@@ -1,0 +1,22 @@
+{
+  "name": "FOSS Andhra - Free & Open Source Software Community",
+  "short_name": "FOSS Andhra",
+  "description": "Promoting free and open source software in education, governance, and society across Andhra Pradesh",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#015ba7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
