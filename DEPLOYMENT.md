@@ -15,7 +15,7 @@ Complete guide for deploying the FOSS Andhra website using Docker and PostgreSQL
 
 ```bash
 git clone <repository-url>
-cd v0-foss-andhra-website
+cd foss-andhra-website
 ```
 
 ### 2. Configure Environment

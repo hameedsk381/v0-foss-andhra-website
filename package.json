@@ -1,6 +1,6 @@
 {
-  "name": "foss-andhra-animated",
-  "version": "0.1.0",
+  "name": "foss-andhra-website",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "next build",
