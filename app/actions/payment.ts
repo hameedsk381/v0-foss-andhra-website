@@ -1,5 +1,8 @@
 "use server"
 
+import { prisma } from "@/lib/prisma"
+import { sendMemberWelcomeEmail } from "@/lib/email"
+
 interface CreateOrderData {
   amount: number
   currency: string
@@ -81,10 +84,46 @@ export async function verifyPayment(orderId: string, paymentId: string, signatur
       // Payment is verified successfully
       console.log("Payment verified for user:", userDetails.email)
 
+      // Generate unique membership ID
+      const membershipId = `FOSS${Date.now()}`
+
+      // Save member to database
+      try {
+        const expiryDate = new Date()
+        expiryDate.setFullYear(expiryDate.getFullYear() + 1)
+
+        const newMember = await prisma.member.create({
+          data: {
+            name: userDetails.name,
+            email: userDetails.email,
+            phone: userDetails.phone,
+            membershipType: "FOSStar Annual",
+            status: "active",
+            membershipId,
+            expiryDate,
+            paymentId,
+          },
+        })
+
+        console.log("Member saved to database:", membershipId)
+
+        // Send welcome email
+        await sendMemberWelcomeEmail(userDetails.email, {
+          name: userDetails.name,
+          membershipId,
+          expiryDate
+        })
+
+        console.log("Welcome email sent to:", userDetails.email)
+      } catch (dbError) {
+        console.error("Error saving member to database:", dbError)
+        // Continue even if DB save fails
+      }
+
       return {
         success: true,
         message: "Payment verified successfully",
-        membershipId: `FOSS${Date.now()}`,
+        membershipId,
       }
     } else {
       console.error("Payment verification failed: signature mismatch")

@@ -2,10 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'standalone', // For Docker deployment
   images: {
-    domains: ["fossandhra.org"],
+    domains: ["fossap.in", "images.unsplash.com"],
     formats: ["image/avif", "image/webp"],
-    unoptimized: true,
+    unoptimized: false, // Enable optimization in production
   },
   compress: true,
   poweredByHeader: false,

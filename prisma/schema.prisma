@@ -1,0 +1,420 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin Users
+model Admin {
+  id        String     @id @default(cuid())
+  name      String
+  email     String     @unique
+  password  String
+  role      String     @default("admin")
+  avatar    String?
+  lastLogin DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  blogPosts BlogPost[]
+}
+
+// Members
+model Member {
+  id             String   @id @default(cuid())
+  name           String
+  email          String   @unique
+  phone          String
+  password       String?  // For member portal login
+  organization   String?
+  designation    String?
+  experience     String?
+  interests      String?
+  referral       String?
+  membershipType String   @default("FOSStar Annual")
+  status         String   @default("pending")
+  joinDate       DateTime @default(now())
+  expiryDate     DateTime
+  paymentId      String?
+  membershipId   String   @unique
+  avatar         String?
+  lastLogin      DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// Events
+model Event {
+  id               String              @id @default(cuid())
+  title            String
+  description      String
+  date             DateTime
+  endDate          DateTime?
+  time             String
+  location         String
+  type             String
+  status           String              @default("upcoming")
+  maxAttendees     Int?
+  currentAttendees Int                 @default(0)
+  program          String?
+  imageUrl         String?
+  gallery          String?             // JSON array of image URLs
+  externalTicketUrl String?            // Hi Events or external ticketing URL
+  externalRegisterUrl String?          // Hi Events registration URL
+  createdBy        String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+}
+
+// Donations
+model Donation {
+  id                String   @id @default(cuid())
+  name              String
+  email             String
+  phone             String
+  amount            Float
+  type              String
+  status            String   @default("pending")
+  anonymous         Boolean  @default(false)
+  paymentId         String?
+  razorpayOrderId   String?
+  razorpaySignature String?
+  program           String?
+  notes             String?
+  receiptUrl        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// Content
+model Content {
+  id              String    @id @default(cuid())
+  type            String
+  slug            String    @unique
+  title           String
+  content         String
+  metaDescription String?
+  keywords        String?
+  ogTitle         String?         // Open Graph title
+  ogDescription   String?         // Open Graph description
+  ogImage         String?         // Open Graph image URL
+  twitterCard     String?         // twitter:card type
+  twitterTitle    String?         // Twitter specific title
+  twitterDescription String?      // Twitter specific description
+  twitterImage    String?         // Twitter specific image
+  canonicalUrl    String?         // Canonical URL for SEO
+  focusKeyword    String?         // Primary SEO keyword
+  status          String    @default("draft")
+  author          String
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// Media
+model Media {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  alt          String?
+  caption      String?
+  uploadedBy   String
+  createdAt    DateTime @default(now())
+}
+
+// Settings
+model Settings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+// Newsletter Subscribers
+model Subscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  status         String    @default("active")
+  subscribedAt   DateTime  @default(now())
+  unsubscribedAt DateTime?
+}
+
+// Volunteers
+model Volunteer {
+  id           String    @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  phone        String
+  skills       String
+  interests    String
+  availability String
+  status       String    @default("pending")
+  appliedAt    DateTime  @default(now())
+  reviewedAt   DateTime?
+  reviewedBy   String?
+}
+
+// Blog Categories
+model BlogCategory {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  posts       BlogPost[]
+}
+
+// Blog Tags
+model BlogTag {
+  id        String          @id @default(cuid())
+  name      String          @unique
+  slug      String          @unique
+  createdAt DateTime        @default(now())
+  posts     BlogPostTag[]
+}
+
+// Blog Posts
+model BlogPost {
+  id              String          @id @default(cuid())
+  title           String
+  slug            String          @unique
+  excerpt         String
+  content         String
+  coverImage      String?
+  categoryId      String
+  authorId        String
+  status          String          @default("draft")
+  views           Int             @default(0)
+  featured        Boolean         @default(false)
+  metaDescription String?
+  metaKeywords    String?
+  ogTitle         String?         // Open Graph title
+  ogDescription   String?         // Open Graph description
+  ogImage         String?         // Open Graph image URL
+  twitterCard     String?         // twitter:card type (summary, summary_large_image)
+  twitterTitle    String?         // Twitter specific title
+  twitterDescription String?      // Twitter specific description
+  twitterImage    String?         // Twitter specific image
+  canonicalUrl    String?         // Canonical URL for SEO
+  focusKeyword    String?         // Primary SEO keyword
+  readingTime     Int?            // Estimated reading time in minutes
+  publishedAt     DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  category        BlogCategory    @relation(fields: [categoryId], references: [id])
+  author          Admin           @relation(fields: [authorId], references: [id])
+  tags            BlogPostTag[]
+  comments        BlogComment[]
+}
+
+// Blog Post Tags (Many-to-Many)
+model BlogPostTag {
+  id         String   @id @default(cuid())
+  postId     String
+  tagId      String
+  post       BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag        BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, tagId])
+}
+
+// Blog Comments
+model BlogComment {
+  id        String   @id @default(cuid())
+  postId    String
+  name      String
+  email     String
+  content   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+// Analytics
+model Analytics {
+  id          String   @id @default(cuid())
+  type        String
+  value       Float
+  metadata    String?
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+// Notifications
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// Programs
+model Program {
+  id               String              @id @default(cuid())
+  name             String              @unique // fosstar, fosserve, fossync, fosstorm, fossart, fossterage, fosspeaks
+  title            String
+  description      String
+  tagline          String?
+  mission          String?
+  color            String
+  logo             String?
+  status           String              @default("active") // active, inactive
+  displayOrder     Int                 @default(0)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  initiatives      ProgramInitiative[]
+  team             ProgramTeamMember[]
+  casestudies      ProgramCaseStudy[]
+  clubs            ProgramClub[]       // For FOSSynC
+  projects         ProgramProject[]    // For FOSStorm
+  startups         ProgramStartup[]    // For FOSSart
+  repositories     ProgramRepository[] // For FOSSterage
+}
+
+// Program Initiatives
+model ProgramInitiative {
+  id          String   @id @default(cuid())
+  programId   String
+  title       String
+  description String
+  content     String?
+  icon        String?
+  category    String?  // e.g., "benefits", "activities", "membership"
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+// Program Team Members
+model ProgramTeamMember {
+  id          String   @id @default(cuid())
+  programId   String
+  name        String
+  role        String
+  bio         String?
+  avatar      String?
+  email       String?
+  linkedin    String?
+  twitter     String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+// Program Case Studies (for FOSServe)
+model ProgramCaseStudy {
+  id          String   @id @default(cuid())
+  programId   String
+  title       String
+  subtitle    String?
+  description String
+  content     String?
+  imageUrl    String?
+  metrics     String?  // JSON string with metrics data
+  category    String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+// Program Clubs (for FOSSynC)
+model ProgramClub {
+  id           String   @id @default(cuid())
+  programId    String
+  name         String
+  location     String
+  institution  String
+  members      Int      @default(0)
+  established  String
+  description  String?
+  contact      String?
+  logo         String?
+  order        Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+// Program Projects (for FOSStorm)
+model ProgramProject {
+  id           String   @id @default(cuid())
+  programId    String
+  name         String
+  description  String
+  content      String?
+  githubUrl    String?
+  websiteUrl   String?
+  status       String   @default("active") // active, beta, development, archived
+  technologies String?  // JSON array of tech tags
+  stars        Int      @default(0)
+  contributors Int      @default(0)
+  logo         String?
+  order        Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+// Program Startups (for FOSSart)
+model ProgramStartup {
+  id           String   @id @default(cuid())
+  programId    String
+  name         String
+  description  String
+  content      String?
+  category     String?  // healthcare, ecommerce, edtech, agritech, etc.
+  founded      String
+  location     String
+  teamSize     Int      @default(0)
+  fundingStage String?  // funded, seed, incubation, pre-funding
+  fundingAmount String?
+  logo         String?
+  websiteUrl   String?
+  technologies String?  // JSON array of tech tags
+  order        Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+// Program Repositories (for FOSSterage)
+model ProgramRepository {
+  id          String   @id @default(cuid())
+  programId   String
+  name        String
+  description String
+  content     String?
+  category    String?  // databases, research, education
+  type        String?  // archive, hub, network, library, etc.
+  url         String?
+  features    String?  // JSON array of features
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
