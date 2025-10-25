@@ -5,10 +5,9 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json ./
-COPY bun.lock ./bun.lock
 
-# Install dependencies
-RUN bun install --frozen-lockfile --production=false
+# Install dependencies (without frozen lockfile)
+RUN bun install --production=false
 
 # Stage 2: Builder
 FROM oven/bun:1 AS builder
