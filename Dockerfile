@@ -1,23 +1,17 @@
 # Multi-stage build for FOSS Andhra Website
 # Stage 1: Dependencies
-FROM node:18-alpine AS deps
+FROM oven/bun:1 AS deps
 WORKDIR /app
-
-# Install pnpm
-RUN npm install -g pnpm
 
 # Copy package files
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile --prod=false
+RUN bun install --frozen-lockfile --production=false
 
 # Stage 2: Builder
-FROM node:18-alpine AS builder
+FROM oven/bun:1 AS builder
 WORKDIR /app
-
-# Install pnpm
-RUN npm install -g pnpm
 
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
