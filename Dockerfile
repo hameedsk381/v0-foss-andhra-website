@@ -5,6 +5,8 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json ./
+# Try to copy lock file if it exists
+RUN cd /app && if [ -f "/app/bun.lock" ]; then cp /app/bun.lock ./; else echo "No bun.lock file found"; fi
 
 # Install dependencies (without frozen lockfile)
 RUN bun install --production=false
@@ -41,7 +43,8 @@ RUN adduser --system --uid 1001 nextjs
 # Copy necessary files from builder
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/bun.lock ./bun.lock
+# Try to copy lock file if it exists
+RUN cd /app && if [ -f "/app/bun.lock" ]; then cp /app/bun.lock ./; else echo "No bun.lock file found"; fi
 
 # Copy Next.js build output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
