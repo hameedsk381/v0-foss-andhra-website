@@ -17,6 +17,12 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
+  // Experimental feature to skip static generation for problematic pages
+  experimental: {
+    appDir: true,
+    serverComponentsExternalPackages: ['@prisma/client', '.prisma'],
+  },
+
   // Security headers
   async headers() {
     return [
