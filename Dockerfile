@@ -46,6 +46,9 @@ RUN mkdir -p .next/standalone
 FROM oven/bun:1-slim AS runner
 WORKDIR /app
 
+# Install OpenSSL to fix Prisma warnings
+RUN apt-get update && apt-get install -y openssl
+
 # Set to production
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
