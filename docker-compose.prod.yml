@@ -39,21 +39,23 @@ services:
       # App
       NODE_ENV: production
       NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+      NEXT_OPTIMIZE_FONTS: 'false'
+      NEXT_FONT_OPTS: '0'
       
       # Auth
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       
       # Payment
-      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
-      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
       
       # Email
-      SMTP_HOST: ${SMTP_HOST}
+      SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-465}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASS: ${SMTP_PASS}
-      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME:-FOSS Andhra}
     volumes:
       - ./public/uploads:/app/public/uploads
@@ -66,8 +68,12 @@ services:
       sh -c "
         echo 'Waiting for database...' &&
         sleep 5 &&
+        echo 'Resetting database migrations...' &&
+        bunx prisma migrate reset --force &&
         echo 'Running database migrations...' &&
         bunx prisma migrate deploy &&
+        echo 'Seeding database...' &&
+        bun run prisma/seed.ts &&
         echo 'Starting application...' &&
         bun run server.js
       "

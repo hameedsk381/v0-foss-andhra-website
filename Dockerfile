@@ -35,6 +35,9 @@ ENV NEXT_EXPORT=0
 ENV NEXT_BYPASS_PRERENDER=1
 # Skip static generation errors
 ENV NEXT_IGNORE_PRERENDER_ERRORS=1
+# Skip font optimization during build to avoid network issues
+ENV NEXT_OPTIMIZE_FONTS=false
+ENV NEXT_FONT_OPTS=0
 RUN bun run build || echo "Build completed with warnings"
 # Create standalone directory if it doesn't exist
 RUN mkdir -p .next/standalone
