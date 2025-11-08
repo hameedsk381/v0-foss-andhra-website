@@ -1,23 +1,19 @@
 version: '3.8'
 
-# 🐳 Development Environment Configuration
-# For production deployment, see docker-compose.prod.yml and PRODUCTION-DEPLOYMENT.md
-
 services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: foss-postgres
+    container_name: foss-postgres-prod
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-fossandhra}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-fossandhra}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fossandhra}"]
       interval: 10s
@@ -25,26 +21,27 @@ services:
       retries: 5
     networks:
       - foss-network
+    # Security: No external volumes for production
 
   # Next.js Application
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: foss-app
+    container_name: foss-app-prod
     restart: unless-stopped
     ports:
       - "${APP_PORT:-3000}:3000"
     environment:
       # Database
-      DATABASE_URL: postgresql://${POSTGRES_USER:-fossandhra}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-fossandhra}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-fossandhra}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-fossandhra}?schema=public
       
       # App
       NODE_ENV: production
-      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
       
       # Auth
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       
       # Payment
@@ -55,12 +52,11 @@ services:
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT:-465}
       SMTP_USER: ${SMTP_USER}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PASS: ${SMTP_PASS}
       SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME:-FOSS Andhra}
     volumes:
       - ./public/uploads:/app/public/uploads
-      - ./prisma:/app/prisma
     depends_on:
       postgres:
         condition: service_healthy
@@ -76,30 +72,8 @@ services:
         bun run server.js
       "
 
-  # pgAdmin (Optional - for database management)
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: foss-pgadmin
-    restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@fossandhra.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-      PGADMIN_LISTEN_PORT: 80
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    depends_on:
-      - postgres
-    networks:
-      - foss-network
-    profiles:
-      - dev
-
 volumes:
   postgres_data:
-    driver: local
-  pgadmin_data:
     driver: local
 
 networks:
