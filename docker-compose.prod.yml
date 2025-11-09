@@ -75,7 +75,7 @@ services:
         echo 'Seeding database...' &&
         bun run prisma/seed.ts &&
         echo 'Starting application...' &&
-        bun run server.js
+        bun run start
       "
 
 volumes:

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "ask": [
+      "Read(!C:\\Users\\cogni\\v0-foss-andhra-website/**)",
+      "Edit(!C:\\Users\\cogni\\v0-foss-andhra-website/**)"
+    ],
+    "allow": [
+      "Read(C:\\Users\\cogni\\v0-foss-andhra-website/**)",
+      "Edit(C:\\Users\\cogni\\v0-foss-andhra-website/**)"
+    ]
+  },
+  "memoryImport": {},
+  "monitoring": {}
+}

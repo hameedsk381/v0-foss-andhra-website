@@ -38,9 +38,8 @@ ENV NEXT_IGNORE_PRERENDER_ERRORS=1
 # Skip font optimization during build to avoid network issues
 ENV NEXT_OPTIMIZE_FONTS=false
 ENV NEXT_FONT_OPTS=0
+# Allow build to continue even with export errors
 RUN bun run build || echo "Build completed with warnings"
-# Create standalone directory if it doesn't exist
-RUN mkdir -p .next/standalone
 
 # Stage 3: Runner
 FROM oven/bun:1-slim AS runner
@@ -63,8 +62,7 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/bun.lock ./bun.lock
 
 # Copy Next.js build output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
 # Copy Prisma files for migrations
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
@@ -92,5 +90,5 @@ ENV HOSTNAME="0.0.0.0"
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD bun run healthcheck || exit 1
 
-# Start application
-CMD ["bun", "run", "server.js"]
+# Start application using next start command
+CMD ["bun", "node_modules/next/dist/bin/next", "start"]
