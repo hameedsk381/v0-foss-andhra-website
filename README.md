@@ -46,7 +46,25 @@ bun run dev
 
 ### Production Deployment
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete Docker deployment guide with PostgreSQL.
+For production deployment, you can build and run the application directly with Bun:
+
+```bash
+# Install dependencies
+bun install
+
+# Set up environment variables for production
+cp .env.production .env
+# Edit .env with your production configuration
+
+# Run database migrations
+bunx prisma migrate deploy
+
+# Build for production
+bun run build
+
+# Start production server
+bun run start
+```
 
 ## 📦 Tech Stack
 
@@ -61,7 +79,6 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete Docker deployment guide with P
 - **UI Components**: Radix UI
 - **Rich Text Editor**: TipTap
 - **Analytics**: Recharts
-- **Deployment**: Docker
 
 ## 🔧 Configuration
 
@@ -112,32 +129,8 @@ foss-andhra-website/
 │   └── ...
 ├── lib/                   # Utility functions
 ├── prisma/               # Database schema & migrations
-├── public/               # Static assets
-├── Dockerfile            # Production Docker image
-└── DEPLOYMENT.md         # Deployment documentation
+└── public/               # Static assets
 ```
-
-## 🐳 Docker Deployment
-
-Quick start with Docker (without Docker Compose):
-
-```bash
-# Build the Docker image
-docker build -t foss-andhra-website .
-
-# Run the container (make sure PostgreSQL is running separately)
-docker run -d \
-  --name foss-app \
-  -p 3001:3000 \
-  -e DATABASE_URL="postgresql://username:password@host:port/database_name?schema=public" \
-  -e NEXTAUTH_URL="http://localhost:3001" \
-  -e NEXTAUTH_SECRET="your-nextauth-secret" \
-  -e NEXT_PUBLIC_APP_URL="http://localhost:3001" \
-  -e NODE_ENV="production" \
-  foss-andhra-website
-```
-
-For detailed deployment instructions, see [DOCKER-README.md](./DOCKER-README.md).
 
 ## 📚 Available Scripts
 
