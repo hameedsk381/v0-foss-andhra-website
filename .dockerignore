@@ -48,7 +48,7 @@ logs
 
 # Docker
 .dockerignore
-Dockerfile
+# Note: Dockerfile is needed for Docker build, so it's NOT ignored
 docker-compose*.yml
 
 # Documentation
