@@ -6,8 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { CheckCircle, XCircle, Loader2, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { Suspense } from "react"
 
-export default function UnsubscribePage() {
+// Create a wrapper component for the unsubscribe page to handle suspense
+function UnsubscribePageContent() {
   const searchParams = useSearchParams()
   const email = searchParams.get("email")
   const token = searchParams.get("token")
@@ -128,5 +130,14 @@ export default function UnsubscribePage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+// Wrap the component with Suspense to handle useSearchParams
+export default function UnsubscribePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UnsubscribePageContent />
+    </Suspense>
   )
 }

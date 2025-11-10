@@ -19,7 +19,6 @@ const nextConfig = {
 
   // Experimental feature to skip static generation for problematic pages
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ['@prisma/client', '.prisma'],
   },
 

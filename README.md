@@ -61,7 +61,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete Docker deployment guide with P
 - **UI Components**: Radix UI
 - **Rich Text Editor**: TipTap
 - **Analytics**: Recharts
-- **Deployment**: Docker + Docker Compose
+- **Deployment**: Docker
 
 ## 🔧 Configuration
 
@@ -113,32 +113,31 @@ foss-andhra-website/
 ├── lib/                   # Utility functions
 ├── prisma/               # Database schema & migrations
 ├── public/               # Static assets
-├── docker-compose.yml    # Docker orchestration
 ├── Dockerfile            # Production Docker image
 └── DEPLOYMENT.md         # Deployment documentation
 ```
 
 ## 🐳 Docker Deployment
 
-Quick start with Docker:
+Quick start with Docker (without Docker Compose):
 
 ```bash
-# Build and start services
-docker-compose up -d
+# Build the Docker image
+docker build -t foss-andhra-website .
 
-# View logs
-docker-compose logs -f app
-
-# Seed database
-docker-compose exec app bunx tsx prisma/seed.ts
+# Run the container (make sure PostgreSQL is running separately)
+docker run -d \
+  --name foss-app \
+  -p 3001:3000 \
+  -e DATABASE_URL="postgresql://username:password@host:port/database_name?schema=public" \
+  -e NEXTAUTH_URL="http://localhost:3001" \
+  -e NEXTAUTH_SECRET="your-nextauth-secret" \
+  -e NEXT_PUBLIC_APP_URL="http://localhost:3001" \
+  -e NODE_ENV="production" \
+  foss-andhra-website
 ```
 
-Services:
-- **App**: http://localhost:3000
-- **PostgreSQL**: localhost:5432
-- **pgAdmin** (dev): http://localhost:5050
-
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+For detailed deployment instructions, see [DOCKER-README.md](./DOCKER-README.md).
 
 ## 📚 Available Scripts
 
@@ -148,12 +147,6 @@ bun run dev              # Start dev server
 bun run build            # Build for production
 bun run start            # Start production server
 bun run lint             # Run ESLint
-
-# Docker
-bun run docker:build     # Build Docker images
-bun run docker:up        # Start Docker services
-bun run docker:down      # Stop Docker services
-bun run docker:logs      # View Docker logs
 
 # Database
 bun run db:migrate       # Run database migrations

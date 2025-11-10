@@ -11,8 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import Link from "next/link"
+import { Suspense } from "react"
 
-export default function LoginPage() {
+// Create a wrapper component for the login page to handle suspense
+function LoginPageContent() {
   const [memberEmail, setMemberEmail] = useState("")
   const [memberPassword, setMemberPassword] = useState("")
   const [adminEmail, setAdminEmail] = useState("")
@@ -20,6 +22,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
+  
   const { toast } = useToast()
 
   const callbackUrl = searchParams.get("callbackUrl") || "/"
@@ -199,5 +202,14 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+// Wrap the component with Suspense to handle useSearchParams
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
   )
 }

@@ -64,13 +64,13 @@ COPY --from=builder /app/bun.lock ./bun.lock
 # Copy Next.js build output
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
-# Copy Prisma files for migrations
+# Copy Prisma files for migrations (but won't run them automatically)
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
 
-# Install bcryptjs for seeding
+# Install bcryptjs
 RUN apt-get update && apt-get install -y python3 build-essential
 RUN bun add bcryptjs
 
@@ -90,5 +90,5 @@ ENV HOSTNAME="0.0.0.0"
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD bun run healthcheck || exit 1
 
-# Start application using next start command
-CMD ["bun", "node_modules/next/dist/bin/next", "start"]
+# Start application
+CMD ["bun", "run", "start"]
