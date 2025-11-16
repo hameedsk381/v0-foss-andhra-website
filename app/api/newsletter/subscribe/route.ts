@@ -1,22 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendWelcomeEmail } from '@/lib/email'
+import { strictRateLimit, getRateLimitIdentifier } from '@/lib/rate-limit'
+import { subscribeNewsletterSchema, validateRequestBody } from '@/lib/validation-schemas'
+import { logError, logInfo } from '@/lib/logger'
 
 // POST - Public newsletter subscription endpoint
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const identifier = getRateLimitIdentifier(request)
+    await strictRateLimit.check(request, 10, identifier)
+
     const body = await request.json()
-    const { email, name } = body
 
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    // Validate request body
+    const validation = await validateRequestBody(subscribeNewsletterSchema, body)
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
-    }
+    const { email, name } = validation.data
 
     // Check if already subscribed
     const existing = await prisma.subscriber.findUnique({
@@ -46,8 +50,10 @@ export async function POST(request: NextRequest) {
     try {
       await sendWelcomeEmail(email, name)
     } catch (emailError) {
-      console.error('Error sending welcome email:', emailError)
+      logError(emailError as Error, { context: 'newsletter_welcome_email' })
     }
+
+    logInfo('Newsletter subscription', { email })
 
     return NextResponse.json({ 
       success: true,
@@ -58,7 +64,12 @@ export async function POST(request: NextRequest) {
       }
     }, { status: 201 })
   } catch (error) {
-    console.error('Error subscribing:', error)
+    // Rate limit errors are already responses
+    if (error instanceof Response) {
+      return error
+    }
+
+    logError(error as Error, { context: 'newsletter_subscribe' })
     return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 })
   }
 }

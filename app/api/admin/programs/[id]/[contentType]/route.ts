@@ -29,26 +29,64 @@ export async function GET(
 
     if (!modelName) {
       return NextResponse.json(
-        { error: "Invalid content type" },
+        { 
+          success: false,
+          error: `Invalid content type: ${contentType}`,
+          validTypes: Object.keys(contentTypeModelMap),
+        },
         { status: 400 }
       )
     }
 
     const model = (prisma as any)[modelName]
     if (!model) {
-      return NextResponse.json({ error: "Model not found" }, { status: 404 })
+      return NextResponse.json(
+        { success: false, error: "Model not found" },
+        { status: 404 }
+      )
+    }
+
+    // Verify program exists (support both UUID and name)
+    const program = await prisma.program.findFirst({
+      where: {
+        OR: [
+          { id },
+          { name: id },
+        ],
+      },
+    })
+
+    if (!program) {
+      return NextResponse.json(
+        { success: false, error: "Program not found" },
+        { status: 404 }
+      )
     }
 
     const data = await model.findMany({
-      where: { programId: id },
+      where: { programId: program.id },
       orderBy: { order: "asc" },
     })
 
-    return NextResponse.json({ data })
+    return NextResponse.json({ 
+      success: true,
+      data,
+      count: data.length,
+      program: {
+        id: program.id,
+        name: program.name,
+        title: program.title,
+      },
+    })
   } catch (error) {
     console.error("GET error:", error)
+    const errorMessage = error instanceof Error ? error.message : "Internal server error"
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        success: false,
+        error: errorMessage,
+        details: process.env.NODE_ENV === "development" ? error : undefined,
+      },
       { status: 500 }
     )
   }
@@ -69,40 +107,88 @@ export async function POST(
 
     if (!modelName) {
       return NextResponse.json(
-        { error: "Invalid content type" },
+        { 
+          success: false,
+          error: `Invalid content type: ${contentType}`,
+          validTypes: Object.keys(contentTypeModelMap),
+        },
         { status: 400 }
       )
     }
 
     const model = (prisma as any)[modelName]
     if (!model) {
-      return NextResponse.json({ error: "Model not found" }, { status: 404 })
+      return NextResponse.json(
+        { success: false, error: "Model not found" },
+        { status: 404 }
+      )
+    }
+
+    // Verify program exists (support both UUID and name)
+    const program = await prisma.program.findFirst({
+      where: {
+        OR: [
+          { id },
+          { name: id },
+        ],
+      },
+    })
+
+    if (!program) {
+      return NextResponse.json(
+        { success: false, error: "Program not found" },
+        { status: 404 }
+      )
     }
 
     const body = await request.json()
 
-    // Parse JSON fields if they're strings
+    // Validate required fields based on content type
+    const requiredFields: Record<string, string[]> = {
+      initiatives: ["title", "description"],
+      team: ["name", "role"],
+      clubs: ["name", "location", "institution"],
+      projects: ["name", "description"],
+      casestudies: ["title", "description"],
+      startups: ["name", "description", "founded"],
+      repositories: ["name", "description"],
+    }
+
+    const required = requiredFields[contentType] || []
+    const missing = required.filter(field => !body[field])
+
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: `Missing required fields: ${missing.join(", ")}`,
+        },
+        { status: 400 }
+      )
+    }
+
+    // Process JSON fields
     const processedData = { ...body }
+    const jsonFields = ["metrics", "technologies", "features"]
+    
     for (const key in processedData) {
-      if (
-        typeof processedData[key] === "string" &&
-        (key === "metrics" ||
-          key === "technologies" ||
-          key === "features" ||
-          processedData[key].startsWith("{") ||
-          processedData[key].startsWith("["))
-      ) {
-        try {
-          processedData[key] = JSON.parse(processedData[key])
-        } catch {
-          // Keep as string if not valid JSON
+      if (jsonFields.includes(key) || typeof processedData[key] === "string") {
+        if (
+          typeof processedData[key] === "string" &&
+          (processedData[key].startsWith("{") || processedData[key].startsWith("["))
+        ) {
+          try {
+            processedData[key] = JSON.parse(processedData[key])
+          } catch {
+            // Keep as string if not valid JSON
+          }
         }
       }
     }
 
     // Get the highest order value and add 1
     const maxOrder = await model.findFirst({
-      where: { programId: id },
+      where: { programId: program.id },
       orderBy: { order: "desc" },
       select: { order: true },
     })
@@ -112,17 +198,26 @@ export async function POST(
     const item = await model.create({
       data: {
         ...processedData,
-        programId: id,
-        active: true,
+        programId: program.id,
+        active: processedData.active !== undefined ? processedData.active : true,
         order: nextOrder,
       },
     })
 
-    return NextResponse.json({ data: item }, { status: 201 })
+    return NextResponse.json({ 
+      success: true,
+      data: item,
+      message: `${contentType} item created successfully`,
+    }, { status: 201 })
   } catch (error) {
     console.error("POST error:", error)
+    const errorMessage = error instanceof Error ? error.message : "Internal server error"
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        success: false,
+        error: errorMessage,
+        details: process.env.NODE_ENV === "development" ? error : undefined,
+      },
       { status: 500 }
     )
   }

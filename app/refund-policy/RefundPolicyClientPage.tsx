@@ -1,11 +1,29 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { fadeIn } from "@/lib/animation"
 
+interface ContentData {
+  title: string
+  content: string
+}
+
 export default function RefundPolicyClientPage() {
+  const [pageContent, setPageContent] = useState<ContentData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/content/refund-policy")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setPageContent(data.data)
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
   return (
     <main className="flex-1">
       <div className="container max-w-4xl py-12 px-4 md:px-6">

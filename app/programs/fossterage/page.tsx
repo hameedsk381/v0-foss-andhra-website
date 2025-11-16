@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -11,9 +12,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { programInfo } from "@/lib/utils"
 
+interface Program {
+  title: string
+  description: string
+  tagline?: string | null
+  mission?: string | null
+  logo?: string | null
+}
+
 export default function FOSSteragePage() {
-  const programData = programInfo.fossterage
+  const [programData, setProgramData] = useState<Program>(programInfo.fossterage as any)
   const programColor = "fossterage"
+
+  useEffect(() => {
+    fetch("/api/programs/fossterage")
+      .then(res => res.json())
+      .then(data => { if (data.success) setProgramData(data.data) })
+      .catch(console.error)
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -26,7 +42,7 @@ export default function FOSSteragePage() {
               <div className="flex flex-col space-y-4">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">{programData.title}</h1>
                 <p className="text-xl text-white/90 max-w-[600px]">
-                  Repository of knowledge bases for researchers and data scientists
+                  {programData.tagline || programData.description || "Repository of knowledge bases for researchers and data scientists"}
                 </p>
                 <div className="flex flex-wrap gap-4 mt-4">
                   <Link href="#initiatives">
@@ -154,17 +170,23 @@ export default function FOSSteragePage() {
 
             <AnimatedSection variant="fadeLeft">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About FOSSterage</h2>
-                <p className="text-gray-600">
-                  FOSSterage is a specialized program by FOSS Andhra dedicated to creating and maintaining comprehensive
-                  knowledge repositories for researchers, data scientists, and the general public. Our mission is to
-                  democratize access to data and information through open-source solutions.
-                </p>
-                <p className="text-gray-600">
-                  We focus on building sustainable, open, and accessible data infrastructures that enable knowledge
-                  sharing, foster innovation, and support evidence-based decision-making across various sectors
-                  including education, governance, and social development.
-                </p>
+                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About {programData.title}</h2>
+                {programData.mission ? (
+                  <p className="text-gray-600">{programData.mission}</p>
+                ) : (
+                  <>
+                    <p className="text-gray-600">
+                      {programData.title} is a specialized program by FOSS Andhra dedicated to creating and maintaining comprehensive
+                      knowledge repositories for researchers, data scientists, and the general public. Our mission is to
+                      democratize access to data and information through open-source solutions.
+                    </p>
+                    <p className="text-gray-600">
+                      We focus on building sustainable, open, and accessible data infrastructures that enable knowledge
+                      sharing, foster innovation, and support evidence-based decision-making across various sectors
+                      including education, governance, and social development.
+                    </p>
+                  </>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                   <div className="flex items-start space-x-3">
                     <div className="bg-fossterage/10 p-2 rounded-full">

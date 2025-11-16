@@ -1,29 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendVolunteerConfirmationEmail, sendVolunteerAdminNotification } from '@/lib/email'
+import { strictRateLimit, getRateLimitIdentifier } from '@/lib/rate-limit'
+import { createVolunteerSchema, validateRequestBody } from '@/lib/validation-schemas'
+import { logError, logInfo } from '@/lib/logger'
 
 // POST - Public volunteer registration endpoint
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const identifier = getRateLimitIdentifier(request)
+    await strictRateLimit.check(request, 5, identifier) // 5 requests per minute
+
     const body = await request.json()
-    const { firstName, lastName, email, phone, skills, interests, availability } = body
 
-    // Validate required fields
-    if (!firstName || !lastName || !email || !phone || !skills || !interests || !availability) {
+    // Validate request body
+    const validation = await validateRequestBody(createVolunteerSchema, body)
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: validation.error },
         { status: 400 }
       )
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email address' },
-        { status: 400 }
-      )
-    }
+    const { firstName, lastName, email, phone, skills, interests, availability } = validation.data
 
     // Check if already registered
     const existing = await prisma.volunteer.findUnique({
@@ -51,6 +51,8 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    logInfo('Volunteer registered', { volunteerId: volunteer.id, email })
+
     // Send confirmation email to volunteer
     try {
       await sendVolunteerConfirmationEmail(email, {
@@ -60,7 +62,7 @@ export async function POST(request: NextRequest) {
         interests,
       })
     } catch (emailError) {
-      console.error('Error sending volunteer confirmation email:', emailError)
+      logError(emailError as Error, { context: 'volunteer_confirmation_email' })
     }
 
     // Send notification to admin
@@ -76,7 +78,7 @@ export async function POST(request: NextRequest) {
         id: volunteer.id,
       })
     } catch (emailError) {
-      console.error('Error sending admin notification:', emailError)
+      logError(emailError as Error, { context: 'volunteer_admin_notification' })
     }
 
     return NextResponse.json(
@@ -92,7 +94,12 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     )
   } catch (error) {
-    console.error('Error registering volunteer:', error)
+    // Rate limit errors are already responses
+    if (error instanceof Response) {
+      return error
+    }
+    
+    logError(error as Error, { context: 'volunteer_registration' })
     return NextResponse.json(
       { error: 'Failed to register volunteer' },
       { status: 500 }

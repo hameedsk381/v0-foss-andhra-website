@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,7 +8,23 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Lightbulb, DollarSign, Rocket, CheckCircle, Award, Image } from "lucide-react"
 
+interface Program {
+  title: string
+  description: string
+}
+
 export default function FOSSartPage() {
+  const [programData, setProgramData] = useState<Program>({
+    title: "FOSSart",
+    description: "Entrepreneurship space for funding open source innovations",
+  })
+
+  useEffect(() => {
+    fetch("/api/programs/fossart")
+      .then(res => res.json())
+      .then(data => { if (data.success) setProgramData(data.data) })
+      .catch(console.error)
+  }, [])
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-5xl mx-auto">
@@ -13,10 +32,10 @@ export default function FOSSartPage() {
           <Badge variant="outline" className="px-3 py-1 text-red-600 border-red-200 font-medium">
             Program
           </Badge>
-          <h1 className="text-4xl font-bold">FOSSart</h1>
+          <h1 className="text-4xl font-bold">{programData.title}</h1>
         </div>
 
-        <p className="text-xl text-red-600 mb-8">Entrepreneurship space for funding open source innovations</p>
+        <p className="text-xl text-red-600 mb-8">{programData.description}</p>
 
         <Tabs defaultValue="overview" className="mb-12">
           <TabsList className="grid w-full grid-cols-4">

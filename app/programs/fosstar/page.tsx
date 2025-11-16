@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -11,9 +12,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { programInfo } from "@/lib/utils"
 
+interface Program {
+  id: string
+  name: string
+  title: string
+  description: string
+  tagline?: string | null
+  mission?: string | null
+  color: string
+  logo?: string | null
+  initiatives?: any[]
+  team?: any[]
+}
+
 export default function FOSStarPage() {
-  const programData = programInfo.fosstar
+  const [programData, setProgramData] = useState<Program>(programInfo.fosstar as any)
+  const [loading, setLoading] = useState(true)
   const programColor = "fosstar"
+
+  useEffect(() => {
+    fetchProgramData()
+  }, [])
+
+  const fetchProgramData = async () => {
+    try {
+      const res = await fetch("/api/programs/fosstar")
+      const data = await res.json()
+      if (data.success && data.data) {
+        setProgramData(data.data)
+      }
+    } catch (error) {
+      console.error("Error fetching program data:", error)
+      // Fallback to static data if API fails
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -26,7 +60,7 @@ export default function FOSStarPage() {
               <div className="flex flex-col space-y-4">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">{programData.title}</h1>
                 <p className="text-xl text-white/90 max-w-[600px]">
-                  Our flagship membership program connecting and empowering the FOSS community across Andhra Pradesh
+                  {programData.tagline || programData.description || "Our flagship membership program connecting and empowering the FOSS community across Andhra Pradesh"}
                 </p>
                 <div className="flex flex-wrap gap-4 mt-4">
                   <Link href="#initiatives">
@@ -147,17 +181,23 @@ export default function FOSStarPage() {
 
             <AnimatedSection variant="fadeLeft">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About FOSStar</h2>
-                <p className="text-gray-600">
-                  FOSStar is FOSS Andhra's comprehensive membership program designed to connect individuals, students,
-                  professionals, and institutions who share a common interest in promoting and adopting free and open
-                  source software solutions.
-                </p>
-                <p className="text-gray-600">
-                  Through FOSStar, we aim to build a vibrant community of FOSS enthusiasts who collaborate, learn, and
-                  advocate for open source adoption across educational institutions, government bodies, and society at
-                  large.
-                </p>
+                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About {programData.title}</h2>
+                {programData.mission ? (
+                  <p className="text-gray-600">{programData.mission}</p>
+                ) : (
+                  <>
+                    <p className="text-gray-600">
+                      {programData.title} is FOSS Andhra's comprehensive membership program designed to connect individuals, students,
+                      professionals, and institutions who share a common interest in promoting and adopting free and open
+                      source software solutions.
+                    </p>
+                    <p className="text-gray-600">
+                      Through {programData.title}, we aim to build a vibrant community of FOSS enthusiasts who collaborate, learn, and
+                      advocate for open source adoption across educational institutions, government bodies, and society at
+                      large.
+                    </p>
+                  </>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                   <div className="flex items-start space-x-3">
                     <div className="bg-fosstar/10 p-2 rounded-full">

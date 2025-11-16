@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Search, X, Loader2, FileText, Users, Calendar } from "lucide-react"
+import { Search, X, Loader2, FileText, Users, Calendar, Folder, FileText as PageIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,8 @@ interface SearchResult {
   members: any[]
   events: any[]
   blog: any[]
+  programs: any[]
+  content: any[]
   total: number
 }
 
@@ -110,7 +112,7 @@ export function GlobalSearch() {
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search members, events, blog posts..."
+                  placeholder="Search members, events, blog posts, programs, pages..."
                   className="pl-10 pr-10 py-6 text-lg border-none focus:ring-0"
                   autoFocus
                 />
@@ -221,6 +223,60 @@ export function GlobalSearch() {
                               <p className="text-xs text-gray-500">
                                 {member.organization || "No organization"}
                               </p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Programs */}
+                  {results.programs && results.programs.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
+                        <Folder className="h-4 w-4" />
+                        Programs ({results.programs.length})
+                      </h3>
+                      <div className="space-y-2">
+                        {results.programs.map((program: any) => (
+                          <Card
+                            key={program.id}
+                            className="cursor-pointer hover:bg-gray-50 transition"
+                            onClick={() => handleResultClick(`/programs/${program.name}`)}
+                          >
+                            <CardContent className="p-3">
+                              <p className="font-medium text-sm">{program.title}</p>
+                              <p className="text-xs text-gray-500 line-clamp-1 mt-1">
+                                {program.description}
+                              </p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Content Pages */}
+                  {results.content && results.content.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
+                        <PageIcon className="h-4 w-4" />
+                        Pages ({results.content.length})
+                      </h3>
+                      <div className="space-y-2">
+                        {results.content.map((page: any) => (
+                          <Card
+                            key={page.id}
+                            className="cursor-pointer hover:bg-gray-50 transition"
+                            onClick={() => handleResultClick(`/${page.slug}`)}
+                          >
+                            <CardContent className="p-3">
+                              <p className="font-medium text-sm">{page.title}</p>
+                              {page.metaDescription && (
+                                <p className="text-xs text-gray-500 line-clamp-1 mt-1">
+                                  {page.metaDescription}
+                                </p>
+                              )}
                             </CardContent>
                           </Card>
                         ))}

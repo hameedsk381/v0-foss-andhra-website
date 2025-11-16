@@ -7,7 +7,10 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get("q") || ""
 
     if (query.length < 2) {
-      return NextResponse.json({ success: true, data: { members: [], events: [], blog: [], total: 0 } })
+      return NextResponse.json({ 
+        success: true, 
+        data: { members: [], events: [], blog: [], programs: [], content: [], total: 0 } 
+      })
     }
 
     // Search members (public info only)
@@ -50,8 +53,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Search blog posts
-    const blog = await prisma.blogPost.findMany({
-      where: {
+    const blog = await prisma.blogPost.findMany({  where: {
         status: "published",
         OR: [
           { title: { contains: query, mode: "insensitive" } },
@@ -73,7 +75,48 @@ export async function GET(request: NextRequest) {
       orderBy: { publishedAt: "desc" },
     })
 
-    const total = members.length + events.length + blog.length
+    // Search programs
+    const programs = await prisma.program.findMany({
+      where: {
+        status: "active",
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { description: { contains: query, mode: "insensitive" } },
+          { mission: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        title: true,
+        description: true,
+        color: true,
+        logo: true,
+      },
+      take: 5,
+      orderBy: { displayOrder: "asc" },
+    })
+
+    // Search content pages
+    const content = await prisma.content.findMany({
+      where: {
+        status: "published",
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { content: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        metaDescription: true,
+      },
+      take: 5,
+      orderBy: { updatedAt: "desc" },
+    })
+
+    const total = members.length + events.length + blog.length + programs.length + content.length
 
     return NextResponse.json({
       success: true,
@@ -81,6 +124,8 @@ export async function GET(request: NextRequest) {
         members,
         events,
         blog,
+        programs,
+        content,
         total,
       },
     })

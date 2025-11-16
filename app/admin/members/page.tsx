@@ -1,56 +1,62 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Filter, Download, Mail, CheckCircle, XCircle } from "lucide-react"
+import { Search, Filter, Download, Mail, CheckCircle, XCircle, Loader2 } from "lucide-react"
+
+interface Member {
+  id: string
+  name: string
+  email: string
+  phone: string
+  membershipType: string
+  status: string
+  joinDate: Date
+  expiryDate: Date
+  organization: string | null
+  membershipId: string
+}
 
 export default function MembersManagement() {
   const [filter, setFilter] = useState("all")
+  const [members, setMembers] = useState<Member[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
 
-  // Mock data - replace with actual database queries
-  const members = [
-    {
-      id: 1,
-      name: "Rajesh Kumar",
-      email: "rajesh@example.com",
-      phone: "+91 98765 43210",
-      membershipType: "FOSStar Annual",
-      status: "active",
-      joinDate: "2024-01-15",
-      expiryDate: "2025-01-15",
-      organization: "Tech Solutions Inc",
-    },
-    {
-      id: 2,
-      name: "Priya Reddy",
-      email: "priya@example.com",
-      phone: "+91 98765 43211",
-      membershipType: "FOSStar Annual",
-      status: "active",
-      joinDate: "2024-02-20",
-      expiryDate: "2025-02-20",
-      organization: "Andhra University",
-    },
-    {
-      id: 3,
-      name: "Anil Sharma",
-      email: "anil@example.com",
-      phone: "+91 98765 43212",
-      membershipType: "FOSStar Annual",
-      status: "expired",
-      joinDate: "2023-03-10",
-      expiryDate: "2024-03-10",
-      organization: "Freelancer",
-    },
-  ]
+  useEffect(() => {
+    fetchMembers()
+  }, [filter])
+
+  const fetchMembers = async () => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams()
+      if (filter !== "all") params.append("status", filter)
+      
+      const res = await fetch(`/api/admin/members?${params.toString()}`)
+      const data = await res.json()
+      if (data.success) {
+        setMembers(data.data)
+      }
+    } catch (error) {
+      console.error("Error fetching members:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const filteredMembers = members.filter((member) => {
-    if (filter === "all") return true
-    return member.status === filter
+    if (!searchQuery) return true
+    const query = searchQuery.toLowerCase()
+    return (
+      member.name.toLowerCase().includes(query) ||
+      member.email.toLowerCase().includes(query) ||
+      member.phone.includes(query)
+    )
   })
 
   return (
@@ -98,7 +104,9 @@ export default function MembersManagement() {
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-yellow-600">0</div>
+            <div className="text-2xl font-bold text-yellow-600">
+              {members.filter((m) => m.status === "pending").length}
+            </div>
             <p className="text-sm text-gray-600">Pending Renewals</p>
           </CardContent>
         </Card>
@@ -111,7 +119,12 @@ export default function MembersManagement() {
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input placeholder="Search members..." className="pl-10" />
+                <Input
+                  placeholder="Search members..."
+                  className="pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
             </div>
             <Select value={filter} onValueChange={setFilter}>
@@ -145,64 +158,78 @@ export default function MembersManagement() {
           <CardTitle>Members List</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Name</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Email</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Phone</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Organization</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Join Date</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Expiry Date</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-600">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredMembers.map((member) => (
-                  <tr key={member.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <div className="font-medium">{member.name}</div>
-                      <div className="text-xs text-gray-500">{member.membershipType}</div>
-                    </td>
-                    <td className="py-3 px-4 text-sm">{member.email}</td>
-                    <td className="py-3 px-4 text-sm">{member.phone}</td>
-                    <td className="py-3 px-4 text-sm">{member.organization}</td>
-                    <td className="py-3 px-4 text-sm">{member.joinDate}</td>
-                    <td className="py-3 px-4 text-sm">{member.expiryDate}</td>
-                    <td className="py-3 px-4">
-                      <Badge
-                        variant={member.status === "active" ? "default" : "secondary"}
-                        className={
-                          member.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }
-                      >
-                        {member.status === "active" ? (
-                          <CheckCircle className="h-3 w-3 mr-1 inline" />
-                        ) : (
-                          <XCircle className="h-3 w-3 mr-1 inline" />
-                        )}
-                        {member.status}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          Edit
-                        </Button>
-                      </div>
-                    </td>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : filteredMembers.length === 0 ? (
+            <p className="text-center py-8 text-gray-500">No members found</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Name</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Email</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Phone</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Organization</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Join Date</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Expiry Date</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredMembers.map((member) => (
+                    <tr key={member.id} className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4">
+                        <div className="font-medium">{member.name}</div>
+                        <div className="text-xs text-gray-500">{member.membershipType}</div>
+                      </td>
+                      <td className="py-3 px-4 text-sm">{member.email}</td>
+                      <td className="py-3 px-4 text-sm">{member.phone}</td>
+                      <td className="py-3 px-4 text-sm">{member.organization || "N/A"}</td>
+                      <td className="py-3 px-4 text-sm">
+                        {new Date(member.joinDate).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 px-4 text-sm">
+                        {new Date(member.expiryDate).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 px-4">
+                        <Badge
+                          variant={member.status === "active" ? "default" : "secondary"}
+                          className={
+                            member.status === "active"
+                              ? "bg-green-100 text-green-800"
+                              : member.status === "expired"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }
+                        >
+                          {member.status === "active" ? (
+                            <CheckCircle className="h-3 w-3 mr-1 inline" />
+                          ) : (
+                            <XCircle className="h-3 w-3 mr-1 inline" />
+                          )}
+                          {member.status}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            Edit
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

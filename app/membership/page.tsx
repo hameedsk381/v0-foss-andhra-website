@@ -25,14 +25,19 @@ export default function MembershipPage() {
     referrer: "",
   })
 
-  const [formSubmitted, setFormSubmitted] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    if (formSubmitted) {
-      router.replace("/register")
+  const handleMembershipSelect = (type: string) => {
+    // Map membership types to audience types in register page
+    const audienceMap: Record<string, string> = {
+      'student': 'student',
+      'professional': 'professional',
+      'institutional': 'institution'
     }
-  }, [formSubmitted, router])
+    
+    const audience = audienceMap[type] || 'professional'
+    router.push(`/register?type=${audience}`)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -45,23 +50,15 @@ export default function MembershipPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // In a real app, you would submit the form data to your backend or API here
-    console.log("Form submitted:", formData)
-    setFormSubmitted(true)
+    // Redirect to register page with pre-filled data via query params
+    const audience = formData.membershipType || 'professional'
+    router.push(`/register?type=${audience}`)
   }
 
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-4xl mx-auto">
-        {formSubmitted ? (
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-fosstar mx-auto mb-4"></div>
-              <p>Redirecting to registration...</p>
-            </div>
-          </div>
-        ) : (
-          <>
+        <>
             <h1 className="text-4xl font-bold mb-2">FOSStar Membership Program</h1>
             <p className="text-xl text-gray-600 mb-8">
               Join our community of open source enthusiasts and help us promote free and open source solutions.
@@ -187,7 +184,7 @@ export default function MembershipPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="text-3xl font-bold mb-4">
-                        ₹500<span className="text-sm font-normal text-gray-500">/year</span>
+                        ₹300<span className="text-sm font-normal text-gray-500">/year</span>
                       </div>
                       <ul className="space-y-2 mb-6">
                         <li className="flex items-start">
@@ -209,8 +206,8 @@ export default function MembershipPage() {
                       </ul>
                     </CardContent>
                     <CardFooter>
-                      <Button className="w-full" onClick={() => handleSelectChange("membershipType", "student")}>
-                        Select
+                      <Button className="w-full" onClick={() => handleMembershipSelect("student")}>
+                        Select Student
                       </Button>
                     </CardFooter>
                   </Card>
@@ -223,7 +220,7 @@ export default function MembershipPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="text-3xl font-bold mb-4">
-                        ₹2000<span className="text-sm font-normal text-gray-500">/year</span>
+                        ₹1,000<span className="text-sm font-normal text-gray-500">/year</span>
                       </div>
                       <ul className="space-y-2 mb-6">
                         <li className="flex items-start">
@@ -249,8 +246,8 @@ export default function MembershipPage() {
                       </ul>
                     </CardContent>
                     <CardFooter>
-                      <Button className="w-full" onClick={() => handleSelectChange("membershipType", "professional")}>
-                        Select
+                      <Button className="w-full" onClick={() => handleMembershipSelect("professional")}>
+                        Select Professional
                       </Button>
                     </CardFooter>
                   </Card>
@@ -262,7 +259,7 @@ export default function MembershipPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="text-3xl font-bold mb-4">
-                        ₹10,000<span className="text-sm font-normal text-gray-500">/year</span>
+                        ₹5,000<span className="text-sm font-normal text-gray-500">/year</span>
                       </div>
                       <ul className="space-y-2 mb-6">
                         <li className="flex items-start">
@@ -288,8 +285,8 @@ export default function MembershipPage() {
                       </ul>
                     </CardContent>
                     <CardFooter>
-                      <Button className="w-full" onClick={() => handleSelectChange("membershipType", "institutional")}>
-                        Select
+                      <Button className="w-full" onClick={() => handleMembershipSelect("institutional")}>
+                        Select Institutional
                       </Button>
                     </CardFooter>
                   </Card>
@@ -415,7 +412,6 @@ export default function MembershipPage() {
               </TabsContent>
             </Tabs>
           </>
-        )}
       </div>
     </div>
   )

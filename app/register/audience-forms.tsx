@@ -2,7 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -134,9 +135,20 @@ const audienceConfig = {
 }
 
 export function AudienceSpecificForms() {
+  const searchParams = useSearchParams()
+  const typeParam = searchParams.get('type') as AudienceType | null
+  
   const [selectedAudience, setSelectedAudience] = useState<AudienceType | null>(null)
   const [currentStep, setCurrentStep] = useState<"audience" | "form" | "payment" | "success">("audience")
   const [membershipId, setMembershipId] = useState<string>("")
+
+  // Auto-select audience from URL param
+  useEffect(() => {
+    if (typeParam && audienceConfig[typeParam]) {
+      setSelectedAudience(typeParam)
+      setCurrentStep("form")
+    }
+  }, [typeParam])
 
   // Form data states for each audience
   const [studentData, setStudentData] = useState<StudentFormData>({

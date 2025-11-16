@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -13,7 +14,43 @@ import { ProgramHero } from "@/components/program-hero"
 import { Server, Database, Users, Code, Globe } from "lucide-react"
 import { BookOpen } from "lucide-react"
 
+interface Program {
+  id: string
+  name: string
+  title: string
+  description: string
+  tagline?: string | null
+  mission?: string | null
+  color: string
+  logo?: string | null
+}
+
 export default function FOSServePage() {
+  const [programData, setProgramData] = useState<Program>({
+    name: "fosserve",
+    title: "FOSServe",
+    description: "Promoting open-source solutions in education and governance",
+    color: "#9333ea",
+  } as any)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchProgramData()
+  }, [])
+
+  const fetchProgramData = async () => {
+    try {
+      const res = await fetch("/api/programs/fosserve")
+      const data = await res.json()
+      if (data.success && data.data) {
+        setProgramData(data.data)
+      }
+    } catch (error) {
+      console.error("Error fetching program data:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
   // Icons for the hero section
   const HeroIcons = () => (
     <>
@@ -71,10 +108,10 @@ export default function FOSServePage() {
   return (
     <main className="min-h-screen">
       <ProgramHero
-        title="FOSServe"
-        description="Promoting open-source solutions in education and governance to enhance digital infrastructure and services."
-        color="#9333ea" // Purple color
-        logoSrc="/logos/fosserve-logo.png"
+        title={programData.title}
+        description={programData.tagline || programData.description || "Promoting open-source solutions in education and governance to enhance digital infrastructure and services."}
+        color={programData.color || "#9333ea"}
+        logoSrc={programData.logo || "/logos/fosserve-logo.png"}
         icons={<HeroIcons />}
       />
 
@@ -104,18 +141,24 @@ export default function FOSServePage() {
 
               <AnimatedSection variant="fadeLeft">
                 <div className="space-y-6">
-                  <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About FOSServe</h2>
-                  <p className="text-gray-600">
-                    FOSServe is our dedicated program focused on promoting and implementing open source solutions in
-                    educational institutions, government bodies, and the broader society. We believe that open source
-                    software offers numerous advantages including cost-effectiveness, transparency, customizability, and
-                    security.
-                  </p>
-                  <p className="text-gray-600">
-                    Through FOSServe, we work closely with schools, colleges, universities, and government departments
-                    to help them transition to open source alternatives, providing training, support, and custom
-                    implementation services.
-                  </p>
+                  <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About {programData.title}</h2>
+                  {programData.mission ? (
+                    <p className="text-gray-600">{programData.mission}</p>
+                  ) : (
+                    <>
+                      <p className="text-gray-600">
+                        {programData.title} is our dedicated program focused on promoting and implementing open source solutions in
+                        educational institutions, government bodies, and the broader society. We believe that open source
+                        software offers numerous advantages including cost-effectiveness, transparency, customizability, and
+                        security.
+                      </p>
+                      <p className="text-gray-600">
+                        Through {programData.title}, we work closely with schools, colleges, universities, and government departments
+                        to help them transition to open source alternatives, providing training, support, and custom
+                        implementation services.
+                      </p>
+                    </>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                     <div className="flex items-start space-x-3">
                       <div className="bg-purple-100 p-2 rounded-full">

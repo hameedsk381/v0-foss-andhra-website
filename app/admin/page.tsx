@@ -1,20 +1,71 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Calendar, Heart, TrendingUp, DollarSign, UserPlus } from "lucide-react"
+import { Users, Calendar, Heart, TrendingUp, DollarSign, UserPlus, Loader2 } from "lucide-react"
+import { formatDistanceToNow } from "date-fns"
+
+interface DashboardData {
+  stats: {
+    totalMembers: number
+    activeMembers: number
+    newMembersThisMonth: number
+    totalEvents: number
+    upcomingEvents: number
+    totalDonations: number
+    monthlyDonations: number
+    eventAttendance: number
+  }
+  recentMembers: Array<{ name: string; email: string; createdAt: Date }>
+  upcomingEvents: Array<{ title: string; date: Date; location: string }>
+  recentDonations: Array<{
+    name: string
+    amount: number
+    type: string
+    createdAt: Date
+    anonymous: boolean
+  }>
+}
 
 export default function AdminDashboard() {
-  // This would be fetched from your database
-  const stats = {
-    totalMembers: 1247,
-    activeMembers: 892,
-    totalEvents: 48,
-    upcomingEvents: 12,
-    totalDonations: 456789,
-    monthlyDonations: 45670,
-    newMembersThisMonth: 67,
-    eventAttendance: 3456,
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchDashboardData()
+  }, [])
+
+  const fetchDashboardData = async () => {
+    try {
+      const res = await fetch("/api/admin/dashboard")
+      const result = await res.json()
+      if (result.success) {
+        setData(result.data)
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error)
+    } finally {
+      setLoading(false)
+    }
   }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    )
+  }
+
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-500">Failed to load dashboard data</p>
+      </div>
+    )
+  }
+
+  const { stats, recentMembers, upcomingEvents, recentDonations } = data
 
   return (
     <div className="space-y-8">
@@ -47,7 +98,9 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.activeMembers}</div>
             <p className="text-xs text-gray-600 mt-1">
-              {((stats.activeMembers / stats.totalMembers) * 100).toFixed(1)}% of total
+              {stats.totalMembers > 0
+                ? ((stats.activeMembers / stats.totalMembers) * 100).toFixed(1)
+                : 0}% of total
             </p>
           </CardContent>
         </Card>
@@ -86,20 +139,21 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: "Rajesh Kumar", email: "rajesh@example.com", date: "2 hours ago" },
-                { name: "Priya Reddy", email: "priya@example.com", date: "5 hours ago" },
-                { name: "Anil Sharma", email: "anil@example.com", date: "1 day ago" },
-                { name: "Lakshmi Devi", email: "lakshmi@example.com", date: "2 days ago" },
-              ].map((member, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">{member.name}</p>
-                    <p className="text-xs text-gray-500">{member.email}</p>
+              {recentMembers.length > 0 ? (
+                recentMembers.map((member, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">{member.name}</p>
+                      <p className="text-xs text-gray-500">{member.email}</p>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      {formatDistanceToNow(new Date(member.createdAt), { addSuffix: true })}
+                    </p>
                   </div>
-                  <p className="text-xs text-gray-400">{member.date}</p>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 text-center py-4">No recent members</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -110,20 +164,21 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { title: "FOSSynC Workshop", date: "Feb 10, 2025", location: "JNTU Kakinada" },
-                { title: "FOSStorm Hackathon", date: "Feb 22-23, 2025", location: "Vijayawada" },
-                { title: "FOSServe Training", date: "Mar 5, 2025", location: "Amaravati" },
-                { title: "Annual Conference", date: "Mar 15-16, 2025", location: "Visakhapatnam" },
-              ].map((event, index) => (
-                <div key={index} className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm font-medium">{event.title}</p>
-                    <p className="text-xs text-gray-500">{event.location}</p>
+              {upcomingEvents.length > 0 ? (
+                upcomingEvents.map((event, index) => (
+                  <div key={index} className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm font-medium">{event.title}</p>
+                      <p className="text-xs text-gray-500">{event.location}</p>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      {new Date(event.date).toLocaleDateString()}
+                    </p>
                   </div>
-                  <p className="text-xs text-gray-400">{event.date}</p>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 text-center py-4">No upcoming events</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -136,24 +191,26 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[
-              { name: "Anonymous", amount: 5000, type: "One-time", date: "1 hour ago" },
-              { name: "Tech Company Ltd", amount: 50000, type: "Program Sponsorship", date: "3 hours ago" },
-              { name: "Ramesh Kumar", amount: 1000, type: "Monthly", date: "1 day ago" },
-              { name: "Sarah Johnson", amount: 2500, type: "One-time", date: "2 days ago" },
-              { name: "Anonymous", amount: 500, type: "One-time", date: "3 days ago" },
-            ].map((donation, index) => (
-              <div key={index} className="flex items-center justify-between border-b pb-3 last:border-0">
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{donation.name}</p>
-                  <p className="text-xs text-gray-500">{donation.type}</p>
+            {recentDonations.length > 0 ? (
+              recentDonations.map((donation, index) => (
+                <div key={index} className="flex items-center justify-between border-b pb-3 last:border-0">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">
+                      {donation.anonymous ? "Anonymous" : donation.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{donation.type}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-green-600">₹{donation.amount.toLocaleString()}</p>
+                    <p className="text-xs text-gray-400">
+                      {formatDistanceToNow(new Date(donation.createdAt), { addSuffix: true })}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-green-600">₹{donation.amount.toLocaleString()}</p>
-                  <p className="text-xs text-gray-400">{donation.date}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-gray-500 text-center py-4">No recent donations</p>
+            )}
           </div>
         </CardContent>
       </Card>

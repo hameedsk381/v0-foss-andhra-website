@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -7,7 +8,24 @@ import { AnimatedSection } from "@/components/ui/animated-section"
 import { AnimatedButton } from "@/components/ui/animated-button"
 import { LogoShowcase } from "@/components/logo-showcase"
 
+interface ContentData {
+  title: string
+  content: string
+}
+
 export default function AboutPageClient() {
+  const [pageContent, setPageContent] = useState<ContentData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/content/about")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setPageContent(data.data)
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}

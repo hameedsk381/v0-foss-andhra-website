@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
+import { Prisma } from "@prisma/client"
 
 export async function GET() {
   try {
@@ -14,100 +15,146 @@ export async function GET() {
     const now = new Date()
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
-    // Member growth over last 30 days
-    const memberGrowth = await prisma.$queryRaw<Array<{ date: string; count: number }>>`
-      SELECT DATE(createdAt) as date, COUNT(*) as count
-      FROM Member
-      WHERE createdAt >= ${thirtyDaysAgo}
-      GROUP BY DATE(createdAt)
-      ORDER BY date ASC
-    `
+    // Execute all queries in parallel for better performance
+    const [
+      memberGrowthRaw,
+      donationTrendsRaw,
+      eventTrends,
+      membersByStatus,
+      membersByOrganization,
+      donationsByType,
+      blogStats,
+      recentMembers,
+      recentDonations,
+    ] = await Promise.all([
+      // Member growth over last 30 days with proper date formatting
+      prisma.$queryRaw<Array<{ date: Date; count: bigint }>>(Prisma.sql`
+        SELECT DATE("createdAt") as date, COUNT(*)::integer as count
+        FROM "Member"
+        WHERE "createdAt" >= ${thirtyDaysAgo}
+        GROUP BY DATE("createdAt")
+        ORDER BY date ASC
+      `),
 
-    // Donation trends
-    const donationTrends = await prisma.$queryRaw<Array<{ date: string; amount: number }>>`
-      SELECT DATE(createdAt) as date, SUM(amount) as amount
-      FROM Donation
-      WHERE createdAt >= ${thirtyDaysAgo} AND status = 'completed'
-      GROUP BY DATE(createdAt)
-      ORDER BY date ASC
-    `
+      // Donation trends with proper decimal handling
+      prisma.$queryRaw<Array<{ date: Date; amount: Prisma.Decimal }>>(Prisma.sql`
+        SELECT DATE("createdAt") as date, SUM(amount)::numeric as amount
+        FROM "Donation"
+        WHERE "createdAt" >= ${thirtyDaysAgo} AND status = 'completed'
+        GROUP BY DATE("createdAt")
+        ORDER BY date ASC
+      `),
 
-    // Event attendance trends
-    const eventTrends = await prisma.event.findMany({
-      where: {
-        date: { gte: thirtyDaysAgo },
-      },
-      select: {
-        title: true,
-        date: true,
-        currentAttendees: true,
-        maxAttendees: true,
-      },
-      orderBy: { date: "asc" },
-    })
-
-    // Member status distribution
-    const membersByStatus = await prisma.member.groupBy({
-      by: ["status"],
-      _count: true,
-    })
-
-    // Member by organization (top 10)
-    const membersByOrganization = await prisma.member.groupBy({
-      by: ["organization"],
-      _count: true,
-      orderBy: {
-        _count: {
-          organization: "desc",
+      // Event attendance trends
+      prisma.event.findMany({
+        where: {
+          date: { gte: thirtyDaysAgo },
         },
-      },
-      take: 10,
-    })
-
-    // Donation by type
-    const donationsByType = await prisma.donation.groupBy({
-      by: ["type"],
-      _sum: {
-        amount: true,
-      },
-      _count: true,
-      where: {
-        status: "completed",
-      },
-    })
-
-    // Blog stats
-    const blogStats = {
-      totalPosts: await prisma.blogPost.count(),
-      publishedPosts: await prisma.blogPost.count({ where: { status: "published" } }),
-      totalViews: await prisma.blogPost.aggregate({
-        _sum: { views: true },
+        select: {
+          title: true,
+          date: true,
+          currentAttendees: true,
+          maxAttendees: true,
+        },
+        orderBy: { date: "asc" },
+        take: 50, // Limit to prevent large responses
       }),
-      totalComments: await prisma.blogComment.count(),
-    }
 
-    // Recent activity
-    const recentMembers = await prisma.member.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-      select: {
-        name: true,
-        email: true,
-        createdAt: true,
-      },
-    })
+      // Member status distribution
+      prisma.member.groupBy({
+        by: ["status"],
+        _count: true,
+      }),
 
-    const recentDonations = await prisma.donation.findMany({
-      take: 5,
-      where: { status: "completed" },
-      orderBy: { createdAt: "desc" },
-      select: {
-        name: true,
-        amount: true,
-        type: true,
-        createdAt: true,
-      },
-    })
+      // Member by organization (top 10, filter out null)
+      prisma.member.groupBy({
+        by: ["organization"],
+        _count: true,
+        where: {
+          organization: { not: null },
+        },
+        orderBy: {
+          _count: {
+            organization: "desc",
+          },
+        },
+        take: 10,
+      }),
+
+      // Donation by type
+      prisma.donation.groupBy({
+        by: ["type"],
+        _sum: {
+          amount: true,
+        },
+        _count: true,
+        where: {
+          status: "completed",
+        },
+      }),
+
+      // Blog stats - all queries in parallel
+      Promise.all([
+        prisma.blogPost.count(),
+        prisma.blogPost.count({ where: { status: "published" } }),
+        prisma.blogPost.aggregate({ _sum: { views: true } }),
+        prisma.blogComment.count(),
+      ]).then(([totalPosts, publishedPosts, viewsAgg, totalComments]) => ({
+        totalPosts,
+        publishedPosts,
+        _sum: { views: viewsAgg._sum.views || 0 },
+        totalComments,
+      })),
+
+      // Recent members
+      prisma.member.findMany({
+        take: 5,
+        orderBy: { createdAt: "desc" },
+        select: {
+          name: true,
+          email: true,
+          createdAt: true,
+        },
+      }),
+
+      // Recent donations
+      prisma.donation.findMany({
+        take: 5,
+        where: { status: "completed" },
+        orderBy: { createdAt: "desc" },
+        select: {
+          name: true,
+          amount: true,
+          type: true,
+          createdAt: true,
+          anonymous: true,
+        },
+      }),
+    ])
+
+    // Format member growth data
+    const memberGrowth = memberGrowthRaw.map((item) => ({
+      date: item.date.toISOString().split('T')[0],
+      count: Number(item.count),
+    }))
+
+    // Format donation trends data
+    const donationTrends = donationTrendsRaw.map((item) => ({
+      date: item.date.toISOString().split('T')[0],
+      amount: Number(item.amount),
+    }))
+
+    // Format member by status
+    const formattedMembersByStatus = membersByStatus.map((item) => ({
+      status: item.status,
+      _count: item._count,
+    }))
+
+    // Format member by organization
+    const formattedMembersByOrganization = membersByOrganization.map((item) => ({
+      organization: item.organization || "Not specified",
+      _count: item._count,
+    }))
 
     return NextResponse.json({
       success: true,
@@ -115,8 +162,8 @@ export async function GET() {
         memberGrowth,
         donationTrends,
         eventTrends,
-        membersByStatus,
-        membersByOrganization,
+        membersByStatus: formattedMembersByStatus,
+        membersByOrganization: formattedMembersByOrganization,
         donationsByType,
         blogStats,
         recentMembers,
@@ -125,6 +172,14 @@ export async function GET() {
     })
   } catch (error) {
     console.error("Error fetching analytics:", error)
-    return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : "Failed to fetch analytics"
+    return NextResponse.json(
+      { 
+        success: false,
+        error: errorMessage,
+        details: process.env.NODE_ENV === "development" ? error : undefined,
+      },
+      { status: 500 }
+    )
   }
 }

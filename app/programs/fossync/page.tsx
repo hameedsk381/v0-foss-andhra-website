@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,7 +8,24 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, GraduationCap, MapPin, CheckCircle, CalendarDays, Image } from "lucide-react"
 
+interface Program {
+  title: string
+  description: string
+  mission?: string | null
+}
+
 export default function FOSSynCPage() {
+  const [programData, setProgramData] = useState<Program>({
+    title: "FOSSynC",
+    description: "Student-led FOSS clubs in educational institutions",
+  })
+
+  useEffect(() => {
+    fetch("/api/programs/fossync")
+      .then(res => res.json())
+      .then(data => { if (data.success) setProgramData(data.data) })
+      .catch(console.error)
+  }, [])
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-5xl mx-auto">
@@ -13,10 +33,10 @@ export default function FOSSynCPage() {
           <Badge variant="outline" className="px-3 py-1 text-green-600 border-green-200 font-medium">
             Program
           </Badge>
-          <h1 className="text-4xl font-bold">FOSSynC</h1>
+          <h1 className="text-4xl font-bold">{programData.title}</h1>
         </div>
 
-        <p className="text-xl text-green-600 mb-8">Student-led FOSS clubs in educational institutions</p>
+        <p className="text-xl text-green-600 mb-8">{programData.description}</p>
 
         <Tabs defaultValue="overview" className="mb-12">
           <TabsList className="grid w-full grid-cols-4">

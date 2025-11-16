@@ -31,3 +31,18 @@ next-env.d.ts
 # uploads
 /public/uploads/*
 !/public/uploads/.gitkeep
+
+# backups
+/backups/*
+!/backups/.gitkeep
+
+# test coverage
+/coverage
+*.coverage
+
+# vitest
+.vitest
+
+# logs
+*.log
+logs/
