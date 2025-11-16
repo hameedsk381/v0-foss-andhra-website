@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Search, Filter, X } from "lucide-react"
@@ -8,6 +8,7 @@ import { AnimatedSection } from "@/components/ui/animated-section"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { programColors, programInfo } from "@/lib/utils"
+import { useToast } from "@/hooks/use-toast"
 
 type GalleryItem = {
   id: string
@@ -22,82 +23,40 @@ type GalleryItem = {
 export default function GalleryPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const { toast } = useToast()
 
-  // Gallery items
-  const galleryItems: GalleryItem[] = [
-    {
-      id: "fosstar-event-1",
-      title: "FOSStar Community Meetup",
-      description: "Community meetup for FOSS enthusiasts in Vijayawada",
-      date: "2023-04-15",
-      image: "/gallery/fosstar-event-1.jpg",
-      program: "fosstar",
-      tags: ["event", "community", "meetup"],
-    },
-    {
-      id: "fosstar-event-2",
-      title: "FOSS Leadership Summit",
-      description: "Annual leadership summit for FOSS community leaders",
-      date: "2023-06-22",
-      image: "/gallery/fosstar-event-2.jpg",
-      program: "fosstar",
-      tags: ["event", "leadership", "summit"],
-    },
-    {
-      id: "fosserve-implementation-1",
-      title: "Government Portal Launch",
-      description: "Launch of new FOSS-based government service portal",
-      date: "2023-05-10",
-      image: "/gallery/fosserve-implementation-1.jpg",
-      program: "fosserve",
-      tags: ["implementation", "government", "launch"],
-    },
-    {
-      id: "fossync-club-1",
-      title: "University FOSS Club Inauguration",
-      description: "Opening ceremony of new FOSS club at Andhra University",
-      date: "2023-07-05",
-      image: "/gallery/fossync-club-1.jpg",
-      program: "fossync",
-      tags: ["education", "university", "inauguration"],
-    },
-    {
-      id: "fosstorm-project-1",
-      title: "Project Collaboration Workshop",
-      description: "Developers collaborate on open source projects",
-      date: "2023-08-18",
-      image: "/gallery/fosstorm-project-1.jpg",
-      program: "fosstorm",
-      tags: ["development", "workshop", "collaboration"],
-    },
-    {
-      id: "fossart-startup-1",
-      title: "FOSS Startup Incubation",
-      description: "New startups join the FOSS entrepreneurship program",
-      date: "2023-09-12",
-      image: "/gallery/fossart-startup-1.jpg",
-      program: "fossart",
-      tags: ["startup", "entrepreneurship", "innovation"],
-    },
-    {
-      id: "fossterage-database-1",
-      title: "Open Data Repository Launch",
-      description: "Launch of new open research data repository",
-      date: "2023-10-05",
-      image: "/gallery/fossterage-database-1.jpg",
-      program: "fossterage",
-      tags: ["data", "research", "repository"],
-    },
-    {
-      id: "fosspeaks-advocacy-1",
-      title: "Policy Advocacy Forum",
-      description: "Forum on FOSS policy advocacy with government officials",
-      date: "2023-11-19",
-      image: "/gallery/fosspeaks-advocacy-1.jpg",
-      program: "fosspeaks",
-      tags: ["policy", "advocacy", "government"],
-    },
-  ]
+  // Fetch gallery items from database
+  useEffect(() => {
+    fetchGalleryItems()
+  }, [])
+
+  const fetchGalleryItems = async () => {
+    try {
+      const res = await fetch('/api/gallery')
+      const data = await res.json()
+      
+      if (data.success) {
+        setGalleryItems(data.data)
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to load gallery items",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      console.error("Error fetching gallery:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load gallery items",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // All available tags
   const allTags = Array.from(new Set(galleryItems.flatMap((item) => item.tags)))
@@ -144,6 +103,16 @@ export default function GalleryPage() {
           </AnimatedSection>
         </div>
       </section>
+
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading gallery...</p>
+          </div>
+        </div>
+      ) : (
+        <>
 
       {/* Filter Section */}
       <section className="w-full py-8 bg-white border-b">
@@ -238,7 +207,9 @@ export default function GalleryPage() {
                           />
                           <div className="absolute top-2 right-2">
                             <span
-                              className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-white ${programColors[item.program].split(" ")[0]}`}
+                              className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-white ${
+                                programColors[item.program as keyof typeof programColors]?.split(" ")[0] || "bg-gray-500"
+                              }`}
                             >
                               {getProgramLabel(item.program)}
                             </span>
@@ -361,6 +332,8 @@ export default function GalleryPage() {
           </Tabs>
         </div>
       </section>
+      </>
+      )}
     </div>
   )
 }

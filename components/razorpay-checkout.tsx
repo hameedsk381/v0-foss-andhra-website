@@ -101,6 +101,7 @@ export function RazorpayCheckout({ membershipType, amount, userDetails, classNam
               response.razorpay_payment_id,
               response.razorpay_signature,
               userDetails,
+              membershipType  // ✅ Pass membershipType to save in DB
             )
 
             if (verificationResult.success) {
