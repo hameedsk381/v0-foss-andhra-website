@@ -2,6 +2,9 @@
   "name": "foss-andhra-website",
   "version": "1.0.0",
   "private": true,
+  "prisma": {
+    "seed": "bunx tsx prisma/seed.ts"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
