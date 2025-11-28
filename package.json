@@ -18,7 +18,8 @@
     "db:seed": "bunx tsx prisma/seed.ts",
     "db:studio": "bunx prisma studio",
     "db:backup": "bun run scripts/backup-database.ts",
-    "healthcheck": "bun run healthcheck.ts"
+    "healthcheck": "bun run healthcheck.ts",
+    "deploy:prod": "bun scripts/deploy-production.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
