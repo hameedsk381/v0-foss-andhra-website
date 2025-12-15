@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Calendar, MapPin, Plus, Search, Edit, Trash2, Eye, Save } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { RichTextEditor } from "@/components/ui/rich-text-editor"
 
 interface Event {
   id: string
@@ -379,12 +380,10 @@ export default function EventsManagement() {
 
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={eventForm.description}
-                onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
-                placeholder="Event description"
-                rows={4}
+              <RichTextEditor
+                content={eventForm.description}
+                onChange={(content) => setEventForm({ ...eventForm, description: content })}
+                placeholder="Write detailed event information..."
               />
             </div>
 

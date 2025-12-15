@@ -11,8 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
-import { FileText, Image, Video, Edit, Trash2, Plus, Save, Search } from "lucide-react"
+import { FileText, Image as ImageIcon, Video, Edit, Trash2, Plus, Save, Search } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
+import NextImage from "next/image"
 
 interface Content {
   id: string
@@ -35,6 +37,8 @@ export default function ContentManagement() {
   const [editingContent, setEditingContent] = useState<Content | null>(null)
   const [saving, setSaving] = useState(false)
   const { toast } = useToast()
+  const [mediaItems, setMediaItems] = useState<any[]>([])
+  const [mediaLoading, setMediaLoading] = useState(false)
 
   const [contentForm, setContentForm] = useState({
     type: "page",
@@ -54,6 +58,23 @@ export default function ContentManagement() {
 
   useEffect(() => {
     fetchContent()
+  }, [])
+
+  useEffect(() => {
+    const fetchMediaPreview = async () => {
+      try {
+        setMediaLoading(true)
+        const res = await fetch("/api/admin/media")
+        const data = await res.json()
+        if (data?.success && Array.isArray(data.data)) {
+          setMediaItems(data.data.slice(0, 8))
+        }
+      } catch (e) {
+      } finally {
+        setMediaLoading(false)
+      }
+    }
+    fetchMediaPreview()
   }, [])
 
   const fetchContent = async () => {
@@ -323,26 +344,45 @@ export default function ContentManagement() {
         <TabsContent value="gallery" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Photo Gallery</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Photo Gallery</CardTitle>
+                <Link href="/admin/gallery" className="text-sm">
+                  <Button variant="outline" size="sm">
+                    Manage Gallery
+                  </Button>
+                </Link>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                  <div key={item} className="relative group">
-                    <div className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
-                      <Image className="h-12 w-12 text-gray-400" />
-                    </div>
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition rounded-lg flex items-center justify-center gap-2">
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+              {mediaLoading ? (
+                <p className="text-center py-8 text-gray-500">Loading...</p>
+              ) : mediaItems.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 gap-3">
+                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                    <ImageIcon className="h-6 w-6 text-gray-400" />
                   </div>
-                ))}
-              </div>
+                  <p className="text-gray-600">No images yet</p>
+                  <Link href="/admin/gallery">
+                    <Button>Upload Images</Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {mediaItems.map((item) => (
+                    <div key={item.id} className="relative group">
+                      <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
+                        <NextImage
+                          src={item.url}
+                          alt={item.alt || item.title || "Image"}
+                          width={600}
+                          height={600}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -350,18 +390,27 @@ export default function ContentManagement() {
         <TabsContent value="media" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Media Library</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Media Library</CardTitle>
+                <Link href="/admin/gallery" className="text-sm">
+                  <Button variant="outline" size="sm">
+                    Open Gallery Manager
+                  </Button>
+                </Link>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="border-2 border-dashed rounded-lg p-8 text-center">
                   <div className="flex flex-col items-center gap-2">
                     <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                      <Image className="h-6 w-6 text-gray-400" />
+                      <ImageIcon className="h-6 w-6 text-gray-400" />
                     </div>
                     <p className="font-medium">Upload Media</p>
                     <p className="text-sm text-gray-500">Drag and drop or click to upload</p>
-                    <Button className="mt-2">Choose Files</Button>
+                    <Link href="/admin/gallery">
+                      <Button className="mt-2">Choose Files</Button>
+                    </Link>
                   </div>
                 </div>
               </div>

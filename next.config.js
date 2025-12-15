@@ -3,9 +3,31 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["fossap.in", "images.unsplash.com"],
+    remotePatterns: (() => {
+      const patterns = [
+        { protocol: "https", hostname: "fossap.in" },
+        { protocol: "https", hostname: "images.unsplash.com" },
+      ]
+      // Dynamically allow MinIO public URL for gallery/media assets
+      const minioUrl = process.env.MINIO_PUBLIC_URL
+      const bucket = process.env.MINIO_BUCKET || "foss-andhra-gallery"
+      if (minioUrl) {
+        try {
+          const u = new URL(minioUrl)
+          patterns.push({
+            protocol: u.protocol.replace(":", ""),
+            hostname: u.hostname,
+            port: u.port || undefined,
+            pathname: `/${bucket}/**`,
+          })
+        } catch (_) {
+          // Ignore invalid URL
+        }
+      }
+      return patterns
+    })(),
     formats: ["image/avif", "image/webp"],
-    unoptimized: false, // Enable optimization in production
+    unoptimized: false,
   },
   compress: true,
   poweredByHeader: false,

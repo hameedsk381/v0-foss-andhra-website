@@ -12,6 +12,7 @@ import {
   Share2, Download, Ticket
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import DOMPurify from "dompurify"
 
 interface Event {
   id: string
@@ -194,9 +195,10 @@ export default function EventDetailsPage() {
             <Card>
               <CardContent className="pt-6">
                 <h2 className="text-2xl font-bold mb-4">About This Event</h2>
-                <div className="prose max-w-none text-gray-700 whitespace-pre-wrap">
-                  {event.description}
-                </div>
+                <div
+                  className="prose max-w-none text-gray-700"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
+                />
               </CardContent>
             </Card>
 

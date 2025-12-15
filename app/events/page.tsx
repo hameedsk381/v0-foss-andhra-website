@@ -22,6 +22,8 @@ interface Event {
   currentAttendees: number
   enableTicketing: boolean
   program: string | null
+  externalTicketUrl?: string | null
+  externalRegisterUrl?: string | null
   _count: {
     registrations: number
   }
@@ -31,6 +33,15 @@ export default function EventsPage() {
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([])
   const [pastEvents, setPastEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
+
+  const stripHtml = (html: string) => {
+    return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim()
+  }
+
+  const excerpt = (html: string, max = 180) => {
+    const text = stripHtml(html)
+    return text.length > max ? text.slice(0, max - 1) + "…" : text
+  }
 
   useEffect(() => {
     fetchEvents()
@@ -106,7 +117,7 @@ export default function EventsPage() {
                 <Badge className="bg-gray-100 text-gray-800 mb-2">Past Event</Badge>
               )}
               <CardTitle className={isFeatured ? "text-2xl" : ""}>{event.title}</CardTitle>
-              <CardDescription>{event.description}</CardDescription>
+              <CardDescription>{excerpt(event.description)}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -167,13 +178,25 @@ export default function EventsPage() {
               <Button variant="outline">View Details</Button>
             </Link>
             {!isPast && event.enableTicketing ? (
-              <Link href={`/events/${event.id}`}>
-                <Button>Buy Tickets</Button>
-              </Link>
+              event.externalTicketUrl ? (
+                <a href={event.externalTicketUrl} target="_blank" rel="noopener noreferrer">
+                  <Button>Buy Tickets</Button>
+                </a>
+              ) : (
+                <Link href={`/events/${event.id}`}>
+                  <Button>Buy Tickets</Button>
+                </Link>
+              )
             ) : !isPast && !event.enableTicketing ? (
-              <Link href={`/events/${event.id}/register`}>
-                <Button>Register</Button>
-              </Link>
+              event.externalRegisterUrl ? (
+                <a href={event.externalRegisterUrl} target="_blank" rel="noopener noreferrer">
+                  <Button>Register</Button>
+                </a>
+              ) : (
+                <Link href={`/events/${event.id}/register`}>
+                  <Button>Register</Button>
+                </Link>
+              )
             ) : null}
           </div>
         </CardFooter>

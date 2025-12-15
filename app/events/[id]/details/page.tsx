@@ -10,6 +10,7 @@ import {
   Calendar, MapPin, Clock, Users, Ticket, ArrowLeft,
   AlertCircle, Share2, Download
 } from "lucide-react"
+import DOMPurify from "dompurify"
 
 interface Event {
   id: string
@@ -145,7 +146,10 @@ export default function EventDetailsPage() {
               Share
             </Button>
           </div>
-          <p className="text-lg text-gray-600">{event.description}</p>
+          <div
+            className="prose max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
+          />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
