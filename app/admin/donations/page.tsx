@@ -1,12 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Download, Heart, TrendingUp, DollarSign, Loader2 } from "lucide-react"
+import { Download, Heart, TrendingUp, DollarSign, Eye, FileText } from "lucide-react"
+import { DataTable, Column } from "@/components/admin/data-table"
+import { BulkActions } from "@/components/admin/bulk-actions"
+import { AdvancedFilters, FilterOption } from "@/components/admin/advanced-filters"
+import { exportToCSV, printTable } from "@/components/admin/export-utils"
+import { useToast } from "@/hooks/use-toast"
+import { format } from "date-fns"
 
 interface Donation {
   id: string
@@ -23,19 +28,26 @@ interface Donation {
 export default function DonationsManagement() {
   const [donations, setDonations] = useState<Donation[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState({ type: "all", status: "all" })
-  const [searchQuery, setSearchQuery] = useState("")
+  const [filterValues, setFilterValues] = useState({
+    type: "all",
+    status: "all",
+    dateFrom: "",
+    dateTo: "",
+  })
+  const [selectedDonations, setSelectedDonations] = useState<Donation[]>([])
+  const { toast } = useToast()
 
   useEffect(() => {
     fetchDonations()
-  }, [filter])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterValues.type, filterValues.status])
 
   const fetchDonations = async () => {
     setLoading(true)
     try {
       const params = new URLSearchParams()
-      if (filter.type !== "all") params.append("type", filter.type)
-      if (filter.status !== "all") params.append("status", filter.status)
+      if (filterValues.type !== "all") params.append("type", filterValues.type)
+      if (filterValues.status !== "all") params.append("status", filterValues.status)
 
       const res = await fetch(`/api/admin/donations?${params.toString()}`)
       const data = await res.json()
@@ -44,19 +56,179 @@ export default function DonationsManagement() {
       }
     } catch (error) {
       console.error("Error fetching donations:", error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch donations",
+        variant: "destructive",
+      })
     } finally {
       setLoading(false)
     }
   }
 
-  const filteredDonations = donations.filter((donation) => {
-    if (!searchQuery) return true
-    const query = searchQuery.toLowerCase()
-    return (
-      donation.name.toLowerCase().includes(query) ||
-      donation.email.toLowerCase().includes(query)
-    )
-  })
+  // Filter donations based on filters
+  const filteredDonations = useMemo(() => {
+    return donations.filter((donation) => {
+      if (filterValues.type !== "all" && donation.type !== filterValues.type) return false
+      if (filterValues.status !== "all" && donation.status !== filterValues.status) return false
+      if (filterValues.dateFrom) {
+        const donationDate = new Date(donation.createdAt)
+        const fromDate = new Date(filterValues.dateFrom)
+        if (donationDate < fromDate) return false
+      }
+      if (filterValues.dateTo) {
+        const donationDate = new Date(donation.createdAt)
+        const toDate = new Date(filterValues.dateTo)
+        if (donationDate > toDate) return false
+      }
+      return true
+    })
+  }, [donations, filterValues])
+
+  const handleExport = (items: Donation[]) => {
+    const columns = [
+      { key: "name" as keyof Donation, header: "Donor Name" },
+      { key: "email" as keyof Donation, header: "Email" },
+      { key: "amount" as keyof Donation, header: "Amount" },
+      { key: "type" as keyof Donation, header: "Type" },
+      { key: "status" as keyof Donation, header: "Status" },
+      { key: "paymentId" as keyof Donation, header: "Payment ID" },
+    ]
+    exportToCSV(items, columns, { filename: "donations" })
+    toast({
+      title: "Export Started",
+      description: `Exporting ${items.length} donations to CSV`,
+    })
+  }
+
+  const handlePrint = () => {
+    const columns = [
+      { key: "name" as keyof Donation, header: "Donor" },
+      { key: "email" as keyof Donation, header: "Email" },
+      { key: "amount" as keyof Donation, header: "Amount" },
+      { key: "type" as keyof Donation, header: "Type" },
+      { key: "status" as keyof Donation, header: "Status" },
+    ]
+    printTable(filteredDonations, columns, "Donations Report")
+  }
+
+  const filterOptions: FilterOption[] = [
+    {
+      id: "type",
+      label: "Donation Type",
+      type: "select",
+      options: [
+        { value: "One-time", label: "One-time" },
+        { value: "Monthly", label: "Monthly" },
+        { value: "Recurring", label: "Recurring" },
+        { value: "Program Sponsorship", label: "Program Sponsorship" },
+      ],
+    },
+    {
+      id: "status",
+      label: "Status",
+      type: "select",
+      options: [
+        { value: "completed", label: "Completed" },
+        { value: "pending", label: "Pending" },
+        { value: "failed", label: "Failed" },
+      ],
+    },
+    {
+      id: "dateFrom",
+      label: "From Date",
+      type: "date",
+      placeholder: "Select start date",
+    },
+    {
+      id: "dateTo",
+      label: "To Date",
+      type: "date",
+      placeholder: "Select end date",
+    },
+  ]
+
+  const columns: Column<Donation>[] = [
+    {
+      id: "donor",
+      header: "Donor",
+      accessor: (donation) => (
+        <div>
+          <div className="font-medium">
+            {donation.anonymous ? "Anonymous" : donation.name}
+          </div>
+          {donation.anonymous && (
+            <div className="text-xs text-gray-500">Anonymous donation</div>
+          )}
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "email",
+      header: "Email",
+      accessor: (donation) => donation.email,
+      sortable: true,
+    },
+    {
+      id: "amount",
+      header: "Amount",
+      accessor: (donation) => (
+        <div className="font-semibold text-green-600">
+          ₹{donation.amount.toLocaleString()}
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "type",
+      header: "Type",
+      accessor: (donation) => <Badge variant="outline">{donation.type}</Badge>,
+      sortable: true,
+    },
+    {
+      id: "date",
+      header: "Date",
+      accessor: (donation) => format(new Date(donation.createdAt), "MMM dd, yyyy"),
+      sortable: true,
+    },
+    {
+      id: "paymentId",
+      header: "Payment ID",
+      accessor: (donation) => (
+        <span className="font-mono text-xs">{donation.paymentId || "N/A"}</span>
+      ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessor: (donation) => (
+        <Badge
+          className={
+            donation.status === "completed"
+              ? "bg-green-100 text-green-800"
+              : donation.status === "pending"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-red-100 text-red-800"
+          }
+        >
+          {donation.status}
+        </Badge>
+      ),
+      sortable: true,
+    },
+  ]
+
+  const actions = (donation: Donation) => (
+    <>
+      <Button variant="ghost" size="sm" title="View">
+        <Eye className="h-4 w-4" />
+      </Button>
+      <Button variant="ghost" size="sm" title="Receipt">
+        <FileText className="h-4 w-4" />
+      </Button>
+    </>
+  )
 
   const totalDonations = donations
     .filter((d) => d.status === "completed")
@@ -137,131 +309,56 @@ export default function DonationsManagement() {
         </Card>
       </div>
 
-      {/* Search and Filter */}
+      {/* Filters and Actions */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search donations..."
-                  className="pl-10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-            <Select
-              value={filter.type}
-              onValueChange={(value) => setFilter({ ...filter, type: value })}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Donation Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="One-time">One-time</SelectItem>
-                <SelectItem value="Monthly">Monthly</SelectItem>
-                <SelectItem value="Recurring">Recurring</SelectItem>
-                <SelectItem value="Program Sponsorship">Program Sponsorship</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select
-              value={filter.status}
-              onValueChange={(value) => setFilter({ ...filter, status: value })}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex gap-4 items-center">
+            <AdvancedFilters
+              filters={filterOptions}
+              values={filterValues}
+              onChange={(values) => setFilterValues(values as typeof filterValues)}
+            />
+            <div className="flex-1" />
+            <Button variant="outline" onClick={handlePrint}>
+              <FileText className="h-4 w-4 mr-2" />
+              Print Report
+            </Button>
+            <Button variant="outline" onClick={() => handleExport(filteredDonations)}>
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
           </div>
         </CardContent>
       </Card>
 
+      {/* Bulk Actions */}
+      {selectedDonations.length > 0 && (
+        <BulkActions
+          selected={selectedDonations}
+          onExport={handleExport}
+        />
+      )}
+
       {/* Donations Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Donations</CardTitle>
+          <CardTitle>Donations</CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          ) : filteredDonations.length === 0 ? (
-            <p className="text-center py-8 text-gray-500">No donations found</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Donor</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Email</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Amount</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Type</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Date</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Payment ID</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredDonations.map((donation) => (
-                    <tr key={donation.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">
-                        <div className="font-medium">
-                          {donation.anonymous ? "Anonymous" : donation.name}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-sm">{donation.email}</td>
-                      <td className="py-3 px-4">
-                        <div className="font-semibold text-green-600">
-                          ₹{donation.amount.toLocaleString()}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-sm">{donation.type}</td>
-                      <td className="py-3 px-4 text-sm">
-                        {new Date(donation.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="py-3 px-4 text-sm font-mono text-xs">
-                        {donation.paymentId || "N/A"}
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge
-                          className={
-                            donation.status === "completed"
-                              ? "bg-green-100 text-green-800"
-                              : donation.status === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
-                          }
-                        >
-                          {donation.status}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            View
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            Receipt
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <DataTable
+            data={filteredDonations}
+            columns={columns}
+            searchable
+            searchPlaceholder="Search donations by donor name or email..."
+            searchKeys={["name", "email", "paymentId"]}
+            pagination
+            pageSize={10}
+            selectable
+            onSelectionChange={setSelectedDonations}
+            loading={loading}
+            emptyMessage="No donations found"
+            actions={actions}
+          />
         </CardContent>
       </Card>
     </div>

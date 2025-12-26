@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,9 +9,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Calendar, MapPin, Plus, Search, Edit, Trash2, Eye, Save } from "lucide-react"
+import { Calendar, Plus, Edit, Trash2, Save, Download } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
+import { DataTable, Column } from "@/components/admin/data-table"
+import { BulkActions } from "@/components/admin/bulk-actions"
+import { AdvancedFilters, FilterOption } from "@/components/admin/advanced-filters"
+import { exportToCSV, printTable } from "@/components/admin/export-utils"
+import { format } from "date-fns"
 
 interface Event {
   id: string
@@ -33,7 +38,13 @@ export default function EventsManagement() {
   const [showDialog, setShowDialog] = useState(false)
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [saving, setSaving] = useState(false)
-  const [filter, setFilter] = useState({ type: "all", status: "all" })
+  const [filterValues, setFilterValues] = useState({
+    type: "all",
+    status: "all",
+    dateFrom: "",
+    dateTo: "",
+  })
+  const [selectedEvents, setSelectedEvents] = useState<Event[]>([])
   const { toast } = useToast()
 
   const [eventForm, setEventForm] = useState({
@@ -53,17 +64,27 @@ export default function EventsManagement() {
 
   useEffect(() => {
     fetchEvents()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterValues.type, filterValues.status])
 
   const fetchEvents = async () => {
     try {
-      const res = await fetch("/api/admin/events")
+      const params = new URLSearchParams()
+      if (filterValues.type !== "all") params.append("type", filterValues.type)
+      if (filterValues.status !== "all") params.append("status", filterValues.status)
+
+      const res = await fetch(`/api/admin/events?${params.toString()}`)
       const data = await res.json()
       if (data.success) {
         setEvents(data.data)
       }
     } catch (error) {
       console.error("Error fetching events:", error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch events",
+        variant: "destructive",
+      })
     } finally {
       setLoading(false)
     }
@@ -176,11 +197,160 @@ export default function EventsManagement() {
     }
   }
 
-  const filteredEvents = events.filter((event) => {
-    if (filter.type !== "all" && event.type !== filter.type) return false
-    if (filter.status !== "all" && event.status !== filter.status) return false
-    return true
-  })
+  const handleExport = (items: Event[]) => {
+    const columns = [
+      { key: "title" as keyof Event, header: "Title" },
+      { key: "type" as keyof Event, header: "Type" },
+      { key: "status" as keyof Event, header: "Status" },
+      { key: "location" as keyof Event, header: "Location" },
+    ]
+    exportToCSV(items, columns, { filename: "events" })
+    toast({
+      title: "Export Started",
+      description: `Exporting ${items.length} event(s)`,
+    })
+  }
+
+  const handlePrint = () => {
+    const columns = [
+      { key: "title" as keyof Event, header: "Title" },
+      { key: "type" as keyof Event, header: "Type" },
+      { key: "status" as keyof Event, header: "Status" },
+      { key: "location" as keyof Event, header: "Location" },
+    ]
+    printTable(filteredEvents, columns, "Events Report")
+  }
+
+  const filterOptions: FilterOption[] = [
+    {
+      id: "type",
+      label: "Event Type",
+      type: "select",
+      options: [
+        { value: "Conference", label: "Conference" },
+        { value: "Workshop", label: "Workshop" },
+        { value: "Hackathon", label: "Hackathon" },
+        { value: "Meetup", label: "Meetup" },
+      ],
+    },
+    {
+      id: "status",
+      label: "Status",
+      type: "select",
+      options: [
+        { value: "upcoming", label: "Upcoming" },
+        { value: "ongoing", label: "Ongoing" },
+        { value: "past", label: "Past" },
+        { value: "cancelled", label: "Cancelled" },
+      ],
+    },
+    {
+      id: "dateFrom",
+      label: "From Date",
+      type: "date",
+      placeholder: "Start date",
+    },
+    {
+      id: "dateTo",
+      label: "To Date",
+      type: "date",
+      placeholder: "End date",
+    },
+  ]
+
+  const columns: Column<Event>[] = [
+    {
+      id: "title",
+      header: "Title",
+      accessor: (event) => (
+        <div>
+          <div className="font-medium">{event.title}</div>
+          <div className="text-xs text-gray-500">{event.program || "General"}</div>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "type",
+      header: "Type",
+      accessor: (event) => <Badge variant="outline">{event.type}</Badge>,
+      sortable: true,
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessor: (event) => (
+        <Badge
+          className={
+            event.status === "upcoming"
+              ? "bg-green-100 text-green-800"
+              : event.status === "ongoing"
+              ? "bg-blue-100 text-blue-800"
+              : event.status === "cancelled"
+              ? "bg-red-100 text-red-800"
+              : "bg-gray-100 text-gray-800"
+          }
+        >
+          {event.status}
+        </Badge>
+      ),
+      sortable: true,
+    },
+    {
+      id: "date",
+      header: "Date",
+      accessor: (event) => format(new Date(event.date), "MMM dd, yyyy"),
+      sortable: true,
+    },
+    {
+      id: "time",
+      header: "Time",
+      accessor: (event) => event.time,
+    },
+    {
+      id: "location",
+      header: "Location",
+      accessor: (event) => event.location,
+    },
+    {
+      id: "attendees",
+      header: "Attendees",
+      accessor: (event) => `${event.currentAttendees}/${event.maxAttendees}`,
+    },
+  ]
+
+  const actions = (event: Event) => (
+    <>
+      <Button variant="ghost" size="sm" title="Edit" onClick={() => openEditEventDialog(event)}>
+        <Edit className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        title="Delete"
+        onClick={() => deleteEvent(event.id)}
+        className="text-red-600"
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </>
+  )
+
+  const filteredEvents = useMemo(() => {
+    return events.filter((event) => {
+      if (filterValues.type !== "all" && event.type !== filterValues.type) return false
+      if (filterValues.status !== "all" && event.status !== filterValues.status) return false
+      if (filterValues.dateFrom) {
+        const eventDate = new Date(event.date)
+        if (eventDate < new Date(filterValues.dateFrom)) return false
+      }
+      if (filterValues.dateTo) {
+        const eventDate = new Date(event.date)
+        if (eventDate > new Date(filterValues.dateTo)) return false
+      }
+      return true
+    })
+  }, [events, filterValues])
 
   return (
     <div className="space-y-6">
@@ -195,103 +365,54 @@ export default function EventsManagement() {
         </Button>
       </div>
 
-      {/* Search and Filter */}
+      {/* Filters and Actions */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input placeholder="Search events..." className="pl-10" />
-              </div>
-            </div>
-            <Select value={filter.type} onValueChange={(value) => setFilter({ ...filter, type: value })}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Event Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="Conference">Conference</SelectItem>
-                <SelectItem value="Workshop">Workshop</SelectItem>
-                <SelectItem value="Hackathon">Hackathon</SelectItem>
-                <SelectItem value="Meetup">Meetup</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filter.status} onValueChange={(value) => setFilter({ ...filter, status: value })}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="upcoming">Upcoming</SelectItem>
-                <SelectItem value="ongoing">Ongoing</SelectItem>
-                <SelectItem value="past">Past</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex gap-4 items-center">
+            <AdvancedFilters
+              filters={filterOptions}
+              values={filterValues}
+              onChange={(values) => setFilterValues(values as typeof filterValues)}
+            />
+            <div className="flex-1" />
+            <Button variant="outline" onClick={handlePrint}>
+              <Download className="h-4 w-4 mr-2" />
+              Print / Export
+            </Button>
+            <Button variant="outline" onClick={() => handleExport(filteredEvents)}>
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Events List */}
+      {/* Bulk Actions */}
+      {selectedEvents.length > 0 && (
+        <BulkActions selected={selectedEvents} onExport={handleExport} />
+      )
+      }
+
+      {/* Events Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Events ({filteredEvents.length})</CardTitle>
+          <CardTitle>Events</CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <p className="text-center py-8 text-gray-500">Loading...</p>
-          ) : filteredEvents.length === 0 ? (
-            <p className="text-center py-8 text-gray-500">No events found. Create your first event!</p>
-          ) : (
-            <div className="space-y-3">
-              {filteredEvents.map((event) => (
-                <div key={event.id} className="flex items-start justify-between p-4 border rounded-lg hover:bg-gray-50">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold">{event.title}</h3>
-                      <Badge variant={event.type === "Conference" ? "default" : "secondary"} className="text-xs">
-                        {event.type}
-                      </Badge>
-                      <Badge
-                        className={
-                          event.status === "upcoming"
-                            ? "bg-green-100 text-green-800"
-                            : event.status === "ongoing"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        }
-                      >
-                        {event.status}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-gray-600 line-clamp-2 mb-2">{event.description}</p>
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{new Date(event.date).toLocaleDateString()} at {event.time}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4" />
-                        <span>{event.location}</span>
-                      </div>
-                      <span>
-                        Attendees: {event.currentAttendees} / {event.maxAttendees}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => openEditEventDialog(event)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => deleteEvent(event.id)} className="text-red-600">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <DataTable
+            data={filteredEvents}
+            columns={columns}
+            searchable
+            searchPlaceholder="Search events by title, location, or program..."
+            searchKeys={["title", "location", "program"]}
+            pagination
+            pageSize={10}
+            selectable
+            onSelectionChange={setSelectedEvents}
+            loading={loading}
+            emptyMessage="No events found"
+            actions={actions}
+          />
         </CardContent>
       </Card>
 

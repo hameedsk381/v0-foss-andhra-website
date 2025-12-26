@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import { Skeleton } from "@/components/skeleton-loader"
 import { User, Mail, Phone, Building, Briefcase, Save } from "lucide-react"
 
 export default function ProfilePage() {
@@ -81,7 +82,35 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return <div className="flex items-center justify-center h-96">Loading...</div>
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-9 w-64 mb-2" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-32" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-20 w-20 rounded-full mb-4" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-3/4" />
+            </CardContent>
+          </Card>
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <Skeleton className="h-6 w-32" />
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-24 w-full" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   return (

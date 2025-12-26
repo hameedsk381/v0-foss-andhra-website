@@ -1,17 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import {
   Select,
   SelectContent,
@@ -26,7 +18,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Users, Mail, Phone, Calendar, CheckCircle, XCircle, Clock, Eye } from "lucide-react"
+import { Users, Mail, Phone, CheckCircle, XCircle, Clock, Eye, Download } from "lucide-react"
+import { DataTable, Column } from "@/components/admin/data-table"
+import { BulkActions } from "@/components/admin/bulk-actions"
+import { exportToCSV } from "@/components/admin/export-utils"
+import { format } from "date-fns"
 
 interface Volunteer {
   id: string
@@ -47,9 +43,11 @@ export default function VolunteersAdminPage() {
   const [filter, setFilter] = useState("all")
   const [selectedVolunteer, setSelectedVolunteer] = useState<Volunteer | null>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
+  const [selectedRows, setSelectedRows] = useState<Volunteer[]>([])
 
   useEffect(() => {
     fetchVolunteers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter])
 
   const fetchVolunteers = async () => {
@@ -65,6 +63,97 @@ export default function VolunteersAdminPage() {
       setLoading(false)
     }
   }
+
+  const filteredVolunteers = useMemo(() => volunteers, [volunteers])
+
+  const handleExport = (items: Volunteer[]) => {
+    const columns = [
+      { key: "firstName" as keyof Volunteer, header: "First Name" },
+      { key: "lastName" as keyof Volunteer, header: "Last Name" },
+      { key: "email" as keyof Volunteer, header: "Email" },
+      { key: "phone" as keyof Volunteer, header: "Phone" },
+      { key: "status" as keyof Volunteer, header: "Status" },
+    ]
+    exportToCSV(items, columns, { filename: "volunteers" })
+  }
+
+  const columns: Column<Volunteer>[] = [
+    {
+      id: "name",
+      header: "Name",
+      accessor: (volunteer) => `${volunteer.firstName} ${volunteer.lastName}`,
+      sortable: true,
+    },
+    {
+      id: "contact",
+      header: "Contact",
+      accessor: (volunteer) => (
+        <div className="flex flex-col gap-1 text-sm">
+          <div className="flex items-center gap-1">
+            <Mail className="h-3 w-3" />
+            {volunteer.email}
+          </div>
+          <div className="flex items-center gap-1">
+            <Phone className="h-3 w-3" />
+            {volunteer.phone}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "skills",
+      header: "Skills",
+      accessor: (volunteer) => volunteer.skills,
+    },
+    {
+      id: "appliedAt",
+      header: "Applied",
+      accessor: (volunteer) => format(new Date(volunteer.appliedAt), "MMM dd, yyyy"),
+      sortable: true,
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessor: (volunteer) => getStatusBadge(volunteer.status),
+      sortable: true,
+    },
+  ]
+
+  const actions = (volunteer: Volunteer) => (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => {
+          setSelectedVolunteer(volunteer)
+          setDetailsOpen(true)
+        }}
+        title="View"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {volunteer.status === "pending" && (
+        <>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => updateVolunteerStatus(volunteer.id, "approved")}
+            title="Approve"
+          >
+            <CheckCircle className="h-4 w-4 text-green-600" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => updateVolunteerStatus(volunteer.id, "rejected")}
+            title="Reject"
+          >
+            <XCircle className="h-4 w-4 text-red-600" />
+          </Button>
+        </>
+      )}
+    </>
+  )
 
   const updateVolunteerStatus = async (id: string, newStatus: string) => {
     try {
@@ -163,99 +252,43 @@ export default function VolunteersAdminPage() {
               <CardTitle>Volunteer Applications</CardTitle>
               <CardDescription>Manage and review volunteer registrations</CardDescription>
             </div>
-            <Select value={filter} onValueChange={setFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex gap-2 items-center">
+              <Select value={filter} onValueChange={setFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button variant="outline" onClick={() => handleExport(filteredVolunteers)}>
+                <Download className="h-4 w-4 mr-2" />
+                Export CSV
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading...</div>
-          ) : volunteers.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">No volunteers found</div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Skills</TableHead>
-                  <TableHead>Applied</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {volunteers.map((volunteer) => (
-                  <TableRow key={volunteer.id}>
-                    <TableCell className="font-medium">
-                      {volunteer.firstName} {volunteer.lastName}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Mail className="h-3 w-3" />
-                          {volunteer.email}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Phone className="h-3 w-3" />
-                          {volunteer.phone}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-[200px] truncate">{volunteer.skills}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(volunteer.appliedAt).toLocaleDateString()}
-                      </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(volunteer.status)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedVolunteer(volunteer)
-                            setDetailsOpen(true)
-                          }}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        {volunteer.status === "pending" && (
-                          <>
-                            <Button
-                              size="sm"
-                              onClick={() => updateVolunteerStatus(volunteer.id, "approved")}
-                              className="bg-green-600 hover:bg-green-700"
-                            >
-                              Approve
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => updateVolunteerStatus(volunteer.id, "rejected")}
-                            >
-                              Reject
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          {selectedRows.length > 0 && (
+            <BulkActions selected={selectedRows} onExport={handleExport} />
           )}
+          <DataTable
+            data={filteredVolunteers}
+            columns={columns}
+            searchable
+            searchPlaceholder="Search volunteers by name, email, or phone..."
+            searchKeys={["firstName", "lastName", "email", "phone", "skills"]}
+            pagination
+            pageSize={10}
+            selectable
+            onSelectionChange={setSelectedRows}
+            loading={loading}
+            emptyMessage="No volunteers found"
+            actions={actions}
+          />
         </CardContent>
       </Card>
 

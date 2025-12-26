@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Calendar, Heart, TrendingUp, DollarSign, UserPlus, Loader2 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
+import { Skeleton } from "@/components/skeleton-loader"
 
 interface DashboardData {
   stats: {
@@ -51,8 +52,25 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="space-y-8">
+        <div>
+          <Skeleton className="h-9 w-64 mb-2" />
+          <Skeleton className="h-5 w-96" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-4 rounded" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-3 w-32" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     )
   }

@@ -6,6 +6,11 @@ import { MainNav } from "@/components/main-nav"
 import { SiteFooter } from "@/components/site-footer"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
+import { RegisterSW } from "./register-sw"
+import { InstallPrompt } from "@/components/install-prompt"
+import { OfflineIndicator } from "@/components/offline-indicator"
+import { BottomNav } from "@/components/bottom-nav"
+import { WebVitals } from "./web-vitals"
 import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -113,8 +118,13 @@ export default function RootLayout({
               {children}
             </main>
             <SiteFooter />
+            <BottomNav />
           </div>
           <Toaster />
+          <RegisterSW />
+          <InstallPrompt />
+          <OfflineIndicator />
+          <WebVitals />
         </ThemeProvider>
 
         {/* Structured Data for Organization */}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,8 +11,13 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
-import { Search, Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X, Download } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { DataTable, Column } from "@/components/admin/data-table"
+import { BulkActions } from "@/components/admin/bulk-actions"
+import { AdvancedFilters, FilterOption } from "@/components/admin/advanced-filters"
+import { exportToCSV } from "@/components/admin/export-utils"
+import { format } from "date-fns"
 
 interface BlogPost {
   id: string
@@ -34,7 +39,8 @@ export default function BlogManagement() {
   const [categories, setCategories] = useState<any[]>([])
   const [tags, setTags] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState("all")
+  const [filterValues, setFilterValues] = useState({ status: "all" })
+  const [selectedPosts, setSelectedPosts] = useState<BlogPost[]>([])
   const [showPostDialog, setShowPostDialog] = useState(false)
   const [showCategoryDialog, setShowCategoryDialog] = useState(false)
   const [showTagDialog, setShowTagDialog] = useState(false)
@@ -67,11 +73,12 @@ export default function BlogManagement() {
     fetchPosts()
     fetchCategories()
     fetchTags()
-  }, [filter])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterValues.status])
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch(`/api/admin/blog/posts?status=${filter}`)
+      const res = await fetch(`/api/admin/blog/posts?status=${filterValues.status}`)
       const data = await res.json()
       if (data.success) {
         setPosts(data.data)
@@ -106,6 +113,97 @@ export default function BlogManagement() {
       console.error("Error fetching tags:", error)
     }
   }
+
+  const filteredPosts = useMemo(() => {
+    return posts.filter((post) => {
+      if (filterValues.status !== "all" && post.status !== filterValues.status) return false
+      return true
+    })
+  }, [posts, filterValues.status])
+
+  const handleExport = (items: BlogPost[]) => {
+    const columns = [
+      { key: "title" as keyof BlogPost, header: "Title" },
+      { key: "status" as keyof BlogPost, header: "Status" },
+      { key: "views" as keyof BlogPost, header: "Views" },
+      { key: "createdAt" as keyof BlogPost, header: "Created" },
+    ]
+    exportToCSV(items, columns, { filename: "blog-posts" })
+  }
+
+  const filterOptions: FilterOption[] = [
+    {
+      id: "status",
+      label: "Status",
+      type: "select",
+      options: [
+        { value: "published", label: "Published" },
+        { value: "draft", label: "Draft" },
+      ],
+    },
+  ]
+
+  const columns: Column<BlogPost>[] = [
+    {
+      id: "title",
+      header: "Title",
+      accessor: (post) => (
+        <div>
+          <div className="font-medium">{post.title}</div>
+          <div className="text-xs text-gray-500">{post.slug}</div>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessor: (post) => (
+        <Badge className={post.status === "published" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
+          {post.status}
+        </Badge>
+      ),
+      sortable: true,
+    },
+    {
+      id: "category",
+      header: "Category",
+      accessor: (post) => post.category?.name || "Uncategorized",
+      sortable: true,
+    },
+    {
+      id: "views",
+      header: "Views",
+      accessor: (post) => post.views,
+      sortable: true,
+    },
+    {
+      id: "comments",
+      header: "Comments",
+      accessor: (post) => post._count?.comments ?? 0,
+      sortable: true,
+    },
+    {
+      id: "created",
+      header: "Created",
+      accessor: (post) => format(new Date(post.createdAt), "MMM dd, yyyy"),
+      sortable: true,
+    },
+  ]
+
+  const actions = (post: BlogPost) => (
+    <>
+      <Button variant="ghost" size="sm" title="View" onClick={() => window.open(`/blog/${post.slug}`, "_blank")}>
+        <Eye className="h-4 w-4" />
+      </Button>
+      <Button variant="ghost" size="sm" title="Edit" onClick={() => openEditPostDialog(post)}>
+        <Edit className="h-4 w-4" />
+      </Button>
+      <Button variant="ghost" size="sm" title="Delete" onClick={() => deletePost(post.id)} className="text-red-600">
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </>
+  )
 
   // Auto-generate slug from title
   const generateSlug = (title: string) => {
@@ -358,83 +456,46 @@ export default function BlogManagement() {
           {/* Filters */}
           <Card>
             <CardContent className="pt-6">
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input placeholder="Search posts..." className="pl-10" />
-                  </div>
-                </div>
-                <Select value={filter} onValueChange={setFilter}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                    <SelectItem value="draft">Draft</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex gap-4 items-center">
+                <AdvancedFilters
+                  filters={filterOptions}
+                  values={filterValues}
+                  onChange={(values) => setFilterValues(values as typeof filterValues)}
+                />
+                <div className="flex-1" />
+                <Button variant="outline" onClick={() => handleExport(filteredPosts)}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                </Button>
               </div>
             </CardContent>
           </Card>
 
-          {/* Posts List */}
+          {/* Bulk Actions */}
+          {selectedPosts.length > 0 && (
+            <BulkActions selected={selectedPosts} onExport={handleExport} />
+          )}
+
+          {/* Posts Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Blog Posts ({posts.length})</CardTitle>
+              <CardTitle>Blog Posts ({filteredPosts.length})</CardTitle>
             </CardHeader>
             <CardContent>
-              {loading ? (
-                <p className="text-center py-8 text-gray-500">Loading...</p>
-              ) : posts.length === 0 ? (
-                <p className="text-center py-8 text-gray-500">No posts found. Create your first post!</p>
-              ) : (
-                <div className="space-y-3">
-                  {posts.map((post) => (
-                    <div key={post.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold">{post.title}</h3>
-                          {post.featured && <Badge className="bg-yellow-100 text-yellow-800">Featured</Badge>}
-                          <Badge
-                            className={
-                              post.status === "published"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
-                            }
-                          >
-                            {post.status}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-gray-600 line-clamp-1">{post.excerpt}</p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                          <span>{post.category.name}</span>
-                          <span>•</span>
-                          <span>By {post.author.name}</span>
-                          <span>•</span>
-                          <span>{post.views} views</span>
-                          <span>•</span>
-                          <span>{post._count.comments} comments</span>
-                          <span>•</span>
-                          <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => window.open(`/blog/${post.slug}`, "_blank")}>
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => openEditPostDialog(post)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => deletePost(post.id)} className="text-red-600">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <DataTable
+                data={filteredPosts}
+                columns={columns}
+                searchable
+                searchPlaceholder="Search posts by title, slug, author, or category..."
+                searchKeys={["title", "slug"]}
+                pagination
+                pageSize={10}
+                selectable
+                onSelectionChange={setSelectedPosts}
+                loading={loading}
+                emptyMessage="No posts found. Create your first post!"
+                actions={actions}
+              />
             </CardContent>
           </Card>
         </TabsContent>

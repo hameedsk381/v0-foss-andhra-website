@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, CreditCard, Bell, TrendingUp, Award, Users } from "lucide-react"
+import { Skeleton } from "@/components/skeleton-loader"
+import { ActivityTimeline } from "@/components/member/activity-timeline"
 import Link from "next/link"
 
 export default function MemberDashboard() {
@@ -34,7 +36,25 @@ export default function MemberDashboard() {
   }
 
   if (loading) {
-    return <div className="flex items-center justify-center h-96">Loading...</div>
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-9 w-64 mb-2" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-4 rounded" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-3 w-32" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   const daysUntilExpiry = memberData?.expiryDate
@@ -165,22 +185,44 @@ export default function MemberDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-gray-600">Membership ID</p>
+              <p className="text-gray-600 dark:text-gray-400">Membership ID</p>
               <p className="font-semibold">{memberData?.membershipId}</p>
             </div>
             <div>
-              <p className="text-gray-600">Membership Type</p>
+              <p className="text-gray-600 dark:text-gray-400">Membership Type</p>
               <p className="font-semibold">{memberData?.membershipType}</p>
             </div>
             <div>
-              <p className="text-gray-600">Organization</p>
+              <p className="text-gray-600 dark:text-gray-400">Organization</p>
               <p className="font-semibold">{memberData?.organization || "N/A"}</p>
             </div>
             <div>
-              <p className="text-gray-600">Designation</p>
+              <p className="text-gray-600 dark:text-gray-400">Designation</p>
               <p className="font-semibold">{memberData?.designation || "N/A"}</p>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ActivityTimeline
+            activities={[
+              {
+                id: "1",
+                type: "membership",
+                title: "Membership Activated",
+                description: `Joined as ${memberData?.membershipType}`,
+                date: new Date(memberData?.joinDate || Date.now()),
+                status: "success",
+              },
+              // Add more activities from API
+            ]}
+          />
         </CardContent>
       </Card>
     </div>
