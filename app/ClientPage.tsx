@@ -391,38 +391,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Collaborators Section */}
-        <section className="w-full py-12 md:py-24 bg-gray-50">
-          <div className="container px-4 md:px-6">
-            <AnimatedSection variant="fadeUp">
-              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-                <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm text-primary mb-2">
-                  Our Collaborators
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-900">Partners in Innovation</h2>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl">
-                  Working together with organizations that share our vision for an open source future
-                </p>
-              </div>
-            </AnimatedSection>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
-              {[1, 2, 3, 4].map((i) => (
-                <AnimatedSection key={i} variant="fadeUp" delay={0.1 * i}>
-                  <div className="bg-white p-6 rounded-lg shadow-sm h-24 w-full flex items-center justify-center">
-                    <Image
-                      src={`/placeholder.svg?height=80&width=160&text=Partner+${i}`}
-                      alt={`Partner ${i}`}
-                      width={160}
-                      height={80}
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Call to Action */}
         <section className="w-full py-12 md:py-24 lg:py-32 bg-primary relative overflow-hidden">

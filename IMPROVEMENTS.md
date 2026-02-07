@@ -119,6 +119,14 @@ This document outlines the improvements made to the FOSS Andhra website while pr
   - Mapped registration form fields (institution, course, etc.) to the Member profile.
 - **Impact**: New members now receive immediate access to their dashboard.
 
+### 7. ✅ Member Security: Change Password
+- **Problem**: New members were stuck with a random temporary password sent via email.
+- **Solution**: 
+  - Created a `ChangePasswordModal` component for the member dashboard.
+  - Implemented a secure server action `changePasswordMember` with `bcrypt` validation.
+  - Integrated the feature into the "Quick Actions" on the Member Dashboard.
+- **Impact**: Members can now take full ownership of their account security immediately after login.
+
 ## Technical Implementation Details
 
 ### Files Created
@@ -141,6 +149,12 @@ This document outlines the improvements made to the FOSS Andhra website while pr
    - Updated welcome email template to include password
 3. `app/actions/payment.ts`:
    - Implemented password generation and hashing strategy
+4. `app/actions/member.ts`:
+   - Added password update logic
+5. `components/member/change-password-modal.tsx`:
+   - UI for securing accounts
+6. `app/ClientPage.tsx`:
+   - Removed placeholder "Partners" section for a cleaner UI
 
 ### Dependencies
 - No new dependencies added

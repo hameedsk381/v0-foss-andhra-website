@@ -10,6 +10,8 @@ import { Skeleton } from "@/components/skeleton-loader"
 import { ActivityTimeline } from "@/components/member/activity-timeline"
 import Link from "next/link"
 
+import { ChangePasswordModal } from "@/components/member/change-password-modal"
+
 export default function MemberDashboard() {
   const { data: session } = useSession()
   const [memberData, setMemberData] = useState<any>(null)
@@ -154,7 +156,7 @@ export default function MemberDashboard() {
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link href="/member/membership">
               <Button className="w-full" variant="outline">
                 <CreditCard className="h-4 w-4 mr-2" />
@@ -173,6 +175,7 @@ export default function MemberDashboard() {
                 Browse Events
               </Button>
             </Link>
+            <ChangePasswordModal />
           </div>
         </CardContent>
       </Card>
