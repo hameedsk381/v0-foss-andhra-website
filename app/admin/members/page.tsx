@@ -4,11 +4,14 @@ import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Download, Mail, CheckCircle, XCircle, Eye, Edit } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Download, Mail, CheckCircle, XCircle, Eye, Edit, Plus, Trash2, Save } from "lucide-react"
 import { DataTable, Column } from "@/components/admin/data-table"
 import { BulkActions } from "@/components/admin/bulk-actions"
-import { exportToCSV, exportToJSON } from "@/components/admin/export-utils"
+import { exportToCSV } from "@/components/admin/export-utils"
 import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
 
@@ -19,10 +22,11 @@ interface Member {
   phone: string
   membershipType: string
   status: string
-  joinDate: Date
-  expiryDate: Date
+  joinDate: string
+  expiryDate: string
   organization: string | null
   membershipId: string
+  designation?: string
 }
 
 export default function MembersManagement() {
@@ -31,10 +35,25 @@ export default function MembersManagement() {
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
+  const [showDialog, setShowDialog] = useState(false)
+  const [editingMember, setEditingMember] = useState<Member | null>(null)
+  const [saving, setSaving] = useState(false)
   const { toast } = useToast()
+
+  const [memberForm, setMemberForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    membershipType: "FOSStar Annual",
+    status: "active",
+    organization: "",
+    designation: "",
+    expiryDate: "",
+  })
 
   useEffect(() => {
     fetchMembers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, membershipTypeFilter])
 
   const fetchMembers = async () => {
@@ -43,7 +62,7 @@ export default function MembersManagement() {
       const params = new URLSearchParams()
       if (filter !== "all") params.append("status", filter)
       if (membershipTypeFilter !== "all") params.append("type", membershipTypeFilter)
-      
+
       const res = await fetch(`/api/admin/members?${params.toString()}`)
       const data = await res.json()
       if (data.success) {
@@ -61,16 +80,100 @@ export default function MembersManagement() {
     }
   }
 
-  // Filter members based on status and type
+  // Filter members based on status and type locally if needed (though API does it)
   const filteredMembers = useMemo(() => {
-    return members.filter((member) => {
-      if (filter !== "all" && member.status !== filter) return false
-      if (membershipTypeFilter !== "all" && member.membershipType !== membershipTypeFilter) return false
-      return true
+    return members
+  }, [members]) // Filtering is done via API calls in this implementation
+
+  const openNewMemberDialog = () => {
+    setEditingMember(null)
+    const oneYearFromNow = new Date()
+    oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
+
+    setMemberForm({
+      name: "",
+      email: "",
+      phone: "",
+      membershipType: "FOSStar Annual",
+      status: "active",
+      organization: "",
+      designation: "",
+      expiryDate: oneYearFromNow.toISOString().split('T')[0],
     })
-  }, [members, filter, membershipTypeFilter])
+    setShowDialog(true)
+  }
+
+  const openEditMemberDialog = (member: Member) => {
+    setEditingMember(member)
+    setMemberForm({
+      name: member.name,
+      email: member.email,
+      phone: member.phone,
+      membershipType: member.membershipType,
+      status: member.status,
+      organization: member.organization || "",
+      designation: member.designation || "",
+      expiryDate: member.expiryDate ? new Date(member.expiryDate).toISOString().split('T')[0] : "",
+    })
+    setShowDialog(true)
+  }
+
+  const saveMember = async () => {
+    if (!memberForm.name || !memberForm.email || !memberForm.phone) {
+      toast({
+        title: "Validation Error",
+        description: "Name, Email, and Phone are required",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setSaving(true)
+    try {
+      const method = editingMember ? "PUT" : "POST"
+
+      const body: any = { ...memberForm }
+      if (editingMember) {
+        body.id = editingMember.id
+        // Ensure dates are properly formatted if needed, or rely on API parsing
+        if (memberForm.expiryDate) {
+          body.expiryDate = new Date(memberForm.expiryDate).toISOString()
+        }
+      }
+
+      const res = await fetch("/api/admin/members", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        toast({
+          title: "Success",
+          description: `Member ${editingMember ? "updated" : "created"} successfully`,
+        })
+        setShowDialog(false)
+        fetchMembers()
+      } else {
+        throw new Error(data.error)
+      }
+    } catch (error) {
+      console.error("Error saving member:", error)
+      toast({
+        title: "Error",
+        description: `Failed to ${editingMember ? "update" : "create"} member`,
+        variant: "destructive",
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const handleDelete = async (ids: string[]) => {
+    if (!confirm(`Are you sure you want to delete ${ids.length} member(s)?`)) return
+
     try {
       const res = await fetch("/api/admin/members", {
         method: "DELETE",
@@ -104,6 +207,8 @@ export default function MembersManagement() {
       { key: "status" as keyof Member, header: "Status" },
       { key: "organization" as keyof Member, header: "Organization" },
       { key: "membershipId" as keyof Member, header: "Membership ID" },
+      { key: "joinDate" as keyof Member, header: "Join Date" },
+      { key: "expiryDate" as keyof Member, header: "Expiry Date" },
     ]
     exportToCSV(items, columns, { filename: "members" })
     toast({
@@ -113,10 +218,10 @@ export default function MembersManagement() {
   }
 
   const handleSendEmail = async (items: Member[]) => {
-    // Implement email sending logic
+    // Ideally opens an email composer or sends via API
     toast({
-      title: "Email Sent",
-      description: `Email sent to ${items.length} member(s)`,
+      title: "Feature coming soon",
+      description: `Email composer for ${items.length} member(s)`,
     })
   }
 
@@ -159,13 +264,13 @@ export default function MembersManagement() {
     },
     {
       id: "joinDate",
-      header: "Join Date",
+      header: "Joined",
       accessor: (member) => format(new Date(member.joinDate), "MMM dd, yyyy"),
       sortable: true,
     },
     {
       id: "expiryDate",
-      header: "Expiry Date",
+      header: "Expires",
       accessor: (member) => format(new Date(member.expiryDate), "MMM dd, yyyy"),
       sortable: true,
     },
@@ -178,8 +283,8 @@ export default function MembersManagement() {
             member.status === "active"
               ? "bg-green-100 text-green-800"
               : member.status === "expired"
-              ? "bg-red-100 text-red-800"
-              : "bg-yellow-100 text-yellow-800"
+                ? "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800"
           }
         >
           {member.status === "active" ? (
@@ -196,18 +301,24 @@ export default function MembersManagement() {
 
   const actions = (member: Member) => (
     <>
-      <Button variant="ghost" size="sm" title="View">
-        <Eye className="h-4 w-4" />
-      </Button>
-      <Button variant="ghost" size="sm" title="Edit">
+      <Button variant="ghost" size="sm" title="Edit" onClick={() => openEditMemberDialog(member)}>
         <Edit className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        title="Delete"
+        onClick={() => handleDelete([member.id])}
+        className="text-red-600"
+      >
+        <Trash2 className="h-4 w-4" />
       </Button>
     </>
   )
 
-  const activeMembers = filteredMembers.filter((m) => m.status === "active").length
-  const expiredMembers = filteredMembers.filter((m) => m.status === "expired").length
-  const pendingMembers = filteredMembers.filter((m) => m.status === "pending").length
+  const activeMembers = members.filter((m) => m.status === "active").length
+  const expiredMembers = members.filter((m) => m.status === "expired").length
+  const pendingMembers = members.filter((m) => m.status === "pending").length
 
   return (
     <div className="space-y-6">
@@ -217,13 +328,9 @@ export default function MembersManagement() {
           <p className="text-gray-600 mt-1">Manage FOSStar memberships</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
-          <Button variant="outline">
-            <Mail className="h-4 w-4 mr-2" />
-            Send Email
+          <Button onClick={openNewMemberDialog} className="bg-primary">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Member
           </Button>
         </div>
       </div>
@@ -232,7 +339,7 @@ export default function MembersManagement() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{filteredMembers.length}</div>
+            <div className="text-2xl font-bold">{members.length}</div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Total Members</p>
           </CardContent>
         </Card>
@@ -278,7 +385,8 @@ export default function MembersManagement() {
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="FOSStar Annual">FOSStar Annual</SelectItem>
-                <SelectItem value="Lifetime">Lifetime</SelectItem>
+                <SelectItem value="FOSStar Lifetime">FOSStar Lifetime</SelectItem>
+                <SelectItem value="FOSStar Student">FOSStar Student</SelectItem>
               </SelectContent>
             </Select>
             <div className="flex-1" />
@@ -298,7 +406,7 @@ export default function MembersManagement() {
       {selectedMembers.length > 0 && (
         <BulkActions
           selected={selectedMembers}
-          onDelete={handleDelete}
+          onDelete={(ids) => handleDelete(ids)}
           onExport={handleExport}
           onSendEmail={handleSendEmail}
         />
@@ -326,6 +434,129 @@ export default function MembersManagement() {
           />
         </CardContent>
       </Card>
+
+      {/* Member Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{editingMember ? "Edit Member" : "Add New Member"}</DialogTitle>
+            <DialogDescription>
+              {editingMember ? "Update member details" : "Add a new member manually"}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name *</Label>
+                <Input
+                  id="name"
+                  value={memberForm.name}
+                  onChange={(e) => setMemberForm({ ...memberForm, name: e.target.value })}
+                  placeholder="John Doe"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={memberForm.email}
+                  onChange={(e) => setMemberForm({ ...memberForm, email: e.target.value })}
+                  placeholder="john@example.com"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone *</Label>
+                <Input
+                  id="phone"
+                  value={memberForm.phone}
+                  onChange={(e) => setMemberForm({ ...memberForm, phone: e.target.value })}
+                  placeholder="+91 9876543210"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="membershipType">Membership Type *</Label>
+                <Select
+                  value={memberForm.membershipType}
+                  onValueChange={(value) => setMemberForm({ ...memberForm, membershipType: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="FOSStar Annual">FOSStar Annual</SelectItem>
+                    <SelectItem value="FOSStar Lifetime">FOSStar Lifetime</SelectItem>
+                    <SelectItem value="FOSStar Student">FOSStar Student</SelectItem>
+                    <SelectItem value="Associate">Associate</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="organization">Organization</Label>
+                <Input
+                  id="organization"
+                  value={memberForm.organization}
+                  onChange={(e) => setMemberForm({ ...memberForm, organization: e.target.value })}
+                  placeholder="Company or College"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="designation">Designation</Label>
+                <Input
+                  id="designation"
+                  value={memberForm.designation}
+                  onChange={(e) => setMemberForm({ ...memberForm, designation: e.target.value })}
+                  placeholder="Role"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  value={memberForm.status}
+                  onValueChange={(value) => setMemberForm({ ...memberForm, status: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="expired">Expired</SelectItem>
+                    <SelectItem value="suspended">Suspended</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Input
+                  id="expiryDate"
+                  type="date"
+                  value={memberForm.expiryDate}
+                  onChange={(e) => setMemberForm({ ...memberForm, expiryDate: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={saveMember} disabled={saving}>
+              <Save className="h-4 w-4 mr-2" />
+              {saving ? "Saving..." : editingMember ? "Update Member" : "Create Member"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

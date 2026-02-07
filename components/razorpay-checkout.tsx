@@ -16,6 +16,7 @@ interface RazorpayCheckoutProps {
   }
   className?: string
   onSuccess?: (membershipId: string) => void
+  additionalData?: any // ✅ Add additionalData prop
 }
 
 declare global {
@@ -24,7 +25,7 @@ declare global {
   }
 }
 
-export function RazorpayCheckout({ membershipType, amount, userDetails, className, onSuccess }: RazorpayCheckoutProps) {
+export function RazorpayCheckout({ membershipType, amount, userDetails, className, onSuccess, additionalData }: RazorpayCheckoutProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isVerifying, setIsVerifying] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -101,7 +102,8 @@ export function RazorpayCheckout({ membershipType, amount, userDetails, classNam
               response.razorpay_payment_id,
               response.razorpay_signature,
               userDetails,
-              membershipType  // ✅ Pass membershipType to save in DB
+              membershipType,  // ✅ Pass membershipType to save in DB
+              additionalData // ✅ Pass additionalData
             )
 
             if (verificationResult.success) {

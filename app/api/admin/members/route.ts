@@ -55,3 +55,53 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: "Failed to create member" }, { status: 500 })
   }
 }
+
+// PUT update member
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json()
+    const { id, ...data } = body
+
+    if (!id) {
+      return NextResponse.json({ success: false, error: "Member ID is required" }, { status: 400 })
+    }
+
+    const member = await prisma.member.update({
+      where: { id },
+      data: {
+        ...data,
+        updatedAt: new Date()
+      }
+    })
+
+    return NextResponse.json({ success: true, data: member, message: "Member updated successfully" })
+  } catch (error) {
+    console.error("Error updating member:", error)
+    return NextResponse.json({ success: false, error: "Failed to update member" }, { status: 500 })
+  }
+}
+
+// DELETE members
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json()
+    const { ids } = body
+
+    if (!ids || !Array.isArray(ids)) {
+      return NextResponse.json({ success: false, error: "Invalid request body" }, { status: 400 })
+    }
+
+    await prisma.member.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
+
+    return NextResponse.json({ success: true, message: "Members deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting members:", error)
+    return NextResponse.json({ success: false, error: "Failed to delete members" }, { status: 500 })
+  }
+}

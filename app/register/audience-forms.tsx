@@ -27,9 +27,10 @@ interface StudentFormData extends BaseFormData {
   course: string
   year: string
   studentId: string
-  interests: string
-  experience: string
+
   projects: string
+  contribution: string
+  expectations: string
 }
 
 interface TeacherFormData extends BaseFormData {
@@ -137,7 +138,7 @@ const audienceConfig = {
 export function AudienceSpecificForms() {
   const searchParams = useSearchParams()
   const typeParam = searchParams.get('type') as AudienceType | null
-  
+
   const [selectedAudience, setSelectedAudience] = useState<AudienceType | null>(null)
   const [currentStep, setCurrentStep] = useState<"audience" | "form" | "payment" | "success">("audience")
   const [membershipId, setMembershipId] = useState<string>("")
@@ -160,9 +161,10 @@ export function AudienceSpecificForms() {
     course: "",
     year: "",
     studentId: "",
-    interests: "",
-    experience: "",
+
     projects: "",
+    contribution: "",
+    expectations: "",
   })
 
   const [teacherData, setTeacherData] = useState<TeacherFormData>({
@@ -473,6 +475,7 @@ export function AudienceSpecificForms() {
                       phone: getCurrentFormData().phone,
                     }}
                     onSuccess={handlePaymentSuccess}
+                    additionalData={getCurrentFormData()} // ✅ Pass form data
                     className="flex-1 bg-fosstar hover:bg-fosstar/90"
                   />
                 </div>
@@ -616,31 +619,28 @@ function StudentForm({ data, setData }: { data: StudentFormData; setData: (data:
         </div>
       </div>
 
-      {/* FOSS Interest */}
+      {/* Contribution & Expectations */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">FOSS Interest & Experience</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Contribution & Expectations</h3>
         <div className="space-y-2">
-          <Label htmlFor="interests">Areas of Interest in FOSS</Label>
+          <Label htmlFor="contribution">How would you like to contribute to us?</Label>
           <Textarea
-            id="interests"
-            value={data.interests}
-            onChange={(e) => handleChange("interests", e.target.value)}
-            placeholder="What aspects of FOSS interest you? (e.g., development, documentation, community building)"
+            id="contribution"
+            value={data.contribution}
+            onChange={(e) => handleChange("contribution", e.target.value)}
+            placeholder="Let us know how you'd like to get involved"
             rows={3}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="experience">FOSS Experience Level</Label>
-          <Select onValueChange={(value) => handleChange("experience", value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select your experience level" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="beginner">Beginner (Just getting started)</SelectItem>
-              <SelectItem value="intermediate">Intermediate (Some experience)</SelectItem>
-              <SelectItem value="advanced">Advanced (Regular contributor)</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label htmlFor="expectations">What are you expecting from us?</Label>
+          <Textarea
+            id="expectations"
+            value={data.expectations}
+            onChange={(e) => handleChange("expectations", e.target.value)}
+            placeholder="Share your expectations from this program"
+            rows={3}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="projects">Previous Projects/Contributions</Label>

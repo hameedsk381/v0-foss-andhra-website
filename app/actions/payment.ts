@@ -67,11 +67,12 @@ export async function createPaymentOrder(data: CreateOrderData) {
 }
 
 export async function verifyPayment(
-  orderId: string, 
-  paymentId: string, 
-  signature: string, 
+  orderId: string,
+  paymentId: string,
+  signature: string,
   userDetails: any,
-  membershipType?: string  // ✅ Add membershipType parameter
+  membershipType?: string,
+  additionalData?: any // ✅ Add additionalData parameter
 ) {
   try {
     const keySecret = process.env.RAZORPAY_KEY_SECRET
@@ -103,11 +104,12 @@ export async function verifyPayment(
             name: userDetails.name,
             email: userDetails.email,
             phone: userDetails.phone,
-            membershipType: membershipType || "FOSStar Annual",  // ✅ Use passed membershipType
+            membershipType: membershipType || "FOSStar Annual",
             status: "active",
             membershipId,
             expiryDate,
             paymentId,
+            metadata: additionalData || {}, // ✅ Save additional data
           },
         })
 

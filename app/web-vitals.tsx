@@ -8,9 +8,8 @@ export function WebVitals() {
     if (typeof window === "undefined") return
 
     // Import and initialize web-vitals
-    import("web-vitals").then(({ onCLS, onFID, onFCP, onLCP, onTTFB, onINP }) => {
+    import("web-vitals").then(({ onCLS, onFCP, onLCP, onTTFB, onINP }) => {
       onCLS(reportWebVitals)
-      onFID(reportWebVitals)
       onFCP(reportWebVitals)
       onLCP(reportWebVitals)
       onTTFB(reportWebVitals)
