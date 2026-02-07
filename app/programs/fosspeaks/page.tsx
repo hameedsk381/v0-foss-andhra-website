@@ -251,7 +251,7 @@ export default function FOSSpeaksPage() {
               </TabsList>
             </AnimatedSection>
 
-            <TabsContent value="advocacy" className="mt-0">
+            <TabsContent value="advocacy" className="mt-0" id="advocacy">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <AnimatedCard>
@@ -337,7 +337,7 @@ export default function FOSSpeaksPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="policy" className="mt-0">
+            <TabsContent value="policy" className="mt-0" id="policy">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <AnimatedCard>
@@ -422,7 +422,7 @@ export default function FOSSpeaksPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="education" className="mt-0">
+            <TabsContent value="education" className="mt-0" id="education">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <AnimatedCard>
@@ -616,7 +616,7 @@ export default function FOSSpeaksPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Email Us</h4>
-                      <p className="text-sm text-gray-500">fosspeaks@fossandhra.org</p>
+                      <p className="text-sm text-gray-500">office@fossap.in</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -638,7 +638,7 @@ export default function FOSSpeaksPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-sm text-gray-500">+91 98765 43210</p>
+                      <p className="text-sm text-gray-500">+91 94944 63840</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -667,7 +667,7 @@ export default function FOSSpeaksPage() {
                     <div>
                       <h4 className="font-medium">Office</h4>
                       <p className="text-sm text-gray-500">
-                        FOSS Andhra, Innovation Valley, Visakhapatnam, Andhra Pradesh
+                        Foss andhra, Yesj centre for excellence, Vijayawada 520008
                       </p>
                     </div>
                   </div>

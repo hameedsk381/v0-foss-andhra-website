@@ -231,9 +231,9 @@ export default function TermsOfServicePageClient() {
             <p className="text-gray-500 md:text-lg/relaxed">
               FOSS Andhra
               <br />
-              Email: legal@fossandhra.org
+              Email: legal@fossap.in
               <br />
-              Address: 123 Open Source Street, Andhra Pradesh, India
+              Address: Foss andhra, Yesj centre for excellence, Vijayawada 520008
             </p>
           </motion.section>
 

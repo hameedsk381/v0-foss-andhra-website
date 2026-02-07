@@ -263,7 +263,7 @@ export default function FOSStarPage() {
               </TabsList>
             </AnimatedSection>
 
-            <TabsContent value="benefits" className="mt-0">
+            <TabsContent value="benefits" className="mt-0" id="benefits">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <Card>
@@ -383,7 +383,7 @@ export default function FOSStarPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="activities" className="mt-0">
+            <TabsContent value="activities" className="mt-0" id="activities">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <AnimatedCard>
@@ -643,7 +643,7 @@ export default function FOSStarPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Email Us</h4>
-                      <p className="text-sm text-gray-500">fosstar@fossandhra.org</p>
+                      <p className="text-sm text-gray-500">office@fossap.in</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -665,7 +665,7 @@ export default function FOSStarPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-sm text-gray-500">+91 98765 43210</p>
+                      <p className="text-sm text-gray-500">+91 94944 63840</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -694,7 +694,7 @@ export default function FOSStarPage() {
                     <div>
                       <h4 className="font-medium">Office</h4>
                       <p className="text-sm text-gray-500">
-                        FOSS Andhra, Innovation Valley, Visakhapatnam, Andhra Pradesh
+                        Foss andhra, Yesj centre for excellence, Vijayawada 520008
                       </p>
                     </div>
                   </div>

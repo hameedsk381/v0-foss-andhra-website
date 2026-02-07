@@ -225,7 +225,7 @@ export default function FOSServePage() {
                 </TabsList>
               </AnimatedSection>
 
-              <TabsContent value="overview" className="mt-0">
+              <TabsContent value="overview" className="mt-0" id="overview">
                 <div className="prose prose-lg max-w-none mb-8">
                   <p>
                     FOSServe is our dedicated program focused on promoting and implementing open source solutions in
@@ -301,12 +301,12 @@ export default function FOSServePage() {
                     solutions? Partner with FOSServe for comprehensive support, training, and implementation assistance.
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    <Link href="/contact">
+                    <Link href="#contact">
                       <AnimatedButton className="bg-purple-600 hover:bg-purple-700 text-white">
                         Contact Us
                       </AnimatedButton>
                     </Link>
-                    <Link href="/programs/fosserve/case-studies">
+                    <Link href="#casestudies">
                       <AnimatedButton variant="outline" className="border-purple-200 text-purple-600">
                         View Case Studies
                       </AnimatedButton>
@@ -315,7 +315,7 @@ export default function FOSServePage() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="initiatives" className="mt-0">
+              <TabsContent value="initiatives" className="mt-0" id="initiatives">
                 <div className="grid gap-6 md:grid-cols-2">
                   <Card>
                     <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
@@ -347,7 +347,7 @@ export default function FOSServePage() {
                       </ul>
                     </CardContent>
                     <CardFooter className="flex justify-end">
-                      <Link href="/programs/fosserve/foss-campus">
+                      <Link href="#contact">
                         <AnimatedButton variant="ghost" className="text-purple-600">
                           Learn More
                         </AnimatedButton>
@@ -385,7 +385,7 @@ export default function FOSServePage() {
                       </ul>
                     </CardContent>
                     <CardFooter className="flex justify-end">
-                      <Link href="/programs/fosserve/foss-gov">
+                      <Link href="#contact">
                         <AnimatedButton variant="ghost" className="text-purple-600">
                           Learn More
                         </AnimatedButton>
@@ -423,7 +423,7 @@ export default function FOSServePage() {
                       </ul>
                     </CardContent>
                     <CardFooter className="flex justify-end">
-                      <Link href="/programs/fosserve/foss-library">
+                      <Link href="#contact">
                         <AnimatedButton variant="ghost" className="text-purple-600">
                           Learn More
                         </AnimatedButton>
@@ -461,7 +461,7 @@ export default function FOSServePage() {
                       </ul>
                     </CardContent>
                     <CardFooter className="flex justify-end">
-                      <Link href="/programs/fosserve/foss-training">
+                      <Link href="#contact">
                         <AnimatedButton variant="ghost" className="text-purple-600">
                           Learn More
                         </AnimatedButton>
@@ -471,7 +471,7 @@ export default function FOSServePage() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="casestudies" className="mt-0">
+              <TabsContent value="casestudies" className="mt-0" id="casestudies">
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold mb-6 flex items-center">
                     <FileText className="mr-2 h-6 w-6 text-purple-600" />
@@ -519,9 +519,9 @@ export default function FOSServePage() {
                               </div>
                             </div>
                             <div className="mt-4">
-                              <Link href="/programs/fosserve/case-studies/university">
+                              <Link href="#contact">
                                 <AnimatedButton variant="outline" size="sm" className="text-purple-600">
-                                  Read Full Case Study
+                                  Inquire for Details
                                 </AnimatedButton>
                               </Link>
                             </div>
@@ -570,9 +570,9 @@ export default function FOSServePage() {
                               </div>
                             </div>
                             <div className="mt-4">
-                              <Link href="/programs/fosserve/case-studies/district-office">
+                              <Link href="#contact">
                                 <AnimatedButton variant="outline" size="sm" className="text-purple-600">
-                                  Read Full Case Study
+                                  Inquire for Details
                                 </AnimatedButton>
                               </Link>
                             </div>
@@ -621,9 +621,9 @@ export default function FOSServePage() {
                               </div>
                             </div>
                             <div className="mt-4">
-                              <Link href="/programs/fosserve/case-studies/rural-schools">
+                              <Link href="#contact">
                                 <AnimatedButton variant="outline" size="sm" className="text-purple-600">
-                                  Read Full Case Study
+                                  Inquire for Details
                                 </AnimatedButton>
                               </Link>
                             </div>
@@ -635,7 +635,7 @@ export default function FOSServePage() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="gallery" className="mt-0">
+              <TabsContent value="gallery" className="mt-0" id="gallery">
                 <h3 className="text-2xl font-bold mb-6 flex items-center">
                   <ImageIcon className="mr-2 h-6 w-6 text-purple-600" />
                   FOSServe Implementation Gallery
@@ -660,11 +660,14 @@ export default function FOSServePage() {
                 </div>
 
                 <div className="text-center">
-                  <AnimatedButton variant="outline" className="mt-4 border-purple-200 text-purple-600">
-                    View All Gallery Images
-                  </AnimatedButton>
+                  <Link href="/gallery">
+                    <AnimatedButton variant="outline" className="mt-4 border-purple-200 text-purple-600">
+                      View All Gallery Images
+                    </AnimatedButton>
+                  </Link>
                 </div>
               </TabsContent>
+
             </Tabs>
           </div>
         </section>
@@ -776,7 +779,7 @@ export default function FOSServePage() {
                       </div>
                       <div>
                         <h4 className="font-medium">Email Us</h4>
-                        <p className="text-sm text-gray-500">fosserve@fossandhra.org</p>
+                        <p className="text-sm text-gray-500">office@fossap.in</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -798,7 +801,7 @@ export default function FOSServePage() {
                       </div>
                       <div>
                         <h4 className="font-medium">Phone</h4>
-                        <p className="text-sm text-gray-500">+91 98765 43210</p>
+                        <p className="text-sm text-gray-500">+91 94944 63840</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -827,7 +830,7 @@ export default function FOSServePage() {
                       <div>
                         <h4 className="font-medium">Office</h4>
                         <p className="text-sm text-gray-500">
-                          FOSS Andhra, Innovation Valley, Visakhapatnam, Andhra Pradesh
+                          Foss andhra, Yesj centre for excellence, Vijayawada 520008
                         </p>
                       </div>
                     </div>

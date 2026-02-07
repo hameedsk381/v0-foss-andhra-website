@@ -481,7 +481,7 @@ export async function sendMemberWelcomeEmail(to: string, memberData: {
               <a href="https://fossandhra.org/login" class="button">Login to Member Portal</a>
             </center>
 
-            <p>If you have any questions, feel free to reach out to us at <a href="mailto:info@fossandhra.org">info@fossandhra.org</a></p>
+            <p>If you have any questions, feel free to reach out to us at <a href="mailto:office@fossap.in">office@fossap.in</a></p>
 
             <p>Best regards,<br><strong>FOSS Andhra Team</strong></p>
           </div>
@@ -699,7 +699,7 @@ export async function sendRenewalReminderEmail(to: string, memberData: {
               <a href="https://fossandhra.org/programs/fosstar#membership" class="button">Renew Membership</a>
             </center>
 
-            <p>Questions? Contact us at <a href="mailto:info@fossandhra.org">info@fossandhra.org</a></p>
+            <p>Questions? Contact us at <a href="mailto:office@fossap.in">office@fossap.in</a></p>
 
             <p>Best regards,<br><strong>FOSS Andhra Team</strong></p>
           </div>

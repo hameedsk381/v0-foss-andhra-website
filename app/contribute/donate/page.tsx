@@ -131,9 +131,8 @@ export default function DonatePage() {
                             setAmount(amt)
                             setCustomAmount("")
                           }}
-                          className={`h-14 text-lg font-semibold ${
-                            amount === amt ? "bg-[#015ba7] hover:bg-[#015ba7]/90" : ""
-                          }`}
+                          className={`h-14 text-lg font-semibold ${amount === amt ? "bg-[#015ba7] hover:bg-[#015ba7]/90" : ""
+                            }`}
                         >
                           ₹{parseInt(amt).toLocaleString()}
                         </Button>
@@ -184,7 +183,7 @@ export default function DonatePage() {
                       <Input
                         id="phone"
                         type="tel"
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 94944 63840"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         required

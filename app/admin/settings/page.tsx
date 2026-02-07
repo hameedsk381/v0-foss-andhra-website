@@ -17,10 +17,10 @@ export default function SettingsPage() {
 
   const [settings, setSettings] = useState({
     siteName: "FOSS Andhra",
-    contactEmail: "info@fossandhra.org",
+    contactEmail: "office@fossap.in",
     siteDescription: "Promoting free and open source software in Andhra Pradesh",
-    phone: "+91 98765 43210",
-    address: "Visakhapatnam, Andhra Pradesh",
+    phone: "+91 94944 63840",
+    address: "Foss andhra, Yesj centre for excellence, Vijayawada 520008",
     membershipFee: "300",
     membershipDuration: "12",
     reminderDays: "30",
@@ -29,7 +29,7 @@ export default function SettingsPage() {
     smtpPort: "",
     smtpUser: "",
     smtpPass: "",
-    fromEmail: "noreply@fossandhra.org",
+    fromEmail: "office@fossap.in",
     fromName: "FOSS Andhra",
     razorpayKeyId: "",
     razorpayKeySecret: "",

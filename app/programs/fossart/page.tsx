@@ -45,7 +45,7 @@ export default function FOSSartPage() {
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview" className="mt-6" id="overview">
             <div className="prose prose-lg max-w-none mb-8">
               <p>
                 FOSSart is our entrepreneurship and innovation program focused on supporting startups and projects that
@@ -120,10 +120,10 @@ export default function FOSSartPage() {
                 your open source innovation to the next level.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/programs/fossart/apply">
+                <Link href="#apply">
                   <Button className="bg-red-600 hover:bg-red-700">Apply for Funding</Button>
                 </Link>
-                <Link href="/programs/fossart/startups">
+                <Link href="#startups">
                   <Button variant="outline" className="border-red-200 text-red-600">
                     View Supported Startups
                   </Button>
@@ -132,7 +132,7 @@ export default function FOSSartPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="startups" className="mt-6">
+          <TabsContent value="startups" className="mt-6" id="startups">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <Award className="mr-2 h-6 w-6 text-red-600" />
@@ -200,11 +200,13 @@ export default function FOSSartPage() {
                     </div>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    <Button variant="outline" className="text-red-600 border-red-200">
-                      Contact
-                    </Button>
-                    <Link href="/programs/fossart/startups/openhealth">
-                      <Button className="bg-red-600 hover:bg-red-700">View Details</Button>
+                    <Link href="/contact?subject=Contact OpenHealth">
+                      <Button variant="outline" className="text-red-600 border-red-200">
+                        Contact
+                      </Button>
+                    </Link>
+                    <Link href="/contact?subject=Inquiry: OpenHealth Startup">
+                      <Button className="bg-red-600 hover:bg-red-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -269,11 +271,13 @@ export default function FOSSartPage() {
                     </div>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    <Button variant="outline" className="text-red-600 border-red-200">
-                      Contact
-                    </Button>
-                    <Link href="/programs/fossart/startups/localmarket">
-                      <Button className="bg-red-600 hover:bg-red-700">View Details</Button>
+                    <Link href="/contact?subject=Contact LocalMarket">
+                      <Button variant="outline" className="text-red-600 border-red-200">
+                        Contact
+                      </Button>
+                    </Link>
+                    <Link href="/contact?subject=Inquiry: LocalMarket Startup">
+                      <Button className="bg-red-600 hover:bg-red-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -338,11 +342,13 @@ export default function FOSSartPage() {
                     </div>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    <Button variant="outline" className="text-red-600 border-red-200">
-                      Contact
-                    </Button>
-                    <Link href="/programs/fossart/startups/eduopen">
-                      <Button className="bg-red-600 hover:bg-red-700">View Details</Button>
+                    <Link href="/contact?subject=Contact EduOpen">
+                      <Button variant="outline" className="text-red-600 border-red-200">
+                        Contact
+                      </Button>
+                    </Link>
+                    <Link href="/contact?subject=Inquiry: EduOpen Startup">
+                      <Button className="bg-red-600 hover:bg-red-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -407,27 +413,29 @@ export default function FOSSartPage() {
                     </div>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    <Button variant="outline" className="text-red-600 border-red-200">
-                      Contact
-                    </Button>
-                    <Link href="/programs/fossart/startups/greentech">
-                      <Button className="bg-red-600 hover:bg-red-700">View Details</Button>
+                    <Link href="/contact?subject=Contact GreenTech">
+                      <Button variant="outline" className="text-red-600 border-red-200">
+                        Contact
+                      </Button>
+                    </Link>
+                    <Link href="/contact?subject=Inquiry: GreenTech Startup">
+                      <Button className="bg-red-600 hover:bg-red-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
               </div>
 
               <div className="mt-8 text-center">
-                <Link href="/programs/fossart/startups">
+                <Link href="#startups">
                   <Button variant="outline" className="mt-4 border-red-200 text-red-600">
-                    View All Startups
+                    Refresh Startups
                   </Button>
                 </Link>
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="apply" className="mt-6">
+          <TabsContent value="apply" className="mt-6" id="apply">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <Rocket className="mr-2 h-6 w-6 text-red-600" />
@@ -477,7 +485,7 @@ export default function FOSSartPage() {
                     </ul>
                   </CardContent>
                   <CardFooter>
-                    <Link href="/programs/fossart/apply/idea-grant" className="w-full">
+                    <Link href="/contact?subject=Apply for Idea Grant" className="w-full">
                       <Button className="w-full bg-red-600 hover:bg-red-700">Apply for Idea Grant</Button>
                     </Link>
                   </CardFooter>
@@ -525,7 +533,7 @@ export default function FOSSartPage() {
                     </ul>
                   </CardContent>
                   <CardFooter>
-                    <Link href="/programs/fossart/apply/seed-investment" className="w-full">
+                    <Link href="/contact?subject=Apply for Seed Investment" className="w-full">
                       <Button className="w-full bg-red-600 hover:bg-red-700">Apply for Seed Investment</Button>
                     </Link>
                   </CardFooter>
@@ -588,14 +596,14 @@ export default function FOSSartPage() {
                   If you have an open source idea or startup that you'd like to grow with FOSSart support, we encourage
                   you to apply for our funding programs.
                 </p>
-                <Link href="/programs/fossart/apply/start">
+                <Link href="/contact?subject=FOSSart Application">
                   <Button className="bg-red-600 hover:bg-red-700">Start Your Application</Button>
                 </Link>
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="gallery" className="mt-6">
+          <TabsContent value="gallery" className="mt-6" id="gallery">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
               <Image className="mr-2 h-6 w-6 text-red-600" />
               FOSSart Events & Startups Gallery
@@ -618,11 +626,14 @@ export default function FOSSartPage() {
             </div>
 
             <div className="text-center">
-              <Button variant="outline" className="mt-4 border-red-200 text-red-600">
-                View All Gallery Images
-              </Button>
+              <Link href="/gallery">
+                <Button variant="outline" className="mt-4 border-red-200 text-red-600">
+                  View All Gallery Images
+                </Button>
+              </Link>
             </div>
           </TabsContent>
+
         </Tabs>
       </div>
     </div>

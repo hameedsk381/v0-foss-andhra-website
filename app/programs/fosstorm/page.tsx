@@ -45,7 +45,7 @@ export default function FOSStormPage() {
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview" className="mt-6" id="overview">
             <div className="prose prose-lg max-w-none mb-8">
               <p>
                 FOSStorm is our initiative to develop community-led open source projects that address local challenges
@@ -119,10 +119,10 @@ export default function FOSStormPage() {
                 FOSStorm and help us build impactful software solutions through community collaboration.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/programs/fosstorm/join">
+                <Link href="/contact?subject=Join FOSStorm">
                   <Button className="bg-orange-600 hover:bg-orange-700">Join as a Contributor</Button>
                 </Link>
-                <Link href="/programs/fosstorm/projects">
+                <Link href="#projects">
                   <Button variant="outline" className="border-orange-200 text-orange-600">
                     Explore Projects
                   </Button>
@@ -131,7 +131,7 @@ export default function FOSStormPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="projects" className="mt-6">
+          <TabsContent value="projects" className="mt-6" id="projects">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <Code className="mr-2 h-6 w-6 text-orange-600" />
@@ -186,8 +186,8 @@ export default function FOSStormPage() {
                         GitHub
                       </Button>
                     </Link>
-                    <Link href="/programs/fosstorm/projects/telugu-nlp">
-                      <Button className="bg-orange-600 hover:bg-orange-700">View Details</Button>
+                    <Link href="/contact?subject=Project Inquiry: TeluguNLP">
+                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -239,8 +239,8 @@ export default function FOSStormPage() {
                         GitHub
                       </Button>
                     </Link>
-                    <Link href="/programs/fosstorm/projects/open-edu">
-                      <Button className="bg-orange-600 hover:bg-orange-700">View Details</Button>
+                    <Link href="/contact?subject=Project Inquiry: OpenEdu">
+                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -292,8 +292,8 @@ export default function FOSStormPage() {
                         GitHub
                       </Button>
                     </Link>
-                    <Link href="/programs/fosstorm/projects/civic-docs">
-                      <Button className="bg-orange-600 hover:bg-orange-700">View Details</Button>
+                    <Link href="/contact?subject=Project Inquiry: CivicDocs">
+                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -346,24 +346,24 @@ export default function FOSStormPage() {
                         GitHub
                       </Button>
                     </Link>
-                    <Link href="/programs/fosstorm/projects/farm-connect">
-                      <Button className="bg-orange-600 hover:bg-orange-700">View Details</Button>
+                    <Link href="/contact?subject=Project Inquiry: FarmConnect">
+                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
               </div>
 
               <div className="mt-8 text-center">
-                <Link href="/programs/fosstorm/projects">
+                <Link href="#projects">
                   <Button variant="outline" className="mt-4 border-orange-200 text-orange-600">
-                    View All Projects
+                    Refresh Projects
                   </Button>
                 </Link>
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="contribute" className="mt-6">
+          <TabsContent value="contribute" className="mt-6" id="contribute">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <Github className="mr-2 h-6 w-6 text-orange-600" />
@@ -390,7 +390,7 @@ export default function FOSStormPage() {
                       Browse our active projects and find one that matches your interests and skills. Each project has
                       its own GitHub repository with detailed information about the project goals and architecture.
                     </p>
-                    <Link href="/programs/fosstorm/projects">
+                    <Link href="#projects">
                       <Button variant="outline" className="w-full text-orange-600 border-orange-200">
                         Browse Projects
                       </Button>
@@ -410,9 +410,9 @@ export default function FOSStormPage() {
                       Follow the project's README file to set up your local development environment. Most projects
                       include detailed instructions for getting started with development.
                     </p>
-                    <Link href="/programs/fosstorm/developer-guide">
+                    <Link href="/contact?subject=Developer Setup Guide">
                       <Button variant="outline" className="w-full text-orange-600 border-orange-200">
-                        Development Guide
+                        Inquire for Guide
                       </Button>
                     </Link>
                   </CardContent>
@@ -451,14 +451,15 @@ export default function FOSStormPage() {
                       Follow the project's contribution guidelines to submit your work. This typically involves forking
                       the repository, creating a branch, making changes, and submitting a pull request.
                     </p>
-                    <Link href="/programs/fosstorm/contribution-guide">
+                    <Link href="/contact?subject=Contribution Guide">
                       <Button variant="outline" className="w-full text-orange-600 border-orange-200">
-                        Contribution Guide
+                        Inquire for Guide
                       </Button>
                     </Link>
                   </CardContent>
                 </Card>
               </div>
+
 
               <div className="bg-orange-50 p-8 rounded-lg">
                 <h4 className="text-xl font-bold mb-4">Join the FOSStorm Developer Community</h4>
@@ -480,7 +481,7 @@ export default function FOSStormPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="gallery" className="mt-6">
+          <TabsContent value="gallery" className="mt-6" id="gallery">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
               <Image className="mr-2 h-6 w-6 text-orange-600" />
               FOSStorm Project Gallery
@@ -503,9 +504,11 @@ export default function FOSStormPage() {
             </div>
 
             <div className="text-center">
-              <Button variant="outline" className="mt-4 border-orange-200 text-orange-600">
-                View All Gallery Images
-              </Button>
+              <Link href="/gallery">
+                <Button variant="outline" className="mt-4 border-orange-200 text-orange-600">
+                  View All Gallery Images
+                </Button>
+              </Link>
             </div>
           </TabsContent>
         </Tabs>

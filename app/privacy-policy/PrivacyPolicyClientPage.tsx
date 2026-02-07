@@ -207,9 +207,9 @@ export default function PrivacyPolicyClientPage() {
             <p className="text-gray-500 md:text-lg/relaxed">
               FOSS Andhra
               <br />
-              Email: privacy@fossandhra.org
+              Email: privacy@fossap.in
               <br />
-              Address: 123 Open Source Street, Andhra Pradesh, India
+              Address: Foss andhra, Yesj centre for excellence, Vijayawada 520008
             </p>
           </motion.section>
 

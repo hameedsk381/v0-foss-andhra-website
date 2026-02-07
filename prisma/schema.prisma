@@ -63,6 +63,21 @@ model Event {
   gallery             String?
   externalTicketUrl   String?
   externalRegisterUrl String?
+  registrations       Registration[]
+}
+
+model Registration {
+  id           String   @id @default(cuid())
+  eventId      String
+  name         String
+  email        String
+  phone        String?
+  organization String?
+  notes        String?
+  attended     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model Donation {

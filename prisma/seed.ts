@@ -3,97 +3,214 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function seedPrograms() {
-  console.log('🌱 Seeding programs...')
+  console.log('🌱 Seeding programs with detailed content...')
 
-  const programs = [
+  const programsData = [
     {
       name: 'fosstar',
       title: 'FOSStar',
       description: 'Building a vibrant community of FOSS enthusiasts and contributors',
-      tagline: 'Community Building',
-      mission: 'To create a thriving ecosystem of FOSS enthusiasts who actively contribute to open source projects and promote FOSS adoption',
+      tagline: 'Community Building & Recognition',
+      mission: 'To create a thriving ecosystem of FOSS enthusiasts who actively contribute to open source projects and promote FOSS adoption across Andhra Pradesh.',
       color: '#015ba7',
-      logo: '/logos/fosstar.png',
+      logo: '/logos/fosstar-logo.png',
       status: 'active',
       displayOrder: 1,
+      initiatives: [
+        { title: 'Community Meetups', description: 'Monthly meetups for FOSS enthusiasts to network and share knowledge.', category: 'Engagement' },
+        { title: 'Professional Network', description: 'Connecting FOSS professionals with organizations seeking open-source expertise.', category: 'Professional' },
+        { title: 'Annual FOSS Summit', description: 'The flagship event celebrating open-source innovation in the region.', category: 'Events' }
+      ],
+      team: [
+        { name: 'Dr. Satish Kumar', role: 'Community Lead', bio: 'FOSS advocate with 15+ years of experience in open source governance.' }
+      ]
     },
     {
       name: 'fosserve',
       title: 'FOSServe',
       description: 'Facilitating FOSS adoption in government and public services',
-      tagline: 'Government Services',
-      mission: 'To enable government departments to adopt FOSS solutions for better service delivery and cost efficiency',
+      tagline: 'G2C & G2G Solutions',
+      mission: 'To enable government departments to adopt FOSS solutions for better service delivery, cost efficiency, and digital sovereignty.',
       color: '#0077cc',
-      logo: '/logos/fosserve.png',
+      logo: '/logos/fosserve-logo.png',
       status: 'active',
       displayOrder: 2,
+      initiatives: [
+        { title: 'E-Governance Portals', description: 'Building citizen-centric portals using open-source stacks.', category: 'Infrastructure' },
+        { title: 'Public Service Digitization', description: 'Helping local bodies digitize their records and services using FOSS.', category: 'Service' }
+      ]
     },
     {
       name: 'fossync',
       title: 'FOSSynC',
       description: 'Promoting FOSS education in schools and colleges',
-      tagline: 'Education',
-      mission: 'To integrate FOSS education into academic curricula and establish FOSS clubs in educational institutions',
+      tagline: 'Campus Ecosystems',
+      mission: 'To integrate FOSS education into academic curricula and establish student-led FOSS clubs in every educational institution in Andhra Pradesh.',
       color: '#98d339',
-      logo: '/logos/fossync.png',
+      logo: '/logos/fossync-logo.png',
       status: 'active',
       displayOrder: 3,
+      initiatives: [
+        { title: 'Campus Clubs', description: 'Supporting student-led clubs to foster a culture of open-source contribution.', category: 'Student' },
+        { title: 'Skill Workshops', description: 'Hands-on training sessions on Linux, Git, and various FOSS technologies.', category: 'Education' }
+      ],
+      clubs: [
+        { name: 'AU FOSS Club', institution: 'Andhra University', location: 'Visakhapatnam', members: 120, established: '2023' },
+        { name: 'JNTUK Open Source Society', institution: 'JNTU Kakinada', location: 'Kakinada', members: 85, established: '2024' }
+      ]
     },
     {
       name: 'fosstorm',
       title: 'FOSStorm',
       description: 'Supporting collaborative FOSS development projects',
-      tagline: 'Development',
-      mission: 'To facilitate collaborative development of high-quality FOSS projects that solve real-world problems',
+      tagline: 'Open Innovation Lab',
+      mission: 'To facilitate collaborative development of high-quality FOSS projects that solve real-world problems in local communities.',
       color: '#ff6b35',
-      logo: '/logos/fosstorm.png',
+      logo: '/logos/fosstorm-logo.png',
       status: 'active',
       displayOrder: 4,
+      initiatives: [
+        { title: 'Community Projects', description: 'Developing tools for local challenges like agriculture and health.', category: 'Development' },
+        { title: 'Contribution Sprints', description: 'Intensive weekend sessions focused on merging PRs to global FOSS projects.', category: 'Global' }
+      ],
+      projects: [
+        { name: 'Andhra Rural Maps', description: 'Open source mapping tool for rural infrastructure tracking.', technologies: 'React, Leaflet, PostGIS', status: 'Active', githubUrl: 'https://github.com/fossandhra/rural-maps' },
+        { name: 'AgriConnect', description: 'Market information system for farmers using open data.', technologies: 'Next.js, Python, PostgreSQL', status: 'In Development' }
+      ]
     },
     {
       name: 'fossart',
       title: 'FOSSart',
       description: 'Nurturing FOSS-based startups and entrepreneurship',
-      tagline: 'Entrepreneurship',
-      mission: 'To support entrepreneurs in building sustainable businesses on FOSS technologies',
+      tagline: 'Startup Incubation',
+      mission: 'To support entrepreneurs in building sustainable businesses on FOSS technologies, promoting economic growth through open innovation.',
       color: '#e63946',
-      logo: '/logos/fossart.png',
+      logo: '/logos/fossart-logo.png',
       status: 'active',
       displayOrder: 5,
+      initiatives: [
+        { title: 'Incubation Program', description: 'Mentorship and resources for FOSS-based startups.', category: 'Advisory' },
+        { title: 'Innovation Grants', description: 'Financial support for high-impact open-source solutions.', category: 'Funding' }
+      ],
+      startups: [
+        { name: 'OpenStream Technologies', description: 'FOSS-based edtech solutions for rural schools.', founded: '2023', location: 'Vijayawada' }
+      ]
     },
     {
       name: 'fossterage',
       title: 'FOSSterage',
       description: 'Creating open repositories for research and data',
-      tagline: 'Research & Data',
-      mission: 'To establish open data repositories and promote open research practices',
+      tagline: 'Data & Knowledge Commons',
+      mission: 'To establish open data repositories and promote open research practices for scientists and researchers in the region.',
       color: '#6a4c93',
-      logo: '/logos/fossterage.png',
+      logo: '/logos/fossterage-logo.png',
       status: 'active',
       displayOrder: 6,
+      initiatives: [
+        { title: 'Open Data Portal', description: 'Hosting public datasets for policy analysis and research.', category: 'Data' },
+        { title: 'Research Archives', description: 'Preserving academic papers and open-access research materials.', category: 'Research' }
+      ],
+      repositories: [
+        { name: 'Public Health Archive', description: 'Curated datasets of public health metrics across Andhra Pradesh.', category: 'Data', type: 'Database', url: '#', features: 'Searchable, API access' }
+      ]
     },
     {
       name: 'fosspeaks',
       title: 'FOSSpeaks',
       description: 'Advocacy for FOSS policies and awareness',
-      tagline: 'Advocacy',
-      mission: 'To advocate for FOSS-friendly policies and raise awareness about the benefits of FOSS',
+      tagline: 'Advocacy & Outreach',
+      mission: 'To advocate for FOSS-friendly policies and raise awareness about the benefits of digital freedom and open source software.',
       color: '#1982c4',
-      logo: '/logos/fosspeaks.png',
+      logo: '/logos/fosspeaks-logo.png',
       status: 'active',
       displayOrder: 7,
-    },
+      initiatives: [
+        { title: 'Policy Advocacy', description: 'Engaging with policy makers to promote open-source adoption.', category: 'Advocacy' },
+        { title: 'Awareness Campaigns', description: 'Public workshops and social media outreach about digital freedom.', category: 'Outreach' }
+      ]
+    }
   ]
 
-  for (const program of programs) {
-    await prisma.program.upsert({
-      where: { name: program.name },
-      update: program,
-      create: program,
+  for (const p of programsData) {
+    const { initiatives, team, clubs, projects, startups, repositories, ...programData } = p
+
+    // Simple way to handle cleanup of existingRelations for re-seeding if needed
+    // or just use upsert for the program and then handle relations separately
+
+    const program = await prisma.program.upsert({
+      where: { name: programData.name },
+      update: programData,
+      create: programData,
     })
+
+    // Upsert initiatives
+    if (initiatives) {
+      for (const init of initiatives) {
+        await prisma.programInitiative.upsert({
+          where: { id: `${program.id}-${init.title.replace(/\s+/g, '-').toLowerCase()}` },
+          update: { ...init, programId: program.id },
+          create: { id: `${program.id}-${init.title.replace(/\s+/g, '-').toLowerCase()}`, ...init, programId: program.id }
+        })
+      }
+    }
+
+    // Upsert team
+    if (team) {
+      for (const t of team) {
+        await prisma.programTeamMember.upsert({
+          where: { id: `${program.id}-${t.name.replace(/\s+/g, '-').toLowerCase()}` },
+          update: { ...t, programId: program.id },
+          create: { id: `${program.id}-${t.name.replace(/\s+/g, '-').toLowerCase()}`, ...t, programId: program.id }
+        })
+      }
+    }
+
+    // Upsert clubs
+    if (clubs) {
+      for (const c of clubs) {
+        await prisma.programClub.upsert({
+          where: { id: `${program.id}-${c.name.replace(/\s+/g, '-').toLowerCase()}` },
+          update: { ...c, programId: program.id },
+          create: { id: `${program.id}-${c.name.replace(/\s+/g, '-').toLowerCase()}`, ...c, programId: program.id }
+        })
+      }
+    }
+
+    // Upsert projects
+    if (projects) {
+      for (const proj of projects) {
+        await prisma.programProject.upsert({
+          where: { id: `${program.id}-${proj.name.replace(/\s+/g, '-').toLowerCase()}` },
+          update: { ...proj, programId: program.id },
+          create: { id: `${program.id}-${proj.name.replace(/\s+/g, '-').toLowerCase()}`, ...proj, programId: program.id }
+        })
+      }
+    }
+
+    // Upsert startups
+    if (startups) {
+      for (const s of startups) {
+        await prisma.programStartup.upsert({
+          where: { id: `${program.id}-${s.name.replace(/\s+/g, '-').toLowerCase()}` },
+          update: { ...s, programId: program.id },
+          create: { id: `${program.id}-${s.name.replace(/\s+/g, '-').toLowerCase()}`, ...s, programId: program.id }
+        })
+      }
+    }
+
+    // Upsert repositories
+    if (repositories) {
+      for (const repo of repositories) {
+        await prisma.programRepository.upsert({
+          where: { id: `${program.id}-${repo.name.replace(/\s+/g, '-').toLowerCase()}` },
+          update: { ...repo, programId: program.id },
+          create: { id: `${program.id}-${repo.name.replace(/\s+/g, '-').toLowerCase()}`, ...repo, programId: program.id }
+        })
+      }
+    }
   }
 
-  console.log(`✅ ${programs.length} programs seeded`)
+  console.log(`✅ ${programsData.length} programs and their content seeded`)
 }
 
 async function seedGallery() {

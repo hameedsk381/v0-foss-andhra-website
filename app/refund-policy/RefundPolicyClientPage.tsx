@@ -124,7 +124,7 @@ export default function RefundPolicyClientPage() {
             <h2 className="text-2xl font-bold">Donations</h2>
             <p className="text-gray-500 md:text-lg/relaxed">
               Donations to FOSS Andhra are generally non-refundable. However, if you made a donation in error or were
-              charged an incorrect amount, please contact us immediately at donations@fossandhra.org, and we will
+              charged an incorrect amount, please contact us immediately at donations@fossap.in, and we will
               address your concern.
             </p>
           </motion.section>
@@ -153,7 +153,7 @@ export default function RefundPolicyClientPage() {
           <motion.section variants={fadeIn} className="space-y-4">
             <h2 className="text-2xl font-bold">Refund Process</h2>
             <p className="text-gray-500 md:text-lg/relaxed">
-              To request a refund, please contact us at refunds@fossandhra.org with the following information:
+              To request a refund, please contact us at refunds@fossap.in with the following information:
             </p>
             <ul className="list-disc list-inside text-gray-500 md:text-lg/relaxed space-y-1 pl-4">
               <li>Your full name</li>
@@ -203,9 +203,9 @@ export default function RefundPolicyClientPage() {
             <p className="text-gray-500 md:text-lg/relaxed">
               FOSS Andhra
               <br />
-              Email: refunds@fossandhra.org
+              Email: refunds@fossap.in
               <br />
-              Address: 123 Open Source Street, Andhra Pradesh, India
+              Address: Foss andhra, Yesj centre for excellence, Vijayawada 520008
             </p>
           </motion.section>
 

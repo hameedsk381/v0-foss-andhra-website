@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     google: "your-google-verification-code",
     yandex: "your-yandex-verification-code",
   },
-    generator: 'Next.js',
+  generator: 'Next.js',
 }
 
 export default function RootLayout({
@@ -141,15 +141,17 @@ export default function RootLayout({
               description: "Non-profit organization promoting free and open source software in Andhra Pradesh",
               address: {
                 "@type": "PostalAddress",
-                addressLocality: "Visakhapatnam",
+                streetAddress: "Yesj centre for excellence",
+                addressLocality: "Vijayawada",
                 addressRegion: "Andhra Pradesh",
+                postalCode: "520008",
                 addressCountry: "IN",
               },
               contactPoint: {
                 "@type": "ContactPoint",
-                telephone: "+91-98765-43210",
+                telephone: "+91-94944-63840",
                 contactType: "customer service",
-                email: "info@fossandhra.org",
+                email: "office@fossap.in",
               },
               sameAs: [
                 "https://twitter.com/fossandhra",

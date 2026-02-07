@@ -46,7 +46,7 @@ export default function FOSSynCPage() {
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview" className="mt-6" id="overview">
             <div className="prose prose-lg max-w-none mb-8">
               <p>
                 FOSSynC is our initiative to establish and support student-led FOSS clubs in educational institutions
@@ -121,10 +121,10 @@ export default function FOSSynCPage() {
                 FOSS community.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/programs/fossync/start-club">
+                <Link href="/contact?subject=Start a FOSSynC Club">
                   <Button className="bg-green-600 hover:bg-green-700">Start a Club</Button>
                 </Link>
-                <Link href="/programs/fossync/resources">
+                <Link href="/contact?subject=FOSSynC Resources">
                   <Button variant="outline" className="border-green-200 text-green-600">
                     View Resources
                   </Button>
@@ -133,7 +133,7 @@ export default function FOSSynCPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="clubs" className="mt-6">
+          <TabsContent value="clubs" className="mt-6" id="clubs">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <MapPin className="mr-2 h-6 w-6 text-green-600" />
@@ -206,11 +206,11 @@ export default function FOSSynCPage() {
                     </CardContent>
                     <CardFooter>
                       <Link
-                        href={`/programs/fossync/clubs/${club.name.toLowerCase().replace(/\s+/g, "-")}`}
+                        href="/contact?subject=Club Inquiry"
                         className="w-full"
                       >
                         <Button variant="outline" className="w-full text-green-600 border-green-200">
-                          View Club Details
+                          Inquire for Details
                         </Button>
                       </Link>
                     </CardFooter>
@@ -219,16 +219,17 @@ export default function FOSSynCPage() {
               </div>
 
               <div className="mt-8 text-center">
-                <Link href="/programs/fossync/clubs">
+                <Link href="#clubs">
                   <Button variant="outline" className="mt-4 border-green-200 text-green-600">
-                    View All FOSSynC Clubs
+                    Refresh Club Network
                   </Button>
                 </Link>
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="activities" className="mt-6">
+
+          <TabsContent value="activities" className="mt-6" id="activities">
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader>
@@ -369,7 +370,9 @@ export default function FOSSynCPage() {
                         </li>
                       </ul>
 
-                      <Button className="bg-green-600 hover:bg-green-700">Learn More About the Summit</Button>
+                      <Link href="/contact?subject=FOSSynC Summit Inquiry">
+                        <Button className="bg-green-600 hover:bg-green-700">Learn More About the Summit</Button>
+                      </Link>
                     </div>
                   </div>
                 </CardContent>
@@ -377,7 +380,7 @@ export default function FOSSynCPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="gallery" className="mt-6">
+          <TabsContent value="gallery" className="mt-6" id="gallery">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
               <Image className="mr-2 h-6 w-6 text-green-600" />
               FOSSynC Events Gallery
@@ -400,9 +403,11 @@ export default function FOSSynCPage() {
             </div>
 
             <div className="text-center">
-              <Button variant="outline" className="mt-4 border-green-200 text-green-600">
-                View All Gallery Images
-              </Button>
+              <Link href="/gallery">
+                <Button variant="outline" className="mt-4 border-green-200 text-green-600">
+                  View All Gallery Images
+                </Button>
+              </Link>
             </div>
           </TabsContent>
         </Tabs>

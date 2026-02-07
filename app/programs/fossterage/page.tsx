@@ -252,7 +252,7 @@ export default function FOSSteragePage() {
               </TabsList>
             </AnimatedSection>
 
-            <TabsContent value="databases" className="mt-0">
+            <TabsContent value="databases" className="mt-0" id="databases">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <AnimatedCard>
@@ -338,7 +338,7 @@ export default function FOSSteragePage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="research" className="mt-0">
+            <TabsContent value="research" className="mt-0" id="research">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <AnimatedCard>
@@ -423,7 +423,7 @@ export default function FOSSteragePage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="education" className="mt-0">
+            <TabsContent value="education" className="mt-0" id="education">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <AnimatedSection variant="fadeUp" delay={0.2}>
                   <AnimatedCard>
@@ -618,7 +618,7 @@ export default function FOSSteragePage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Email Us</h4>
-                      <p className="text-sm text-gray-500">fossterage@fossandhra.org</p>
+                      <p className="text-sm text-gray-500">office@fossap.in</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -640,7 +640,7 @@ export default function FOSSteragePage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-sm text-gray-500">+91 98765 43210</p>
+                      <p className="text-sm text-gray-500">+91 94944 63840</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -669,7 +669,7 @@ export default function FOSSteragePage() {
                     <div>
                       <h4 className="font-medium">Office</h4>
                       <p className="text-sm text-gray-500">
-                        FOSS Andhra, Innovation Valley, Visakhapatnam, Andhra Pradesh
+                        Foss andhra, Yesj centre for excellence, Vijayawada 520008
                       </p>
                     </div>
                   </div>

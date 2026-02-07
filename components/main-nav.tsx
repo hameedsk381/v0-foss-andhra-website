@@ -87,7 +87,7 @@ const programs = [
 const navItems = [
   { title: "Home", href: "/" },
   { title: "About", href: "/about" },
-  { title: "Programs", href: "#", hasChildren: true },
+  { title: "Programs", href: "/programs", hasChildren: true },
   { title: "Events", href: "/events" },
   { title: "Gallery", href: "/gallery" },
   { title: "Contribute", href: "/contribute" },

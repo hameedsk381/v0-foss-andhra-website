@@ -200,34 +200,35 @@ export default function ProgramPage({ params }: { params: { slug: string } }) {
                 </section>
             )}
 
-            {/* Projects Showcase (if applicable) */}
+            {/* Projects Showcase */}
             {(program.projects?.length || 0) > 0 && (
-                <section className="w-full py-12 md:py-24 bg-white">
+                <section className="w-full py-12 md:py-24 bg-white" id="projects">
                     <div className="container px-4 md:px-6">
                         <AnimatedSection variant="fadeUp">
                             <div className="text-center mb-12">
                                 <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Featured Projects</h2>
+                                <p className="mt-2 text-gray-600">Open source solutions built by our community</p>
                             </div>
                         </AnimatedSection>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {program.projects?.map((project: any, index: number) => (
                                 <AnimatedSection key={project.id} variant="fadeUp" delay={index * 0.1}>
-                                    <Card>
+                                    <Card className="h-full">
                                         <CardHeader>
                                             <CardTitle className="flex justify-between items-center">
                                                 {project.name}
                                                 {project.githubUrl && (
                                                     <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                                                        <Github className="h-5 w-5 text-gray-500 hover:text-black" />
+                                                        <Github className="h-5 w-5 text-gray-500 hover:text-black transition-colors" />
                                                     </a>
                                                 )}
                                             </CardTitle>
                                             <CardDescription>{project.technologies}</CardDescription>
                                         </CardHeader>
                                         <CardContent>
-                                            <p className="text-sm text-gray-600 mb-4">{project.description}</p>
-                                            <div className="flex gap-2">
-                                                <Badge variant="secondary">{project.status}</Badge>
+                                            <p className="text-sm text-gray-600 mb-4 leading-relaxed">{project.description}</p>
+                                            <div className="flex gap-2 items-center">
+                                                <Badge variant="secondary" className="capitalize">{project.status}</Badge>
                                                 {project.websiteUrl && (
                                                     <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
                                                         <Globe className="h-3 w-3" /> Website
@@ -243,9 +244,131 @@ export default function ProgramPage({ params }: { params: { slug: string } }) {
                 </section>
             )}
 
-            {/* Team Section */}
+            {/* Clubs Showcase */}
+            {(program.clubs?.length || 0) > 0 && (
+                <section className="w-full py-12 md:py-24 bg-white" id="clubs">
+                    <div className="container px-4 md:px-6">
+                        <AnimatedSection variant="fadeUp">
+                            <div className="text-center mb-12">
+                                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Campus Clubs</h2>
+                                <p className="mt-2 text-gray-600">Student-led FOSS societies across institutions</p>
+                            </div>
+                        </AnimatedSection>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {program.clubs?.map((club: any, index: number) => (
+                                <AnimatedSection key={club.id} variant="fadeUp" delay={index * 0.1}>
+                                    <Card className="h-full">
+                                        <CardHeader>
+                                            <CardTitle className="text-xl">{club.name}</CardTitle>
+                                            <CardDescription className="flex items-center gap-1">
+                                                <MapPin className="h-3 w-3" /> {club.location}
+                                            </CardDescription>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500">Institution:</span>
+                                                    <span className="font-medium">{club.institution}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500">Established:</span>
+                                                    <span className="font-medium">{club.established}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500">Active Members:</span>
+                                                    <Badge variant="outline">{club.members}+</Badge>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </AnimatedSection>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Startups Showcase */}
+            {(program.startups?.length || 0) > 0 && (
+                <section className="w-full py-12 md:py-24 bg-white" id="startups">
+                    <div className="container px-4 md:px-6">
+                        <AnimatedSection variant="fadeUp">
+                            <div className="text-center mb-12">
+                                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Featured Startups</h2>
+                                <p className="mt-2 text-gray-600">Innovators building sustainable businesses on FOSS</p>
+                            </div>
+                        </AnimatedSection>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {program.startups?.map((startup: any, index: number) => (
+                                <AnimatedSection key={startup.id} variant="fadeUp" delay={index * 0.1}>
+                                    <Card className="h-full">
+                                        <CardHeader>
+                                            <CardTitle className="text-xl">{startup.name}</CardTitle>
+                                            <CardDescription className="flex items-center gap-1">
+                                                <Calendar className="h-3 w-3" /> Founded {startup.founded}
+                                            </CardDescription>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-sm text-gray-600 mb-4 leading-relaxed">{startup.description}</p>
+                                            <div className="flex justify-between items-center text-sm border-t pt-4">
+                                                <span className="text-gray-500 flex items-center gap-1">
+                                                    <MapPin className="h-3 w-3" /> {startup.location}
+                                                </span>
+                                                {startup.websiteUrl && (
+                                                    <a href={startup.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                                        Visit Website
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </AnimatedSection>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Repositories Showcase */}
+            {(program.repositories?.length || 0) > 0 && (
+                <section className="w-full py-12 md:py-24 bg-gray-50" id="repositories">
+                    <div className="container px-4 md:px-6">
+                        <AnimatedSection variant="fadeUp">
+                            <div className="text-center mb-12">
+                                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Open Repositories</h2>
+                                <p className="mt-2 text-gray-600">Secure and accessible data & knowledge archives</p>
+                            </div>
+                        </AnimatedSection>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {program.repositories?.map((repo: any, index: number) => (
+                                <AnimatedSection key={repo.id} variant="fadeUp" delay={index * 0.1}>
+                                    <Card className="h-full">
+                                        <CardHeader>
+                                            <CardTitle className="flex justify-between items-center text-xl">
+                                                {repo.name}
+                                                <Database className="h-5 w-5 text-purple-600" />
+                                            </CardTitle>
+                                            <CardDescription>{repo.category} • {repo.type}</CardDescription>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-sm text-gray-600 mb-4">{repo.description}</p>
+                                            {repo.features && (
+                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                    {repo.features.split(',').map((feature: string) => (
+                                                        <Badge key={feature} variant="secondary" className="text-[10px]">{feature.trim()}</Badge>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                </AnimatedSection>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
             {(program.team?.length || 0) > 0 && (
-                <section className="w-full py-12 md:py-24 bg-gray-50">
+                <section className="w-full py-12 md:py-24 bg-gray-50" id="team">
                     <div className="container px-4 md:px-6">
                         <AnimatedSection variant="fadeUp">
                             <div className="text-center mb-12">
@@ -258,17 +381,17 @@ export default function ProgramPage({ params }: { params: { slug: string } }) {
                             {program.team?.map((member: any, index: number) => (
                                 <AnimatedSection key={member.id} variant="fadeUp" delay={index * 0.1}>
                                     <AnimatedCard className="overflow-hidden h-full">
-                                        <div className="h-48 bg-gray-200 flex items-center justify-center">
+                                        <div className="h-48 bg-gray-200 flex items-center justify-center relative">
                                             {member.avatar ? (
-                                                <Image src={member.avatar} alt={member.name} width={100} height={100} className="rounded-full" />
+                                                <Image src={member.avatar} alt={member.name} fill className="object-cover" />
                                             ) : (
-                                                <Users className="h-24 w-24 text-gray-400" />
+                                                <Users className="h-16 w-16 text-gray-400" />
                                             )}
                                         </div>
-                                        <CardContent className="pt-4 text-center">
-                                            <h3 className="font-bold">{member.name}</h3>
-                                            <p className="text-sm text-gray-500 font-medium" style={textStyle}>{member.role}</p>
-                                            {member.bio && <p className="text-sm mt-2 text-gray-600">{member.bio}</p>}
+                                        <CardContent className="pt-6 text-center">
+                                            <h3 className="font-bold text-lg">{member.name}</h3>
+                                            <p className="text-sm font-medium mb-3" style={textStyle}>{member.role}</p>
+                                            {member.bio && <p className="text-sm text-gray-600 line-clamp-3">{member.bio}</p>}
                                         </CardContent>
                                     </AnimatedCard>
                                 </AnimatedSection>
@@ -279,16 +402,23 @@ export default function ProgramPage({ params }: { params: { slug: string } }) {
             )}
 
             {/* CTA Section */}
-            <section className="w-full py-16 md:py-24 text-white" style={bgStyle}>
+            <section className="w-full py-16 md:py-24 text-white" style={bgStyle} id="membership">
                 <div className="container px-4 md:px-6 text-center">
-                    <AnimatedSection variant="zoomIn">
+                    <AnimatedSection variant="scaleUp">
                         <h2 className="text-3xl font-bold mb-4">Join {program.title} Today</h2>
                         <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
                             Be part of the movement and contribute to the open source ecosystem in Andhra Pradesh.
                         </p>
                         <div className="flex justify-center gap-4">
+                            {program.name === 'fosstar' && (
+                                <Link href="/membership">
+                                    <AnimatedButton className="bg-white hover:bg-white/90" style={textStyle}>
+                                        Become a Member
+                                    </AnimatedButton>
+                                </Link>
+                            )}
                             <Link href="/contact">
-                                <AnimatedButton className="bg-white hover:bg-white/90" style={textStyle}>
+                                <AnimatedButton variant="outline" className="border-white text-white hover:bg-white/10">
                                     Get Involved
                                 </AnimatedButton>
                             </Link>
