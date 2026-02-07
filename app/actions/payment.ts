@@ -94,6 +94,14 @@ export async function verifyPayment(
       // Generate unique membership ID
       const membershipId = `FOSS${Date.now()}`
 
+      // Generate temporary password
+      const crypto = require("crypto")
+      const password = crypto.randomBytes(4).toString("hex") // 8 char hex string
+
+      // Hash password
+      const bcrypt = require("bcryptjs")
+      const hashedPassword = await bcrypt.hash(password, 10)
+
       // Save member to database
       try {
         const expiryDate = new Date()
@@ -109,17 +117,23 @@ export async function verifyPayment(
             membershipId,
             expiryDate,
             paymentId,
-            metadata: additionalData || {}, // ✅ Save additional data
+            // Map additional data to member fields
+            organization: additionalData?.institution || additionalData?.institutionName || additionalData?.company || additionalData?.companyName || additionalData?.organizationName,
+            designation: additionalData?.designation || additionalData?.course,
+            experience: additionalData?.experience || additionalData?.year,
+            interests: additionalData?.interests || additionalData?.contribution || additionalData?.expectations,
+            password: hashedPassword, // ✅ Save hashed password
           },
         })
 
         console.log("Member saved to database:", membershipId)
 
-        // Send welcome email
+        // Send welcome email with temporary password
         await sendMemberWelcomeEmail(userDetails.email, {
           name: userDetails.name,
           membershipId,
-          expiryDate
+          expiryDate,
+          password // ✅ Send plain password in email
         })
 
         console.log("Welcome email sent to:", userDetails.email)

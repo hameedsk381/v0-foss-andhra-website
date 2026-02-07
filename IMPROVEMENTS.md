@@ -108,12 +108,27 @@ This document outlines the improvements made to the FOSS Andhra website while pr
 - Skeleton components can be extended easily
 - Clear separation of concerns
 
+### 6. ✅ Authentication Fix
+
+#### Member Login Access
+- **Problem**: Users could register and pay but received no credentials to log in to the member portal.
+- **Solution**: 
+  - Updated `app/actions/payment.ts` to generate a secure random password upon payment verification.
+  - Hashed the password using `bcryptjs` before storing in the database.
+  - Updated `lib/email.ts` to include the temporary password in the welcome email.
+  - Mapped registration form fields (institution, course, etc.) to the Member profile.
+- **Impact**: New members now receive immediate access to their dashboard.
+
 ## Technical Implementation Details
 
 ### Files Created
 1. `lib/animations.ts` - Animation constants and variants
 2. `components/ui/skeleton.tsx` - Loading skeleton components
 3. `components/skip-link.tsx` - Accessibility skip link
+
+4. `app/actions/payment.ts`:
+   - Added password generation and hashing
+   - Improved data mapping for member profile
 
 ### Files Modified
 1. `app/ClientPage.tsx`:
@@ -122,6 +137,10 @@ This document outlines the improvements made to the FOSS Andhra website while pr
    - Added OrganizationJsonLd structured data
    - Enhanced buttons with micro-interactions
    - Added main content landmark
+2. `lib/email.ts`:
+   - Updated welcome email template to include password
+3. `app/actions/payment.ts`:
+   - Implemented password generation and hashing strategy
 
 ### Dependencies
 - No new dependencies added

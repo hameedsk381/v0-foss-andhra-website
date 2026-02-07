@@ -372,7 +372,7 @@ export async function sendNewsletterEmail(
 export async function sendWelcomeEmail(email: string, name?: string) {
   const greeting = name ? `Hi ${name}` : 'Hello'
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3002'
-  
+
   const content = `
     <h1>Welcome to FOSS Andhra Foundation! 🎉</h1>
     <p>
@@ -428,8 +428,9 @@ export async function sendMemberWelcomeEmail(to: string, memberData: {
   name: string
   membershipId: string
   expiryDate: Date
+  password?: string
 }) {
-  const { name, membershipId, expiryDate } = memberData
+  const { name, membershipId, expiryDate, password } = memberData
 
   const mailOptions = {
     from: `"${process.env.SMTP_FROM_NAME || 'FOSS Andhra'}" <${process.env.SMTP_USER}>`,
@@ -462,8 +463,11 @@ export async function sendMemberWelcomeEmail(to: string, memberData: {
               <h3>Your Membership Details</h3>
               <p><strong>Membership ID:</strong> ${membershipId}</p>
               <p><strong>Type:</strong> FOSStar Annual</p>
+              <p><strong>Temporary Password:</strong> ${password}</p>
               <p><strong>Valid Until:</strong> ${expiryDate.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </div>
+
+            <p><strong>Important:</strong> Please log in and change your password immediately.</p>
 
             <h3>What's Next?</h3>
             <ul>
@@ -474,7 +478,7 @@ export async function sendMemberWelcomeEmail(to: string, memberData: {
             </ul>
 
             <center>
-              <a href="https://fossandhra.org/programs/fosstar" class="button">Visit Member Portal</a>
+              <a href="https://fossandhra.org/login" class="button">Login to Member Portal</a>
             </center>
 
             <p>If you have any questions, feel free to reach out to us at <a href="mailto:info@fossandhra.org">info@fossandhra.org</a></p>
