@@ -4,6 +4,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 import { Prisma } from "@prisma/client"
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
@@ -174,7 +176,7 @@ export async function GET() {
     console.error("Error fetching analytics:", error)
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch analytics"
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
