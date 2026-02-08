@@ -218,8 +218,12 @@ if errorlevel 1 (
 call :log "Running database migrations..."
 bunx prisma migrate deploy
 if errorlevel 1 (
-    call :error "Failed to run database migrations"
-    exit /b 1
+    call :warning "Database migrations failed, attempting db push..."
+    bunx prisma db push
+    if errorlevel 1 (
+        call :error "Failed to push database schema"
+        exit /b 1
+    )
 )
 
 :: Seed database

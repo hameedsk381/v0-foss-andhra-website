@@ -35,7 +35,7 @@ function log(message: string, type: 'info' | 'success' | 'warning' | 'error' = '
     error: '\x1b[31m', // Red
     reset: '\x1b[0m' // Reset
   };
-  
+
   console.log(`${colors[type]}[${type.toUpperCase()}]${colors.reset} ${message}`);
 }
 
@@ -65,7 +65,7 @@ function generateSecret(length: number = 32): string {
 
 function checkEnvironmentVariables(): boolean {
   log('Checking environment variables...', 'info');
-  
+
   // Check if .env file exists
   if (!existsSync(ENV_FILE)) {
     log('.env file not found. Creating from .env.production template...', 'warning');
@@ -110,25 +110,25 @@ MINIO_PUBLIC_URL=http://localhost:9000
   // Read current .env file
   const envContent = readFileSync(ENV_FILE, 'utf-8');
   const envLines = envContent.split('\n');
-  
+
   // Check for required variables
   const missingVars: string[] = [];
   for (const varName of REQUIRED_ENV_VARS) {
-    const hasVar = envLines.some(line => 
+    const hasVar = envLines.some(line =>
       line.trim().startsWith(varName + '=') && !line.trim().startsWith('#')
     );
-    
+
     if (!hasVar) {
       missingVars.push(varName);
     }
   }
-  
+
   if (missingVars.length > 0) {
     log(`Missing required environment variables: ${missingVars.join(', ')}`, 'warning');
     log('Please update your .env file with these variables before proceeding.', 'warning');
     return false;
   }
-  
+
   // Check for placeholder values
   const placeholders = [
     'your-razorpay-key-id',
@@ -138,16 +138,16 @@ MINIO_PUBLIC_URL=http://localhost:9000
     'your-smtp-password',
     'your-from-email'
   ];
-  
-  const hasPlaceholders = placeholders.some(placeholder => 
+
+  const hasPlaceholders = placeholders.some(placeholder =>
     envContent.includes(placeholder)
   );
-  
+
   if (hasPlaceholders) {
     log('Detected placeholder values in .env file. Please update with actual values.', 'warning');
     return false;
   }
-  
+
   log('Environment variables check passed!', 'success');
   return true;
 }
@@ -155,17 +155,17 @@ MINIO_PUBLIC_URL=http://localhost:9000
 async function main() {
   try {
     log('Starting FOSS Andhra Production Deployment...', 'info');
-    
+
     // 1. Check environment variables
     if (!checkEnvironmentVariables()) {
       log('Environment check failed. Please fix the issues and run again.', 'error');
       process.exit(1);
     }
-    
+
     // 2. Install dependencies
     log('Installing dependencies...', 'info');
     runCommand('bun install');
-    
+
     // 3. Generate Prisma client
     log('Generating Prisma client...', 'info');
     try {
@@ -173,15 +173,21 @@ async function main() {
     } catch (error) {
       log('Prisma generation failed, continuing...', 'warning');
     }
-    
+
     // 4. Run database migrations
     log('Running database migrations...', 'info');
     try {
       runCommand('bunx prisma migrate deploy');
     } catch (error) {
-      log('Database migrations failed, continuing...', 'warning');
+      log('Database migrations failed, attempting db push...', 'warning');
+      try {
+        runCommand('bunx prisma db push');
+        log('Database push successful.', 'success');
+      } catch (pushError) {
+        log('Database push failed, continuing...', 'warning');
+      }
     }
-    
+
     // 5. Seed database
     log('Seeding database...', 'info');
     try {
@@ -189,7 +195,7 @@ async function main() {
     } catch (error) {
       log('Database seeding failed, continuing...', 'warning');
     }
-    
+
     // 6. Create admin user if not exists
     log('Creating admin user...', 'info');
     try {
@@ -197,7 +203,7 @@ async function main() {
     } catch (error) {
       log('Admin user may already exist or creation failed. Continuing...', 'warning');
     }
-    
+
     // 7. Build application
     log('Building application for production...', 'info');
     try {
@@ -205,12 +211,12 @@ async function main() {
     } catch (error) {
       log('Build failed, continuing...', 'warning');
     }
-    
+
     // 8. Start application
     log('Starting production server...', 'info');
     log('Application will be available at the configured domain', 'success');
     runCommand('bun run start');
-    
+
   } catch (error) {
     log(`Deployment failed: ${error instanceof Error ? error.message : String(error)}`, 'error');
     process.exit(1);
