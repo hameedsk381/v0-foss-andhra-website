@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { MainNav } from "@/components/main-nav"
 import { SiteFooter } from "@/components/site-footer"
+import { AuthProvider } from "@/components/auth-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { RegisterSW } from "./register-sw"
@@ -104,29 +105,31 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <div className="flex flex-col min-h-screen">
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded"
-            >
-              Skip to main content
-            </a>
-            <header className="border-b">
-              <div className="container px-4 md:px-6">
-                <MainNav />
-              </div>
-            </header>
-            <main id="main-content" className="flex-1">
-              {children}
-            </main>
-            <SiteFooter />
-            <BottomNav />
-          </div>
-          <Toaster />
-          <RegisterSW />
-          <InstallPrompt />
-          <OfflineIndicator />
-          <WebVitals />
+          <AuthProvider>
+            <div className="flex flex-col min-h-screen">
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded"
+              >
+                Skip to main content
+              </a>
+              <header className="border-b">
+                <div className="container px-4 md:px-6">
+                  <MainNav />
+                </div>
+              </header>
+              <main id="main-content" className="flex-1">
+                {children}
+              </main>
+              <SiteFooter />
+              <BottomNav />
+            </div>
+            <Toaster />
+            <RegisterSW />
+            <InstallPrompt />
+            <OfflineIndicator />
+            <WebVitals />
+          </AuthProvider>
         </ThemeProvider>
 
         {/* Structured Data for Organization */}
