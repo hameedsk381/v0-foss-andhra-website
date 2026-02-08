@@ -16,7 +16,7 @@ import Script from "next/script"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://fossandhra.org"),
+  metadataBase: new URL("https://fossap.in"),
   title: {
     default: "FOSS Andhra - Free & Open Source Software Community in Andhra Pradesh",
     template: "%s | FOSS Andhra",
@@ -36,6 +36,8 @@ export const metadata: Metadata = {
     "digital sovereignty",
     "FOSS training",
     "open source projects",
+    "Vijayawada",
+    "Amaravati",
   ],
   authors: [{ name: "FOSS Andhra" }],
   creator: "FOSS Andhra",
@@ -49,7 +51,7 @@ export const metadata: Metadata = {
     title: "FOSS Andhra - Free & Open Source Software Community",
     description:
       "Join the leading open source community in Andhra Pradesh. Promoting FOSS in education, governance, and society.",
-    url: "https://fossandhra.org",
+    url: "https://fossap.in",
     siteName: "FOSS Andhra",
     images: [
       {
@@ -95,7 +97,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href="https://fossandhra.org" />
+        <link rel="canonical" href="https://fossap.in" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
@@ -136,12 +138,12 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "FOSS Andhra",
-              url: "https://fossandhra.org",
-              logo: "https://fossandhra.org/logo.png",
+              url: "https://fossap.in",
+              logo: "https://fossap.in/logos/foss-andhra-logo.png",
               description: "Non-profit organization promoting free and open source software in Andhra Pradesh",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "Yesj centre for excellence",
+                streetAddress: "Yesj Centre for Excellence",
                 addressLocality: "Vijayawada",
                 addressRegion: "Andhra Pradesh",
                 postalCode: "520008",
