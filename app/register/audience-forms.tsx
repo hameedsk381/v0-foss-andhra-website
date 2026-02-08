@@ -27,6 +27,7 @@ interface StudentFormData extends BaseFormData {
   course: string
   year: string
   studentId: string
+  address: string
 
   projects: string
   contribution: string
@@ -161,6 +162,7 @@ export function AudienceSpecificForms() {
     course: "",
     year: "",
     studentId: "",
+    address: "",
 
     projects: "",
     contribution: "",
@@ -443,6 +445,11 @@ export function AudienceSpecificForms() {
                       <p className="mb-2">
                         <strong>Phone:</strong> {getCurrentFormData().phone}
                       </p>
+                      {selectedAudience === 'student' && (
+                        <p className="mb-2">
+                          <strong>Address:</strong> {(getCurrentFormData() as StudentFormData).address}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <p className="mb-2">
@@ -561,6 +568,17 @@ function StudentForm({ data, setData }: { data: StudentFormData; setData: (data:
             value={data.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
             placeholder="Enter your phone number"
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="address">Address *</Label>
+          <Textarea
+            id="address"
+            value={data.address}
+            onChange={(e) => handleChange("address", e.target.value)}
+            placeholder="Enter your full address"
+            rows={2}
             required
           />
         </div>

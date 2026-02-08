@@ -119,6 +119,7 @@ export async function verifyPayment(
             paymentId,
             // Map additional data to member fields
             organization: additionalData?.institution || additionalData?.institutionName || additionalData?.company || additionalData?.companyName || additionalData?.organizationName,
+            address: additionalData?.address,
             designation: additionalData?.designation || additionalData?.course,
             experience: additionalData?.experience || additionalData?.year,
             interests: additionalData?.interests || additionalData?.contribution || additionalData?.expectations,

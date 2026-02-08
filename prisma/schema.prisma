@@ -41,6 +41,7 @@ model Member {
   updatedAt      DateTime  @updatedAt
   password       String?
   avatar         String?
+  address        String?
 }
 
 model Event {
