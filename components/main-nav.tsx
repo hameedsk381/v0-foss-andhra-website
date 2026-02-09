@@ -16,7 +16,17 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, X, Code, Database, Smartphone } from "lucide-react"
+import { Menu, X, Code, Database, Smartphone, BookOpen, User, LogOut, LayoutDashboard } from "lucide-react"
+import { useSession, signOut } from "next-auth/react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const programs = [
   {
@@ -56,13 +66,13 @@ const programs = [
     logo: "/logos/fosstorm-logo.png",
   },
   {
-    id: "fossart",
-    title: "FOSSart",
+    id: "fosstart",
+    title: "FOSStart",
     description: "Entrepreneurship space for funding open-source innovations",
-    href: "/programs/fossart",
+    href: "/programs/fosstart",
     color: "red",
     icon: Database,
-    logo: "/logos/fossart-logo.png",
+    logo: "/logos/fosstart-logo.png",
   },
   {
     id: "fossterage",
@@ -89,12 +99,14 @@ const navItems = [
   { title: "About", href: "/about" },
   { title: "Programs", href: "/programs", hasChildren: true },
   { title: "Events", href: "/events" },
+  { title: "Blog", href: "/blog", icon: BookOpen },
   { title: "Gallery", href: "/gallery" },
   { title: "Contribute", href: "/contribute" },
 ]
 
 export function MainNav() {
   const pathname = usePathname()
+  const { data: session } = useSession()
   const [isOpen, setIsOpen] = React.useState(false)
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const menuTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
@@ -138,7 +150,7 @@ export function MainNav() {
   }, [])
 
   return (
-    <div className="flex justify-between items-center py-4">
+    <div className="flex w-full justify-between items-center">
       <Link href="/" className="flex items-center space-x-2">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -175,8 +187,7 @@ export function MainNav() {
                       {/* Custom dropdown that stays open on hover */}
                       {isMenuOpen && (
                         <div
-                          className="absolute top-full left-0 mt-1 z-50 bg-white rounded-md shadow-lg p-4 w-[600px] dropdown-menu"
-                          style={{ minWidth: "600px" }}
+                          className="absolute top-full left-0 mt-1 z-50 bg-white rounded-md shadow-lg p-4 w-[90vw] md:w-[500px] lg:w-[600px] dropdown-menu"
                         >
                           <motion.div
                             initial={{ opacity: 0, y: 10 }}
@@ -199,7 +210,7 @@ export function MainNav() {
                                         ? "hover:bg-green-100"
                                         : program.id === "fosstorm"
                                           ? "hover:bg-orange-100"
-                                          : program.id === "fossart"
+                                          : program.id === "fosstart"
                                             ? "hover:bg-red-100"
                                             : program.id === "fossterage"
                                               ? "hover:bg-blue-100"
@@ -249,11 +260,52 @@ export function MainNav() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="ml-4">
-          <Link href="/programs/fosstar#membership">
-            <Button className="bg-secondary text-black hover:bg-secondary/90">Join Us</Button>
-          </Link>
-        </motion.div>
+        <div className="ml-4 flex items-center gap-4">
+          {session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
+                    <AvatarFallback>{session.user?.name?.charAt(0) || "U"}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{session.user?.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{session.user?.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/member">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    <span>Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/member/profile">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/login">
+                <Button className="bg-secondary text-black hover:bg-secondary/90">Join Us / Login</Button>
+              </Link>
+            </motion.div>
+          )}
+        </div>
       </div>
 
       {/* Mobile Navigation */}
@@ -301,7 +353,7 @@ export function MainNav() {
                                 <Link
                                   href={program.href}
                                   className={cn(
-                                    "flex items-center gap-2 py-2 px-1 rounded-md",
+                                    "flex items-center gap-2 py-3 px-1 rounded-md",
                                     pathname === program.href
                                       ? program.id === "fosstar"
                                         ? "text-fosstar font-medium"
@@ -311,7 +363,7 @@ export function MainNav() {
                                             ? "text-green-600 font-medium"
                                             : program.id === "fosstorm"
                                               ? "text-orange-600 font-medium"
-                                              : program.id === "fossart"
+                                              : program.id === "fosstart"
                                                 ? "text-red-600 font-medium"
                                                 : program.id === "fossterage"
                                                   ? "text-blue-600 font-medium"
@@ -345,7 +397,7 @@ export function MainNav() {
                         <Link
                           href={item.href}
                           className={cn(
-                            "block py-2 px-1 rounded-md",
+                            "block py-3 px-1 rounded-md",
                             pathname === item.href ? "text-primary font-medium" : "text-foreground hover:text-primary",
                           )}
                           onClick={() => setIsOpen(false)}
@@ -358,10 +410,35 @@ export function MainNav() {
                 </AnimatePresence>
               </div>
 
-              <div className="pt-4 mt-auto">
-                <Link href="/programs/fosstar#membership" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full bg-secondary text-black hover:bg-secondary/90">Join Us</Button>
-                </Link>
+              <div className="pt-4 mt-auto border-t">
+                {session ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 px-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={session.user?.image || ""} />
+                        <AvatarFallback>{session.user?.name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium">{session.user?.name}</p>
+                        <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+                      </div>
+                    </div>
+                    <Link href="/member" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full justify-start">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button variant="outline" className="w-full justify-start text-red-600" onClick={() => signOut()}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Log out
+                    </Button>
+                  </div>
+                ) : (
+                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full bg-secondary text-black hover:bg-secondary/90">Join Us / Login</Button>
+                  </Link>
+                )}
               </div>
             </div>
           </SheetContent>

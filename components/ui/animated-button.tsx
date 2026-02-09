@@ -21,7 +21,7 @@ interface AnimatedButtonProps extends ButtonProps {
     | "fosserve"
     | "fossync"
     | "fosstorm"
-    | "fossart"
+    | "fosstart"
     | "fossstart"
     | "fossterage"
     | "fosspeaks"
@@ -46,8 +46,8 @@ export function AnimatedButton({
         return "bg-fossync text-white hover:bg-fossync/90"
       case "fosstorm":
         return "bg-fosstorm text-white hover:bg-fosstorm/90"
-      case "fossart":
-        return "bg-fossart text-white hover:bg-fossart/90"
+      case "fosstart":
+        return "bg-fosstart text-white hover:bg-fosstart/90"
       case "fossstart":
         return "bg-fossstart text-white hover:bg-fossstart/90"
       case "fossterage":

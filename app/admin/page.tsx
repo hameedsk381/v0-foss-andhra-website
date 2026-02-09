@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Calendar, Heart, TrendingUp, DollarSign, UserPlus, Loader2 } from "lucide-react"
@@ -152,8 +153,11 @@ export default function AdminDashboard() {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Recent Members</CardTitle>
+            <Link href="/admin/members" className="text-sm text-primary hover:underline">
+              View All
+            </Link>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -177,8 +181,11 @@ export default function AdminDashboard() {
         </Card>
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Upcoming Events</CardTitle>
+            <Link href="/admin/events" className="text-sm text-primary hover:underline">
+              View All
+            </Link>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -204,8 +211,11 @@ export default function AdminDashboard() {
 
       {/* Recent Donations */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Recent Donations</CardTitle>
+          <Link href="/admin/donations" className="text-sm text-primary hover:underline">
+            View All
+          </Link>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">

@@ -80,7 +80,7 @@ const sampleGalleryData = [
   },
   {
     filename: 'gallery/sample-6.jpg',
-    originalName: 'fossart-startup.jpg',
+    originalName: 'fosstart-startup.jpg',
     mimeType: 'image/jpeg',
     size: 234000,
     url: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800',
@@ -88,7 +88,7 @@ const sampleGalleryData = [
     description: 'New startups join the FOSS entrepreneurship program',
     alt: 'Startup founders at incubation program',
     caption: 'New startups join the FOSS entrepreneurship program',
-    program: 'fossart',
+    program: 'fosstart',
     category: 'event',
     tags: 'startup,entrepreneurship,innovation',
     uploadedBy: 'admin',

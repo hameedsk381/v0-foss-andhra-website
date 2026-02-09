@@ -30,9 +30,9 @@ export function LogoShowcase() {
       delay: 0.4,
     },
     {
-      id: "fossart",
-      title: "FOSSart",
-      logo: "/logos/fossart-logo.png",
+      id: "fosstart",
+      title: "FOSStart",
+      logo: "/logos/fosstart-logo.png",
       delay: 0.5,
     },
     {

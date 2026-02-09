@@ -12,7 +12,7 @@ async function main() {
       data: {
         name: "FOSS Andhra Admin",
         email: "admin@fossandhra.org",
-        password: "$2a$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDzqgqw9XDpnDGfPdYjNlJBMF9S6", // "password123"
+        password: "$2a$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdqgqw9XDpnDGfPdYjNlJBMF9S6", // "password123"
         role: "admin",
       },
     })
@@ -97,55 +97,56 @@ async function main() {
     }),
   ])
 
-  // Blog posts data
+  // Blog posts data - now using Markdown format
   const blogPosts = [
     {
       title: "Getting Started with Free and Open Source Software",
       slug: "getting-started-with-foss",
       excerpt: "A comprehensive guide for beginners to understand and embrace the world of Free and Open Source Software (FOSS).",
-      content: `<h2>What is FOSS?</h2>
-<p>Free and Open Source Software (FOSS) represents software that is freely licensed to grant users the right to use, study, change, and distribute the software and its source code to anyone and for any purpose.</p>
+      content: `## What is FOSS?
 
-<h3>The Four Essential Freedoms</h3>
-<p>FOSS is built on four fundamental freedoms:</p>
-<ul>
-  <li><strong>Freedom 0:</strong> The freedom to run the program as you wish, for any purpose</li>
-  <li><strong>Freedom 1:</strong> The freedom to study how the program works and change it</li>
-  <li><strong>Freedom 2:</strong> The freedom to redistribute copies</li>
-  <li><strong>Freedom 3:</strong> The freedom to distribute copies of your modified versions</li>
-</ul>
+Free and Open Source Software (FOSS) represents software that is freely licensed to grant users the right to use, study, change, and distribute the software and its source code to anyone and for any purpose.
 
-<h3>Why Choose FOSS?</h3>
-<p>Open source software offers numerous advantages:</p>
-<ul>
-  <li><strong>Cost-effective:</strong> Most FOSS is available at no cost</li>
-  <li><strong>Security:</strong> With thousands of eyes reviewing code, vulnerabilities are found and fixed quickly</li>
-  <li><strong>Flexibility:</strong> Customize software to meet your specific needs</li>
-  <li><strong>Community:</strong> Join a global community of developers and users</li>
-  <li><strong>No Vendor Lock-in:</strong> Freedom to switch or modify tools as needed</li>
-</ul>
+### The Four Essential Freedoms
 
-<h3>Popular FOSS Applications</h3>
-<p>Start your FOSS journey with these popular applications:</p>
-<ul>
-  <li><strong>Firefox:</strong> Fast, privacy-focused web browser</li>
-  <li><strong>LibreOffice:</strong> Complete office suite alternative to Microsoft Office</li>
-  <li><strong>GIMP:</strong> Powerful image editing software</li>
-  <li><strong>VLC Media Player:</strong> Plays virtually any media format</li>
-  <li><strong>Audacity:</strong> Audio recording and editing software</li>
-</ul>
+FOSS is built on four fundamental freedoms:
 
-<h3>Getting Involved</h3>
-<p>Contributing to FOSS doesn't always mean coding. You can:</p>
-<ul>
-  <li>Report bugs and suggest features</li>
-  <li>Write or improve documentation</li>
-  <li>Design graphics and UI elements</li>
-  <li>Translate software to other languages</li>
-  <li>Help other users in forums and chat rooms</li>
-</ul>
+- **Freedom 0:** The freedom to run the program as you wish, for any purpose
+- **Freedom 1:** The freedom to study how the program works and change it
+- **Freedom 2:** The freedom to redistribute copies
+- **Freedom 3:** The freedom to distribute copies of your modified versions
 
-<p>Join FOSS Andhra to connect with like-minded individuals and contribute to the open source ecosystem!</p>`,
+### Why Choose FOSS?
+
+Open source software offers numerous advantages:
+
+- **Cost-effective:** Most FOSS is available at no cost
+- **Security:** With thousands of eyes reviewing code, vulnerabilities are found and fixed quickly
+- **Flexibility:** Customize software to meet your specific needs
+- **Community:** Join a global community of developers and users
+- **No Vendor Lock-in:** Freedom to switch or modify tools as needed
+
+### Popular FOSS Applications
+
+Start your FOSS journey with these popular applications:
+
+- **Firefox:** Fast, privacy-focused web browser
+- **LibreOffice:** Complete office suite alternative to Microsoft Office
+- **GIMP:** Powerful image editing software
+- **VLC Media Player:** Plays virtually any media format
+- **Audacity:** Audio recording and editing software
+
+### Getting Involved
+
+Contributing to FOSS doesn't always mean coding. You can:
+
+- Report bugs and suggest features
+- Write or improve documentation
+- Design graphics and UI elements
+- Translate software to other languages
+- Help other users in forums and chat rooms
+
+Join FOSS Andhra to connect with like-minded individuals and contribute to the open source ecosystem!`,
       categoryId: categories[0].id,
       authorId: admin.id,
       status: "published",
@@ -163,60 +164,81 @@ async function main() {
       title: "Top 10 Linux Distributions for Developers in 2024",
       slug: "top-10-linux-distros-developers-2024",
       excerpt: "Explore the best Linux distributions tailored for software development, from beginner-friendly to advanced developer workstations.",
-      content: `<h2>Why Linux for Development?</h2>
-<p>Linux has become the operating system of choice for developers worldwide. Its open-source nature, powerful command-line tools, and extensive package repositories make it ideal for software development.</p>
+      content: `## Why Linux for Development?
 
-<h3>1. Ubuntu</h3>
-<p><strong>Best for:</strong> Beginners and general development</p>
-<p>Ubuntu remains the most popular Linux distribution, offering excellent hardware support, a vast software repository, and long-term support (LTS) releases. Perfect for web development, Python programming, and containerization with Docker.</p>
+Linux has become the operating system of choice for developers worldwide. Its open-source nature, powerful command-line tools, and extensive package repositories make it ideal for software development.
 
-<h3>2. Fedora Workstation</h3>
-<p><strong>Best for:</strong> Cutting-edge development</p>
-<p>Fedora delivers the latest software packages and technologies. It's sponsored by Red Hat and serves as a testing ground for RHEL features. Excellent for system programming and DevOps.</p>
+### 1. Ubuntu
 
-<h3>3. Arch Linux</h3>
-<p><strong>Best for:</strong> Advanced users who want control</p>
-<p>Arch Linux follows a rolling release model and provides complete control over your system. The Arch User Repository (AUR) offers access to thousands of packages. Perfect for learning Linux internals.</p>
+**Best for:** Beginners and general development
 
-<h3>4. Pop!_OS</h3>
-<p><strong>Best for:</strong> AI/ML developers</p>
-<p>Developed by System76, Pop!_OS comes with excellent NVIDIA GPU support out of the box. Ideal for machine learning, data science, and CUDA development.</p>
+Ubuntu remains the most popular Linux distribution, offering excellent hardware support, a vast software repository, and long-term support (LTS) releases. Perfect for web development, Python programming, and containerization with Docker.
 
-<h3>5. Manjaro</h3>
-<p><strong>Best for:</strong> Arch experience without the complexity</p>
-<p>Manjaro provides an Arch-based system with easier installation and better hardware support. Great balance between cutting-edge and stability.</p>
+### 2. Fedora Workstation
 
-<h3>6. Debian</h3>
-<p><strong>Best for:</strong> Server development and stability</p>
-<p>Known for its rock-solid stability, Debian is perfect for backend development and server applications. The foundation for Ubuntu and many other distributions.</p>
+**Best for:** Cutting-edge development
 
-<h3>7. openSUSE Tumbleweed</h3>
-<p><strong>Best for:</strong> Enterprise development</p>
-<p>A rolling release with excellent tools like YaST for system configuration. Strong integration with enterprise tools and containers.</p>
+Fedora delivers the latest software packages and technologies. It's sponsored by Red Hat and serves as a testing ground for RHEL features. Excellent for system programming and DevOps.
 
-<h3>8. Linux Mint</h3>
-<p><strong>Best for:</strong> Windows developers transitioning to Linux</p>
-<p>User-friendly interface similar to Windows, based on Ubuntu. Excellent for web development and general programming.</p>
+### 3. Arch Linux
 
-<h3>9. Kali Linux</h3>
-<p><strong>Best for:</strong> Security researchers and penetration testing</p>
-<p>Packed with security and penetration testing tools. Essential for cybersecurity professionals and ethical hackers.</p>
+**Best for:** Advanced users who want control
 
-<h3>10. NixOS</h3>
-<p><strong>Best for:</strong> Reproducible development environments</p>
-<p>Revolutionary approach to package management. Perfect for DevOps and ensuring reproducible builds.</p>
+Arch Linux follows a rolling release model and provides complete control over your system. The Arch User Repository (AUR) offers access to thousands of packages. Perfect for learning Linux internals.
 
-<h3>Choosing Your Distribution</h3>
-<p>Consider these factors:</p>
-<ul>
-  <li>Your experience level with Linux</li>
-  <li>Type of development you'll be doing</li>
-  <li>Hardware compatibility requirements</li>
-  <li>Preference for stability vs. cutting-edge features</li>
-  <li>Community and documentation availability</li>
-</ul>
+### 4. Pop!_OS
 
-<p>Visit FOSS Andhra's events page to join our Linux installation workshops!</p>`,
+**Best for:** AI/ML developers
+
+Developed by System76, Pop!_OS comes with excellent NVIDIA GPU support out of the box. Ideal for machine learning, data science, and CUDA development.
+
+### 5. Manjaro
+
+**Best for:** Arch experience without the complexity
+
+Manjaro provides an Arch-based system with easier installation and better hardware support. Great balance between cutting-edge and stability.
+
+### 6. Debian
+
+**Best for:** Server development and stability
+
+Known for its rock-solid stability, Debian is perfect for backend development and server applications. The foundation for Ubuntu and many other distributions.
+
+### 7. openSUSE Tumbleweed
+
+**Best for:** Enterprise development
+
+A rolling release with excellent tools like YaST for system configuration. Strong integration with enterprise tools and containers.
+
+### 8. Linux Mint
+
+**Best for:** Windows developers transitioning to Linux
+
+User-friendly interface similar to Windows, based on Ubuntu. Excellent for web development and general programming.
+
+### 9. Kali Linux
+
+**Best for:** Security researchers and penetration testing
+
+Packed with security and penetration testing tools. Essential for cybersecurity professionals and ethical hackers.
+
+### 10. NixOS
+
+**Best for:** Reproducible development environments
+
+Revolutionary approach to package management. Perfect for DevOps and ensuring reproducible builds.
+
+### Choosing Your Distribution
+
+Consider these factors:
+
+- Your experience level with Linux
+- Type of development you'll be doing
+- Hardware compatibility requirements
+- Preference for stability vs. cutting-edge features
+- Community and documentation availability
+
+Visit FOSS Andhra's events page to join our Linux installation workshops!`,
       categoryId: categories[1].id,
       authorId: admin.id,
       status: "published",
@@ -234,30 +256,34 @@ async function main() {
       title: "Building Your First Open Source Project: A Step-by-Step Guide",
       slug: "building-first-open-source-project",
       excerpt: "Learn how to create, publish, and maintain your first open source project. From choosing a license to managing contributions.",
-      content: `<h2>Starting Your Open Source Journey</h2>
-<p>Creating your first open source project can be intimidating, but it's one of the best ways to learn, contribute to the community, and build your portfolio.</p>
+      content: `## Starting Your Open Source Journey
 
-<h3>Step 1: Choose a Problem to Solve</h3>
-<p>The best projects solve real problems. Consider:</p>
-<ul>
-  <li>Pain points you've experienced while coding</li>
-  <li>Tools that could improve your workflow</li>
-  <li>Improvements to existing open source projects</li>
-  <li>Educational projects that help others learn</li>
-</ul>
+Creating your first open source project can be intimidating, but it's one of the best ways to learn, contribute to the community, and build your portfolio.
 
-<h3>Step 2: Select the Right License</h3>
-<p>Choosing a license is crucial for open source projects:</p>
-<ul>
-  <li><strong>MIT License:</strong> Very permissive, allows commercial use</li>
-  <li><strong>GPL (GNU General Public License):</strong> Copyleft license requiring derivatives to be open source</li>
-  <li><strong>Apache 2.0:</strong> Similar to MIT with explicit patent grants</li>
-  <li><strong>BSD:</strong> Simple and permissive like MIT</li>
-</ul>
+### Step 1: Choose a Problem to Solve
 
-<h3>Step 3: Set Up Your Repository</h3>
-<p>Create a professional repository structure:</p>
-<pre><code>your-project/
+The best projects solve real problems. Consider:
+
+- Pain points you've experienced while coding
+- Tools that could improve your workflow
+- Improvements to existing open source projects
+- Educational projects that help others learn
+
+### Step 2: Select the Right License
+
+Choosing a license is crucial for open source projects:
+
+- **MIT License:** Very permissive, allows commercial use
+- **GPL (GNU General Public License):** Copyleft license requiring derivatives to be open source
+- **Apache 2.0:** Similar to MIT with explicit patent grants
+- **BSD:** Simple and permissive like MIT
+
+### Step 3: Set Up Your Repository
+
+Create a professional repository structure:
+
+\`\`\`
+your-project/
 ├── README.md
 ├── LICENSE
 ├── CONTRIBUTING.md
@@ -265,69 +291,70 @@ async function main() {
 ├── .gitignore
 ├── src/
 ├── tests/
-└── docs/</code></pre>
+└── docs/
+\`\`\`
 
-<h3>Step 4: Write Excellent Documentation</h3>
-<p>Your README.md should include:</p>
-<ul>
-  <li>Project description and purpose</li>
-  <li>Installation instructions</li>
-  <li>Usage examples</li>
-  <li>API documentation</li>
-  <li>Contributing guidelines</li>
-  <li>License information</li>
-</ul>
+### Step 4: Write Excellent Documentation
 
-<h3>Step 5: Write Quality Code</h3>
-<p>Best practices for open source code:</p>
-<ul>
-  <li>Follow coding standards for your language</li>
-  <li>Write comprehensive tests (aim for 80%+ coverage)</li>
-  <li>Add meaningful comments</li>
-  <li>Use clear variable and function names</li>
-  <li>Keep functions small and focused</li>
-</ul>
+Your README.md should include:
 
-<h3>Step 6: Set Up CI/CD</h3>
-<p>Implement continuous integration:</p>
-<ul>
-  <li>GitHub Actions for automated testing</li>
-  <li>Code quality checks (linting, formatting)</li>
-  <li>Automated releases</li>
-  <li>Documentation generation</li>
-</ul>
+- Project description and purpose
+- Installation instructions
+- Usage examples
+- API documentation
+- Contributing guidelines
+- License information
 
-<h3>Step 7: Promote Your Project</h3>
-<p>Get your project noticed:</p>
-<ul>
-  <li>Share on Reddit (r/opensource, language-specific subreddits)</li>
-  <li>Post on Hacker News and Product Hunt</li>
-  <li>Write blog posts about your project</li>
-  <li>Present at local meetups (like FOSS Andhra events!)</li>
-  <li>Engage on Twitter and LinkedIn</li>
-</ul>
+### Step 5: Write Quality Code
 
-<h3>Step 8: Manage Contributions</h3>
-<p>Welcome and manage contributors:</p>
-<ul>
-  <li>Respond to issues promptly</li>
-  <li>Review pull requests constructively</li>
-  <li>Acknowledge all contributions</li>
-  <li>Create "good first issue" labels for newcomers</li>
-  <li>Maintain a CODE_OF_CONDUCT.md</li>
-</ul>
+Best practices for open source code:
 
-<h3>Step 9: Maintain and Iterate</h3>
-<p>Keep your project healthy:</p>
-<ul>
-  <li>Regular releases with semantic versioning</li>
-  <li>Keep dependencies updated</li>
-  <li>Address security vulnerabilities promptly</li>
-  <li>Maintain a changelog</li>
-  <li>Listen to community feedback</li>
-</ul>
+- Follow coding standards for your language
+- Write comprehensive tests (aim for 80%+ coverage)
+- Add meaningful comments
+- Use clear variable and function names
+- Keep functions small and focused
 
-<p>Join FOSS Andhra to connect with mentors and collaborate on open source projects!</p>`,
+### Step 6: Set Up CI/CD
+
+Implement continuous integration:
+
+- GitHub Actions for automated testing
+- Code quality checks (linting, formatting)
+- Automated releases
+- Documentation generation
+
+### Step 7: Promote Your Project
+
+Get your project noticed:
+
+- Share on Reddit (r/opensource, language-specific subreddits)
+- Post on Hacker News and Product Hunt
+- Write blog posts about your project
+- Present at local meetups (like FOSS Andhra events!)
+- Engage on Twitter and LinkedIn
+
+### Step 8: Manage Contributions
+
+Welcome and manage contributors:
+
+- Respond to issues promptly
+- Review pull requests constructively
+- Acknowledge all contributions
+- Create "good first issue" labels for newcomers
+- Maintain a CODE_OF_CONDUCT.md
+
+### Step 9: Maintain and Iterate
+
+Keep your project healthy:
+
+- Regular releases with semantic versioning
+- Keep dependencies updated
+- Address security vulnerabilities promptly
+- Maintain a changelog
+- Listen to community feedback
+
+Join FOSS Andhra to connect with mentors and collaborate on open source projects!`,
       categoryId: categories[2].id,
       authorId: admin.id,
       status: "published",
@@ -345,122 +372,118 @@ async function main() {
       title: "Python for FOSS: Essential Libraries Every Developer Should Know",
       slug: "python-foss-essential-libraries",
       excerpt: "Discover the most powerful open source Python libraries that will supercharge your development workflow and projects.",
-      content: `<h2>Why Python Dominates FOSS</h2>
-<p>Python has become one of the most popular languages in the open source community, thanks to its simplicity, readability, and vast ecosystem of libraries.</p>
+      content: `## Why Python Dominates FOSS
 
-<h3>Web Development</h3>
-<p><strong>Django</strong> - The web framework for perfectionists with deadlines</p>
-<ul>
-  <li>Full-featured MVC framework</li>
-  <li>Built-in admin interface</li>
-  <li>ORM for database interactions</li>
-  <li>Excellent security features</li>
-</ul>
+Python has become one of the most popular languages in the open source community, thanks to its simplicity, readability, and vast ecosystem of libraries.
 
-<p><strong>Flask</strong> - Lightweight and flexible</p>
-<ul>
-  <li>Micro-framework for web applications</li>
-  <li>Easy to learn and extend</li>
-  <li>Perfect for APIs and microservices</li>
-  <li>Large ecosystem of extensions</li>
-</ul>
+### Web Development
 
-<p><strong>FastAPI</strong> - Modern, fast web framework</p>
-<ul>
-  <li>Based on type hints</li>
-  <li>Automatic API documentation</li>
-  <li>High performance (comparable to Node.js)</li>
-  <li>Built-in data validation</li>
-</ul>
+**Django** - The web framework for perfectionists with deadlines
 
-<h3>Data Science & Machine Learning</h3>
-<p><strong>NumPy</strong> - Fundamental package for scientific computing</p>
-<ul>
-  <li>Powerful N-dimensional arrays</li>
-  <li>Linear algebra functions</li>
-  <li>Foundation for other libraries</li>
-</ul>
+- Full-featured MVC framework
+- Built-in admin interface
+- ORM for database interactions
+- Excellent security features
 
-<p><strong>Pandas</strong> - Data manipulation and analysis</p>
-<ul>
-  <li>DataFrame structures for data analysis</li>
-  <li>Time series functionality</li>
-  <li>Easy data cleaning and preparation</li>
-</ul>
+**Flask** - Lightweight and flexible
 
-<p><strong>Scikit-learn</strong> - Machine learning made easy</p>
-<ul>
-  <li>Classification, regression, clustering algorithms</li>
-  <li>Model selection and evaluation</li>
-  <li>Preprocessing tools</li>
-</ul>
+- Micro-framework for web applications
+- Easy to learn and extend
+- Perfect for APIs and microservices
+- Large ecosystem of extensions
 
-<p><strong>TensorFlow & PyTorch</strong> - Deep learning frameworks</p>
-<ul>
-  <li>Neural network development</li>
-  <li>GPU acceleration</li>
-  <li>Production deployment tools</li>
-</ul>
+**FastAPI** - Modern, fast web framework
 
-<h3>DevOps & Automation</h3>
-<p><strong>Ansible</strong> - IT automation platform</p>
-<ul>
-  <li>Configuration management</li>
-  <li>Application deployment</li>
-  <li>Agentless architecture</li>
-</ul>
+- Based on type hints
+- Automatic API documentation
+- High performance (comparable to Node.js)
+- Built-in data validation
 
-<p><strong>Fabric</strong> - Streamlining SSH for deployment</p>
-<ul>
-  <li>Remote server management</li>
-  <li>Automated deployments</li>
-  <li>Task execution</li>
-</ul>
+### Data Science & Machine Learning
 
-<h3>Testing</h3>
-<p><strong>pytest</strong> - Powerful testing framework</p>
-<ul>
-  <li>Simple syntax</li>
-  <li>Extensive plugin ecosystem</li>
-  <li>Fixtures for setup/teardown</li>
-</ul>
+**NumPy** - Fundamental package for scientific computing
 
-<p><strong>unittest</strong> - Built-in testing framework</p>
-<ul>
-  <li>Part of Python standard library</li>
-  <li>xUnit-style testing</li>
-  <li>Test discovery</li>
-</ul>
+- Powerful N-dimensional arrays
+- Linear algebra functions
+- Foundation for other libraries
 
-<h3>Utilities & Tools</h3>
-<p><strong>Requests</strong> - HTTP for humans</p>
-<ul>
-  <li>Elegant API for HTTP requests</li>
-  <li>Session management</li>
-  <li>Authentication support</li>
-</ul>
+**Pandas** - Data manipulation and analysis
 
-<p><strong>Beautiful Soup</strong> - Web scraping</p>
-<ul>
-  <li>Parse HTML and XML</li>
-  <li>Navigate parse trees</li>
-  <li>Extract data from websites</li>
-</ul>
+- DataFrame structures for data analysis
+- Time series functionality
+- Easy data cleaning and preparation
 
-<p><strong>Click</strong> - Command-line interfaces</p>
-<ul>
-  <li>Easy CLI creation</li>
-  <li>Argument parsing</li>
-  <li>Nested commands</li>
-</ul>
+**Scikit-learn** - Machine learning made easy
 
-<h3>Getting Started</h3>
-<p>Install these libraries using pip:</p>
-<pre><code>pip install django flask fastapi
+- Classification, regression, clustering algorithms
+- Model selection and evaluation
+- Preprocessing tools
+
+**TensorFlow & PyTorch** - Deep learning frameworks
+
+- Neural network development
+- GPU acceleration
+- Production deployment tools
+
+### DevOps & Automation
+
+**Ansible** - IT automation platform
+
+- Configuration management
+- Application deployment
+- Agentless architecture
+
+**Fabric** - Streamlining SSH for deployment
+
+- Remote server management
+- Automated deployments
+- Task execution
+
+### Testing
+
+**pytest** - Powerful testing framework
+
+- Simple syntax
+- Extensive plugin ecosystem
+- Fixtures for setup/teardown
+
+**unittest** - Built-in testing framework
+
+- Part of Python standard library
+- xUnit-style testing
+- Test discovery
+
+### Utilities & Tools
+
+**Requests** - HTTP for humans
+
+- Elegant API for HTTP requests
+- Session management
+- Authentication support
+
+**Beautiful Soup** - Web scraping
+
+- Parse HTML and XML
+- Navigate parse trees
+- Extract data from websites
+
+**Click** - Command-line interfaces
+
+- Easy CLI creation
+- Argument parsing
+- Nested commands
+
+### Getting Started
+
+Install these libraries using pip:
+
+\`\`\`
+pip install django flask fastapi
 pip install numpy pandas scikit-learn
-pip install pytest requests beautifulsoup4</code></pre>
+pip install pytest requests beautifulsoup4
+\`\`\`
 
-<p>Attend FOSS Andhra's Python workshops to learn how to use these libraries effectively!</p>`,
+Attend FOSS Andhra's Python workshops to learn how to use these libraries effectively!`,
       categoryId: categories[2].id,
       authorId: admin.id,
       status: "published",
@@ -478,21 +501,24 @@ pip install pytest requests beautifulsoup4</code></pre>
       title: "The Complete Guide to Contributing to Open Source on GitHub",
       slug: "contributing-open-source-github-guide",
       excerpt: "Master the art of contributing to open source projects on GitHub. Learn Git workflows, pull requests, and community best practices.",
-      content: `<h2>Why Contribute to Open Source?</h2>
-<p>Contributing to open source projects is one of the best ways to:</p>
-<ul>
-  <li>Improve your coding skills</li>
-  <li>Build a public portfolio</li>
-  <li>Network with experienced developers</li>
-  <li>Give back to the community</li>
-  <li>Learn industry best practices</li>
-</ul>
+      content: `## Why Contribute to Open Source?
 
-<h3>Understanding Git and GitHub</h3>
-<p><strong>Git</strong> is a distributed version control system, while <strong>GitHub</strong> is a platform for hosting Git repositories and collaborating.</p>
+Contributing to open source projects is one of the best ways to:
 
-<h4>Essential Git Commands</h4>
-<pre><code># Clone a repository
+- Improve your coding skills
+- Build a public portfolio
+- Network with experienced developers
+- Give back to the community
+- Learn industry best practices
+
+### Understanding Git and GitHub
+
+**Git** is a distributed version control system, while **GitHub** is a platform for hosting Git repositories and collaborating.
+
+#### Essential Git Commands
+
+\`\`\`bash
+# Clone a repository
 git clone https://github.com/username/repo.git
 
 # Create a new branch
@@ -508,69 +534,90 @@ git commit -m "Description of changes"
 git push origin feature-name
 
 # Pull latest changes
-git pull origin main</code></pre>
+git pull origin main
+\`\`\`
 
-<h3>Finding Projects to Contribute To</h3>
-<p>Start with these resources:</p>
-<ul>
-  <li><strong>GitHub Explore:</strong> Discover trending repositories</li>
-  <li><strong>Good First Issue:</strong> Find beginner-friendly issues</li>
-  <li><strong>Up For Grabs:</strong> Projects actively seeking contributors</li>
-  <li><strong>First Timers Only:</strong> Issues specifically for newcomers</li>
-  <li><strong>CodeTriage:</strong> Get issues delivered to your inbox</li>
-</ul>
+### Finding Projects to Contribute To
 
-<h3>The Contribution Workflow</h3>
+Start with these resources:
 
-<h4>1. Fork the Repository</h4>
-<p>Click the "Fork" button on the project's GitHub page to create your own copy.</p>
+- **GitHub Explore:** Discover trending repositories
+- **Good First Issue:** Find beginner-friendly issues
+- **Up For Grabs:** Projects actively seeking contributors
+- **First Timers Only:** Issues specifically for newcomers
+- **CodeTriage:** Get issues delivered to your inbox
 
-<h4>2. Clone Your Fork</h4>
-<pre><code>git clone https://github.com/YOUR-USERNAME/project.git
+### The Contribution Workflow
+
+#### 1. Fork the Repository
+
+Click the "Fork" button on the project's GitHub page to create your own copy.
+
+#### 2. Clone Your Fork
+
+\`\`\`bash
+git clone https://github.com/YOUR-USERNAME/project.git
 cd project
-git remote add upstream https://github.com/ORIGINAL-OWNER/project.git</code></pre>
+git remote add upstream https://github.com/ORIGINAL-OWNER/project.git
+\`\`\`
 
-<h4>3. Create a Feature Branch</h4>
-<pre><code>git checkout -b fix-issue-123</code></pre>
+#### 3. Create a Feature Branch
 
-<h4>4. Make Your Changes</h4>
-<ul>
-  <li>Follow the project's coding style</li>
-  <li>Write or update tests</li>
-  <li>Update documentation if needed</li>
-  <li>Keep commits atomic and well-described</li>
-</ul>
+\`\`\`bash
+git checkout -b fix-issue-123
+\`\`\`
 
-<h4>5. Test Your Changes</h4>
-<pre><code># Run tests
+#### 4. Make Your Changes
+
+- Follow the project's coding style
+- Write or update tests
+- Update documentation if needed
+- Keep commits atomic and well-described
+
+#### 5. Test Your Changes
+
+\`\`\`bash
+# Run tests
 npm test  # or pytest, cargo test, etc.
 
 # Check code style
-npm run lint</code></pre>
+npm run lint
+\`\`\`
 
-<h4>6. Commit Your Changes</h4>
-<pre><code>git add .
-git commit -m "Fix: Resolve issue #123 - Add validation"</code></pre>
+#### 6. Commit Your Changes
 
-<h4>7. Keep Your Fork Updated</h4>
-<pre><code>git fetch upstream
-git rebase upstream/main</code></pre>
+\`\`\`bash
+git add .
+git commit -m "Fix: Resolve issue #123 - Add validation"
+\`\`\`
 
-<h4>8. Push to Your Fork</h4>
-<pre><code>git push origin fix-issue-123</code></pre>
+#### 7. Keep Your Fork Updated
 
-<h4>9. Create a Pull Request</h4>
-<ul>
-  <li>Go to your fork on GitHub</li>
-  <li>Click "Compare & pull request"</li>
-  <li>Write a clear description of your changes</li>
-  <li>Reference any related issues</li>
-  <li>Be patient and responsive to feedback</li>
-</ul>
+\`\`\`bash
+git fetch upstream
+git rebase upstream/main
+\`\`\`
 
-<h3>Writing Great Commit Messages</h3>
-<p>Follow these conventions:</p>
-<pre><code>Type: Short summary (50 characters max)
+#### 8. Push to Your Fork
+
+\`\`\`bash
+git push origin fix-issue-123
+\`\`\`
+
+#### 9. Create a Pull Request
+
+- Go to your fork on GitHub
+- Click "Compare & pull request"
+- Write a clear description of your changes
+- Reference any related issues
+- Be patient and responsive to feedback
+
+### Writing Great Commit Messages
+
+Follow these conventions:
+
+\`\`\`
+Type: Short summary (50 characters max)
 
 Longer explanation if needed. Wrap at 72 characters.
 Explain what and why, not how.
@@ -578,63 +625,61 @@ Explain what and why, not how.
 - Bullet points are okay
 - Use imperative mood: "Fix bug" not "Fixed bug"
 
-Fixes #123</code></pre>
+Fixes #123
+\`\`\`
 
-<h4>Commit Types:</h4>
-<ul>
-  <li><strong>feat:</strong> New feature</li>
-  <li><strong>fix:</strong> Bug fix</li>
-  <li><strong>docs:</strong> Documentation changes</li>
-  <li><strong>style:</strong> Code style changes (formatting)</li>
-  <li><strong>refactor:</strong> Code refactoring</li>
-  <li><strong>test:</strong> Adding or updating tests</li>
-  <li><strong>chore:</strong> Maintenance tasks</li>
-</ul>
+#### Commit Types:
 
-<h3>Pull Request Best Practices</h3>
-<ul>
-  <li><strong>Small PRs:</strong> Focus on one issue or feature</li>
-  <li><strong>Clear Title:</strong> Describe what the PR does</li>
-  <li><strong>Detailed Description:</strong> Explain the problem and solution</li>
-  <li><strong>Screenshots:</strong> Include for UI changes</li>
-  <li><strong>Tests:</strong> Add or update tests for your changes</li>
-  <li><strong>Documentation:</strong> Update docs if needed</li>
-  <li><strong>Responsive:</strong> Address reviewer feedback promptly</li>
-</ul>
+- **feat:** New feature
+- **fix:** Bug fix
+- **docs:** Documentation changes
+- **style:** Code style changes (formatting)
+- **refactor:** Code refactoring
+- **test:** Adding or updating tests
+- **chore:** Maintenance tasks
 
-<h3>Handling Code Reviews</h3>
-<p>When you receive feedback:</p>
-<ul>
-  <li>Don't take criticism personally</li>
-  <li>Ask questions if something is unclear</li>
-  <li>Make requested changes thoughtfully</li>
-  <li>Push updates to the same branch</li>
-  <li>Thank reviewers for their time</li>
-</ul>
+### Pull Request Best Practices
 
-<h3>Non-Code Contributions</h3>
-<p>You can contribute without coding:</p>
-<ul>
-  <li>Improve documentation</li>
-  <li>Report bugs with detailed information</li>
-  <li>Triage and reproduce issues</li>
-  <li>Review pull requests</li>
-  <li>Translate documentation</li>
-  <li>Create tutorials and examples</li>
-  <li>Design logos and graphics</li>
-</ul>
+- **Small PRs:** Focus on one issue or feature
+- **Clear Title:** Describe what the PR does
+- **Detailed Description:** Explain the problem and solution
+- **Screenshots:** Include for UI changes
+- **Tests:** Add or update tests for your changes
+- **Documentation:** Update docs if needed
+- **Responsive:** Address reviewer feedback promptly
 
-<h3>Common Pitfalls to Avoid</h3>
-<ul>
-  <li>Not reading CONTRIBUTING.md guidelines</li>
-  <li>Making large, unfocused PRs</li>
-  <li>Ignoring code style requirements</li>
-  <li>Not testing changes before submitting</li>
-  <li>Being defensive about feedback</li>
-  <li>Abandoning PRs without communication</li>
-</ul>
+### Handling Code Reviews
 
-<p>Join FOSS Andhra's contribution workshops to practice these skills with mentorship!</p>`,
+When you receive feedback:
+
+- Don't take criticism personally
+- Ask questions if something is unclear
+- Make requested changes thoughtfully
+- Push updates to the same branch
+- Thank reviewers for their time
+
+### Non-Code Contributions
+
+You can contribute without coding:
+
+- Improve documentation
+- Report bugs with detailed information
+- Triage and reproduce issues
+- Review pull requests
+- Translate documentation
+- Create tutorials and examples
+- Design logos and graphics
+
+### Common Pitfalls to Avoid
+
+- Not reading CONTRIBUTING.md guidelines
+- Making large, unfocused PRs
+- Ignoring code style requirements
+- Not testing changes before submitting
+- Being defensive about feedback
+- Abandoning PRs without communication
+
+Join FOSS Andhra's contribution workshops to practice these skills with mentorship!`,
       categoryId: categories[0].id,
       authorId: admin.id,
       status: "published",
@@ -653,7 +698,7 @@ Fixes #123</code></pre>
   // Create blog posts
   for (const postData of blogPosts) {
     const { tags: postTags, ...postInfo } = postData
-    
+
     const post = await prisma.blogPost.upsert({
       where: { slug: postInfo.slug },
       update: postInfo,

@@ -55,7 +55,7 @@ const programTypes = [
   { value: "fosserve", label: "FOSServe", color: "#9333ea" },
   { value: "fossync", label: "FOSSynC", color: "#16a34a" },
   { value: "fosstorm", label: "FOSStorm", color: "#ea580c" },
-  { value: "fossart", label: "FOSSart", color: "#dc2626" },
+  { value: "fosstart", label: "FOSStart", color: "#dc2626" },
   { value: "fossterage", label: "FOSSterage", color: "#0891b2" },
   { value: "fosspeaks", label: "FOSSpeaks", color: "#db2777" },
 ]
@@ -302,7 +302,7 @@ export default function ProgramsPage() {
                         <span>{program._count?.projects || 0} Projects</span>
                       </div>
                     )}
-                    {program.name === "fossart" && (
+                    {program.name === "fosstart" && (
                       <div className="flex items-center gap-2 text-sm">
                         <Briefcase className="h-4 w-4 text-gray-500" />
                         <span>{program._count?.startups || 0} Startups</span>
@@ -348,7 +348,7 @@ export default function ProgramsPage() {
                         </a>
                       </Button>
                     )}
-                    {program.name === "fossart" && (
+                    {program.name === "fosstart" && (
                       <Button variant="outline" size="sm" asChild>
                         <a href={`/admin/programs/${program.name}/startups`}>
                           Manage Startups

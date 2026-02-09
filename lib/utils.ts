@@ -35,12 +35,12 @@ export const programInfo = {
     icon: "Code",
     logo: "/logos/fosstorm-logo.png",
   },
-  fossart: {
-    title: "FOSSart",
+  fosstart: {
+    title: "FOSStart",
     description: "Entrepreneurship space for funding open source innovations",
-    color: "fossart",
+    color: "fosstart",
     icon: "Rocket",
-    logo: "/logos/fossart-logo.png",
+    logo: "/logos/fosstart-logo.png",
   },
 
   fossterage: {
@@ -65,7 +65,7 @@ export const programColors = {
   fosserve: "bg-fosserve",
   fossync: "bg-fossync",
   fosstorm: "bg-fosstorm",
-  fossart: "bg-fossart",
+  fosstart: "bg-fosstart",
   fossstart: "bg-fossstart",
   fossterage: "bg-fossterage",
   fosspeaks: "bg-fosspeaks",

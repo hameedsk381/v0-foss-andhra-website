@@ -31,7 +31,7 @@ export default async function MemberLayout({
       <MemberResponsiveSidebar />
       {/* Main Content */}
       <main className="flex-1 lg:ml-64 overflow-auto">
-        <div className="p-4 lg:p-8">{children}</div>
+        <div className="p-3 lg:p-6">{children}</div>
       </main>
     </div>
   )

@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma"
 import { generateBlogPostMetadata } from "@/components/seo-metadata"
 import { BlogPostJsonLd, BreadcrumbJsonLd } from "@/components/structured-data"
 import { Metadata } from "next"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import rehypeRaw from "rehype-raw"
 
 interface BlogPostPageProps {
   params: {
@@ -125,11 +128,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             </div>
 
-            {/* Content */}
-            <div 
-              className="prose prose-lg max-w-none mt-8"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
+            {/* Content - Markdown Rendering */}
+            <div className="prose prose-zinc dark:prose-invert max-w-none mt-8 prose-headings:font-semibold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:leading-7 prose-li:my-0.5 prose-img:rounded-lg prose-img:shadow-md ProseMirror">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+              >
+                {post.content}
+              </ReactMarkdown>
+            </div>
 
             {/* Tags */}
             {post.tags.length > 0 && (

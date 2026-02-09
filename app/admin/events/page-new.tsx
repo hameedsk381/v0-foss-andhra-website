@@ -400,7 +400,7 @@ export default function EventsManagement() {
                     <SelectItem value="FOSServe">FOSServe</SelectItem>
                     <SelectItem value="FOSSynC">FOSSynC</SelectItem>
                     <SelectItem value="FOSStorm">FOSStorm</SelectItem>
-                    <SelectItem value="FOSSart">FOSSart</SelectItem>
+                    <SelectItem value="FOSStart">FOSStart</SelectItem>
                     <SelectItem value="FOSSterage">FOSSterage</SelectItem>
                     <SelectItem value="FOSSpeaks">FOSSpeaks</SelectItem>
                   </SelectContent>

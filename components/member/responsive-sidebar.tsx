@@ -80,15 +80,15 @@ export function MemberResponsiveSidebar() {
         style={{ width: "256px" }}
       >
         {/* Header */}
-        <div className="p-6 border-b">
-          <h1 className="text-xl font-bold text-primary">Member Portal</h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+        <div className="p-4 border-b">
+          <h1 className="text-lg font-bold text-primary">Member Portal</h1>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
             FOSS Andhra
           </p>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
+        <nav className="flex-1 px-3 py-4 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive =

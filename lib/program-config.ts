@@ -257,9 +257,9 @@ export const programConfigs: Record<string, ProgramConfig> = {
     ],
   },
 
-  fossart: {
-    id: 'fossart',
-    name: 'FOSSart',
+  fosstart: {
+    id: 'fosstart',
+    name: 'FOSStart',
     title: 'FOSS Startup Incubator',
     color: '#ec4899',
     contentTypes: [

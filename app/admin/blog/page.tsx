@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
-import { Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X, Download } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X, Download, MessageSquare, Check, XOctagon } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { DataTable, Column } from "@/components/admin/data-table"
 import { BulkActions } from "@/components/admin/bulk-actions"
@@ -34,10 +34,24 @@ interface BlogPost {
   _count: { comments: number }
 }
 
+interface Comment {
+  id: string
+  name: string
+  email: string
+  content: string
+  status: "pending" | "approved" | "spam"
+  createdAt: string
+  post: {
+    title: string
+    slug: string
+  }
+}
+
 export default function BlogManagement() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [categories, setCategories] = useState<any[]>([])
   const [tags, setTags] = useState<any[]>([])
+  const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [filterValues, setFilterValues] = useState({ status: "all" })
   const [selectedPosts, setSelectedPosts] = useState<BlogPost[]>([])
@@ -73,6 +87,7 @@ export default function BlogManagement() {
     fetchPosts()
     fetchCategories()
     fetchTags()
+    fetchComments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValues.status])
 
@@ -114,6 +129,46 @@ export default function BlogManagement() {
     }
   }
 
+  const fetchComments = async () => {
+    try {
+      const res = await fetch("/api/admin/blog/comments")
+      const data = await res.json()
+      if (data.success) {
+        setComments(data.data)
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error)
+    }
+  }
+
+  const handleCommentAction = async (id: string, action: "approve" | "spam" | "delete") => {
+    try {
+      if (action === "delete") {
+        if (!confirm("Are you sure you want to delete this comment?")) return
+        const res = await fetch(`/api/admin/blog/comments/${id}`, { method: "DELETE" })
+        const data = await res.json()
+        if (data.success) {
+          toast({ title: "Success", description: "Comment deleted successfully" })
+          fetchComments()
+        }
+      } else {
+        const status = action === "approve" ? "approved" : "spam"
+        const res = await fetch(`/api/admin/blog/comments/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        })
+        const data = await res.json()
+        if (data.success) {
+          toast({ title: "Success", description: `Comment marked as ${status}` })
+          fetchComments()
+        }
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to update comment", variant: "destructive" })
+    }
+  }
+
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
       if (filterValues.status !== "all" && post.status !== filterValues.status) return false
@@ -142,6 +197,72 @@ export default function BlogManagement() {
       ],
     },
   ]
+
+  const commentColumns: Column<Comment>[] = [
+    {
+      id: "author",
+      header: "Author",
+      accessor: (comment) => (
+        <div>
+          <div className="font-medium">{comment.name}</div>
+          <div className="text-xs text-gray-500">{comment.email}</div>
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "content",
+      header: "Comment",
+      accessor: (comment) => (
+        <div>
+          <div className="text-sm line-clamp-2">{comment.content}</div>
+          <div className="text-xs text-blue-600 mt-1">On: {comment.post.title}</div>
+        </div>
+      ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessor: (comment) => (
+        <Badge
+          className={
+            comment.status === "approved"
+              ? "bg-green-100 text-green-800"
+              : comment.status === "spam"
+                ? "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800"
+          }
+        >
+          {comment.status}
+        </Badge>
+      ),
+      sortable: true,
+    },
+    {
+      id: "date",
+      header: "Date",
+      accessor: (comment) => format(new Date(comment.createdAt), "MMM dd, yyyy"),
+      sortable: true,
+    },
+  ]
+
+  const commentActions = (comment: Comment) => (
+    <>
+      {comment.status !== "approved" && (
+        <Button variant="ghost" size="sm" title="Approve" onClick={() => handleCommentAction(comment.id, "approve")} className="text-green-600">
+          <Check className="h-4 w-4" />
+        </Button>
+      )}
+      {comment.status !== "spam" && (
+        <Button variant="ghost" size="sm" title="Mark as Spam" onClick={() => handleCommentAction(comment.id, "spam")} className="text-orange-600">
+          <XOctagon className="h-4 w-4" />
+        </Button>
+      )}
+      <Button variant="ghost" size="sm" title="Delete" onClick={() => handleCommentAction(comment.id, "delete")} className="text-red-600">
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </>
+  )
 
   const columns: Column<BlogPost>[] = [
     {
@@ -280,7 +401,7 @@ export default function BlogManagement() {
       const url = editingPost
         ? `/api/admin/blog/posts/${editingPost.id}`
         : "/api/admin/blog/posts"
-      
+
       const method = editingPost ? "PUT" : "POST"
 
       const res = await fetch(url, {
@@ -450,6 +571,10 @@ export default function BlogManagement() {
             <Tag className="h-4 w-4 mr-2" />
             Tags
           </TabsTrigger>
+          <TabsTrigger value="comments">
+            <MessageSquare className="h-4 w-4 mr-2" />
+            Comments
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="posts" className="space-y-4">
@@ -545,6 +670,28 @@ export default function BlogManagement() {
                   </Badge>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="comments" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Comments ({comments.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DataTable
+                data={comments}
+                columns={commentColumns}
+                searchable
+                searchPlaceholder="Search comments..."
+                searchKeys={["content", "name", "email"]}
+                pagination
+                pageSize={10}
+                loading={loading}
+                emptyMessage="No comments found."
+                actions={commentActions}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -647,7 +794,7 @@ export default function BlogManagement() {
             {/* SEO Section */}
             <div className="border-t pt-4 mt-4">
               <h3 className="font-semibold mb-3">SEO Settings</h3>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="coverImage">Cover Image URL</Label>

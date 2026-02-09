@@ -182,7 +182,7 @@ export default function GalleryPage() {
                 <TabsTrigger value="fosserve">FOSServe</TabsTrigger>
                 <TabsTrigger value="fossync">FOSSync</TabsTrigger>
                 <TabsTrigger value="fosstorm">FOSStorm</TabsTrigger>
-                <TabsTrigger value="fossart">FOSSart</TabsTrigger>
+                <TabsTrigger value="fosstart">FOSStart</TabsTrigger>
                 <TabsTrigger value="fossterage">FOSSterage</TabsTrigger>
                 <TabsTrigger value="fosspeaks">FOSSpeaks</TabsTrigger>
               </TabsList>

@@ -182,7 +182,7 @@ model Inquiry {
   phone     String?
   subject   String
   message   String
-  status    String   @default("new") // new, read, replied, archived
+  status    String   @default("new")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

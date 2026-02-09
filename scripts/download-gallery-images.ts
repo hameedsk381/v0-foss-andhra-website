@@ -11,7 +11,7 @@ const images = [
     { name: 'fosserve-launch.jpg', keywords: 'government,launch,india' },
     { name: 'fossync-club.jpg', keywords: 'students,computer,lab,india' },
     { name: 'fosstorm-workshop.jpg', keywords: 'coding,workshop,collaboration' },
-    { name: 'fossart-startup.jpg', keywords: 'startup,office,team' },
+    { name: 'fosstart-startup.jpg', keywords: 'startup,office,team' },
     { name: 'fossterage-database.jpg', keywords: 'server,data,visualization' },
     { name: 'fosspeaks-advocacy.jpg', keywords: 'seminar,discussion,people' },
 ];
@@ -68,7 +68,7 @@ async function downloadWithBun() {
                 case 'fosserve-launch.jpg': specificUrl = "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800"; break;
                 case 'fossync-club.jpg': specificUrl = "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800"; break;
                 case 'fosstorm-workshop.jpg': specificUrl = "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800"; break;
-                case 'fossart-startup.jpg': specificUrl = "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800"; break;
+                case 'fosstart-startup.jpg': specificUrl = "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800"; break;
                 case 'fossterage-database.jpg': specificUrl = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800"; break;
                 case 'fosspeaks-advocacy.jpg': specificUrl = "https://images.unsplash.com/photo-1515169067868-5387ec356754?w=800"; break;
                 default: specificUrl = `https://source.unsplash.com/800x600/?${img.keywords}`;

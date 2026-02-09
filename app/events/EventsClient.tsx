@@ -90,7 +90,7 @@ export default function EventsClient() {
       "FOSServe": "bg-purple-100 text-purple-800",
       "FOSSynC": "bg-green-100 text-green-800",
       "FOSStorm": "bg-orange-100 text-orange-800",
-      "FOSSart": "bg-pink-100 text-pink-800",
+      "FOSStart": "bg-pink-100 text-pink-800",
       "FOSSterage": "bg-blue-100 text-blue-800",
     }
     return program ? colors[program] || "bg-gray-100 text-gray-800" : "bg-gray-100 text-gray-800"

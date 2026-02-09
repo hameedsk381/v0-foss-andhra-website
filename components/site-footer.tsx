@@ -142,12 +142,12 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/programs/fossart"
+                  href="/programs/fosstart"
                   className="text-muted-foreground hover:text-foreground flex items-center gap-2"
                 >
                   <Image
-                    src="/logos/fossart-logo.png"
-                    alt="FOSSart Logo"
+                    src="/logos/fosstart-logo.png"
+                    alt="FOSStart Logo"
                     width={80}
                     height={20}
                     className="h-5 w-auto"

@@ -19,7 +19,7 @@ const buttonVariants = cva(
         fosserve: "bg-fosserve text-white hover:bg-fosserve/90",
         fossync: "bg-fossync text-white hover:bg-fossync/90",
         fosstorm: "bg-fosstorm text-white hover:bg-fosstorm/90",
-        fossart: "bg-fossart text-white hover:bg-fossart/90",
+        fosstart: "bg-fosstart text-white hover:bg-fosstart/90",
         fossterage: "bg-fossterage text-white hover:bg-fossterage/90",
         fosspeaks: "bg-fosspeaks text-white hover:bg-fosspeaks/90",
       },

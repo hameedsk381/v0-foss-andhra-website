@@ -27,10 +27,10 @@ const initiatives = [
     link: "https://fosstorm.ieeevit.org/",
   },
   {
-    name: "FOSSart",
+    name: "FOSStart",
     description: "The Art of Open Source",
-    color: "fossart",
-    link: "https://fossart.ieeevit.org/",
+    color: "fosstart",
+    link: "https://fosstart.ieeevit.org/",
   },
   {
     name: "FOSSterage",

@@ -56,7 +56,7 @@ module.exports = {
         fosserve: "#7c3aed",
         fossync: "#16a34a",
         fosstorm: "#ea580c",
-        fossart: "#dc2626",
+        fosstart: "#dc2626",
         fossterage: "#9333ea",
         fosspeaks: "#0891b2",
         fossstart: "#f59e0b",
@@ -137,5 +137,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 }

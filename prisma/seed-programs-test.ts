@@ -11,7 +11,7 @@ async function main() {
     { name: "fosserve", title: "FOSServe - FOSS Deployment Services", description: "Deploy FOSS solutions", color: "#10b981" },
     { name: "fossync", title: "FOSSynC - College Clubs Network", description: "Connect FOSS clubs", color: "#f59e0b" },
     { name: "fosstorm", title: "FOSStorm - Open Source Projects", description: "Contribute to open source", color: "#8b5cf6" },
-    { name: "fossart", title: "FOSSart - FOSS Startup Incubator", description: "Incubate FOSS startups", color: "#ec4899" },
+    { name: "fosstart", title: "FOSStart - FOSS Startup Incubator", description: "Incubate FOSS startups", color: "#ec4899" },
     { name: "fossterage", title: "FOSSterage - FOSS Knowledge Repository", description: "Knowledge hub", color: "#06b6d4" },
     { name: "fosspeaks", title: "FOSSpeaks - FOSS Talks & Events", description: "Learn and share", color: "#f97316" },
   ]
@@ -31,7 +31,7 @@ async function main() {
   const fosserve = await prisma.program.findUnique({ where: { name: "fosserve" } })
   const fossync = await prisma.program.findUnique({ where: { name: "fossync" } })
   const fosstorm = await prisma.program.findUnique({ where: { name: "fosstorm" } })
-  const fossart = await prisma.program.findUnique({ where: { name: "fossart" } })
+  const fosstart = await prisma.program.findUnique({ where: { name: "fosstart" } })
   const fossterage = await prisma.program.findUnique({ where: { name: "fossterage" } })
   const fosspeaks = await prisma.program.findUnique({ where: { name: "fosspeaks" } })
 
@@ -270,15 +270,15 @@ async function main() {
     console.log("✅ FOSStorm seeded")
   }
 
-  // FOSSart - Startups & Mentors
-  if (fossart) {
-    console.log("\n🚀 Seeding FOSSart...")
+  // FOSStart - Startups & Mentors
+  if (fosstart) {
+    console.log("\n🚀 Seeding FOSStart...")
     
     // Startups
     await prisma.programStartup.createMany({
       data: [
         {
-          programId: fossart.id,
+          programId: fosstart.id,
           name: "HealthStack",
           description: "Open source healthcare management",
           category: "healthcare",
@@ -291,7 +291,7 @@ async function main() {
           order: 0,
         },
         {
-          programId: fossart.id,
+          programId: fosstart.id,
           name: "AgriTech Solutions",
           description: "FOSS for farmers",
           category: "agritech",
@@ -303,7 +303,7 @@ async function main() {
           order: 1,
         },
         {
-          programId: fossart.id,
+          programId: fosstart.id,
           name: "EduOpen",
           description: "Open educational platform",
           category: "edtech",
@@ -323,7 +323,7 @@ async function main() {
     await prisma.programTeamMember.createMany({
       data: [
         {
-          programId: fossart.id,
+          programId: fosstart.id,
           name: "Dr. Anitha Kumar",
           role: "Business Mentor",
           bio: "Guiding FOSS startups to success",
@@ -332,7 +332,7 @@ async function main() {
       ],
       skipDuplicates: true,
     })
-    console.log("✅ FOSSart seeded")
+    console.log("✅ FOSStart seeded")
   }
 
   // FOSSterage - Repositories & Curators
@@ -455,7 +455,7 @@ async function main() {
   console.log("   - http://localhost:3000/admin/programs/fosserve/casestudies")
   console.log("   - http://localhost:3000/admin/programs/fossync/clubs")
   console.log("   - http://localhost:3000/admin/programs/fosstorm/projects")
-  console.log("   - http://localhost:3000/admin/programs/fossart/startups")
+  console.log("   - http://localhost:3000/admin/programs/fosstart/startups")
   console.log("   - http://localhost:3000/admin/programs/fossterage/repositories")
   console.log("   - http://localhost:3000/admin/programs/fosspeaks/initiatives")
 }

@@ -54,8 +54,8 @@ export default function FAQPage() {
                     a: "You can reach out to us through the FOSSynC program page or the Contact Us form. We'll guide you through the process of setting up a club, providing resources, and connecting you with mentors."
                 },
                 {
-                    q: "What is FOSSart?",
-                    a: "FOSSart is our entrepreneurship and incubation program. It provides funding, mentorship, and workspace for developers building open-source startups."
+                    q: "What is FOSStart?",
+                    a: "FOSStart is our entrepreneurship and incubation program. It provides funding, mentorship, and workspace for developers building open-source startups."
                 }
             ]
         },

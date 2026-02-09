@@ -104,7 +104,7 @@ export default function ProgramsClient() {
                                 {[
                                     { title: "Education-First", desc: "Equipping the next generation with FOSS skills via FOSSynC and FOSServe." },
                                     { title: "Social Advocacy", desc: "Promoting digital freedom and open tech for society through FOSSpeaks." },
-                                    { title: "Innovation Hub", desc: "Funding and incubating open source startups with FOSSart." },
+                                    { title: "Innovation Hub", desc: "Funding and incubating open source startups with FOSStart." },
                                     { title: "Knowledge Management", desc: "Archiving critical research and data in FOSSterage." }
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-4 p-4 rounded-lg bg-white shadow-sm">

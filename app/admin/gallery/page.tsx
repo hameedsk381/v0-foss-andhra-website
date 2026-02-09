@@ -31,7 +31,7 @@ interface MediaItem {
   createdAt: string
 }
 
-const PROGRAMS = ["fosstar", "fosserve", "fossync", "fosstorm", "fossart", "fossterage", "fosspeaks"]
+const PROGRAMS = ["fosstar", "fosserve", "fossync", "fosstorm", "fosstart", "fossterage", "fosspeaks"]
 const CATEGORIES = ["event", "workshop", "implementation", "community", "launch", "inauguration", "other"]
 
 export default function AdminGalleryPage() {

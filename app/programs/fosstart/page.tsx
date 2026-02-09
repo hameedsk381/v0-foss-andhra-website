@@ -13,14 +13,14 @@ interface Program {
   description: string
 }
 
-export default function FOSSartPage() {
+export default function FOSStartPage() {
   const [programData, setProgramData] = useState<Program>({
-    title: "FOSSart",
+    title: "FOSStart",
     description: "Entrepreneurship space for funding open source innovations",
   })
 
   useEffect(() => {
-    fetch("/api/programs/fossart")
+    fetch("/api/programs/fosstart")
       .then(res => res.json())
       .then(data => { if (data.success) setProgramData(data.data) })
       .catch(console.error)
@@ -48,13 +48,13 @@ export default function FOSSartPage() {
           <TabsContent value="overview" className="mt-6" id="overview">
             <div className="prose prose-lg max-w-none mb-8">
               <p>
-                FOSSart is our entrepreneurship and innovation program focused on supporting startups and projects that
+                FOSStart is our entrepreneurship and innovation program focused on supporting startups and projects that
                 build sustainable businesses around open source solutions. We provide funding, mentorship, networking
                 opportunities, and resources to help open source innovations succeed commercially.
               </p>
 
               <p>
-                Through FOSSart, we aim to demonstrate that open source and commercial success can go hand in hand,
+                Through FOSStart, we aim to demonstrate that open source and commercial success can go hand in hand,
                 creating sustainable businesses that contribute to the open source ecosystem while generating economic
                 value and jobs.
               </p>
@@ -114,9 +114,9 @@ export default function FOSSartPage() {
             </div>
 
             <div className="bg-red-50 p-8 rounded-lg my-12">
-              <h3 className="text-2xl font-bold mb-4">Apply for FOSSart Funding</h3>
+              <h3 className="text-2xl font-bold mb-4">Apply for FOSStart Funding</h3>
               <p className="mb-6">
-                Are you building a business around open source solutions? Apply for FOSSart funding and support to take
+                Are you building a business around open source solutions? Apply for FOSStart funding and support to take
                 your open source innovation to the next level.
               </p>
               <div className="flex flex-wrap gap-4">
@@ -136,7 +136,7 @@ export default function FOSSartPage() {
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <Award className="mr-2 h-6 w-6 text-red-600" />
-                FOSSart Supported Startups
+                FOSStart Supported Startups
               </h3>
 
               <div className="grid gap-6 md:grid-cols-2">
@@ -439,7 +439,7 @@ export default function FOSSartPage() {
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <Rocket className="mr-2 h-6 w-6 text-red-600" />
-                FOSSart Funding Programs
+                FOSStart Funding Programs
               </h3>
 
               <div className="grid gap-6 md:grid-cols-2 mb-8">
@@ -542,7 +542,7 @@ export default function FOSSartPage() {
                 <Card className="md:col-span-2">
                   <CardHeader>
                     <CardTitle>Application Process</CardTitle>
-                    <CardDescription>How to apply for FOSSart funding</CardDescription>
+                    <CardDescription>How to apply for FOSStart funding</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-6 md:grid-cols-4">
@@ -582,7 +582,7 @@ export default function FOSSartPage() {
                         </div>
                         <h4 className="font-medium mb-1">Decision & Onboarding</h4>
                         <p className="text-sm text-gray-600">
-                          Final selection and onboarding of successful applicants into the FOSSart program
+                          Final selection and onboarding of successful applicants into the FOSStart program
                         </p>
                       </div>
                     </div>
@@ -593,10 +593,10 @@ export default function FOSSartPage() {
               <div className="bg-red-50 p-8 rounded-lg">
                 <h4 className="text-xl font-bold mb-4">Ready to Apply?</h4>
                 <p className="mb-6">
-                  If you have an open source idea or startup that you'd like to grow with FOSSart support, we encourage
+                  If you have an open source idea or startup that you'd like to grow with FOSStart support, we encourage
                   you to apply for our funding programs.
                 </p>
-                <Link href="/contact?subject=FOSSart Application">
+                <Link href="/contact?subject=FOSStart Application">
                   <Button className="bg-red-600 hover:bg-red-700">Start Your Application</Button>
                 </Link>
               </div>
@@ -606,19 +606,19 @@ export default function FOSSartPage() {
           <TabsContent value="gallery" className="mt-6" id="gallery">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
               <Image className="mr-2 h-6 w-6 text-red-600" />
-              FOSSart Events & Startups Gallery
+              FOSStart Events & Startups Gallery
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[1, 2, 3, 4, 5, 6].map((item) => (
                 <div key={item} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
                   <img
-                    src={`/placeholder.svg?height=450&width=800&text=FOSSart+Event+${item}`}
-                    alt={`FOSSart event ${item}`}
+                    src={`/placeholder.svg?height=450&width=800&text=FOSStart+Event+${item}`}
+                    alt={`FOSStart event ${item}`}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h4 className="font-medium">FOSSart Event {item}</h4>
+                    <h4 className="font-medium">FOSStart Event {item}</h4>
                     <p className="text-sm opacity-90">Startup showcase and networking</p>
                   </div>
                 </div>

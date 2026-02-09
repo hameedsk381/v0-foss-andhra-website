@@ -279,7 +279,7 @@ export default function Home() {
               </div>
             </AnimatedSection>
 
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-4">
+            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <AnimatedSection variant="fadeUp" delay={0.1}>
                 <Card className="h-full">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -359,7 +359,7 @@ export default function Home() {
               </div>
             </AnimatedSection>
 
-            <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {programs.map((program, index) => (
                 <AnimatedSection key={program.id} variant="fadeUp" delay={0.1 * index}>
                   <Link href={program.href} className="block h-full">

@@ -13,7 +13,7 @@ async function main() {
     { name: "fosserve", title: "FOSServe", description: "Service program", tagline: "Open source consulting", color: "#8b5cf6", displayOrder: 1 },
     { name: "fossync", title: "FOSSynC", description: "Community sync program", tagline: "Connecting FOSS clubs", color: "#10b981", displayOrder: 2 },
     { name: "fosstorm", title: "FOSStorm", description: "Project storm program", tagline: "Building impactful projects", color: "#f59e0b", displayOrder: 3 },
-    { name: "fossart", title: "FOSSart", description: "Startup program", tagline: "Nurturing open source startups", color: "#ef4444", displayOrder: 4 },
+    { name: "fosstart", title: "FOSStart", description: "Startup program", tagline: "Nurturing open source startups", color: "#ef4444", displayOrder: 4 },
     { name: "fossterage", title: "FOSSterage", description: "Resource storage program", tagline: "Curating knowledge repositories", color: "#06b6d4", displayOrder: 5 },
     { name: "fosspeaks", title: "FOSSpeaks", description: "Speaker program", tagline: "Amplifying FOSS voices", color: "#ec4899", displayOrder: 6 },
   ]
@@ -298,14 +298,14 @@ async function main() {
     console.log("✅ Created 2 FOSStorm maintainers")
   }
 
-  // 5. FOSSart - Startups (no ProgramMentor model exists, use team members)
-  console.log("\n📌 Seeding FOSSart (startups, mentors)...")
+  // 5. FOSStart - Startups (no ProgramMentor model exists, use team members)
+  console.log("\n📌 Seeding FOSStart (startups, mentors)...")
   
-  const fossartStartups = await prisma.programStartup.count({ where: { programId: "fossart" } })
-  if (fossartStartups === 0) {
+  const fosstartStartups = await prisma.programStartup.count({ where: { programId: "fosstart" } })
+  if (fosstartStartups === 0) {
     const startups = [
       {
-        programId: "fossart",
+        programId: "fosstart",
         name: "OpenEdu Solutions",
         description: "Building affordable ed-tech solutions using open source",
         content: "Startup details",
@@ -320,7 +320,7 @@ async function main() {
         order: 0,
       },
       {
-        programId: "fossart",
+        programId: "fosstart",
         name: "AgriTech FOSS",
         description: "Open source IoT solutions for smart farming",
         content: "AgriTech startup information",
@@ -335,7 +335,7 @@ async function main() {
         order: 1,
       },
       {
-        programId: "fossart",
+        programId: "fosstart",
         name: "HealthStack",
         description: "Open source hospital management system",
         content: "Healthcare technology details",
@@ -356,15 +356,15 @@ async function main() {
         data: startup as any,
       })
     }
-    console.log("✅ Created 3 FOSSart startups")
+    console.log("✅ Created 3 FOSStart startups")
   }
 
-  const fossartTeam = await prisma.programTeamMember.count({ where: { programId: "fossart" } })
-  if (fossartTeam === 0) {
+  const fosstartTeam = await prisma.programTeamMember.count({ where: { programId: "fosstart" } })
+  if (fosstartTeam === 0) {
     await prisma.programTeamMember.createMany({
       data: [
         {
-          programId: "fossart",
+          programId: "fosstart",
           name: "Ramesh Naidu",
           role: "Startup Mentor",
           bio: "Serial entrepreneur with 2 successful exits, passionate about open source business models. Expert in product development, go-to-market strategy, and fundraising.",
@@ -373,7 +373,7 @@ async function main() {
           order: 0,
         },
         {
-          programId: "fossart",
+          programId: "fosstart",
           name: "Kavitha Menon",
           role: "Legal & Compliance Mentor",
           bio: "Legal expert specializing in FOSS licenses, helping startups navigate compliance. Open source licensing and community building specialist.",
@@ -383,7 +383,7 @@ async function main() {
         },
       ],
     })
-    console.log("✅ Created 2 FOSSart mentors")
+    console.log("✅ Created 2 FOSStart mentors")
   }
 
   // 6. FOSSterage - Repositories (no ProgramCurator model exists, use team members)
@@ -498,7 +498,7 @@ async function main() {
   console.log("   FOSServe: Case Studies & Team")
   console.log("   FOSSynC: Clubs & Team")
   console.log("   FOSStorm: Projects & Team")
-  console.log("   FOSSart: Startups & Team")
+  console.log("   FOSStart: Startups & Team")
   console.log("   FOSSterage: Repositories & Team")
   console.log("   FOSSpeaks: Speakers")
 }

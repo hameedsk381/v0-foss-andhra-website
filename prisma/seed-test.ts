@@ -123,14 +123,14 @@ async function main() {
     }
   }
 
-  // 5. FOSSart
-  const fossartId = programMap.get("fossart")
-  if (fossartId) {
-    const startupCount = await prisma.programStartup.count({ where: { programId: fossartId } })
+  // 5. FOSStart
+  const fosstartId = programMap.get("fosstart")
+  if (fosstartId) {
+    const startupCount = await prisma.programStartup.count({ where: { programId: fosstartId } })
     if (startupCount === 0) {
       const startups = [
         {
-          programId: fossartId,
+          programId: fosstartId,
           name: "OpenEdu Solutions",
           description: "Affordable ed-tech using open source",
           founded: "March 2023",
@@ -142,7 +142,7 @@ async function main() {
       for (const startup of startups) {
         await prisma.programStartup.create({ data: startup as any })
       }
-      console.log("✅ FOSSart: 1 startup")
+      console.log("✅ FOSStart: 1 startup")
     }
   }
 
