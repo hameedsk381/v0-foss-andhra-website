@@ -7,14 +7,14 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
     const post = await prisma.blogPost.findUnique({
       where: { slug: params.slug, status: "published" },
       include: {
-        category: true,
-        author: {
+        BlogCategory: true,
+        Admin: {
           select: { name: true, avatar: true },
         },
-        tags: {
-          include: { tag: true },
+        BlogPostTag: {
+          include: { BlogTag: true },
         },
-        comments: {
+        BlogComment: {
           where: { status: "approved" },
           orderBy: { createdAt: "desc" },
         },

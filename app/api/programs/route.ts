@@ -9,13 +9,13 @@ export async function GET() {
       include: {
         _count: {
           select: {
-            initiatives: true,
-            team: true,
-            casestudies: true,
-            clubs: true,
-            projects: true,
-            startups: true,
-            repositories: true,
+            ProgramInitiative: true,
+            ProgramTeamMember: true,
+            ProgramCaseStudy: true,
+            ProgramClub: true,
+            ProgramProject: true,
+            ProgramStartup: true,
+            ProgramRepository: true,
           },
         },
       },

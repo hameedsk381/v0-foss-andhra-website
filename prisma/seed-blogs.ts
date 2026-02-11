@@ -1,6 +1,11 @@
 import { PrismaClient } from "@prisma/client"
+import { randomBytes } from "crypto"
 
 const prisma = new PrismaClient()
+
+function generateId() {
+  return randomBytes(12).toString("hex")
+}
 
 async function main() {
   console.log("🌱 Seeding blog posts about FOSS...")
@@ -10,10 +15,12 @@ async function main() {
   if (!admin) {
     admin = await prisma.admin.create({
       data: {
+        id: generateId(),
         name: "FOSS Andhra Admin",
         email: "admin@fossandhra.org",
         password: "$2a$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdqgqw9XDpnDGfPdYjNlJBMF9S6", // "password123"
         role: "admin",
+        updatedAt: new Date(),
       },
     })
   }
@@ -24,6 +31,7 @@ async function main() {
       where: { slug: "open-source" },
       update: {},
       create: {
+        id: generateId(),
         name: "Open Source",
         slug: "open-source",
         description: "Articles about open source software and communities",
@@ -33,6 +41,7 @@ async function main() {
       where: { slug: "linux" },
       update: {},
       create: {
+        id: generateId(),
         name: "Linux",
         slug: "linux",
         description: "Everything about Linux distributions and ecosystem",
@@ -42,6 +51,7 @@ async function main() {
       where: { slug: "development" },
       update: {},
       create: {
+        id: generateId(),
         name: "Development",
         slug: "development",
         description: "Software development with open source tools",
@@ -51,6 +61,7 @@ async function main() {
       where: { slug: "community" },
       update: {},
       create: {
+        id: generateId(),
         name: "Community",
         slug: "community",
         description: "FOSS community news and events",
@@ -63,37 +74,37 @@ async function main() {
     prisma.blogTag.upsert({
       where: { slug: "foss" },
       update: {},
-      create: { name: "FOSS", slug: "foss" },
+      create: { id: generateId(), name: "FOSS", slug: "foss" },
     }),
     prisma.blogTag.upsert({
       where: { slug: "linux" },
       update: {},
-      create: { name: "Linux", slug: "linux" },
+      create: { id: generateId(), name: "Linux", slug: "linux" },
     }),
     prisma.blogTag.upsert({
       where: { slug: "beginner" },
       update: {},
-      create: { name: "Beginner", slug: "beginner" },
+      create: { id: generateId(), name: "Beginner", slug: "beginner" },
     }),
     prisma.blogTag.upsert({
       where: { slug: "tutorial" },
       update: {},
-      create: { name: "Tutorial", slug: "tutorial" },
+      create: { id: generateId(), name: "Tutorial", slug: "tutorial" },
     }),
     prisma.blogTag.upsert({
       where: { slug: "community" },
       update: {},
-      create: { name: "Community", slug: "community" },
+      create: { id: generateId(), name: "Community", slug: "community" },
     }),
     prisma.blogTag.upsert({
       where: { slug: "python" },
       update: {},
-      create: { name: "Python", slug: "python" },
+      create: { id: generateId(), name: "Python", slug: "python" },
     }),
     prisma.blogTag.upsert({
       where: { slug: "javascript" },
       update: {},
-      create: { name: "JavaScript", slug: "javascript" },
+      create: { id: generateId(), name: "JavaScript", slug: "javascript" },
     }),
   ])
 
@@ -702,7 +713,11 @@ Join FOSS Andhra's contribution workshops to practice these skills with mentorsh
     const post = await prisma.blogPost.upsert({
       where: { slug: postInfo.slug },
       update: postInfo,
-      create: postInfo,
+      create: {
+        ...postInfo,
+        id: generateId(),
+        updatedAt: new Date(),
+      },
     })
 
     // Create tag associations
@@ -716,6 +731,7 @@ Join FOSS Andhra's contribution workshops to practice these skills with mentorsh
         },
         update: {},
         create: {
+          id: generateId(),
           postId: post.id,
           tagId: tagId,
         },

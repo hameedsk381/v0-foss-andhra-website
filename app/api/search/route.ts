@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Search blog posts
-    const blog = await prisma.blogPost.findMany({
+    const blogPosts = await prisma.blogPost.findMany({
       where: {
         status: "published",
         OR: [
@@ -70,13 +70,18 @@ export async function GET(request: NextRequest) {
         slug: true,
         excerpt: true,
         publishedAt: true,
-        category: {
+        BlogCategory: {
           select: { name: true },
         },
       },
       take: 5,
       orderBy: { publishedAt: "desc" },
     })
+
+    const blog = blogPosts.map((post) => ({
+      ...post,
+      category: post.BlogCategory,
+    }))
 
     // Search programs
     const programs = await prisma.program.findMany({

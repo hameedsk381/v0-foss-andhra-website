@@ -14,14 +14,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const post = await prisma.blogPost.findUnique({
       where: { id: params.id },
       include: {
-        category: true,
-        author: {
+        BlogCategory: true,
+        Admin: {
           select: { id: true, name: true, email: true, avatar: true },
         },
-        tags: {
-          include: { tag: true },
+        BlogPostTag: {
+          include: { BlogTag: true },
         },
-        comments: {
+        BlogComment: {
           orderBy: { createdAt: "desc" },
         },
       },
@@ -47,17 +47,17 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const body = await request.json()
-    const { 
-      title, 
-      slug, 
-      excerpt, 
-      content, 
-      coverImage, 
-      categoryId, 
-      tags, 
-      status, 
-      featured, 
-      metaDescription, 
+    const {
+      title,
+      slug,
+      excerpt,
+      content,
+      coverImage,
+      categoryId,
+      tags,
+      status,
+      featured,
+      metaDescription,
       metaKeywords,
       ogTitle,
       ogDescription,

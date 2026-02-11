@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
+import { randomUUID } from 'crypto'
 
 const prisma = new PrismaClient()
 
@@ -143,7 +145,7 @@ async function seedPrograms() {
       create: {
         id: programData.name,
         ...programData,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
     })
 
@@ -361,9 +363,155 @@ async function seedGallery() {
   }
 }
 
+async function seedAdmin() {
+  console.log('🌱 Seeding admin account...')
+
+  const email = 'admin@fossandhra.org'
+  const password = await bcrypt.hash('FossAndhra@2024', 10)
+
+  // Check if admin exists
+  let admin = await prisma.admin.findUnique({
+    where: { email },
+  })
+
+  if (!admin) {
+    admin = await prisma.admin.create({
+      data: {
+        id: randomUUID(),
+        email,
+        name: 'System Admin',
+        password,
+        role: 'superadmin',
+        updatedAt: new Date(),
+      }
+    })
+    console.log(`✅ Admin account created: ${admin.email}`)
+  } else {
+    console.log(`⏭️  Admin account already exists: ${admin.email}`)
+  }
+
+  return admin
+}
+
+async function seedBlogs(authorId: string) {
+  console.log('🌱 Seeding blog content...')
+
+  // Categories
+  const categories = [
+    { name: 'Technology', slug: 'technology', description: 'Tech news and updates' },
+    { name: 'Community', slug: 'community', description: 'Community stories and events' },
+    { name: 'Tutorials', slug: 'tutorials', description: 'Guides and how-tos' },
+    { name: 'Announcements', slug: 'announcements', description: 'Official announcements' },
+    { name: 'Events', slug: 'events', description: 'Upcoming and past events' },
+  ]
+
+  const createdCategories: Record<string, string> = {}
+
+  for (const cat of categories) {
+    const existing = await prisma.blogCategory.findUnique({ where: { slug: cat.slug } })
+    if (existing) {
+      createdCategories[cat.slug] = existing.id
+    } else {
+      const created = await prisma.blogCategory.create({
+        data: {
+          id: randomUUID(),
+          ...cat,
+        },
+      })
+      createdCategories[cat.slug] = created.id
+    }
+  }
+
+  // Tags
+  const tags = ['Open Source', 'Linux', 'Web Development', 'AI', 'Events', 'Career', 'Education']
+  for (const tag of tags) {
+    const slug = tag.toLowerCase().replace(/ /g, '-')
+    const existing = await prisma.blogTag.findUnique({ where: { slug } })
+
+    if (!existing) {
+      await prisma.blogTag.create({
+        data: {
+          id: randomUUID(),
+          name: tag,
+          slug,
+        },
+      })
+    }
+  }
+
+  // Posts
+  const posts = [
+    {
+      title: "Welcome to FOSS Andhra Network",
+      slug: "welcome-to-foss-andhra",
+      excerpt: "We are excited to launch the new FOSS Andhra community platform.",
+      content: "<h2>Welcome</h2><p>FOSS Andhra is a community-driven initiative...</p>",
+      categorySlug: 'announcements',
+      authorId: authorId,
+      status: "published",
+      featured: true,
+      publishedAt: new Date(),
+      coverImage: "/blog/welcome-banner.jpg",
+      readingTime: 3
+    },
+    {
+      title: "Getting Started with Open Source",
+      slug: "getting-started-open-source",
+      excerpt: "A comprehensive guide on how to contribute.",
+      content: "<p>Contributing to open source can be intimidating...</p>",
+      categorySlug: 'tutorials',
+      authorId: authorId,
+      status: "published",
+      featured: false,
+      publishedAt: new Date(),
+      coverImage: "/blog/open-source-contribution.jpg",
+      readingTime: 5
+    },
+    {
+      title: "Highlights from FOSS Summit",
+      slug: "foss-summit-highlights",
+      excerpt: "Recap of the biggest open source event.",
+      content: "<p>The Annual FOSS Summit was a huge success...</p>",
+      categorySlug: 'events',
+      authorId: authorId,
+      status: "published",
+      featured: true,
+      publishedAt: new Date(),
+      coverImage: "/blog/summit-highlights.jpg",
+      readingTime: 4
+    }
+  ]
+
+  for (const post of posts) {
+    const categoryId = createdCategories[post.categorySlug]
+    if (categoryId) {
+      const existing = await prisma.blogPost.findUnique({ where: { slug: post.slug } })
+
+      if (!existing) {
+        // Prepare data without categorySlug
+        const { categorySlug, ...postData } = post
+        await prisma.blogPost.create({
+          data: {
+            id: randomUUID(),
+            ...postData,
+            categoryId,
+            updatedAt: new Date(),
+          }
+        })
+      }
+    } else {
+      console.warn(`Category not found for post: ${post.title} (${post.categorySlug})`)
+    }
+  }
+
+  console.log('✅ Blog content seeded')
+}
+
 async function main() {
   console.log('🌱 Starting database seed...\n')
 
+  const admin = await seedAdmin()
+  await seedBlogs(admin.id)
   await seedPrograms()
   await seedGallery()
 

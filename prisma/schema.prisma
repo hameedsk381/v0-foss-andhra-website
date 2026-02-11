@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Admin {
-  id        String     @id
+  id        String     @id @default(cuid())
   name      String
   email     String     @unique
   password  String
@@ -16,12 +16,12 @@ model Admin {
   avatar    String?
   lastLogin DateTime?
   createdAt DateTime   @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
   BlogPost  BlogPost[]
 }
 
 model Analytics {
-  id        String   @id
+  id        String   @id @default(cuid())
   type      String
   value     Float
   metadata  String?
@@ -30,7 +30,7 @@ model Analytics {
 }
 
 model BlogCategory {
-  id          String     @id
+  id          String     @id @default(cuid())
   name        String     @unique
   slug        String     @unique
   description String?
@@ -39,7 +39,7 @@ model BlogCategory {
 }
 
 model BlogComment {
-  id        String   @id
+  id        String   @id @default(cuid())
   postId    String
   name      String
   email     String
@@ -50,7 +50,7 @@ model BlogComment {
 }
 
 model BlogPost {
-  id                 String        @id
+  id                 String        @id @default(cuid())
   title              String
   slug               String        @unique
   excerpt            String
@@ -75,7 +75,7 @@ model BlogPost {
   readingTime        Int?
   publishedAt        DateTime?
   createdAt          DateTime      @default(now())
-  updatedAt          DateTime
+  updatedAt          DateTime      @updatedAt
   BlogComment        BlogComment[]
   Admin              Admin         @relation(fields: [authorId], references: [id])
   BlogCategory       BlogCategory  @relation(fields: [categoryId], references: [id])
@@ -83,7 +83,7 @@ model BlogPost {
 }
 
 model BlogPostTag {
-  id       String   @id
+  id       String   @id @default(cuid())
   postId   String
   tagId    String
   BlogPost BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -93,7 +93,7 @@ model BlogPostTag {
 }
 
 model BlogTag {
-  id          String        @id
+  id          String        @id @default(cuid())
   name        String        @unique
   slug        String        @unique
   createdAt   DateTime      @default(now())
@@ -101,7 +101,7 @@ model BlogTag {
 }
 
 model Content {
-  id                 String    @id
+  id                 String    @id @default(cuid())
   type               String
   slug               String    @unique
   title              String
@@ -112,7 +112,7 @@ model Content {
   author             String
   publishedAt        DateTime?
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime
+  updatedAt          DateTime  @updatedAt
   canonicalUrl       String?
   focusKeyword       String?
   ogDescription      String?
@@ -125,7 +125,7 @@ model Content {
 }
 
 model Donation {
-  id                String   @id
+  id                String   @id @default(cuid())
   name              String
   email             String
   phone             String
@@ -140,11 +140,11 @@ model Donation {
   notes             String?
   receiptUrl        String?
   createdAt         DateTime @default(now())
-  updatedAt         DateTime
+  updatedAt         DateTime @updatedAt
 }
 
 model Event {
-  id                  String         @id
+  id                  String         @id @default(cuid())
   title               String
   description         String
   date                DateTime
@@ -159,7 +159,7 @@ model Event {
   imageUrl            String?
   createdBy           String?
   createdAt           DateTime       @default(now())
-  updatedAt           DateTime
+  updatedAt           DateTime       @updatedAt
   gallery             String?
   externalTicketUrl   String?
   externalRegisterUrl String?
@@ -171,7 +171,7 @@ model Event {
 }
 
 model Inquiry {
-  id        String   @id
+  id        String   @id @default(cuid())
   name      String
   email     String
   phone     String?
@@ -179,11 +179,11 @@ model Inquiry {
   message   String
   status    String   @default("new")
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Media {
-  id           String   @id
+  id           String   @id @default(cuid())
   filename     String
   originalName String
   mimeType     String
@@ -198,7 +198,7 @@ model Media {
   program      String?
   tags         String?
   title        String?
-  updatedAt    DateTime
+  updatedAt    DateTime @updatedAt
 }
 
 model Member {
@@ -228,7 +228,7 @@ model Member {
 }
 
 model Notification {
-  id        String   @id
+  id        String   @id @default(cuid())
   userId    String
   type      String
   title     String
@@ -239,7 +239,7 @@ model Notification {
 }
 
 model Program {
-  id                String              @id
+  id                String              @id @default(cuid())
   name              String              @unique
   title             String
   description       String
@@ -250,7 +250,7 @@ model Program {
   status            String              @default("active")
   displayOrder      Int                 @default(0)
   createdAt         DateTime            @default(now())
-  updatedAt         DateTime
+  updatedAt         DateTime            @updatedAt
   ProgramCaseStudy  ProgramCaseStudy[]
   ProgramClub       ProgramClub[]
   ProgramInitiative ProgramInitiative[]
@@ -261,7 +261,7 @@ model Program {
 }
 
 model ProgramCaseStudy {
-  id          String   @id
+  id          String   @id @default(cuid())
   programId   String
   title       String
   subtitle    String?
@@ -273,12 +273,12 @@ model ProgramCaseStudy {
   order       Int      @default(0)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramClub {
-  id          String   @id
+  id          String   @id @default(cuid())
   programId   String
   name        String
   location    String
@@ -291,12 +291,12 @@ model ProgramClub {
   order       Int      @default(0)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramInitiative {
-  id          String   @id
+  id          String   @id @default(cuid())
   programId   String
   title       String
   description String
@@ -306,12 +306,12 @@ model ProgramInitiative {
   order       Int      @default(0)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramProject {
-  id           String   @id
+  id           String   @id @default(cuid())
   programId    String
   name         String
   description  String
@@ -326,12 +326,12 @@ model ProgramProject {
   order        Int      @default(0)
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  updatedAt    DateTime @updatedAt
   Program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramRepository {
-  id          String   @id
+  id          String   @id @default(cuid())
   programId   String
   name        String
   description String
@@ -343,12 +343,12 @@ model ProgramRepository {
   order       Int      @default(0)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramStartup {
-  id            String   @id
+  id            String   @id @default(cuid())
   programId     String
   name          String
   description   String
@@ -365,12 +365,12 @@ model ProgramStartup {
   order         Int      @default(0)
   active        Boolean  @default(true)
   createdAt     DateTime @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime @updatedAt
   Program       Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramTeamMember {
-  id        String   @id
+  id        String   @id @default(cuid())
   programId String
   name      String
   role      String
@@ -382,23 +382,23 @@ model ProgramTeamMember {
   order     Int      @default(0)
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
   Program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model PushSubscription {
-  id        String   @id
+  id        String   @id @default(cuid())
   userId    String?
   endpoint  String   @unique
   p256dh    String
   auth      String
   userAgent String?
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Registration {
-  id           String   @id
+  id           String   @id @default(cuid())
   eventId      String
   name         String
   email        String
@@ -407,20 +407,20 @@ model Registration {
   notes        String?
   attended     Boolean  @default(false)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  updatedAt    DateTime @updatedAt
   Event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model Settings {
-  id          String   @id
+  id          String   @id @default(cuid())
   key         String   @unique
   value       String
   description String?
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model Subscriber {
-  id             String    @id
+  id             String    @id @default(cuid())
   email          String    @unique
   name           String?
   status         String    @default("active")
@@ -429,7 +429,7 @@ model Subscriber {
 }
 
 model Volunteer {
-  id           String    @id
+  id           String    @id @default(cuid())
   firstName    String
   lastName     String
   email        String    @unique

@@ -18,31 +18,31 @@ export async function GET(
         status: "active",
       },
       include: {
-        initiatives: {
+        ProgramInitiative: {
           where: { active: true },
           orderBy: { order: "asc" },
         },
-        team: {
+        ProgramTeamMember: {
           where: { active: true },
           orderBy: { order: "asc" },
         },
-        casestudies: {
+        ProgramCaseStudy: {
           where: { active: true },
           orderBy: { order: "asc" },
         },
-        clubs: {
+        ProgramClub: {
           where: { active: true },
           orderBy: { order: "asc" },
         },
-        projects: {
+        ProgramProject: {
           where: { active: true },
           orderBy: { order: "asc" },
         },
-        startups: {
+        ProgramStartup: {
           where: { active: true },
           orderBy: { order: "asc" },
         },
-        repositories: {
+        ProgramRepository: {
           where: { active: true },
           orderBy: { order: "asc" },
         },

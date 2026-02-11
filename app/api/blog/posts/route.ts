@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
     const posts = await prisma.blogPost.findMany({
       where: {
         status: "published",
-        ...(category && { category: { slug: category } }),
-        ...(tag && { tags: { some: { tag: { slug: tag } } } }),
+        ...(category && { BlogCategory: { slug: category } }),
+        ...(tag && { BlogPostTag: { some: { BlogTag: { slug: tag } } } }),
         ...(search && {
           OR: [
             { title: { contains: search, mode: "insensitive" } },
@@ -25,12 +25,12 @@ export async function GET(request: NextRequest) {
         }),
       },
       include: {
-        category: true,
-        author: {
+        BlogCategory: true,
+        Admin: {
           select: { name: true, avatar: true },
         },
-        tags: {
-          include: { tag: true },
+        BlogPostTag: {
+          include: { BlogTag: true },
         },
       },
       orderBy: { publishedAt: "desc" },

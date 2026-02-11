@@ -46,23 +46,23 @@ export async function GET(request: NextRequest) {
     const posts = await prisma.blogPost.findMany({
       where,
       include: {
-        category: {
+        BlogCategory: {
           select: {
             id: true,
             name: true,
             slug: true,
           },
         },
-        author: {
+        Admin: {
           select: {
             id: true,
             name: true,
             email: true,
           },
         },
-        tags: {
+        BlogPostTag: {
           include: {
-            tag: {
+            BlogTag: {
               select: {
                 id: true,
                 name: true,
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
           },
         },
         _count: {
-          select: { comments: true },
+          select: { BlogComment: true },
         },
       },
       orderBy: { createdAt: "desc" },
@@ -210,12 +210,12 @@ export async function POST(request: NextRequest) {
     const completePost = await prisma.blogPost.findUnique({
       where: { id: post.id },
       include: {
-        category: true,
-        author: {
+        BlogCategory: true,
+        Admin: {
           select: { id: true, name: true, email: true },
         },
-        tags: {
-          include: { tag: true },
+        BlogPostTag: {
+          include: { BlogTag: true },
         },
       },
     })
