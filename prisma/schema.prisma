@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Admin {
-  id        String     @id @default(cuid())
+  id        String     @id
   name      String
   email     String     @unique
   password  String
@@ -16,198 +16,41 @@ model Admin {
   avatar    String?
   lastLogin DateTime?
   createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  blogPosts BlogPost[]
+  updatedAt DateTime
+  BlogPost  BlogPost[]
 }
 
-model Member {
-  id             String    @id @default(cuid())
-  name           String
-  email          String    @unique
-  phone          String
-  organization   String?
-  designation    String?
-  experience     String?
-  interests      String?
-  referral       String?
-  membershipType String    @default("FOSStar Annual")
-  status         String    @default("pending")
-  joinDate       DateTime  @default(now())
-  expiryDate     DateTime
-  paymentId      String?
-  membershipId   String    @unique
-  lastLogin      DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  password       String?
-  avatar         String?
-  address          String?
-  resetToken       String?   @unique
-  resetTokenExpiry DateTime?
-}
-
-model Event {
-  id                  String         @id @default(cuid())
-  title               String
-  description         String
-  date                DateTime
-  endDate             DateTime?
-  time                String
-  location            String
-  type                String
-  status              String         @default("upcoming")
-  maxAttendees        Int?
-  currentAttendees    Int            @default(0)
-  program             String?
-  imageUrl            String?
-  createdBy           String?
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
-  gallery             String?
-  externalTicketUrl   String?
-  externalRegisterUrl String?
-  registrations       Registration[]
-}
-
-model Registration {
-  id           String   @id @default(cuid())
-  eventId      String
-  name         String
-  email        String
-  phone        String?
-  organization String?
-  notes        String?
-  attended     Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-}
-
-model Donation {
-  id                String   @id @default(cuid())
-  name              String
-  email             String
-  phone             String
-  amount            Float
-  type              String
-  status            String   @default("pending")
-  anonymous         Boolean  @default(false)
-  paymentId         String?
-  razorpayOrderId   String?
-  razorpaySignature String?
-  program           String?
-  notes             String?
-  receiptUrl        String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-}
-
-model Content {
-  id                 String    @id @default(cuid())
-  type               String
-  slug               String    @unique
-  title              String
-  content            String
-  metaDescription    String?
-  keywords           String?
-  status             String    @default("draft")
-  author             String
-  publishedAt        DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  canonicalUrl       String?
-  focusKeyword       String?
-  ogDescription      String?
-  ogImage            String?
-  ogTitle            String?
-  twitterCard        String?
-  twitterDescription String?
-  twitterImage       String?
-  twitterTitle       String?
-}
-
-model Media {
-  id           String   @id @default(cuid())
-  filename     String
-  originalName String
-  mimeType     String
-  size         Int
-  url          String
-  alt          String?
-  caption      String?
-  uploadedBy   String
-  createdAt    DateTime @default(now())
-  category     String?
-  description  String?
-  program      String?
-  tags         String?
-  title        String?
-  updatedAt    DateTime @updatedAt
-}
-
-model Settings {
-  id          String   @id @default(cuid())
-  key         String   @unique
-  value       String
-  description String?
-  updatedAt   DateTime @updatedAt
-}
-
-model Subscriber {
-  id             String    @id @default(cuid())
-  email          String    @unique
-  name           String?
-  status         String    @default("active")
-  subscribedAt   DateTime  @default(now())
-  unsubscribedAt DateTime?
-}
-
-model Volunteer {
-  id           String    @id @default(cuid())
-  firstName    String
-  lastName     String
-  email        String    @unique
-  phone        String
-  skills       String
-  interests    String
-  availability String
-  status       String    @default("pending")
-  appliedAt    DateTime  @default(now())
-  reviewedAt   DateTime?
-  reviewedBy   String?
-}
-
-model Inquiry {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  phone     String?
-  subject   String
-  message   String
-  status    String   @default("new")
+model Analytics {
+  id        String   @id
+  type      String
+  value     Float
+  metadata  String?
+  date      DateTime @default(now())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model BlogCategory {
-  id          String     @id @default(cuid())
+  id          String     @id
   name        String     @unique
   slug        String     @unique
   description String?
   createdAt   DateTime   @default(now())
-  posts       BlogPost[]
+  BlogPost    BlogPost[]
 }
 
-model BlogTag {
-  id        String        @id @default(cuid())
-  name      String        @unique
-  slug      String        @unique
-  createdAt DateTime      @default(now())
-  posts     BlogPostTag[]
+model BlogComment {
+  id        String   @id
+  postId    String
+  name      String
+  email     String
+  content   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  BlogPost  BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model BlogPost {
-  id                 String        @id @default(cuid())
+  id                 String        @id
   title              String
   slug               String        @unique
   excerpt            String
@@ -232,45 +75,156 @@ model BlogPost {
   readingTime        Int?
   publishedAt        DateTime?
   createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
-  comments           BlogComment[]
-  author             Admin         @relation(fields: [authorId], references: [id])
-  category           BlogCategory  @relation(fields: [categoryId], references: [id])
-  tags               BlogPostTag[]
+  updatedAt          DateTime
+  BlogComment        BlogComment[]
+  Admin              Admin         @relation(fields: [authorId], references: [id])
+  BlogCategory       BlogCategory  @relation(fields: [categoryId], references: [id])
+  BlogPostTag        BlogPostTag[]
 }
 
 model BlogPostTag {
-  id     String   @id @default(cuid())
-  postId String
-  tagId  String
-  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag    BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  id       String   @id
+  postId   String
+  tagId    String
+  BlogPost BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  BlogTag  BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@unique([postId, tagId])
 }
 
-model BlogComment {
-  id        String   @id @default(cuid())
-  postId    String
-  name      String
-  email     String
-  content   String
-  status    String   @default("pending")
-  createdAt DateTime @default(now())
-  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+model BlogTag {
+  id          String        @id
+  name        String        @unique
+  slug        String        @unique
+  createdAt   DateTime      @default(now())
+  BlogPostTag BlogPostTag[]
 }
 
-model Analytics {
-  id        String   @id @default(cuid())
-  type      String
-  value     Float
-  metadata  String?
-  date      DateTime @default(now())
+model Content {
+  id                 String    @id
+  type               String
+  slug               String    @unique
+  title              String
+  content            String
+  metaDescription    String?
+  keywords           String?
+  status             String    @default("draft")
+  author             String
+  publishedAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime
+  canonicalUrl       String?
+  focusKeyword       String?
+  ogDescription      String?
+  ogImage            String?
+  ogTitle            String?
+  twitterCard        String?
+  twitterDescription String?
+  twitterImage       String?
+  twitterTitle       String?
+}
+
+model Donation {
+  id                String   @id
+  name              String
+  email             String
+  phone             String
+  amount            Float
+  type              String
+  status            String   @default("pending")
+  anonymous         Boolean  @default(false)
+  paymentId         String?
+  razorpayOrderId   String?
+  razorpaySignature String?
+  program           String?
+  notes             String?
+  receiptUrl        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime
+}
+
+model Event {
+  id                  String         @id
+  title               String
+  description         String
+  date                DateTime
+  endDate             DateTime?
+  time                String
+  location            String
+  type                String
+  status              String         @default("upcoming")
+  maxAttendees        Int?
+  currentAttendees    Int            @default(0)
+  program             String?
+  imageUrl            String?
+  createdBy           String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime
+  gallery             String?
+  externalTicketUrl   String?
+  externalRegisterUrl String?
+  Registration        Registration[]
+}
+
+model Inquiry {
+  id        String   @id
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    String   @default("new")
   createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Media {
+  id           String   @id
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  alt          String?
+  caption      String?
+  uploadedBy   String
+  createdAt    DateTime @default(now())
+  category     String?
+  description  String?
+  program      String?
+  tags         String?
+  title        String?
+  updatedAt    DateTime
+}
+
+model Member {
+  id               String    @id
+  name             String
+  email            String    @unique
+  phone            String
+  organization     String?
+  designation      String?
+  experience       String?
+  interests        String?
+  referral         String?
+  membershipType   String    @default("FOSStar Annual")
+  status           String    @default("pending")
+  joinDate         DateTime  @default(now())
+  expiryDate       DateTime
+  paymentId        String?
+  membershipId     String    @unique
+  lastLogin        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime
+  password         String?
+  avatar           String?
+  address          String?
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
 }
 
 model Notification {
-  id        String   @id @default(cuid())
+  id        String   @id
   userId    String
   type      String
   title     String
@@ -280,73 +234,30 @@ model Notification {
   createdAt DateTime @default(now())
 }
 
-model PushSubscription {
-  id        String   @id @default(cuid())
-  userId    String?
-  endpoint  String   @unique
-  p256dh    String
-  auth      String
-  userAgent String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Program {
-  id           String              @id @default(cuid())
-  name         String              @unique
-  title        String
-  description  String
-  tagline      String?
-  mission      String?
-  color        String
-  logo         String?
-  status       String              @default("active")
-  displayOrder Int                 @default(0)
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
-  casestudies  ProgramCaseStudy[]
-  clubs        ProgramClub[]
-  initiatives  ProgramInitiative[]
-  projects     ProgramProject[]
-  repositories ProgramRepository[]
-  startups     ProgramStartup[]
-  team         ProgramTeamMember[]
-}
-
-model ProgramInitiative {
-  id          String   @id @default(cuid())
-  programId   String
-  title       String
-  description String
-  content     String?
-  icon        String?
-  category    String?
-  order       Int      @default(0)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
-}
-
-model ProgramTeamMember {
-  id        String   @id @default(cuid())
-  programId String
-  name      String
-  role      String
-  bio       String?
-  avatar    String?
-  email     String?
-  linkedin  String?
-  twitter   String?
-  order     Int      @default(0)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  id                String              @id
+  name              String              @unique
+  title             String
+  description       String
+  tagline           String?
+  mission           String?
+  color             String
+  logo              String?
+  status            String              @default("active")
+  displayOrder      Int                 @default(0)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  ProgramCaseStudy  ProgramCaseStudy[]
+  ProgramClub       ProgramClub[]
+  ProgramInitiative ProgramInitiative[]
+  ProgramProject    ProgramProject[]
+  ProgramRepository ProgramRepository[]
+  ProgramStartup    ProgramStartup[]
+  ProgramTeamMember ProgramTeamMember[]
 }
 
 model ProgramCaseStudy {
-  id          String   @id @default(cuid())
+  id          String   @id
   programId   String
   title       String
   subtitle    String?
@@ -358,12 +269,12 @@ model ProgramCaseStudy {
   order       Int      @default(0)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  updatedAt   DateTime
+  Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramClub {
-  id          String   @id @default(cuid())
+  id          String   @id
   programId   String
   name        String
   location    String
@@ -376,12 +287,27 @@ model ProgramClub {
   order       Int      @default(0)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  updatedAt   DateTime
+  Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+model ProgramInitiative {
+  id          String   @id
+  programId   String
+  title       String
+  description String
+  content     String?
+  icon        String?
+  category    String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramProject {
-  id           String   @id @default(cuid())
+  id           String   @id
   programId    String
   name         String
   description  String
@@ -396,12 +322,29 @@ model ProgramProject {
   order        Int      @default(0)
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  updatedAt    DateTime
+  Program      Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+model ProgramRepository {
+  id          String   @id
+  programId   String
+  name        String
+  description String
+  content     String?
+  category    String?
+  type        String?
+  url         String?
+  features    String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
 model ProgramStartup {
-  id            String   @id @default(cuid())
+  id            String   @id
   programId     String
   name          String
   description   String
@@ -418,23 +361,80 @@ model ProgramStartup {
   order         Int      @default(0)
   active        Boolean  @default(true)
   createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  program       Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  updatedAt     DateTime
+  Program       Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
 
-model ProgramRepository {
-  id          String   @id @default(cuid())
-  programId   String
-  name        String
-  description String
-  content     String?
-  category    String?
-  type        String?
-  url         String?
-  features    String?
-  order       Int      @default(0)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+model ProgramTeamMember {
+  id        String   @id
+  programId String
+  name      String
+  role      String
+  bio       String?
+  avatar    String?
+  email     String?
+  linkedin  String?
+  twitter   String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+model PushSubscription {
+  id        String   @id
+  userId    String?
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Registration {
+  id           String   @id
+  eventId      String
+  name         String
+  email        String
+  phone        String?
+  organization String?
+  notes        String?
+  attended     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  Event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  id          String   @id
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime
+}
+
+model Subscriber {
+  id             String    @id
+  email          String    @unique
+  name           String?
+  status         String    @default("active")
+  subscribedAt   DateTime  @default(now())
+  unsubscribedAt DateTime?
+}
+
+model Volunteer {
+  id           String    @id
+  firstName    String
+  lastName     String
+  email        String    @unique
+  phone        String
+  skills       String
+  interests    String
+  availability String
+  status       String    @default("pending")
+  appliedAt    DateTime  @default(now())
+  reviewedAt   DateTime?
+  reviewedBy   String?
 }

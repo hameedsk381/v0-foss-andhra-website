@@ -335,7 +335,7 @@ export default function FOSSynCPage() {
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="md:w-1/3">
                       <img
-                        src="/placeholder.svg?height=300&width=400&text=FOSSynC+Summit"
+                        src="/gallery/fosstar-summit.jpg"
                         alt="FOSSynC Summit"
                         className="rounded-lg w-full h-auto"
                       />
@@ -387,15 +387,22 @@ export default function FOSSynCPage() {
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
+              {[
+                { id: 1, src: "/gallery/fossync-club.jpg", title: "College Club Launch" },
+                { id: 2, src: "/gallery/fosstorm-workshop.jpg", title: "Campus Hackathon" },
+                { id: 3, src: "/gallery/fosstar-summit.jpg", title: "Student Leader Meet" },
+                { id: 4, src: "/gallery/fosserve-launch.jpg", title: "Open Source Seminar" },
+                { id: 5, src: "/gallery/fossart-startup.jpg", title: "Project Demo Day" },
+                { id: 6, src: "/gallery/fosspeaks-advocacy.jpg", title: "Tech Talk on Campus" },
+              ].map((item) => (
+                <div key={item.id} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
                   <img
-                    src={`/placeholder.svg?height=450&width=800&text=FOSSynC+Event+${item}`}
-                    alt={`FOSSynC event ${item}`}
+                    src={item.src}
+                    alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h4 className="font-medium">FOSSynC Event {item}</h4>
+                    <h4 className="font-medium">{item.title}</h4>
                     <p className="text-sm opacity-90">Student-led FOSS activities</p>
                   </div>
                 </div>

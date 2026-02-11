@@ -10,7 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
-export default function SetPasswordPage() {
+import { Suspense } from "react"
+
+function SetPasswordForm() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const token = searchParams.get("token")
@@ -174,5 +176,17 @@ export default function SetPasswordPage() {
                 </CardContent>
             </Card>
         </div>
+    )
+}
+
+export default function SetPasswordPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        }>
+            <SetPasswordForm />
+        </Suspense>
     )
 }

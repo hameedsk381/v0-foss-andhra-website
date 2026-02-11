@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 // POST - Subscribe to push notifications
 export async function POST(request: NextRequest) {
   try {

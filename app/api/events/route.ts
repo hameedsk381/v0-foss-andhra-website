@@ -1,15 +1,17 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get("status") || "upcoming"
 
     const now = new Date()
-    
+
     let whereClause: any = {}
-    
+
     if (status === "upcoming") {
       whereClause = {
         date: {

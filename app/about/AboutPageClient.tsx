@@ -71,7 +71,7 @@ export default function AboutPageClient() {
             <AnimatedSection variant="fadeRight">
               <div className="relative rounded-xl overflow-hidden h-[400px]">
                 <Image
-                  src="/placeholder.svg?height=800&width=1200&text=FOSS+Andhra+Team"
+                  src="/gallery/fosstar-summit.jpg"
                   alt="FOSS Andhra Team"
                   fill
                   className="object-cover"

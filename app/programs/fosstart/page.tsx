@@ -154,7 +154,7 @@ export default function FOSStartPage() {
                     <div className="flex flex-col md:flex-row gap-4 mb-4">
                       <div className="flex-shrink-0">
                         <img
-                          src="/placeholder.svg?height=120&width=120&text=Logo"
+                          src="/placeholder-logo.png"
                           alt="OpenHealth Logo"
                           className="rounded-lg w-20 h-20 object-cover"
                         />
@@ -225,7 +225,7 @@ export default function FOSStartPage() {
                     <div className="flex flex-col md:flex-row gap-4 mb-4">
                       <div className="flex-shrink-0">
                         <img
-                          src="/placeholder.svg?height=120&width=120&text=Logo"
+                          src="/placeholder-logo.png"
                           alt="LocalMarket Logo"
                           className="rounded-lg w-20 h-20 object-cover"
                         />
@@ -296,7 +296,7 @@ export default function FOSStartPage() {
                     <div className="flex flex-col md:flex-row gap-4 mb-4">
                       <div className="flex-shrink-0">
                         <img
-                          src="/placeholder.svg?height=120&width=120&text=Logo"
+                          src="/placeholder-logo.png"
                           alt="EduOpen Logo"
                           className="rounded-lg w-20 h-20 object-cover"
                         />
@@ -367,7 +367,7 @@ export default function FOSStartPage() {
                     <div className="flex flex-col md:flex-row gap-4 mb-4">
                       <div className="flex-shrink-0">
                         <img
-                          src="/placeholder.svg?height=120&width=120&text=Logo"
+                          src="/placeholder-logo.png"
                           alt="GreenTech Logo"
                           className="rounded-lg w-20 h-20 object-cover"
                         />
@@ -610,16 +610,23 @@ export default function FOSStartPage() {
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
+              {[
+                { id: 1, src: "/gallery/fosstar-summit.jpg", title: "FOSStart Summit" },
+                { id: 2, src: "/gallery/fosstorm-workshop.jpg", title: "Project Showcase" },
+                { id: 3, src: "/gallery/fossync-club.jpg", title: "Student Pitch Day" },
+                { id: 4, src: "/gallery/fosserve-launch.jpg", title: "Program Launch" },
+                { id: 5, src: "/gallery/fossart-startup.jpg", title: "Startup Meetup" },
+                { id: 6, src: "/gallery/fosspeaks-advocacy.jpg", title: "Industry Talk" },
+              ].map((item) => (
+                <div key={item.id} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
                   <img
-                    src={`/placeholder.svg?height=450&width=800&text=FOSStart+Event+${item}`}
-                    alt={`FOSStart event ${item}`}
+                    src={item.src}
+                    alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h4 className="font-medium">FOSStart Event {item}</h4>
-                    <p className="text-sm opacity-90">Startup showcase and networking</p>
+                    <h4 className="font-medium">{item.title}</h4>
+                    <p className="text-sm opacity-90">FOSStart initiative in action</p>
                   </div>
                 </div>
               ))}

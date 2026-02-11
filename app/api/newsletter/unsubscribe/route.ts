@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = "force-dynamic"
+
 // GET - Unsubscribe from newsletter
 export async function GET(request: NextRequest) {
   try {
@@ -30,7 +32,7 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
       message: 'Successfully unsubscribed from newsletter'
     })

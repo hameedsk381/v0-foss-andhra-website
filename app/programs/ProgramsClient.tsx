@@ -122,7 +122,7 @@ export default function ProgramsClient() {
                         <AnimatedSection variant="fadeLeft">
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                                 <Image
-                                    src="/placeholder.svg?height=800&width=1000&text=Strategic+Pillars"
+                                    src="/gallery/fosstar-summit.jpg"
                                     alt="Strategic Pillars"
                                     width={1000}
                                     height={800}

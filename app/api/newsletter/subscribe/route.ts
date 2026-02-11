@@ -5,6 +5,8 @@ import { strictRateLimit, getRateLimitIdentifier } from '@/lib/rate-limit'
 import { subscribeNewsletterSchema, validateRequestBody } from '@/lib/validation-schemas'
 import { logError, logInfo } from '@/lib/logger'
 
+export const dynamic = "force-dynamic"
+
 // POST - Public newsletter subscription endpoint
 export async function POST(request: NextRequest) {
   try {
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     logInfo('Newsletter subscription', { email })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
       message: 'Successfully subscribed to newsletter!',
       subscriber: {

@@ -126,7 +126,7 @@ export default function FOSServePage() {
               <AnimatedSection variant="fadeRight">
                 <div className="relative rounded-xl overflow-hidden h-[400px]">
                   <Image
-                    src="/gallery/fosserve-implementation-1.jpg"
+                    src="/gallery/fosserve-launch.jpg"
                     alt="FOSServe Implementation"
                     fill
                     className="object-cover"
@@ -488,7 +488,7 @@ export default function FOSServePage() {
                         <div className="flex flex-col md:flex-row gap-6">
                           <div className="md:w-1/3">
                             <Image
-                              src="/placeholder.svg?height=300&width=400&text=University+Campus"
+                              src="/gallery/fosstar-summit.jpg"
                               alt="University Campus"
                               width={400}
                               height={300}
@@ -539,7 +539,7 @@ export default function FOSServePage() {
                         <div className="flex flex-col md:flex-row gap-6">
                           <div className="md:w-1/3">
                             <Image
-                              src="/placeholder.svg?height=300&width=400&text=Government+Office"
+                              src="/gallery/fossterage-database.jpg"
                               alt="Government Office"
                               width={400}
                               height={300}
@@ -590,7 +590,7 @@ export default function FOSServePage() {
                         <div className="flex flex-col md:flex-row gap-6">
                           <div className="md:w-1/3">
                             <Image
-                              src="/placeholder.svg?height=300&width=400&text=Rural+School"
+                              src="/gallery/fosserve-launch.jpg"
                               alt="Rural School"
                               width={400}
                               height={300}
@@ -642,18 +642,25 @@ export default function FOSServePage() {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                  {[1, 2, 3, 4, 5, 6].map((item) => (
-                    <div key={item} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
+                  {[
+                    { id: 1, src: "/gallery/fosserve-launch.jpg", title: "Smart Classroom Setup" },
+                    { id: 2, src: "/gallery/fossterage-database.jpg", title: "Institutional Repo" },
+                    { id: 3, src: "/gallery/fosstar-event-1.jpg", title: "Gov Stakeholder Meet" },
+                    { id: 4, src: "/gallery/fosstorm-workshop.jpg", title: "Technical Training" },
+                    { id: 5, src: "/gallery/fossync-club.jpg", title: "Campus Implementation" },
+                    { id: 6, src: "/gallery/fosstar-summit.jpg", title: "Program Review" },
+                  ].map((item) => (
+                    <div key={item.id} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
                       <Image
-                        src={`/placeholder.svg?height=450&width=800&text=FOSServe+Implementation+${item}`}
-                        alt={`FOSServe implementation ${item}`}
+                        src={item.src}
+                        alt={item.title}
                         width={800}
                         height={450}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                        <h4 className="font-medium">FOSServe Project {item}</h4>
-                        <p className="text-sm opacity-90">Open source implementation</p>
+                        <h4 className="font-medium">{item.title}</h4>
+                        <p className="text-sm opacity-90">FOSServe open source initiative</p>
                       </div>
                     </div>
                   ))}

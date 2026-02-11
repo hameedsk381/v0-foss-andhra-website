@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 // GET - Fetch all blog posts
 export async function GET(request: NextRequest) {
   try {
@@ -20,19 +22,19 @@ export async function GET(request: NextRequest) {
 
     // Build where clause
     const where: any = {}
-    
+
     if (status && status !== "all") {
       where.status = status
     }
-    
+
     if (category) {
       where.categoryId = category
     }
-    
+
     if (featured === "true") {
       where.featured = true
     }
-    
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: "insensitive" } },
@@ -77,8 +79,8 @@ export async function GET(request: NextRequest) {
       take: limit ? parseInt(limit) : undefined,
     })
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: posts,
       count: posts.length,
     })
@@ -86,8 +88,8 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching blog posts:", error)
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch blog posts"
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
       },
@@ -109,9 +111,9 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!body.title || !body.slug || !body.categoryId) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: "Missing required fields: title, slug, and categoryId are required" 
+        {
+          success: false,
+          error: "Missing required fields: title, slug, and categoryId are required"
         },
         { status: 400 }
       )
@@ -141,17 +143,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { 
-      title, 
-      slug, 
-      excerpt, 
-      content, 
-      coverImage, 
-      categoryId, 
-      tags, 
-      status, 
-      featured, 
-      metaDescription, 
+    const {
+      title,
+      slug,
+      excerpt,
+      content,
+      coverImage,
+      categoryId,
+      tags,
+      status,
+      featured,
+      metaDescription,
       metaKeywords,
       ogTitle,
       ogDescription,
@@ -218,8 +220,8 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: completePost,
       message: "Blog post created successfully",
     })
@@ -227,8 +229,8 @@ export async function POST(request: NextRequest) {
     console.error("Error creating blog post:", error)
     const errorMessage = error instanceof Error ? error.message : "Failed to create blog post"
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
       },

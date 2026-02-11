@@ -5,6 +5,8 @@ import { strictRateLimit, getRateLimitIdentifier } from '@/lib/rate-limit'
 import { createVolunteerSchema, validateRequestBody } from '@/lib/validation-schemas'
 import { logError, logInfo } from '@/lib/logger'
 
+export const dynamic = "force-dynamic"
+
 // POST - Public volunteer registration endpoint
 export async function POST(request: NextRequest) {
   try {
@@ -98,7 +100,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof Response) {
       return error
     }
-    
+
     logError(error as Error, { context: 'volunteer_registration' })
     return NextResponse.json(
       { error: 'Failed to register volunteer' },

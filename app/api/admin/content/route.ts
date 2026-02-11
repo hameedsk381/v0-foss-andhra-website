@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 // GET all content
 export async function GET(request: NextRequest) {
   try {
@@ -19,15 +21,15 @@ export async function GET(request: NextRequest) {
 
     // Build where clause
     const where: any = {}
-    
+
     if (type && type !== "all") {
       where.type = type
     }
-    
+
     if (status && status !== "all") {
       where.status = status
     }
-    
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: "insensitive" } },
@@ -42,8 +44,8 @@ export async function GET(request: NextRequest) {
       take: limit ? parseInt(limit) : undefined,
     })
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: content,
       count: content.length,
     })
@@ -51,8 +53,8 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching content:", error)
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch content"
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
       },
@@ -74,9 +76,9 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!body.title || !body.slug || !body.type) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: "Missing required fields: title, slug, and type are required" 
+        {
+          success: false,
+          error: "Missing required fields: title, slug, and type are required"
         },
         { status: 400 }
       )
@@ -94,13 +96,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { 
-      type, 
-      slug, 
-      title, 
-      content, 
-      metaDescription, 
-      keywords, 
+    const {
+      type,
+      slug,
+      title,
+      content,
+      metaDescription,
+      keywords,
       status,
       ogTitle,
       ogDescription,
@@ -136,8 +138,8 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: newContent,
       message: "Content created successfully",
     })
@@ -145,8 +147,8 @@ export async function POST(request: NextRequest) {
     console.error("Error creating content:", error)
     const errorMessage = error instanceof Error ? error.message : "Failed to create content"
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
       },

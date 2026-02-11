@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get("q") || ""
 
     if (query.length < 2) {
-      return NextResponse.json({ 
-        success: true, 
-        data: { members: [], events: [], blog: [], programs: [], content: [], total: 0 } 
+      return NextResponse.json({
+        success: true,
+        data: { members: [], events: [], blog: [], programs: [], content: [], total: 0 }
       })
     }
 
@@ -53,7 +55,8 @@ export async function GET(request: NextRequest) {
     })
 
     // Search blog posts
-    const blog = await prisma.blogPost.findMany({  where: {
+    const blog = await prisma.blogPost.findMany({
+      where: {
         status: "published",
         OR: [
           { title: { contains: query, mode: "insensitive" } },

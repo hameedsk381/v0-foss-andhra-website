@@ -488,15 +488,22 @@ export default function FOSStormPage() {
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
+              {[
+                { id: 1, src: "/gallery/fosstorm-workshop.jpg", title: "Developer Workshop" },
+                { id: 2, src: "/gallery/fosstar-summit.jpg", title: "Project Launch Event" },
+                { id: 3, src: "/gallery/fossync-club.jpg", title: "Community Code Sprint" },
+                { id: 4, src: "/gallery/fosserve-launch.jpg", title: "LMS Deployment" },
+                { id: 5, src: "/gallery/fossart-startup.jpg", title: "Architecture Review" },
+                { id: 6, src: "/gallery/fosstar-event-1.jpg", title: "NLP Tool Kit Demo" },
+              ].map((item) => (
+                <div key={item.id} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
                   <img
-                    src={`/placeholder.svg?height=450&width=800&text=Project+Screenshot+${item}`}
-                    alt={`Project screenshot ${item}`}
+                    src={item.src}
+                    alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h4 className="font-medium">Project Demo {item}</h4>
+                    <h4 className="font-medium">{item.title}</h4>
                     <p className="text-sm opacity-90">FOSStorm application interface</p>
                   </div>
                 </div>

@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma"
 import QRCode from "qrcode"
 import { sendTicketConfirmationEmail } from "@/lib/email"
 
+export const dynamic = "force-dynamic"
+
 // GET all orders for an event
 export async function GET(
   request: Request,
@@ -199,7 +201,7 @@ export async function POST(
     for (const ticketData of ticketsData) {
       for (let i = 0; i < ticketData.quantity; i++) {
         const ticketId = `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
-        
+
         // Generate QR code
         const qrData = JSON.stringify({
           eventId,

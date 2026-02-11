@@ -155,7 +155,7 @@ export default function FOSSpeaksPage() {
             <AnimatedSection variant="fadeRight">
               <div className="relative rounded-xl overflow-hidden h-[400px]">
                 <Image
-                  src="/gallery/fosspeaks-advocacy-1.jpg"
+                  src="/gallery/fosspeaks-advocacy.jpg"
                   alt="FOSSpeaks Advocacy Event"
                   fill
                   className="object-cover"

@@ -155,7 +155,7 @@ export default function FOSSteragePage() {
             <AnimatedSection variant="fadeRight">
               <div className="relative rounded-xl overflow-hidden h-[400px]">
                 <Image
-                  src="/gallery/fossterage-database-1.jpg"
+                  src="/gallery/fossterage-database.jpg"
                   alt="FOSSterage Knowledge Database"
                   fill
                   className="object-cover"

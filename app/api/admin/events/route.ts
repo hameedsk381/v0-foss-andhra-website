@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 // GET all events
 export async function GET(request: Request) {
   try {
@@ -19,15 +21,15 @@ export async function GET(request: Request) {
 
     // Build where clause
     const where: any = {}
-    
+
     if (type && type !== "all") {
       where.type = type
     }
-    
+
     if (status && status !== "all") {
       where.status = status
     }
-    
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: "insensitive" } },
@@ -42,8 +44,8 @@ export async function GET(request: Request) {
       take: limit ? parseInt(limit) : undefined,
     })
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: events,
       count: events.length,
     })
@@ -51,8 +53,8 @@ export async function GET(request: Request) {
     console.error("Error fetching events:", error)
     const errorMessage = error instanceof Error ? error.message : "Failed to fetch events"
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
       },
@@ -74,9 +76,9 @@ export async function POST(request: Request) {
     // Validate required fields
     if (!body.title || !body.date || !body.location) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: "Missing required fields: title, date, and location are required" 
+        {
+          success: false,
+          error: "Missing required fields: title, date, and location are required"
         },
         { status: 400 }
       )
@@ -131,17 +133,17 @@ export async function POST(request: Request) {
       data: eventData,
     })
 
-    return NextResponse.json({ 
-      success: true, 
-      data: event, 
-      message: "Event created successfully" 
+    return NextResponse.json({
+      success: true,
+      data: event,
+      message: "Event created successfully"
     })
   } catch (error) {
     console.error("Error creating event:", error)
     const errorMessage = error instanceof Error ? error.message : "Failed to create event"
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
       },
