@@ -13,6 +13,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -108,23 +109,6 @@ export function MainNav() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = React.useState(false)
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const menuTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
-
-  // Custom handlers for menu open/close with delay
-  const handleMenuMouseEnter = () => {
-    if (menuTimeoutRef.current) {
-      clearTimeout(menuTimeoutRef.current)
-      menuTimeoutRef.current = null
-    }
-    setIsMenuOpen(true)
-  }
-
-  const handleMenuMouseLeave = () => {
-    menuTimeoutRef.current = setTimeout(() => {
-      setIsMenuOpen(false)
-    }, 300) // 300ms delay before closing
-  }
 
   // Add the CSS styles for z-index
   React.useEffect(() => {
@@ -177,31 +161,20 @@ export function MainNav() {
               if (item.hasChildren) {
                 return (
                   <NavigationMenuItem key={index}>
-                    <div onMouseEnter={handleMenuMouseEnter} onMouseLeave={handleMenuMouseLeave} className="relative">
-                      <NavigationMenuTrigger
-                        className={cn("text-base", pathname.startsWith("/programs") && "text-primary font-medium")}
-                      >
-                        {item.title}
-                      </NavigationMenuTrigger>
-
-                      {/* Custom dropdown that stays open on hover */}
-                      {isMenuOpen && (
-                        <div
-                          className="absolute top-full left-0 mt-1 z-50 bg-white rounded-md shadow-lg p-4 w-[90vw] md:w-[500px] lg:w-[600px] dropdown-menu"
-                        >
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            transition={{ duration: 0.2 }}
-                            className="grid grid-cols-2 gap-3"
-                          >
-                            {programs.map((program) => (
+                    <NavigationMenuTrigger
+                      className={cn("text-base", pathname.startsWith("/programs") && "text-primary font-medium")}
+                    >
+                      {item.title}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                        {programs.map((program) => (
+                          <li key={program.id}>
+                            <NavigationMenuLink asChild>
                               <Link
-                                key={program.id}
                                 href={program.href}
                                 className={cn(
-                                  "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
+                                  "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
                                   program.id === "fosstar"
                                     ? "hover:bg-fosstar/10"
                                     : program.id === "fosserve"
@@ -217,26 +190,27 @@ export function MainNav() {
                                               : "hover:bg-yellow-100",
                                 )}
                               >
-                                <div className="flex items-center gap-2">
-                                  <div className="h-10 w-auto">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <div className="h-8 w-auto flex-shrink-0">
                                     <Image
                                       src={program.logo || "/placeholder.svg"}
                                       alt={`${program.title} Logo`}
-                                      width={120}
-                                      height={40}
-                                      className="h-8 w-auto object-contain"
+                                      width={100}
+                                      height={32}
+                                      className="h-full w-auto object-contain"
                                     />
                                   </div>
+                                  <div className="text-sm font-medium leading-none">{program.title}</div>
                                 </div>
-                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
+                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                                   {program.description}
                                 </p>
                               </Link>
-                            ))}
-                          </motion.div>
-                        </div>
-                      )}
-                    </div>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
                 )
               }
@@ -377,8 +351,9 @@ export function MainNav() {
                                     alt={`${program.title} Logo`}
                                     width={100}
                                     height={30}
-                                    className="h-6 w-auto"
+                                    className="h-6 w-auto object-contain"
                                   />
+                                  <span className="text-sm font-medium">{program.title}</span>
                                 </Link>
                               </motion.div>
                             ))}

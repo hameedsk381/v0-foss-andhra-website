@@ -164,6 +164,10 @@ model Event {
   externalTicketUrl   String?
   externalRegisterUrl String?
   Registration        Registration[]
+  EventTicketType     EventTicketType[]
+  EventOrder          EventOrder[]
+  EventTicket         EventTicket[]
+  EventPromoCode      EventPromoCode[]
 }
 
 model Inquiry {
@@ -437,4 +441,100 @@ model Volunteer {
   appliedAt    DateTime  @default(now())
   reviewedAt   DateTime?
   reviewedBy   String?
+}
+
+model EventTicketType {
+  id               String            @id @default(cuid())
+  eventId          String
+  name             String
+  description      String?
+  type             String
+  price            Float             @default(0)
+  minDonation      Float?
+  maxDonation      Float?
+  quantity         Int?
+  quantitySold     Int               @default(0)
+  salesStart       DateTime?
+  salesEnd         DateTime?
+  hidden           Boolean           @default(false)
+  requiresApproval Boolean           @default(false)
+  order            Int               @default(0)
+  active           Boolean           @default(true)
+  Event            Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  EventTicket      EventTicket[]
+  applicablePromos PromoCodeTicket[]
+}
+
+model EventOrder {
+  id              String        @id @default(cuid())
+  eventId         String
+  orderNumber     String        @unique
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  totalAmount     Float
+  subtotal        Float
+  taxAmount       Float         @default(0)
+  feeAmount       Float         @default(0)
+  discountAmount  Float         @default(0)
+  promoCode       String?
+  status          String
+  paymentMethod   String
+  paymentId       String?
+  razorpayOrderId String?
+  notes           String?
+  customFields    String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  Event           Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tickets         EventTicket[]
+}
+
+model EventTicket {
+  id            String          @id @default(cuid())
+  eventId       String
+  ticketTypeId  String
+  orderId       String
+  attendeeName  String
+  attendeeEmail String
+  attendeePhone String?
+  qrCode        String
+  price         Float
+  status        String          @default("valid")
+  checkedIn     Boolean         @default(false)
+  checkedInAt   DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Event         Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketType    EventTicketType @relation(fields: [ticketTypeId], references: [id])
+  order         EventOrder      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model EventPromoCode {
+  id                String            @id @default(cuid())
+  eventId           String
+  code              String
+  description       String?
+  discountType      String
+  discountValue     Float
+  maxUses           Int?
+  usedCount         Int               @default(0)
+  validFrom         DateTime?
+  validUntil        DateTime?
+  minOrderAmount    Float?
+  active            Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  Event             Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  applicableTickets PromoCodeTicket[]
+}
+
+model PromoCodeTicket {
+  id           String          @id @default(cuid())
+  promoCodeId  String
+  ticketTypeId String
+  promoCode    EventPromoCode  @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  ticketType   EventTicketType @relation(fields: [ticketTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([promoCodeId, ticketTypeId])
 }

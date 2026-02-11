@@ -1,0 +1,50 @@
+🌱 Starting database seed...
+
+🌱 Seeding programs with detailed content...
+❌ Error seeding database: PrismaClientValidationError: 
+Invalid `prisma.program.upsert()` invocation in
+C:\Users\cogni\v0-foss-andhra-website\prisma\seed.ts:140:42
+
+  137 // Simple way to handle cleanup of existingRelations for re-seeding if needed
+  138 // or just use upsert for the program and then handle relations separately
+  139 
+→ 140 const program = await prisma.program.upsert({
+        where: {
+          name: "fosstar"
+        },
+        update: {
+          name: "fosstar",
+          title: "FOSStar",
+          description: "Building a vibrant community of FOSS enthusiasts and contributors",
+          tagline: "Community Building & Recognition",
+          mission: "To create a thriving ecosystem of FOSS enthusiasts who actively contribute to open source projects and promote FOSS adoption across Andhra Pradesh.",
+          color: "#015ba7",
+          logo: "/logos/fosstar-logo.png",
+          status: "active",
+          displayOrder: 1
+        },
+        create: {
+          id: "fosstar",
+          name: "fosstar",
+          title: "FOSStar",
+          description: "Building a vibrant community of FOSS enthusiasts and contributors",
+          tagline: "Community Building & Recognition",
+          mission: "To create a thriving ecosystem of FOSS enthusiasts who actively contribute to open source projects and promote FOSS adoption across Andhra Pradesh.",
+          color: "#015ba7",
+          logo: "/logos/fosstar-logo.png",
+          status: "active",
+          displayOrder: 1,
+      +   updatedAt: DateTime
+        }
+      })
+
+Argument `updatedAt` is missing.
+    at throwValidationException (C:\Users\cogni\v0-foss-andhra-website\node_modules\@prisma\client\src\runtime\core\errorRendering\throwValidationException.ts:45:9)
+    at ei.handleRequestError (C:\Users\cogni\v0-foss-andhra-website\node_modules\@prisma\client\src\runtime\RequestHandler.ts:202:7)
+    at ei.handleAndLogRequestError (C:\Users\cogni\v0-foss-andhra-website\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ei.request (C:\Users\cogni\v0-foss-andhra-website\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async a (C:\Users\cogni\v0-foss-andhra-website\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:833:24)
+    at async seedPrograms (C:\Users\cogni\v0-foss-andhra-website\prisma\seed.ts:140:21)
+    at async main (C:\Users\cogni\v0-foss-andhra-website\prisma\seed.ts:360:3) {
+  clientVersion: '6.18.0'
+}

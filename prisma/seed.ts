@@ -139,8 +139,12 @@ async function seedPrograms() {
 
     const program = await prisma.program.upsert({
       where: { name: programData.name },
-      update: programData,
-      create: programData,
+      update: { ...programData, updatedAt: new Date() },
+      create: {
+        id: programData.name,
+        ...programData,
+        updatedAt: new Date()
+      },
     })
 
     // Upsert initiatives
@@ -148,8 +152,8 @@ async function seedPrograms() {
       for (const init of initiatives) {
         await prisma.programInitiative.upsert({
           where: { id: `${program.id}-${init.title.replace(/\s+/g, '-').toLowerCase()}` },
-          update: { ...init, programId: program.id },
-          create: { id: `${program.id}-${init.title.replace(/\s+/g, '-').toLowerCase()}`, ...init, programId: program.id }
+          update: { ...init, programId: program.id, updatedAt: new Date() },
+          create: { id: `${program.id}-${init.title.replace(/\s+/g, '-').toLowerCase()}`, ...init, programId: program.id, updatedAt: new Date() }
         })
       }
     }
@@ -159,8 +163,8 @@ async function seedPrograms() {
       for (const t of team) {
         await prisma.programTeamMember.upsert({
           where: { id: `${program.id}-${t.name.replace(/\s+/g, '-').toLowerCase()}` },
-          update: { ...t, programId: program.id },
-          create: { id: `${program.id}-${t.name.replace(/\s+/g, '-').toLowerCase()}`, ...t, programId: program.id }
+          update: { ...t, programId: program.id, updatedAt: new Date() },
+          create: { id: `${program.id}-${t.name.replace(/\s+/g, '-').toLowerCase()}`, ...t, programId: program.id, updatedAt: new Date() }
         })
       }
     }
@@ -170,8 +174,8 @@ async function seedPrograms() {
       for (const c of clubs) {
         await prisma.programClub.upsert({
           where: { id: `${program.id}-${c.name.replace(/\s+/g, '-').toLowerCase()}` },
-          update: { ...c, programId: program.id },
-          create: { id: `${program.id}-${c.name.replace(/\s+/g, '-').toLowerCase()}`, ...c, programId: program.id }
+          update: { ...c, programId: program.id, updatedAt: new Date() },
+          create: { id: `${program.id}-${c.name.replace(/\s+/g, '-').toLowerCase()}`, ...c, programId: program.id, updatedAt: new Date() }
         })
       }
     }
@@ -181,8 +185,8 @@ async function seedPrograms() {
       for (const proj of projects) {
         await prisma.programProject.upsert({
           where: { id: `${program.id}-${proj.name.replace(/\s+/g, '-').toLowerCase()}` },
-          update: { ...proj, programId: program.id },
-          create: { id: `${program.id}-${proj.name.replace(/\s+/g, '-').toLowerCase()}`, ...proj, programId: program.id }
+          update: { ...proj, programId: program.id, updatedAt: new Date() },
+          create: { id: `${program.id}-${proj.name.replace(/\s+/g, '-').toLowerCase()}`, ...proj, programId: program.id, updatedAt: new Date() }
         })
       }
     }
@@ -192,8 +196,8 @@ async function seedPrograms() {
       for (const s of startups) {
         await prisma.programStartup.upsert({
           where: { id: `${program.id}-${s.name.replace(/\s+/g, '-').toLowerCase()}` },
-          update: { ...s, programId: program.id },
-          create: { id: `${program.id}-${s.name.replace(/\s+/g, '-').toLowerCase()}`, ...s, programId: program.id }
+          update: { ...s, programId: program.id, updatedAt: new Date() },
+          create: { id: `${program.id}-${s.name.replace(/\s+/g, '-').toLowerCase()}`, ...s, programId: program.id, updatedAt: new Date() }
         })
       }
     }
@@ -203,8 +207,8 @@ async function seedPrograms() {
       for (const repo of repositories) {
         await prisma.programRepository.upsert({
           where: { id: `${program.id}-${repo.name.replace(/\s+/g, '-').toLowerCase()}` },
-          update: { ...repo, programId: program.id },
-          create: { id: `${program.id}-${repo.name.replace(/\s+/g, '-').toLowerCase()}`, ...repo, programId: program.id }
+          update: { ...repo, programId: program.id, updatedAt: new Date() },
+          create: { id: `${program.id}-${repo.name.replace(/\s+/g, '-').toLowerCase()}`, ...repo, programId: program.id, updatedAt: new Date() }
         })
       }
     }
@@ -343,7 +347,13 @@ async function seedGallery() {
   const count = await prisma.media.count()
   if (count === 0) {
     for (const item of sampleGalleryData) {
-      await prisma.media.create({ data: item })
+      await prisma.media.create({
+        data: {
+          ...item,
+          id: Math.random().toString(36).substring(2) + Date.now().toString(36),
+          updatedAt: new Date(),
+        }
+      })
     }
     console.log(`✅ ${sampleGalleryData.length} gallery images seeded`)
   } else {
