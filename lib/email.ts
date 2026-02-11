@@ -429,8 +429,27 @@ export async function sendMemberWelcomeEmail(to: string, memberData: {
   membershipId: string
   expiryDate: Date
   password?: string
+  resetToken?: string
 }) {
-  const { name, membershipId, expiryDate, password } = memberData
+  const { name, membershipId, expiryDate, password, resetToken } = memberData
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3002'
+
+  let credentialSection = ''
+  if (resetToken) {
+    credentialSection = `
+      <p>To access your account, please set your password by clicking the button below:</p>
+      <center>
+        <a href="${baseUrl}/set-password?token=${resetToken}" class="button" style="background: #015ba7; color: white;">Set Your Password</a>
+      </center>
+      <p style="font-size: 11px; color: #666;">This link is valid for 24 hours.</p>
+    `
+  } else if (password) {
+    credentialSection = `<p><strong>Temporary Password:</strong> ${password}</p>
+    <p><strong>Important:</strong> Please log in and change your password immediately.</p>
+     <center>
+        <a href="${baseUrl}/login" class="button">Login to Member Portal</a>
+      </center>`
+  }
 
   const mailOptions = {
     from: `"${process.env.SMTP_FROM_NAME || 'FOSS Andhra'}" <${process.env.SMTP_USER}>`,
@@ -463,11 +482,10 @@ export async function sendMemberWelcomeEmail(to: string, memberData: {
               <h3>Your Membership Details</h3>
               <p><strong>Membership ID:</strong> ${membershipId}</p>
               <p><strong>Type:</strong> FOSStar Annual</p>
-              <p><strong>Temporary Password:</strong> ${password}</p>
               <p><strong>Valid Until:</strong> ${expiryDate.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </div>
 
-            <p><strong>Important:</strong> Please log in and change your password immediately.</p>
+            ${credentialSection}
 
             <h3>What's Next?</h3>
             <ul>
@@ -476,10 +494,6 @@ export async function sendMemberWelcomeEmail(to: string, memberData: {
               <li>Connect with the FOSS community</li>
               <li>Contribute to open source projects</li>
             </ul>
-
-            <center>
-              <a href="https://fossandhra.org/login" class="button">Login to Member Portal</a>
-            </center>
 
             <p>If you have any questions, feel free to reach out to us at <a href="mailto:office@fossap.in">office@fossap.in</a></p>
 

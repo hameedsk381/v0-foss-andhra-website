@@ -41,7 +41,9 @@ model Member {
   updatedAt      DateTime  @updatedAt
   password       String?
   avatar         String?
-  address        String?
+  address          String?
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
 }
 
 model Event {

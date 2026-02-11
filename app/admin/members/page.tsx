@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Download, Mail, CheckCircle, XCircle, Eye, Edit, Plus, Trash2, Save } from "lucide-react"
@@ -27,6 +28,8 @@ interface Member {
   organization: string | null
   membershipId: string
   designation?: string
+  experience?: string
+  interests?: string
 }
 
 export default function MembersManagement() {
@@ -49,6 +52,8 @@ export default function MembersManagement() {
     organization: "",
     designation: "",
     expiryDate: "",
+    experience: "",
+    interests: "",
   })
 
   useEffect(() => {
@@ -99,6 +104,8 @@ export default function MembersManagement() {
       organization: "",
       designation: "",
       expiryDate: oneYearFromNow.toISOString().split('T')[0],
+      experience: "",
+      interests: "",
     })
     setShowDialog(true)
   }
@@ -114,6 +121,8 @@ export default function MembersManagement() {
       organization: member.organization || "",
       designation: member.designation || "",
       expiryDate: member.expiryDate ? new Date(member.expiryDate).toISOString().split('T')[0] : "",
+      experience: member.experience || "",
+      interests: member.interests || "",
     })
     setShowDialog(true)
   }
@@ -544,6 +553,35 @@ export default function MembersManagement() {
                   onChange={(e) => setMemberForm({ ...memberForm, expiryDate: e.target.value })}
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="experience">Experience Level</Label>
+              <Select
+                value={memberForm.experience}
+                onValueChange={(value) => setMemberForm({ ...memberForm, experience: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select experience" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="beginner">Beginner (0-1 years)</SelectItem>
+                  <SelectItem value="intermediate">Intermediate (1-3 years)</SelectItem>
+                  <SelectItem value="advanced">Advanced (3-5 years)</SelectItem>
+                  <SelectItem value="expert">Expert (5+ years)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="interests">Areas of Interest</Label>
+              <Textarea
+                id="interests"
+                value={memberForm.interests}
+                onChange={(e) => setMemberForm({ ...memberForm, interests: e.target.value })}
+                placeholder="Member's areas of interest"
+                rows={3}
+              />
             </div>
           </div>
           <DialogFooter>

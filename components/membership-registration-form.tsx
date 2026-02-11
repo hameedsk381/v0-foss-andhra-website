@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,7 +41,7 @@ export function MembershipRegistrationForm() {
   const [membershipId, setMembershipId] = useState<string>("")
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev: FormData) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,9 +82,8 @@ export function MembershipRegistrationForm() {
               className={`flex items-center space-x-2 ${currentStep === "form" ? "text-fosstar" : "text-green-600"}`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  currentStep === "form" ? "bg-fosstar text-white" : "bg-green-600 text-white"
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === "form" ? "bg-fosstar text-white" : "bg-green-600 text-white"
+                  }`}
               >
                 {currentStep !== "form" ? <CheckCircle className="w-5 h-5" /> : "1"}
               </div>
@@ -94,22 +91,20 @@ export function MembershipRegistrationForm() {
             </div>
             <div className={`w-16 h-0.5 ${currentStep !== "form" ? "bg-green-600" : "bg-gray-300"}`}></div>
             <div
-              className={`flex items-center space-x-2 ${
-                currentStep === "payment"
-                  ? "text-fosstar"
-                  : currentStep === "success"
-                    ? "text-green-600"
-                    : "text-gray-400"
-              }`}
+              className={`flex items-center space-x-2 ${currentStep === "payment"
+                ? "text-fosstar"
+                : currentStep === "success"
+                  ? "text-green-600"
+                  : "text-gray-400"
+                }`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  currentStep === "payment"
-                    ? "bg-fosstar text-white"
-                    : currentStep === "success"
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-300 text-gray-600"
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === "payment"
+                  ? "bg-fosstar text-white"
+                  : currentStep === "success"
+                    ? "bg-green-600 text-white"
+                    : "bg-gray-300 text-gray-600"
+                  }`}
               >
                 {currentStep === "success" ? <CheckCircle className="w-5 h-5" /> : "2"}
               </div>
@@ -120,9 +115,8 @@ export function MembershipRegistrationForm() {
               className={`flex items-center space-x-2 ${currentStep === "success" ? "text-fosstar" : "text-gray-400"}`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  currentStep === "success" ? "bg-fosstar text-white" : "bg-gray-300 text-gray-600"
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === "success" ? "bg-fosstar text-white" : "bg-gray-300 text-gray-600"
+                  }`}
               >
                 {currentStep === "success" ? <PartyPopper className="w-5 h-5" /> : "3"}
               </div>
@@ -273,7 +267,7 @@ export function MembershipRegistrationForm() {
                     <Checkbox
                       id="terms"
                       checked={formData.agreeTerms}
-                      onCheckedChange={(checked) => handleInputChange("agreeTerms", checked as boolean)}
+                      onCheckedChange={(checked: boolean | "indeterminate") => handleInputChange("agreeTerms", checked === true)}
                     />
                     <Label htmlFor="terms" className="text-sm leading-relaxed">
                       I agree to the{" "}
@@ -351,6 +345,7 @@ export function MembershipRegistrationForm() {
                       email: formData.email,
                       phone: formData.phone,
                     }}
+                    additionalData={formData}
                     onSuccess={handlePaymentSuccess}
                     className="flex-1 bg-fosstar hover:bg-fosstar/90"
                   />

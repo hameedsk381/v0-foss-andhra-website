@@ -8,6 +8,7 @@ interface CreateOrderData {
   currency: string
   receipt: string
   notes?: Record<string, string>
+  additionalData?: any
 }
 
 export async function createPaymentOrder(data: CreateOrderData) {
@@ -24,13 +25,30 @@ export async function createPaymentOrder(data: CreateOrderData) {
       throw new Error("Razorpay configuration is missing. Please check environment variables.")
     }
 
+    // Prepare notes from additionalData
+    const notes: Record<string, string> = {
+      ...data.notes,
+    }
+
+    if (data.additionalData) {
+      // Razorpay notes values must be strings and have length limits
+      // We truncate to ensure we don't hit limits safely, though 256 chars is usually enough for these fields
+      if (data.additionalData.organization) notes.organization = String(data.additionalData.organization).substring(0, 250)
+      if (data.additionalData.designation) notes.designation = String(data.additionalData.designation).substring(0, 250)
+      if (data.additionalData.experience) notes.experience = String(data.additionalData.experience).substring(0, 250)
+      if (data.additionalData.interests) notes.interests = String(data.additionalData.interests).substring(0, 250) // Truncate long interests
+      if (data.additionalData.referral) notes.referral = String(data.additionalData.referral).substring(0, 250)
+      if (data.additionalData.phone) notes.phone = String(data.additionalData.phone).substring(0, 40)
+    }
+
     // Create order using Razorpay API
     const orderData = {
       amount: data.amount,
       currency: data.currency,
       receipt: data.receipt,
-      notes: data.notes || {},
+      notes: notes,
     }
+
 
     console.log("Creating order with data:", orderData)
 
@@ -70,9 +88,13 @@ export async function verifyPayment(
   orderId: string,
   paymentId: string,
   signature: string,
-  userDetails: any,
+  userDetails: {
+    name: string
+    email: string
+    phone: string
+  },
   membershipType?: string,
-  additionalData?: any // ✅ Add additionalData parameter
+  additionalData?: any
 ) {
   try {
     const keySecret = process.env.RAZORPAY_KEY_SECRET
@@ -81,78 +103,94 @@ export async function verifyPayment(
       throw new Error("Razorpay secret key is missing")
     }
 
-    const crypto = require("crypto")
+    const crypto = await import("crypto")
     const expectedSignature = crypto
       .createHmac("sha256", keySecret)
       .update(orderId + "|" + paymentId)
       .digest("hex")
 
-    if (expectedSignature === signature) {
-      // Payment is verified successfully
-      console.log("Payment verified for user:", userDetails.email)
-
-      // Generate unique membership ID
-      const membershipId = `FOSS${Date.now()}`
-
-      // Generate temporary password
-      const crypto = require("crypto")
-      const password = crypto.randomBytes(4).toString("hex") // 8 char hex string
-
-      // Hash password
-      const bcrypt = require("bcryptjs")
-      const hashedPassword = await bcrypt.hash(password, 10)
-
-      // Save member to database
-      try {
-        const expiryDate = new Date()
-        expiryDate.setFullYear(expiryDate.getFullYear() + 1)
-
-        const newMember = await prisma.member.create({
-          data: {
-            name: userDetails.name,
-            email: userDetails.email,
-            phone: userDetails.phone,
-            membershipType: membershipType || "FOSStar Annual",
-            status: "active",
-            membershipId,
-            expiryDate,
-            paymentId,
-            // Map additional data to member fields
-            organization: additionalData?.institution || additionalData?.institutionName || additionalData?.company || additionalData?.companyName || additionalData?.organizationName,
-            address: additionalData?.address,
-            designation: additionalData?.designation || additionalData?.course,
-            experience: additionalData?.experience || additionalData?.year,
-            interests: additionalData?.interests || additionalData?.contribution || additionalData?.expectations,
-            password: hashedPassword, // ✅ Save hashed password
-          },
-        })
-
-        console.log("Member saved to database:", membershipId)
-
-        // Send welcome email with temporary password
-        await sendMemberWelcomeEmail(userDetails.email, {
-          name: userDetails.name,
-          membershipId,
-          expiryDate,
-          password // ✅ Send plain password in email
-        })
-
-        console.log("Welcome email sent to:", userDetails.email)
-      } catch (dbError) {
-        console.error("Error saving member to database:", dbError)
-        // Continue even if DB save fails
-      }
-
-      return {
-        success: true,
-        message: "Payment verified successfully",
-        membershipId,
-      }
-    } else {
+    if (expectedSignature !== signature) {
       console.error("Payment verification failed: signature mismatch")
       return {
         success: false,
         error: "Payment verification failed - invalid signature",
+      }
+    }
+
+    // Payment is verified successfully
+    console.log("Payment verified for user:", userDetails.email)
+
+    // Generate unique membership ID
+    // Generate unique membership ID
+    const membershipId = `FOSS${Date.now()}`
+
+    // Generate secure reset token for password setting
+    const resetToken = crypto.randomBytes(32).toString("hex")
+    const resetTokenExpiry = new Date()
+    resetTokenExpiry.setHours(resetTokenExpiry.getHours() + 24) // Valid for 24 hours
+
+    // Generate a random initial password (not sent to user) to satisfy DB constraints if any,
+    // and to ensure account is not easily accessible until password is set.
+    const tempPassword = crypto.randomBytes(16).toString("hex")
+    const bcrypt = await import("bcryptjs")
+    const hashedPassword = await bcrypt.hash(tempPassword, 10)
+
+    const expiryDate = new Date()
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1)
+
+    // Save member to database
+    try {
+      await prisma.member.create({
+        data: {
+          name: userDetails.name,
+          email: userDetails.email,
+          phone: userDetails.phone,
+          membershipType: membershipType || "FOSStar Annual",
+          status: "active",
+          membershipId,
+          expiryDate,
+          paymentId,
+          organization:
+            additionalData?.institution ||
+            additionalData?.institutionName ||
+            additionalData?.company ||
+            additionalData?.companyName ||
+            additionalData?.organizationName,
+          address: additionalData?.address,
+          designation: additionalData?.designation || additionalData?.course,
+          experience: additionalData?.experience || additionalData?.year,
+          interests: additionalData?.interests || additionalData?.contribution || additionalData?.expectations,
+          password: hashedPassword,
+          resetToken: resetToken,
+          resetTokenExpiry: resetTokenExpiry,
+        },
+      })
+
+      console.log("Member saved to database:", membershipId)
+
+      // Send welcome email with "Set Password" link
+      try {
+        await sendMemberWelcomeEmail(userDetails.email, {
+          name: userDetails.name,
+          membershipId,
+          expiryDate,
+          resetToken,
+        })
+        console.log("Welcome email sent to:", userDetails.email)
+      } catch (emailError) {
+        console.error("Warning: Member created but welcome email failed:", emailError)
+      }
+
+      return {
+        success: true,
+        message: "Payment verified and membership activated successfully",
+        membershipId,
+      }
+    } catch (dbError) {
+      console.error("CRITICAL: Payment received but DB save failed:", dbError)
+      return {
+        success: false,
+        error: `Payment successful (ID: ${paymentId}), but account creation failed. Please contact support immediately.`,
       }
     }
   } catch (error) {
@@ -163,3 +201,4 @@ export async function verifyPayment(
     }
   }
 }
+

@@ -21,11 +21,51 @@ interface RazorpayCheckoutProps {
 
 declare global {
   interface Window {
-    Razorpay: any
+    Razorpay: new (options: RazorpayOptions) => RazorpayInstance
   }
 }
 
-export function RazorpayCheckout({ membershipType, amount, userDetails, className, onSuccess, additionalData }: RazorpayCheckoutProps) {
+interface RazorpayOptions {
+  key: string
+  amount: number
+  currency: string
+  name: string
+  description?: string
+  image?: string
+  order_id: string
+  handler: (response: RazorpayResponse) => void
+  prefill?: {
+    name?: string
+    email?: string
+    contact?: string
+  }
+  notes?: Record<string, string>
+  theme?: {
+    color?: string
+  }
+  modal?: {
+    ondismiss?: () => void
+  }
+}
+
+interface RazorpayInstance {
+  open: () => void
+}
+
+interface RazorpayResponse {
+  razorpay_payment_id: string
+  razorpay_order_id: string
+  razorpay_signature: string
+}
+
+export function RazorpayCheckout({
+  membershipType,
+  amount,
+  userDetails,
+  className,
+  onSuccess,
+  additionalData,
+}: RazorpayCheckoutProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isVerifying, setIsVerifying] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -48,11 +88,12 @@ export function RazorpayCheckout({ membershipType, amount, userDetails, classNam
           userEmail: userDetails.email,
           userName: userDetails.name,
         },
+        additionalData,
       })
 
       console.log("Order creation result:", orderResult)
 
-      if (!orderResult.success) {
+      if (!orderResult.success || !orderResult.order || !orderResult.keyId) {
         throw new Error(orderResult.error || "Failed to create payment order")
       }
 
@@ -76,7 +117,7 @@ export function RazorpayCheckout({ membershipType, amount, userDetails, classNam
         })
       }
 
-      const options = {
+      const options: RazorpayOptions = {
         key: orderResult.keyId,
         amount: orderResult.order.amount,
         currency: orderResult.order.currency,
@@ -91,7 +132,7 @@ export function RazorpayCheckout({ membershipType, amount, userDetails, classNam
         theme: {
           color: "#015ba7",
         },
-        handler: async (response: any) => {
+        handler: async (response: RazorpayResponse) => {
           try {
             setIsVerifying(true)
             console.log("Payment completed, verifying...")
@@ -102,8 +143,8 @@ export function RazorpayCheckout({ membershipType, amount, userDetails, classNam
               response.razorpay_payment_id,
               response.razorpay_signature,
               userDetails,
-              membershipType,  // ✅ Pass membershipType to save in DB
-              additionalData // ✅ Pass additionalData
+              membershipType, // ✅ Pass membershipType to save in DB
+              additionalData, // ✅ Pass additionalData
             )
 
             if (verificationResult.success) {
