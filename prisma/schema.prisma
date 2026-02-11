@@ -202,7 +202,7 @@ model Media {
 }
 
 model Member {
-  id               String    @id
+  id               String    @id @default(cuid())
   name             String
   email            String    @unique
   phone            String
@@ -219,7 +219,7 @@ model Member {
   membershipId     String    @unique
   lastLogin        DateTime?
   createdAt        DateTime  @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime  @updatedAt
   password         String?
   avatar           String?
   address          String?
@@ -501,8 +501,9 @@ model EventTicket {
   qrCode        String
   price         Float
   status        String          @default("valid")
-  checkedIn     Boolean         @default(false)
-  checkedInAt   DateTime?
+  checkInStatus String          @default("pending")
+  checkInTime   DateTime?
+  checkInBy     String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   Event         Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)

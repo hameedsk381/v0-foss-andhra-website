@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     // Store in analytics table
     await prisma.analytics.create({
       data: {
+        id: `av-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: `web-vital-${metric.name}`,
         value: metric.value,
         metadata: JSON.stringify({

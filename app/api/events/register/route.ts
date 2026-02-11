@@ -22,12 +22,14 @@ export async function POST(request: NextRequest) {
         // Create registration
         const registration = await prisma.registration.create({
             data: {
+                id: `reg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
                 eventId,
                 name,
                 email,
                 phone,
                 organization,
                 notes: expectations, // Mapping expectations to notes
+                updatedAt: new Date(),
             }
         })
 
