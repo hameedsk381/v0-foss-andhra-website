@@ -12,7 +12,7 @@ build
 dist
 
 # Environment files
-.env
+
 .env*.local
 .env.development
 .env.test

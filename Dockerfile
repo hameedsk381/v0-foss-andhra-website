@@ -12,6 +12,7 @@ FROM oven/bun:1.2.1-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+COPY .env ./
 
 # Generate Prisma Client (cache this if possible, but schema changes often in early stages)
 # We copy the prisma folder specifically to allow better caching
