@@ -37,7 +37,14 @@ export async function GET(request: NextRequest) {
       take: limit,
     })
 
-    return NextResponse.json({ success: true, data: posts })
+    const formattedPosts = posts.map((post) => ({
+      ...post,
+      category: post.BlogCategory,
+      author: post.Admin,
+      tags: post.BlogPostTag.map((t) => ({ tag: t.BlogTag })), // Map to match interface if needed
+    }))
+
+    return NextResponse.json({ success: true, data: formattedPosts })
   } catch (error) {
     console.error("Error fetching blog posts:", error)
     return NextResponse.json({ error: "Failed to fetch blog posts" }, { status: 500 })

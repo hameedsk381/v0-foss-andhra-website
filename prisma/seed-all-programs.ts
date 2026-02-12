@@ -5,10 +5,8 @@ const prisma = new PrismaClient()
 async function main() {
   console.log("🌱 Starting comprehensive seed for all programs...")
 
-  // First, ensure all programs exist
-  console.log("\n📌 Creating programs if they don't exist...")
-  
-  const programs = [
+  // Define programs
+  const programsData = [
     { name: "fosstar", title: "FOSStar", description: "Student star program", tagline: "Empowering student developers", color: "#3b82f6", displayOrder: 0 },
     { name: "fosserve", title: "FOSServe", description: "Service program", tagline: "Open source consulting", color: "#8b5cf6", displayOrder: 1 },
     { name: "fossync", title: "FOSSynC", description: "Community sync program", tagline: "Connecting FOSS clubs", color: "#10b981", displayOrder: 2 },
@@ -18,296 +16,334 @@ async function main() {
     { name: "fosspeaks", title: "FOSSpeaks", description: "Speaker program", tagline: "Amplifying FOSS voices", color: "#ec4899", displayOrder: 6 },
   ]
 
-  for (const program of programs) {
-    const exists = await prisma.program.findUnique({ where: { name: program.name } })
-    if (!exists) {
-      await prisma.program.create({ data: program as any })
-      console.log(`✅ Created program: ${program.title}`)
-    } else {
-      console.log(`✓ Program already exists: ${program.title}`)
+  // Map to store program IDs by name
+  const programIds: Record<string, string> = {}
+
+  // 1. Ensure all programs exist and get their IDs
+  console.log("\n📌 Creating/Verifying programs...")
+  for (const program of programsData) {
+    const upserted = await prisma.program.upsert({
+      where: { name: program.name },
+      update: {}, // Don't overwrite existing data if present, or maybe we should? maintaining as is
+      create: {
+        ...program,
+        id: program.name // Try to set ID to name for consistency, but if it already exists with CUID, upsert respects that
+      },
+    })
+    programIds[program.name] = upserted.id
+    console.log(`✅ Program ready: ${upserted.title} (ID: ${upserted.id})`)
+  }
+
+  // 2. FOSStar
+  console.log("\n📌 Seeding FOSStar...")
+  const fosstarId = programIds["fosstar"]
+  if (fosstarId) {
+    const initiatives = [
+      {
+        programId: fosstarId,
+        title: "Campus Ambassador Program",
+        description: "Student leaders promoting FOSS culture",
+        content: "Detailed info about ambassador program",
+        category: "membership",
+        order: 0,
+      },
+      {
+        programId: fosstarId,
+        title: "Open Source Workshops",
+        description: "Hands-on workshops",
+        content: "Workshop series details",
+        category: "activities",
+        order: 1,
+      },
+      {
+        programId: fosstarId,
+        title: "Hackathon Series",
+        description: "Monthly hackathons",
+        content: "Hackathon information",
+        category: "activities",
+        order: 2,
+      },
+    ]
+
+    for (const item of initiatives) {
+      await prisma.programInitiative.upsert({
+        where: { id: `${fosstarId}-${item.title.replace(/\s+/g, '-').toLowerCase()}` },
+        update: item,
+        create: { id: `${fosstarId}-${item.title.replace(/\s+/g, '-').toLowerCase()}`, ...item }
+      })
     }
+    console.log("✅ FOSStar initiatives seeded")
+
+    const team = [
+      {
+        programId: fosstarId,
+        name: "Priya Sharma",
+        role: "Program Lead",
+        bio: "Open source advocate",
+        email: "priya@foss.andhra.dev",
+        linkedin: "https://linkedin.com/in/priyasharma",
+        twitter: "https://twitter.com/priyasharma",
+        order: 0,
+      },
+      {
+        programId: fosstarId,
+        name: "Rajesh Kumar",
+        role: "Technical Coordinator",
+        bio: "Full-stack developer",
+        email: "rajesh@foss.andhra.dev",
+        twitter: "https://twitter.com/rajeshkumar",
+        order: 1,
+      },
+    ]
+
+    for (const member of team) {
+      await prisma.programTeamMember.upsert({
+        where: { id: `${fosstarId}-${member.name.replace(/\s+/g, '-').toLowerCase()}` },
+        update: member,
+        create: { id: `${fosstarId}-${member.name.replace(/\s+/g, '-').toLowerCase()}`, ...member }
+      })
+    }
+    console.log("✅ FOSStar team seeded")
   }
 
-  // 1. FOSStar - Initiatives & Team
-  console.log("\n📌 Seeding FOSStar (initiatives, team)...")
-  
-  const fosstar = await prisma.program.findUnique({ where: { name: "fosstar" } })
-  if (!fosstar) throw new Error("FOSStar program not found")
-  
-  const fosstarInitiatives = await prisma.programInitiative.count({ where: { programId: fosstar.id } })
-  if (fosstarInitiatives === 0) {
-    await prisma.programInitiative.createMany({
-      data: [
-        {
-          programId: fosstar.id,
-          title: "Campus Ambassador Program",
-          description: "Student leaders promoting FOSS culture in their institutions",
-          content: "Detailed info about ambassador program",
-          category: "membership",
-          order: 0,
-        },
-        {
-          programId: fosstar.id,
-          title: "Open Source Workshops",
-          description: "Hands-on workshops introducing students to open source contribution",
-          content: "Workshop series details",
-          category: "activities",
-          order: 1,
-        },
-        {
-          programId: fosstar.id,
-          title: "Hackathon Series",
-          description: "Monthly hackathons focused on solving real-world problems with FOSS",
-          content: "Hackathon information",
-          category: "activities",
-          order: 2,
-        },
-      ],
-    })
-    console.log("✅ Created 3 FOSStar initiatives")
+  // 3. FOSServe
+  console.log("\n📌 Seeding FOSServe...")
+  const fosserveId = programIds["fosserve"]
+  if (fosserveId) {
+    const cases = [
+      {
+        programId: fosserveId,
+        title: "Government Department Migration",
+        subtitle: "AP State IT Department",
+        description: "Legacy proprietary systems migration",
+        content: "Full case study content here",
+        metrics: JSON.stringify({ costReduction: "60%", duration: "12 months" }),
+        category: "government",
+        order: 0,
+      },
+      {
+        programId: fosserveId,
+        title: "Educational Institution Digital Transformation",
+        subtitle: "Andhra University",
+        description: "Moodle LMS deployment",
+        content: "Full case study details",
+        metrics: JSON.stringify({ students: "10000+", adoption: "95%", duration: "6 months" }),
+        category: "education",
+        order: 1,
+      },
+    ]
+
+    for (const c of cases) {
+      // Assuming title + programId is unique enough for ID generation since we don't have a natural key besides ID
+      const id = `${fosserveId}-${c.title.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programCaseStudy.upsert({
+        where: { id },
+        update: { ...c, programId: fosserveId },
+        create: { id, ...c, programId: fosserveId }
+      })
+    }
+    console.log("✅ FOSServe case studies seeded")
+
+    const team = [
+      {
+        programId: fosserveId,
+        name: "Anjali Reddy",
+        role: "Service Director",
+        bio: "Enterprise architect",
+        email: "anjali@foss.andhra.dev",
+        linkedin: "https://linkedin.com/in/anjalireddy",
+        order: 0,
+      },
+    ]
+
+    for (const member of team) {
+      const id = `${fosserveId}-${member.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programTeamMember.upsert({
+        where: { id },
+        update: { ...member, programId: fosserveId },
+        create: { id, ...member, programId: fosserveId }
+      })
+    }
+    console.log("✅ FOSServe team seeded")
   }
 
-  const fosstarTeam = await prisma.programTeamMember.count({ where: { programId: fosstar.id } })
-  if (fosstarTeam === 0) {
-    await prisma.programTeamMember.createMany({
-      data: [
-        {
-          programId: fosstar.id,
-          name: "Priya Sharma",
-          role: "Program Lead",
-          bio: "Open source advocate with 5+ years of community building experience",
-          email: "priya@foss.andhra.dev",
-          linkedin: "https://linkedin.com/in/priyasharma",
-          twitter: "https://twitter.com/priyasharma",
-          order: 0,
-        },
-        {
-          programId: fosstar.id,
-          name: "Rajesh Kumar",
-          role: "Technical Coordinator",
-          bio: "Full-stack developer passionate about mentoring students",
-          email: "rajesh@foss.andhra.dev",
-          twitter: "https://twitter.com/rajeshkumar",
-          order: 1,
-        },
-      ],
-    })
-    console.log("✅ Created 2 FOSStar team members")
-  }
-
-  // 2. FOSServe - Case Studies, Team (no Services model exists)
-  console.log("\n📌 Seeding FOSServe (case studies, team)...")
-
-  const fosserveCases = await prisma.programCaseStudy.count({ where: { programId: "fosserve" } })
-  if (fosserveCases === 0) {
-    await prisma.programCaseStudy.createMany({
-      data: [
-        {
-          programId: "fosserve",
-          title: "Government Department Migration to Open Source",
-          subtitle: "AP State IT Department",
-          description: "Legacy proprietary systems causing high costs and vendor lock-in. Phased migration to Linux-based infrastructure and open source office suite.",
-          content: "Full case study content here",
-          metrics: JSON.stringify({ costReduction: "60%", duration: "12 months" }),
-          category: "government",
-          order: 0,
-        },
-        {
-          programId: "fosserve",
-          title: "Educational Institution Digital Transformation",
-          subtitle: "Andhra University",
-          description: "Need for scalable learning management system on limited budget. Deployed Moodle LMS with custom plugins and faculty training.",
-          content: "Full case study details",
-          metrics: JSON.stringify({ students: "10000+", adoption: "95%", duration: "6 months" }),
-          category: "education",
-          order: 1,
-        },
-      ],
-    })
-    console.log("✅ Created 2 FOSServe case studies")
-  }
-
-  const fosserveTeam = await prisma.programTeamMember.count({ where: { programId: "fosserve" } })
-  if (fosserveTeam === 0) {
-    await prisma.programTeamMember.createMany({
-      data: [
-        {
-          programId: "fosserve",
-          name: "Anjali Reddy",
-          role: "Service Director",
-          bio: "Enterprise architect specializing in open source solutions",
-          email: "anjali@foss.andhra.dev",
-          linkedin: "https://linkedin.com/in/anjalireddy",
-          order: 0,
-        },
-      ],
-    })
-    console.log("✅ Created 1 FOSServe team member")
-  }
-
-  // 3. FOSSynC - Clubs & Coordinators
-  console.log("\n📌 Seeding FOSSynC (clubs, coordinators)...")
-  
-  const fossyncClubs = await prisma.programClub.count({ where: { programId: "fossync" } })
-  if (fossyncClubs === 0) {
+  // 4. FOSSynC
+  console.log("\n📌 Seeding FOSSynC...")
+  const fossyncId = programIds["fossync"]
+  if (fossyncId) {
     const clubs = [
       {
-        programId: "fossync",
+        programId: fossyncId,
         name: "GITAM FOSS Club",
         location: "Visakhapatnam",
         institution: "GITAM University",
         members: 85,
         established: "August 2022",
-        description: "Active community promoting open source culture through workshops and hackathons",
+        description: "Active community",
         contact: JSON.stringify({ email: "foss@gitam.edu", phone: "+91-9876543210" }),
         logo: "/uploads/gitam-foss-logo.png",
         order: 0,
       },
       {
-        programId: "fossync",
+        programId: fossyncId,
         name: "VIT-AP Open Source Society",
         location: "Amaravati",
         institution: "VIT-AP University",
         members: 120,
         established: "September 2021",
-        description: "One of the largest FOSS communities in AP with focus on contributions",
+        description: "Largest FOSS community",
         contact: JSON.stringify({ email: "oss@vitap.ac.in", website: "https://oss.vitap.ac.in" }),
         logo: "/uploads/vitap-oss-logo.png",
         order: 1,
       },
       {
-        programId: "fossync",
+        programId: fossyncId,
         name: "Andhra University Linux Users Group",
         location: "Visakhapatnam",
         institution: "Andhra University",
         members: 60,
         established: "January 2020",
-        description: "Veteran club focused on Linux advocacy and system administration",
+        description: "Veteran club",
         contact: JSON.stringify({ email: "lug@andhrauniversity.edu.in" }),
         order: 2,
       },
     ]
-    
+
     for (const club of clubs) {
-      await prisma.programClub.create({
-        data: club as any,
+      const id = `${fossyncId}-${club.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programClub.upsert({
+        where: { id },
+        update: { ...club, programId: fossyncId },
+        create: { id, ...club, programId: fossyncId }
       })
     }
-    console.log("✅ Created 3 FOSSynC clubs")
+    console.log("✅ FOSSynC clubs seeded")
+
+    const team = [
+      {
+        programId: fossyncId,
+        name: "Sai Kiran",
+        role: "Regional Coordinator - North AP",
+        bio: "GITAM University coordinator",
+        email: "saikiran@foss.andhra.dev",
+        order: 0,
+      },
+      {
+        programId: fossyncId,
+        name: "Lakshmi Prasanna",
+        role: "Regional Coordinator - Central AP",
+        bio: "VIT-AP University coordinator",
+        email: "lakshmi@foss.andhra.dev",
+        order: 1,
+      },
+    ]
+
+    for (const member of team) {
+      const id = `${fossyncId}-${member.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programTeamMember.upsert({
+        where: { id },
+        update: { ...member, programId: fossyncId },
+        create: { id, ...member, programId: fossyncId }
+      })
+    }
+    console.log("✅ FOSSynC coordinators seeded")
   }
 
-  // Note: No ProgramCoordinator model exists, using team members instead
-  const fossyncTeam = await prisma.programTeamMember.count({ where: { programId: "fossync" } })
-  if (fossyncTeam === 0) {
-    await prisma.programTeamMember.createMany({
-      data: [
-        {
-          programId: "fossync",
-          name: "Sai Kiran",
-          role: "Regional Coordinator - North AP",
-          bio: "GITAM University coordinator",
-          email: "saikiran@foss.andhra.dev",
-          order: 0,
-        },
-        {
-          programId: "fossync",
-          name: "Lakshmi Prasanna",
-          role: "Regional Coordinator - Central AP",
-          bio: "VIT-AP University coordinator",
-          email: "lakshmi@foss.andhra.dev",
-          order: 1,
-        },
-      ],
-    })
-    console.log("✅ Created 2 FOSSynC coordinators")
+  // 5. FOSStorm
+  console.log("\n📌 Seeding FOSStorm...")
+  const fosstormId = programIds["fosstorm"]
+  if (fosstormId) {
+    const projects = [
+      {
+        programId: fosstormId,
+        name: "AP-Gov-Forms",
+        description: "Open source form builder",
+        content: "Full project details",
+        githubUrl: "https://github.com/foss-andhra/ap-gov-forms",
+        websiteUrl: "https://forms.foss.andhra.dev",
+        status: "active",
+        technologies: JSON.stringify(["React", "Node.js", "PostgreSQL", "Docker"]),
+        stars: 45,
+        contributors: 12,
+        order: 0,
+      },
+      {
+        programId: fosstormId,
+        name: "Telugu NLP Toolkit",
+        description: "NLP tools for Telugu",
+        content: "NLP toolkit information",
+        githubUrl: "https://github.com/foss-andhra/telugu-nlp",
+        status: "active",
+        technologies: JSON.stringify(["Python", "TensorFlow", "FastAPI"]),
+        stars: 89,
+        contributors: 8,
+        order: 1,
+      },
+      {
+        programId: fosstormId,
+        name: "Community Dashboard",
+        description: "Analytics dashboard",
+        content: "Dashboard details",
+        githubUrl: "https://github.com/foss-andhra/community-dashboard",
+        status: "development",
+        technologies: JSON.stringify(["Next.js", "Prisma", "Chart.js"]),
+        stars: 23,
+        contributors: 5,
+        order: 2,
+      },
+    ]
+
+    for (const proj of projects) {
+      const id = `${fosstormId}-${proj.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programProject.upsert({
+        where: { id },
+        update: { ...proj, programId: fosstormId },
+        create: { id, ...proj, programId: fosstormId }
+      })
+    }
+    console.log("✅ FOSStorm projects seeded")
+
+    const team = [
+      {
+        programId: fosstormId,
+        name: "Venkat Rao",
+        role: "Lead Maintainer",
+        bio: "Full-stack developer",
+        email: "venkat@foss.andhra.dev",
+        twitter: "https://twitter.com/venkatrao",
+        order: 0,
+      },
+      {
+        programId: fosstormId,
+        name: "Divya Chowdary",
+        role: "NLP Specialist",
+        bio: "ML expert",
+        email: "divya@foss.andhra.dev",
+        twitter: "https://twitter.com/divyachowdary",
+        order: 1,
+      },
+    ]
+
+    for (const member of team) {
+      const id = `${fosstormId}-${member.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programTeamMember.upsert({
+        where: { id },
+        update: { ...member, programId: fosstormId },
+        create: { id, ...member, programId: fosstormId }
+      })
+    }
+    console.log("✅ FOSStorm maintainers seeded")
   }
 
-  // 4. FOSStorm - Projects (no ProgramMaintainer model exists, use team members)
-  console.log("\n📌 Seeding FOSStorm (projects, maintainers)...")
-  
-  const fosstormProjects = await prisma.programProject.count({ where: { programId: "fosstorm" } })
-  if (fosstormProjects === 0) {
-    await prisma.programProject.createMany({
-      data: [
-        {
-          programId: "fosstorm",
-          name: "AP-Gov-Forms",
-          description: "Open source form builder for government departments",
-          content: "Full project details",
-          githubUrl: "https://github.com/foss-andhra/ap-gov-forms",
-          websiteUrl: "https://forms.foss.andhra.dev",
-          status: "active",
-          technologies: JSON.stringify(["React", "Node.js", "PostgreSQL", "Docker"]),
-          stars: 45,
-          contributors: 12,
-          order: 0,
-        },
-        {
-          programId: "fosstorm",
-          name: "Telugu NLP Toolkit",
-          description: "Natural language processing tools for Telugu language",
-          content: "NLP toolkit information",
-          githubUrl: "https://github.com/foss-andhra/telugu-nlp",
-          status: "active",
-          technologies: JSON.stringify(["Python", "TensorFlow", "FastAPI"]),
-          stars: 89,
-          contributors: 8,
-          order: 1,
-        },
-        {
-          programId: "fosstorm",
-          name: "Community Dashboard",
-          description: "Analytics dashboard for FOSS community metrics",
-          content: "Dashboard details",
-          githubUrl: "https://github.com/foss-andhra/community-dashboard",
-          status: "development",
-          technologies: JSON.stringify(["Next.js", "Prisma", "Chart.js"]),
-          stars: 23,
-          contributors: 5,
-          order: 2,
-        },
-      ],
-    })
-    console.log("✅ Created 3 FOSStorm projects")
-  }
-
-  const fosstormTeam = await prisma.programTeamMember.count({ where: { programId: "fosstorm" } })
-  if (fosstormTeam === 0) {
-    await prisma.programTeamMember.createMany({
-      data: [
-        {
-          programId: "fosstorm",
-          name: "Venkat Rao",
-          role: "Lead Maintainer",
-          bio: "Full-stack developer and DevOps specialist",
-          email: "venkat@foss.andhra.dev",
-          twitter: "https://twitter.com/venkatrao",
-          order: 0,
-        },
-        {
-          programId: "fosstorm",
-          name: "Divya Chowdary",
-          role: "NLP Specialist",
-          bio: "Machine Learning expert specializing in Telugu language processing",
-          email: "divya@foss.andhra.dev",
-          twitter: "https://twitter.com/divyachowdary",
-          order: 1,
-        },
-      ],
-    })
-    console.log("✅ Created 2 FOSStorm maintainers")
-  }
-
-  // 5. FOSStart - Startups (no ProgramMentor model exists, use team members)
-  console.log("\n📌 Seeding FOSStart (startups, mentors)...")
-  
-  const fosstartStartups = await prisma.programStartup.count({ where: { programId: "fosstart" } })
-  if (fosstartStartups === 0) {
+  // 6. FOSStart
+  console.log("\n📌 Seeding FOSStart...")
+  const fosstartId = programIds["fosstart"]
+  if (fosstartId) {
     const startups = [
       {
-        programId: "fosstart",
+        programId: fosstartId,
         name: "OpenEdu Solutions",
-        description: "Building affordable ed-tech solutions using open source",
+        description: "Affordable ed-tech",
         content: "Startup details",
         category: "Education Technology",
         founded: "March 2023",
@@ -320,9 +356,9 @@ async function main() {
         order: 0,
       },
       {
-        programId: "fosstart",
+        programId: fosstartId,
         name: "AgriTech FOSS",
-        description: "Open source IoT solutions for smart farming",
+        description: "Smart farming IoT",
         content: "AgriTech startup information",
         category: "Agriculture Technology",
         founded: "November 2023",
@@ -335,9 +371,9 @@ async function main() {
         order: 1,
       },
       {
-        programId: "fosstart",
+        programId: fosstartId,
         name: "HealthStack",
-        description: "Open source hospital management system",
+        description: "Hospital management system",
         content: "Healthcare technology details",
         category: "Healthcare Technology",
         founded: "June 2022",
@@ -350,157 +386,169 @@ async function main() {
         order: 2,
       },
     ]
-    
+
     for (const startup of startups) {
-      await prisma.programStartup.create({
-        data: startup as any,
+      const id = `${fosstartId}-${startup.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programStartup.upsert({
+        where: { id },
+        update: { ...startup, programId: fosstartId },
+        create: { id, ...startup, programId: fosstartId }
       })
     }
-    console.log("✅ Created 3 FOSStart startups")
+    console.log("✅ FOSStart startups seeded")
+
+    const team = [
+      {
+        programId: fosstartId,
+        name: "Ramesh Naidu",
+        role: "Startup Mentor",
+        bio: "Serial entrepreneur",
+        email: "ramesh@foss.andhra.dev",
+        linkedin: "https://linkedin.com/in/rameshnaidu",
+        order: 0,
+      },
+      {
+        programId: fosstartId,
+        name: "Kavitha Menon",
+        role: "Legal & Compliance Mentor",
+        bio: "Legal expert",
+        email: "kavitha@foss.andhra.dev",
+        linkedin: "https://linkedin.com/in/kavithamenon",
+        order: 1,
+      },
+    ]
+
+    for (const member of team) {
+      const id = `${fosstartId}-${member.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programTeamMember.upsert({
+        where: { id },
+        update: { ...member, programId: fosstartId },
+        create: { id, ...member, programId: fosstartId }
+      })
+    }
+    console.log("✅ FOSStart mentors seeded")
   }
 
-  const fosstartTeam = await prisma.programTeamMember.count({ where: { programId: "fosstart" } })
-  if (fosstartTeam === 0) {
-    await prisma.programTeamMember.createMany({
-      data: [
-        {
-          programId: "fosstart",
-          name: "Ramesh Naidu",
-          role: "Startup Mentor",
-          bio: "Serial entrepreneur with 2 successful exits, passionate about open source business models. Expert in product development, go-to-market strategy, and fundraising.",
-          email: "ramesh@foss.andhra.dev",
-          linkedin: "https://linkedin.com/in/rameshnaidu",
-          order: 0,
-        },
-        {
-          programId: "fosstart",
-          name: "Kavitha Menon",
-          role: "Legal & Compliance Mentor",
-          bio: "Legal expert specializing in FOSS licenses, helping startups navigate compliance. Open source licensing and community building specialist.",
-          email: "kavitha@foss.andhra.dev",
-          linkedin: "https://linkedin.com/in/kavithamenon",
-          order: 1,
-        },
-      ],
-    })
-    console.log("✅ Created 2 FOSStart mentors")
+  // 7. FOSSterage
+  console.log("\n📌 Seeding FOSSterage...")
+  const fossterageId = programIds["fossterage"]
+  if (fossterageId) {
+    const repos = [
+      {
+        programId: fossterageId,
+        name: "awesome-telugu-tech",
+        description: "Telugu tech resources",
+        content: "Repository details",
+        url: "https://github.com/foss-andhra/awesome-telugu-tech",
+        category: "databases",
+        type: "library",
+        features: JSON.stringify(["Telugu resources", "Tech articles", "Learning materials"]),
+        order: 0,
+      },
+      {
+        programId: fossterageId,
+        name: "ap-government-apis",
+        description: "AP government APIs",
+        content: "API collection details",
+        url: "https://github.com/foss-andhra/ap-gov-apis",
+        category: "research",
+        type: "hub",
+        features: JSON.stringify(["Government APIs", "Documentation", "Examples"]),
+        order: 1,
+      },
+      {
+        programId: fossterageId,
+        name: "learning-resources",
+        description: "Learning paths",
+        content: "Learning resources information",
+        url: "https://github.com/foss-andhra/learning-resources",
+        category: "education",
+        type: "archive",
+        features: JSON.stringify(["Learning paths", "Tutorials", "Best practices"]),
+        order: 2,
+      },
+    ]
+
+    for (const repo of repos) {
+      const id = `${fossterageId}-${repo.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programRepository.upsert({
+        where: { id },
+        update: { ...repo, programId: fossterageId },
+        create: { id, ...repo, programId: fossterageId }
+      })
+    }
+    console.log("✅ FOSSterage repositories seeded")
+
+    const team = [
+      {
+        programId: fossterageId,
+        name: "Anil Kumar",
+        role: "Chief Curator",
+        bio: "Documentation specialist",
+        email: "anil@foss.andhra.dev",
+        twitter: "https://twitter.com/anilkumar",
+        order: 0,
+      },
+      {
+        programId: fossterageId,
+        name: "Sneha Patel",
+        role: "Community Curator",
+        bio: "Resource creator",
+        email: "sneha@foss.andhra.dev",
+        order: 1,
+      },
+    ]
+
+    for (const member of team) {
+      const id = `${fossterageId}-${member.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programTeamMember.upsert({
+        where: { id },
+        update: { ...member, programId: fossterageId },
+        create: { id, ...member, programId: fossterageId }
+      })
+    }
+    console.log("✅ FOSSterage curators seeded")
   }
 
-  // 6. FOSSterage - Repositories (no ProgramCurator model exists, use team members)
-  console.log("\n📌 Seeding FOSSterage (repositories, curators)...")
-  
-  const fossterageRepos = await prisma.programRepository.count({ where: { programId: "fossterage" } })
-  if (fossterageRepos === 0) {
-    await prisma.programRepository.createMany({
-      data: [
-        {
-          programId: "fossterage",
-          name: "awesome-telugu-tech",
-          description: "Curated list of Telugu language tech resources",
-          content: "Repository details",
-          url: "https://github.com/foss-andhra/awesome-telugu-tech",
-          category: "databases",
-          type: "library",
-          features: JSON.stringify(["Telugu resources", "Tech articles", "Learning materials"]),
-          order: 0,
-        },
-        {
-          programId: "fossterage",
-          name: "ap-government-apis",
-          description: "Collection of APIs for AP government services",
-          content: "API collection details",
-          url: "https://github.com/foss-andhra/ap-gov-apis",
-          category: "research",
-          type: "hub",
-          features: JSON.stringify(["Government APIs", "Documentation", "Examples"]),
-          order: 1,
-        },
-        {
-          programId: "fossterage",
-          name: "learning-resources",
-          description: "Comprehensive learning paths for various tech stacks",
-          content: "Learning resources information",
-          url: "https://github.com/foss-andhra/learning-resources",
-          category: "education",
-          type: "archive",
-          features: JSON.stringify(["Learning paths", "Tutorials", "Best practices"]),
-          order: 2,
-        },
-      ],
-    })
-    console.log("✅ Created 3 FOSSterage repositories")
-  }
+  // 8. FOSSpeaks
+  console.log("\n📌 Seeding FOSSpeaks...")
+  const fosspeaksId = programIds["fosspeaks"]
+  if (fosspeaksId) {
+    const team = [
+      {
+        programId: fosspeaksId,
+        name: "Vikram Singh",
+        role: "Speaker - Linux Kernel Developer",
+        bio: "Kernel developer",
+        email: "vikram@foss.andhra.dev",
+        twitter: "https://twitter.com/vikramsingh",
+        linkedin: "https://linkedin.com/in/vikramsingh",
+        order: 0,
+      },
+      {
+        programId: fosspeaksId,
+        name: "Meera Krishnan",
+        role: "Speaker - Open Source Advocate",
+        bio: "OS advocate",
+        email: "meera@foss.andhra.dev",
+        linkedin: "https://linkedin.com/in/meerakrishnan",
+        twitter: "https://twitter.com/meerakrishnan",
+        order: 1,
+      },
+    ]
 
-  const fossterageTeam = await prisma.programTeamMember.count({ where: { programId: "fossterage" } })
-  if (fossterageTeam === 0) {
-    await prisma.programTeamMember.createMany({
-      data: [
-        {
-          programId: "fossterage",
-          name: "Anil Kumar",
-          role: "Chief Curator",
-          bio: "Documentation specialist focusing on API design and Telugu tech resources",
-          email: "anil@foss.andhra.dev",
-          twitter: "https://twitter.com/anilkumar",
-          order: 0,
-        },
-        {
-          programId: "fossterage",
-          name: "Sneha Patel",
-          role: "Community Curator",
-          bio: "Passionate about creating beginner-friendly learning resources and documentation",
-          email: "sneha@foss.andhra.dev",
-          order: 1,
-        },
-      ],
-    })
-    console.log("✅ Created 2 FOSSterage curators")
-  }
-
-  // 7. FOSSpeaks - Events & Speakers (no specific models, likely using team for speakers)
-  console.log("\n📌 Seeding FOSSpeaks (events, speakers)...")
-  
-  // FOSSpeaks might use the main Event model, not program-specific
-  // Adding team members as speakers
-  const fosspeaksTeam = await prisma.programTeamMember.count({ where: { programId: "fosspeaks" } })
-  if (fosspeaksTeam === 0) {
-    await prisma.programTeamMember.createMany({
-      data: [
-        {
-          programId: "fosspeaks",
-          name: "Vikram Singh",
-          role: "Speaker - Linux Kernel Developer",
-          bio: "Kernel developer and Linux Foundation member. Expert in systems programming and performance optimization. Past talks: 23+",
-          email: "vikram@foss.andhra.dev",
-          twitter: "https://twitter.com/vikramsingh",
-          linkedin: "https://linkedin.com/in/vikramsingh",
-          order: 0,
-        },
-        {
-          programId: "fosspeaks",
-          name: "Meera Krishnan",
-          role: "Speaker - Open Source Advocate",
-          bio: "Open source advocate and community builder at Mozilla. Expert in community management and developer relations. Past talks: 31+",
-          email: "meera@foss.andhra.dev",
-          linkedin: "https://linkedin.com/in/meerakrishnan",
-          twitter: "https://twitter.com/meerakrishnan",
-          order: 1,
-        },
-      ],
-    })
-    console.log("✅ Created 2 FOSSpeaks speakers")
+    for (const member of team) {
+      const id = `${fosspeaksId}-${member.name.replace(/\s+/g, '-').toLowerCase()}`
+      await prisma.programTeamMember.upsert({
+        where: { id },
+        update: { ...member, programId: fosspeaksId },
+        create: { id, ...member, programId: fosspeaksId }
+      })
+    }
+    console.log("✅ FOSSpeaks speakers seeded")
   }
 
   console.log("\n✅ Comprehensive seed completed successfully!")
-  console.log("\n📊 Summary:")
-  console.log("   7 Programs initialized")
-  console.log("   FOSStar: Initiatives & Team")
-  console.log("   FOSServe: Case Studies & Team")
-  console.log("   FOSSynC: Clubs & Team")
-  console.log("   FOSStorm: Projects & Team")
-  console.log("   FOSStart: Startups & Team")
-  console.log("   FOSSterage: Repositories & Team")
-  console.log("   FOSSpeaks: Speakers")
 }
 
 main()

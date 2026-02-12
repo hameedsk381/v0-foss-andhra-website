@@ -14,15 +14,24 @@ interface BlogPostPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await prisma.blogPost.findUnique({
+  const postRaw = await prisma.blogPost.findUnique({
     where: { slug: params.slug },
     include: {
-      category: true,
-      author: {
+      BlogCategory: true,
+      Admin: {
         select: { name: true },
       },
     },
   })
+
+  // Map to expected structure
+  const post = postRaw
+    ? {
+      ...postRaw,
+      category: postRaw.BlogCategory,
+      author: postRaw.Admin,
+    }
+    : null
 
   if (!post) {
     return {
@@ -34,22 +43,33 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await prisma.blogPost.findUnique({
+  const postRaw = await prisma.blogPost.findUnique({
     where: { slug: params.slug },
     include: {
-      category: true,
-      author: {
+      BlogCategory: true,
+      Admin: {
         select: { id: true, name: true, email: true, avatar: true },
       },
-      tags: {
-        include: { tag: true },
+      BlogPostTag: {
+        include: { BlogTag: true },
       },
-      comments: {
+      BlogComment: {
         where: { status: "approved" },
         orderBy: { createdAt: "desc" },
       },
     },
   })
+
+  // Map to expected structure
+  const post = postRaw
+    ? {
+      ...postRaw,
+      category: postRaw.BlogCategory,
+      author: postRaw.Admin,
+      tags: postRaw.BlogPostTag.map((t) => ({ tag: t.BlogTag })),
+      comments: postRaw.BlogComment,
+    }
+    : null
 
   if (!post) {
     notFound()

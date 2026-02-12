@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { randomUUID } from 'crypto'
 
 const prisma = new PrismaClient()
 
@@ -10,10 +11,12 @@ async function main() {
   if (!admin) {
     admin = await prisma.admin.create({
       data: {
+        id: randomUUID(),
         name: 'FOSS Andhra Admin',
         email: 'admin@fossandhra.org',
         password: 'hashed_password_here',
         role: 'admin',
+        updatedAt: new Date(),
       },
     })
   }
@@ -32,8 +35,11 @@ async function main() {
   for (const cat of categories) {
     const category = await prisma.blogCategory.upsert({
       where: { slug: cat.slug },
-      update: cat,
-      create: cat,
+      update: { ...cat },
+      create: {
+        id: randomUUID(),
+        ...cat,
+      },
     })
     createdCategories[cat.slug] = category
   }
@@ -54,7 +60,11 @@ async function main() {
     const blogTag = await prisma.blogTag.upsert({
       where: { slug },
       update: { name: tag },
-      create: { name: tag, slug },
+      create: {
+        id: randomUUID(),
+        name: tag,
+        slug,
+      },
     })
     createdTags[slug] = blogTag
   }
@@ -62,14 +72,16 @@ async function main() {
   // Helper function to create blog post with tags
   async function createBlogPost(postData: any) {
     const { tags: tagSlugs, ...post } = postData
-    
+
     const createdPost = await prisma.blogPost.upsert({
       where: { slug: post.slug },
-      update: post,
+      update: { ...post, updatedAt: new Date() },
       create: {
+        id: randomUUID(),
         ...post,
         status: 'published',
         publishedAt: new Date(),
+        updatedAt: new Date(),
         readingTime: Math.ceil(post.content.length / 1000),
       },
     })
@@ -87,6 +99,7 @@ async function main() {
           },
           update: {},
           create: {
+            id: randomUUID(),
             postId: createdPost.id,
             tagId: tag.id,
           },
