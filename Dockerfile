@@ -4,7 +4,7 @@ WORKDIR /app
 
 FROM base AS deps
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+RUN ["bun", "install", "--frozen-lockfile"]
 
 FROM deps AS builder
 COPY . .
@@ -12,8 +12,8 @@ ARG DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres?schema=f
 ENV DATABASE_URL=$DATABASE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-RUN bunx prisma generate
-RUN bun run build
+RUN ["bunx", "prisma", "generate"]
+RUN ["bun", "run", "build"]
 
 FROM deps AS migrator
 COPY prisma ./prisma
