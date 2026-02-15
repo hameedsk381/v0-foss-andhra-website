@@ -1,53 +1,16 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { PROGRAMS } from "@/lib/programs"
 import { FloatingLogo } from "./floating-logo"
 
 export function LogoShowcase() {
-  const programs = [
-    {
-      id: "fosstar",
-      title: "FOSStar",
-      logo: "/logos/fosstar-logo.png",
-      delay: 0.1,
-    },
-    {
-      id: "fosserve",
-      title: "FOSServe",
-      logo: "/logos/fosserve-logo.png",
-      delay: 0.2,
-    },
-    {
-      id: "fossync",
-      title: "FOSSynC",
-      logo: "/logos/fossync-logo.png",
-      delay: 0.3,
-    },
-    {
-      id: "fosstorm",
-      title: "FOSStorm",
-      logo: "/logos/fosstorm-logo.png",
-      delay: 0.4,
-    },
-    {
-      id: "fosstart",
-      title: "FOSStart",
-      logo: "/logos/fosstart-logo.png",
-      delay: 0.5,
-    },
-    {
-      id: "fossterage",
-      title: "FOSSterage",
-      logo: "/logos/fossterage-logo.png",
-      delay: 0.6,
-    },
-    {
-      id: "fosspeaks",
-      title: "FOSSpeaks",
-      logo: "/logos/fosspeaks-logo.png",
-      delay: 0.7,
-    },
-  ]
+  const programs = PROGRAMS.map((program, index) => ({
+    id: program.id,
+    title: program.displayName,
+    logo: program.logo,
+    delay: 0.1 * (index + 1),
+  }))
 
   return (
     <motion.div

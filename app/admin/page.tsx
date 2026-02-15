@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Calendar, Heart, TrendingUp, DollarSign, UserPlus, Loader2 } from "lucide-react"
+import { Users, Calendar, Heart, TrendingUp, DollarSign, UserPlus } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { Skeleton } from "@/components/skeleton-loader"
 
@@ -53,12 +53,12 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="space-y-8">
-        <div>
-          <Skeleton className="h-9 w-64 mb-2" />
-          <Skeleton className="h-5 w-96" />
+      <div className="space-y-6 lg:space-y-8">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-56 sm:h-9 sm:w-64" />
+          <Skeleton className="h-5 w-full max-w-sm sm:max-w-lg" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
                 <Skeleton className="h-4 w-4 rounded" />
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="mb-2 h-8 w-16" />
                 <Skeleton className="h-3 w-32" />
               </CardContent>
             </Card>
@@ -78,8 +78,8 @@ export default function AdminDashboard() {
 
   if (!data) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-500">Failed to load dashboard data</p>
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <p className="text-slate-500">Failed to load dashboard data</p>
       </div>
     )
   }
@@ -87,72 +87,68 @@ export default function AdminDashboard() {
   const { stats, recentMembers, upcomingEvents, recentDonations } = data
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome to FOSS Andhra CMS</p>
+    <div className="space-y-6 lg:space-y-8">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Dashboard</h1>
+        <p className="text-sm text-slate-600 sm:text-base dark:text-slate-300">Welcome to FOSS Andhra CMS</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Members</CardTitle>
-            <Users className="h-4 w-4 text-gray-400" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Card className="rounded-xl border-slate-200 shadow-sm dark:border-slate-800">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-300">Total Members</CardTitle>
+            <Users className="h-4 w-4 text-slate-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalMembers}</div>
-            <p className="text-xs text-green-600 flex items-center mt-1">
-              <TrendingUp className="h-3 w-3 mr-1" />
+            <div className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{stats.totalMembers}</div>
+            <p className="mt-1 flex items-center text-xs text-green-600">
+              <TrendingUp className="mr-1 h-3 w-3" />
               +{stats.newMembersThisMonth} this month
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Active Members</CardTitle>
-            <UserPlus className="h-4 w-4 text-gray-400" />
+        <Card className="rounded-xl border-slate-200 shadow-sm dark:border-slate-800">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-300">Active Members</CardTitle>
+            <UserPlus className="h-4 w-4 text-slate-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.activeMembers}</div>
-            <p className="text-xs text-gray-600 mt-1">
-              {stats.totalMembers > 0
-                ? ((stats.activeMembers / stats.totalMembers) * 100).toFixed(1)
-                : 0}% of total
+            <div className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{stats.activeMembers}</div>
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
+              {stats.totalMembers > 0 ? ((stats.activeMembers / stats.totalMembers) * 100).toFixed(1) : 0}% of total
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Events</CardTitle>
-            <Calendar className="h-4 w-4 text-gray-400" />
+        <Card className="rounded-xl border-slate-200 shadow-sm dark:border-slate-800">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-300">Total Events</CardTitle>
+            <Calendar className="h-4 w-4 text-slate-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalEvents}</div>
-            <p className="text-xs text-blue-600 mt-1">{stats.upcomingEvents} upcoming</p>
+            <div className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">{stats.totalEvents}</div>
+            <p className="mt-1 text-xs text-blue-600">{stats.upcomingEvents} upcoming</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Donations</CardTitle>
-            <DollarSign className="h-4 w-4 text-gray-400" />
+        <Card className="rounded-xl border-slate-200 shadow-sm dark:border-slate-800">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-300">Total Donations</CardTitle>
+            <DollarSign className="h-4 w-4 text-slate-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{stats.totalDonations.toLocaleString()}</div>
-            <p className="text-xs text-green-600 flex items-center mt-1">
-              <Heart className="h-3 w-3 mr-1" />
-              ₹{stats.monthlyDonations.toLocaleString()} this month
+            <div className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">&#8377;{stats.totalDonations.toLocaleString()}</div>
+            <p className="mt-1 flex items-center text-xs text-green-600">
+              <Heart className="mr-1 h-3 w-3" />
+              &#8377;{stats.monthlyDonations.toLocaleString()} this month
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <Card className="rounded-xl border-slate-200 shadow-sm dark:border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Recent Members</CardTitle>
             <Link href="/admin/members" className="text-sm text-primary hover:underline">
@@ -163,24 +159,24 @@ export default function AdminDashboard() {
             <div className="space-y-4">
               {recentMembers.length > 0 ? (
                 recentMembers.map((member, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">{member.name}</p>
-                      <p className="text-xs text-gray-500">{member.email}</p>
+                  <div key={index} className="flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{member.name}</p>
+                      <p className="truncate text-xs text-slate-500">{member.email}</p>
                     </div>
-                    <p className="text-xs text-gray-400">
+                    <p className="shrink-0 text-xs text-slate-400">
                       {formatDistanceToNow(new Date(member.createdAt), { addSuffix: true })}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 text-center py-4">No recent members</p>
+                <p className="py-4 text-center text-sm text-slate-500">No recent members</p>
               )}
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-xl border-slate-200 shadow-sm dark:border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Upcoming Events</CardTitle>
             <Link href="/admin/events" className="text-sm text-primary hover:underline">
@@ -191,26 +187,23 @@ export default function AdminDashboard() {
             <div className="space-y-4">
               {upcomingEvents.length > 0 ? (
                 upcomingEvents.map((event, index) => (
-                  <div key={index} className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-medium">{event.title}</p>
-                      <p className="text-xs text-gray-500">{event.location}</p>
+                  <div key={index} className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{event.title}</p>
+                      <p className="truncate text-xs text-slate-500">{event.location}</p>
                     </div>
-                    <p className="text-xs text-gray-400">
-                      {new Date(event.date).toLocaleDateString()}
-                    </p>
+                    <p className="shrink-0 text-xs text-slate-400">{new Date(event.date).toLocaleDateString()}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 text-center py-4">No upcoming events</p>
+                <p className="py-4 text-center text-sm text-slate-500">No upcoming events</p>
               )}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent Donations */}
-      <Card>
+      <Card className="rounded-xl border-slate-200 shadow-sm dark:border-slate-800">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Recent Donations</CardTitle>
           <Link href="/admin/donations" className="text-sm text-primary hover:underline">
@@ -221,23 +214,21 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             {recentDonations.length > 0 ? (
               recentDonations.map((donation, index) => (
-                <div key={index} className="flex items-center justify-between border-b pb-3 last:border-0">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">
-                      {donation.anonymous ? "Anonymous" : donation.name}
-                    </p>
-                    <p className="text-xs text-gray-500">{donation.type}</p>
+                <div key={index} className="flex items-center justify-between gap-4 border-b pb-3 last:border-0">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{donation.anonymous ? "Anonymous" : donation.name}</p>
+                    <p className="text-xs text-slate-500">{donation.type}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-green-600">₹{donation.amount.toLocaleString()}</p>
-                    <p className="text-xs text-gray-400">
+                  <div className="shrink-0 text-right">
+                    <p className="text-sm font-bold text-green-600">&#8377;{donation.amount.toLocaleString()}</p>
+                    <p className="text-xs text-slate-400">
                       {formatDistanceToNow(new Date(donation.createdAt), { addSuffix: true })}
                     </p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500 text-center py-4">No recent donations</p>
+              <p className="py-4 text-center text-sm text-slate-500">No recent donations</p>
             )}
           </div>
         </CardContent>

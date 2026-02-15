@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Download, CreditCard } from "lucide-react"
 import QRCode from "qrcode"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function MembershipPage() {
   const [memberData, setMemberData] = useState<any>(null)
@@ -44,11 +45,9 @@ export default function MembershipPage() {
     }
   }
 
-  const downloadCard = () => {
+  const printCard = () => {
     if (cardRef.current) {
-      // This would require html2canvas or similar library
-      // For now, we'll just show a message
-      alert("Card download feature coming soon!")
+      window.print()
     }
   }
 
@@ -122,7 +121,7 @@ export default function MembershipPage() {
               <div className="flex items-center justify-center">
                 {qrCodeUrl && (
                   <div className="bg-white p-3 rounded-lg">
-                    <img src={qrCodeUrl} alt="QR Code" className="w-32 h-32" />
+                    <Image src={qrCodeUrl} alt="QR Code" width={128} height={128} unoptimized />
                   </div>
                 )}
               </div>
@@ -131,11 +130,11 @@ export default function MembershipPage() {
         </CardContent>
       </Card>
 
-      {/* Download Button */}
+      {/* Print Button */}
       <div className="max-w-2xl mx-auto">
-        <Button onClick={downloadCard} className="w-full">
+        <Button onClick={printCard} className="w-full">
           <Download className="h-4 w-4 mr-2" />
-          Download Membership Card
+          Print Membership Card
         </Button>
       </div>
 
@@ -163,10 +162,10 @@ export default function MembershipPage() {
           </CardHeader>
           <CardContent>
             <ul className="text-sm space-y-1 text-gray-600">
-              <li>✓ Access to all events</li>
-              <li>✓ Networking opportunities</li>
-              <li>✓ Exclusive resources</li>
-              <li>✓ Certificates</li>
+              <li>Access to all events</li>
+              <li>Networking opportunities</li>
+              <li>Exclusive resources</li>
+              <li>Certificates</li>
             </ul>
           </CardContent>
         </Card>
@@ -184,7 +183,9 @@ export default function MembershipPage() {
                 ? "Your membership is expiring soon. Renew now to continue enjoying benefits."
                 : "Your membership has expired. Renew to regain access to all benefits."}
             </p>
-            <Button>Renew Membership</Button>
+            <Link href="/membership">
+              <Button>Renew Membership</Button>
+            </Link>
           </CardContent>
         </Card>
       )}

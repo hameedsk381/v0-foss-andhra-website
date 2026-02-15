@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // GET all ticket types for an event
 export async function GET(
@@ -7,6 +8,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+
     const eventId = params.id
 
     const ticketTypes = await prisma.eventTicketType.findMany({
@@ -30,6 +34,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const eventId = params.id
     const body = await request.json()
 

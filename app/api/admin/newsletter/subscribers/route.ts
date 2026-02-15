@@ -1,18 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 export const dynamic = "force-dynamic"
 
 // GET - List all subscribers
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   try {
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') || 'active'
 
@@ -31,6 +28,9 @@ export async function GET(request: NextRequest) {
 // POST - Add new subscriber
 export async function POST(request: NextRequest) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const body = await request.json()
     const { email, name } = body
 
@@ -80,12 +80,10 @@ export async function POST(request: NextRequest) {
 
 // DELETE - Delete subscriber
 export async function DELETE(request: NextRequest) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   try {
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 

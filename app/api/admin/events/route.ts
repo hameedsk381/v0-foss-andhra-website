@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { requireAdminSession } from "@/lib/auth/admin"
 import { prisma } from "@/lib/prisma"
 
 export const dynamic = "force-dynamic"
@@ -8,10 +7,8 @@ export const dynamic = "force-dynamic"
 // GET all events
 export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const { authError } = await requireAdminSession(["viewer", "editor", "admin"])
+    if (authError) return authError
 
     const { searchParams } = new URL(request.url)
     const type = searchParams.get("type")
@@ -66,10 +63,8 @@ export async function GET(request: Request) {
 // POST create new event
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const { session, authError } = await requireAdminSession(["editor", "admin"])
+    if (authError) return authError
 
     const body = await request.json()
 
@@ -151,3 +146,4 @@ export async function POST(request: Request) {
     )
   }
 }
+

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import QRCode from "qrcode"
 import { sendTicketConfirmationEmail } from "@/lib/email"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 export const dynamic = "force-dynamic"
 
@@ -11,6 +12,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+
     const eventId = params.id
     const { searchParams } = new URL(request.url)
     const status = searchParams.get("status")
@@ -46,6 +50,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const eventId = params.id
     const body = await request.json()
 

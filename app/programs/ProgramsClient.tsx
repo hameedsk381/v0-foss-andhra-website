@@ -7,30 +7,28 @@ import { ArrowRight, Code, BookOpen, GraduationCap, Rocket, Database, Megaphone,
 import { AnimatedSection } from "@/components/ui/animated-section"
 import { AnimatedCard } from "@/components/ui/animated-card"
 import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { programInfo } from "@/lib/utils"
+import { PROGRAMS } from "@/lib/programs"
 
 export default function ProgramsClient() {
-    const programs = Object.entries(programInfo).map(([key, value]) => ({
-        id: key,
-        title: value.title,
-        description: value.description,
-        href: `/programs/${key}`,
-        color: value.color,
-        icon: value.icon,
-        logo: `/logos/${key}-logo.png`,
+    const programs = PROGRAMS.map((program) => ({
+        id: program.id,
+        title: program.displayName,
+        description: program.description,
+        href: `/programs/${program.slug}`,
+        logo: program.logo,
     }))
 
-    const getIconComponent = (iconName: string) => {
+    const getIconComponent = (programId: string) => {
         const icons: Record<string, React.ReactNode> = {
-            Users: <Users className="h-8 w-8 text-fosstar" />,
-            BookOpen: <BookOpen className="h-8 w-8 text-purple-600" />,
-            GraduationCap: <GraduationCap className="h-8 w-8 text-green-600" />,
-            Code: <Code className="h-8 w-8 text-orange-600" />,
-            Rocket: <Rocket className="h-8 w-8 text-red-600" />,
-            Database: <Database className="h-8 w-8 text-blue-600" />,
-            Megaphone: <Megaphone className="h-8 w-8 text-yellow-600" />,
+            fosstar: <Users className="h-8 w-8 text-fosstar" />,
+            fosserve: <BookOpen className="h-8 w-8 text-fosserve" />,
+            fossync: <GraduationCap className="h-8 w-8 text-fossync" />,
+            fosstorm: <Code className="h-8 w-8 text-fosstorm" />,
+            fosstart: <Rocket className="h-8 w-8 text-fosstart" />,
+            fossterage: <Database className="h-8 w-8 text-fossterage" />,
+            fosspeaks: <Megaphone className="h-8 w-8 text-fosspeaks" />,
         }
-        return icons[iconName] || <Code className="h-8 w-8" />
+        return icons[programId] || <Code className="h-8 w-8" />
     }
 
     return (
@@ -59,7 +57,7 @@ export default function ProgramsClient() {
                                         <CardHeader className="pb-2">
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="p-3 rounded-xl bg-gray-50 group-hover:bg-primary/5 transition-colors">
-                                                    {getIconComponent(program.icon)}
+                                                    {getIconComponent(program.id)}
                                                 </div>
                                                 <Image
                                                     src={program.logo}

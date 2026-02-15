@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // GET single ticket type
 export async function GET(
@@ -7,6 +8,9 @@ export async function GET(
   { params }: { params: { id: string; ticketId: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+
     const { ticketId } = params
 
     const ticketType = await prisma.eventTicketType.findUnique({
@@ -44,6 +48,9 @@ export async function PUT(
   { params }: { params: { id: string; ticketId: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const { ticketId } = params
     const body = await request.json()
 
@@ -85,6 +92,9 @@ export async function DELETE(
   { params }: { params: { id: string; ticketId: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+
     const { ticketId } = params
 
     // Check if any tickets have been sold

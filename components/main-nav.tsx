@@ -6,6 +6,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { PROGRAMS, PROGRAM_HOVER_BG_CLASS, PROGRAM_TEXT_CLASS } from "@/lib/programs"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -17,7 +18,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, X, Code, Database, Smartphone, BookOpen, User, LogOut, LayoutDashboard } from "lucide-react"
+import { Menu, X, BookOpen, User, LogOut, LayoutDashboard } from "lucide-react"
 import { useSession, signOut } from "next-auth/react"
 import {
   DropdownMenu,
@@ -29,71 +30,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-const programs = [
-  {
-    id: "fosstar",
-    title: "FOSStar",
-    description: "Membership program connecting the FOSS community",
-    href: "/programs/fosstar",
-    color: "fosstar",
-    icon: Code,
-    logo: "/logos/fosstar-logo.png",
-  },
-  {
-    id: "fosserve",
-    title: "FOSServe",
-    description: "Promoting open-source solutions in education and governance",
-    href: "/programs/fosserve",
-    color: "purple",
-    icon: Database,
-    logo: "/logos/fosserve-logo.png",
-  },
-  {
-    id: "fossync",
-    title: "FOSSynC",
-    description: "Student-led FOSS clubs in educational institutions",
-    href: "/programs/fossync",
-    color: "green",
-    icon: Smartphone,
-    logo: "/logos/fossync-logo.png",
-  },
-  {
-    id: "fosstorm",
-    title: "FOSStorm",
-    description: "Community-led open source projects",
-    href: "/programs/fosstorm",
-    color: "orange",
-    icon: Code,
-    logo: "/logos/fosstorm-logo.png",
-  },
-  {
-    id: "fosstart",
-    title: "FOSStart",
-    description: "Entrepreneurship space for funding open-source innovations",
-    href: "/programs/fosstart",
-    color: "red",
-    icon: Database,
-    logo: "/logos/fosstart-logo.png",
-  },
-  {
-    id: "fossterage",
-    title: "FOSSterage",
-    description: "Repository of knowledge bases for researchers",
-    href: "/programs/fossterage",
-    color: "blue",
-    icon: Smartphone,
-    logo: "/logos/fossterage-logo.png",
-  },
-  {
-    id: "fosspeaks",
-    title: "FOSSpeaks",
-    description: "Advocacy program for free and open-source technology",
-    href: "/programs/fosspeaks",
-    color: "yellow",
-    icon: Code,
-    logo: "/logos/fosspeaks-logo.png",
-  },
-]
+const programs = PROGRAMS.map((program) => ({
+  ...program,
+  title: program.displayName,
+  href: `/programs/${program.slug}`,
+}))
 
 const navItems = [
   { title: "Home", href: "/" },
@@ -109,29 +50,6 @@ export function MainNav() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = React.useState(false)
-
-  // Add the CSS styles for z-index
-  React.useEffect(() => {
-    const style = document.createElement("style")
-    style.innerHTML = `
-      .navigation-menu-content {
-        z-index: 50 !important;
-      }
-      
-      .navigation-menu-trigger {
-        z-index: 50 !important;
-      }
-      
-      .dropdown-menu {
-        z-index: 50 !important;
-      }
-    `
-    document.head.appendChild(style)
-
-    return () => {
-      document.head.removeChild(style)
-    }
-  }, [])
 
   return (
     <div className="flex w-full justify-between items-center">
@@ -155,18 +73,21 @@ export function MainNav() {
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex">
-        <NavigationMenu>
+        <NavigationMenu className="nav-layer">
           <NavigationMenuList>
             {navItems.map((item, index) => {
               if (item.hasChildren) {
                 return (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuTrigger
-                      className={cn("text-base", pathname.startsWith("/programs") && "text-primary font-medium")}
+                      className={cn(
+                        "text-base nav-trigger-layer",
+                        pathname.startsWith("/programs") && "text-primary font-medium",
+                      )}
                     >
                       {item.title}
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent>
+                    <NavigationMenuContent className="nav-content-layer">
                       <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                         {programs.map((program) => (
                           <li key={program.id}>
@@ -175,19 +96,7 @@ export function MainNav() {
                                 href={program.href}
                                 className={cn(
                                   "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                                  program.id === "fosstar"
-                                    ? "hover:bg-fosstar/10"
-                                    : program.id === "fosserve"
-                                      ? "hover:bg-purple-100"
-                                      : program.id === "fossync"
-                                        ? "hover:bg-green-100"
-                                        : program.id === "fosstorm"
-                                          ? "hover:bg-orange-100"
-                                          : program.id === "fosstart"
-                                            ? "hover:bg-red-100"
-                                            : program.id === "fossterage"
-                                              ? "hover:bg-blue-100"
-                                              : "hover:bg-yellow-100",
+                                  PROGRAM_HOVER_BG_CLASS[program.id],
                                 )}
                               >
                                 <div className="flex items-center gap-2 mb-1">
@@ -217,8 +126,9 @@ export function MainNav() {
 
               return (
                 <NavigationMenuItem key={index}>
-                  <Link href={item.href} legacyBehavior passHref>
-                    <NavigationMenuLink
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={item.href}
                       className={cn(
                         navigationMenuTriggerStyle(),
                         "text-base",
@@ -226,8 +136,8 @@ export function MainNav() {
                       )}
                     >
                       {item.title}
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               )
             })}
@@ -245,7 +155,7 @@ export function MainNav() {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuContent className="w-56 dropdown-layer" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{session.user?.name}</p>
@@ -329,19 +239,7 @@ export function MainNav() {
                                   className={cn(
                                     "flex items-center gap-2 py-3 px-1 rounded-md",
                                     pathname === program.href
-                                      ? program.id === "fosstar"
-                                        ? "text-fosstar font-medium"
-                                        : program.id === "fosserve"
-                                          ? "text-purple-600 font-medium"
-                                          : program.id === "fossync"
-                                            ? "text-green-600 font-medium"
-                                            : program.id === "fosstorm"
-                                              ? "text-orange-600 font-medium"
-                                              : program.id === "fosstart"
-                                                ? "text-red-600 font-medium"
-                                                : program.id === "fossterage"
-                                                  ? "text-blue-600 font-medium"
-                                                  : "text-yellow-600 font-medium"
+                                      ? cn(PROGRAM_TEXT_CLASS[program.id], "font-medium")
                                       : "text-foreground hover:text-primary",
                                   )}
                                   onClick={() => setIsOpen(false)}

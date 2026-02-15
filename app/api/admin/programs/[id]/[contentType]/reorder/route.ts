@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // Map content type IDs to Prisma model names
 const contentTypeModelMap: Record<string, string> = {
@@ -19,12 +18,9 @@ export async function POST(
   { params }: { params: { id: string; contentType: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const { contentType } = params
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+const { contentType } = params
     const modelName = contentTypeModelMap[contentType]
 
     if (!modelName) {

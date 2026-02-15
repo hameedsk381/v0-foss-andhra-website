@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 import { uploadToMinio, deleteFromMinio } from "@/lib/minio"
 import sharp from "sharp"
+import { requireAdminSession } from "@/lib/auth/admin"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]
@@ -13,12 +12,9 @@ export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const { searchParams } = new URL(request.url)
+    const { authError } = await requireAdminSession(["viewer", "editor", "admin"])
+    if (authError) return authError
+const { searchParams } = new URL(request.url)
     const program = searchParams.get("program")
     const category = searchParams.get("category")
     const search = searchParams.get("search")
@@ -56,12 +52,9 @@ export async function GET(request: NextRequest) {
 // POST upload new media
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const formData = await request.formData()
+    const { session, authError } = await requireAdminSession(["editor", "admin"])
+    if (authError) return authError
+const formData = await request.formData()
     const file = formData.get("file") as File
     const title = formData.get("title") as string
     const description = formData.get("description") as string
@@ -161,3 +154,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Failed to upload media" }, { status: 500 })
   }
 }
+

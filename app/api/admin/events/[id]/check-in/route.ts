@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // QR Code Check-In
 export async function POST(
@@ -7,6 +8,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const eventId = params.id
     const body = await request.json()
     const { qrData } = body

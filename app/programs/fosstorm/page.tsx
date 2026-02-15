@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Code, Github, Star, CheckCircle, Image } from "lucide-react"
+import { PROGRAMS_BY_ID } from "@/lib/programs"
 
 interface Program {
   title: string
@@ -15,8 +16,8 @@ interface Program {
 
 export default function FOSStormPage() {
   const [programData, setProgramData] = useState<Program>({
-    title: "FOSStorm",
-    description: "Community-led open source projects developed by FOSS Andhra",
+    title: PROGRAMS_BY_ID.fosstorm.displayName,
+    description: PROGRAMS_BY_ID.fosstorm.description,
   })
 
   useEffect(() => {

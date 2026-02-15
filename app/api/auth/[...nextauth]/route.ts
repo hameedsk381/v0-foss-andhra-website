@@ -62,7 +62,15 @@ export const authOptions: AuthOptions = {
         }
 
         const member = await prisma.member.findUnique({
-          where: { email: credentials.email }
+          where: { email: credentials.email },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            password: true,
+            membershipId: true,
+            status: true,
+          },
         })
 
         if (!member || !member.password) {
@@ -81,7 +89,8 @@ export const authOptions: AuthOptions = {
         // Update last login
         await prisma.member.update({
           where: { id: member.id },
-          data: { lastLogin: new Date() }
+          data: { lastLogin: new Date() },
+          select: { id: true },
         })
 
         return {

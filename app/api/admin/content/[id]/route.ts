@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // GET single content
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const content = await prisma.content.findUnique({
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+const content = await prisma.content.findUnique({
       where: { id: params.id },
     })
 
@@ -29,12 +25,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 // PUT update content
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const body = await request.json()
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+const body = await request.json()
 
     const content = await prisma.content.update({
       where: { id: params.id },
@@ -64,12 +57,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // DELETE content
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    await prisma.content.delete({
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+await prisma.content.delete({
       where: { id: params.id },
     })
 

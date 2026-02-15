@@ -354,12 +354,12 @@ export default function EventsManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Events Management</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Events Management</h1>
           <p className="text-gray-600 mt-1">Manage FOSS Andhra events</p>
         </div>
-        <Button onClick={openNewEventDialog} className="bg-primary">
+        <Button onClick={openNewEventDialog} className="w-full bg-primary sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           Add Event
         </Button>
@@ -368,18 +368,18 @@ export default function EventsManagement() {
       {/* Filters and Actions */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex gap-4 items-center">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
             <AdvancedFilters
               filters={filterOptions}
               values={filterValues}
               onChange={(values) => setFilterValues(values as typeof filterValues)}
             />
-            <div className="flex-1" />
-            <Button variant="outline" onClick={handlePrint}>
+            <div className="hidden flex-1 xl:block" />
+            <Button variant="outline" onClick={handlePrint} className="w-full sm:w-auto">
               <Download className="h-4 w-4 mr-2" />
               Print / Export
             </Button>
-            <Button variant="outline" onClick={() => handleExport(filteredEvents)}>
+            <Button variant="outline" onClick={() => handleExport(filteredEvents)} className="w-full sm:w-auto">
               <Download className="h-4 w-4 mr-2" />
               Export CSV
             </Button>
@@ -436,7 +436,7 @@ export default function EventsManagement() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="type">Event Type *</Label>
                 <Select value={eventForm.type} onValueChange={(value) => setEventForm({ ...eventForm, type: value })}>
@@ -468,7 +468,7 @@ export default function EventsManagement() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="date">Date *</Label>
                 <Input
@@ -508,7 +508,7 @@ export default function EventsManagement() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="maxAttendees">Max Attendees</Label>
                 <Input

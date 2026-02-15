@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { PROGRAMS } from "@/lib/programs"
 
 export function SiteFooter() {
   return (
@@ -84,104 +85,16 @@ export function SiteFooter() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Programs</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/programs/fosstar"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-                >
-                  <Image
-                    src="/logos/fosstar-logo.png"
-                    alt="FOSStar Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/programs/fosserve"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-                >
-                  <Image
-                    src="/logos/fosserve-logo.png"
-                    alt="FOSServe Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/programs/fossync"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-                >
-                  <Image
-                    src="/logos/fossync-logo.png"
-                    alt="FOSSynC Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/programs/fosstorm"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-                >
-                  <Image
-                    src="/logos/fosstorm-logo.png"
-                    alt="FOSStorm Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/programs/fosstart"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-                >
-                  <Image
-                    src="/logos/fosstart-logo.png"
-                    alt="FOSStart Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/programs/fossterage"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-                >
-                  <Image
-                    src="/logos/fossterage-logo.png"
-                    alt="FOSSterage Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/programs/fosspeaks"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2"
-                >
-                  <Image
-                    src="/logos/fosspeaks-logo.png"
-                    alt="FOSSpeaks Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
-                </Link>
-              </li>
+              {PROGRAMS.map((program) => (
+                <li key={program.id}>
+                  <Link
+                    href={`/programs/${program.slug}`}
+                    className="text-muted-foreground hover:text-foreground flex items-center gap-2"
+                  >
+                    <Image src={program.logo} alt={`${program.displayName} Logo`} width={80} height={20} className="h-5 w-auto" />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>

@@ -1,19 +1,41 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { Prisma } from "@prisma/client"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 export const dynamic = "force-dynamic"
+const MEMBER_LIST_SELECT = {
+  id: true,
+  name: true,
+  email: true,
+  phone: true,
+  organization: true,
+  designation: true,
+  experience: true,
+  interests: true,
+  membershipType: true,
+  status: true,
+  membershipId: true,
+  joinDate: true,
+  expiryDate: true,
+  createdAt: true,
+  updatedAt: true,
+} as const
 
 // GET all members
 export async function GET(request: Request) {
   try {
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+
     const { searchParams } = new URL(request.url)
     const status = searchParams.get("status")
+    const type = searchParams.get("type")
     const search = searchParams.get("search")
 
     const members = await prisma.member.findMany({
       where: {
         ...(status && status !== "all" && { status }),
+        ...(type && type !== "all" && { membershipType: type }),
         ...(search && {
           OR: [
             { name: { contains: search, mode: 'insensitive' } },
@@ -21,7 +43,8 @@ export async function GET(request: Request) {
           ]
         })
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      select: MEMBER_LIST_SELECT,
     })
 
     return NextResponse.json({ success: true, data: members })
@@ -34,22 +57,44 @@ export async function GET(request: Request) {
 // POST create new member
 export async function POST(request: Request) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const body = await request.json()
+
+    if (!body?.name || !body?.email || !body?.phone) {
+      return NextResponse.json(
+        { success: false, error: "Name, email, and phone are required" },
+        { status: 400 }
+      )
+    }
 
     // Generate unique membership ID
     const membershipId = `FOSS${Date.now()}`
 
-    // Calculate expiry date (1 year from now)
-    const expiryDate = new Date()
-    expiryDate.setFullYear(expiryDate.getFullYear() + 1)
+    const expiryDate = body.expiryDate ? new Date(body.expiryDate) : new Date()
+    if (!body.expiryDate) {
+      expiryDate.setFullYear(expiryDate.getFullYear() + 1)
+    }
+    if (Number.isNaN(expiryDate.getTime())) {
+      return NextResponse.json({ success: false, error: "Invalid expiryDate" }, { status: 400 })
+    }
 
     const member = await prisma.member.create({
       data: {
-        ...body,
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        organization: body.organization || null,
+        designation: body.designation || null,
+        experience: body.experience || null,
+        interests: body.interests || null,
+        membershipType: body.membershipType || "FOSStar Annual",
         membershipId,
         expiryDate,
-        status: 'active'
-      }
+        status: body.status || "active",
+      },
+      select: MEMBER_LIST_SELECT,
     })
 
     return NextResponse.json({ success: true, data: member, message: "Member created successfully" })
@@ -62,19 +107,31 @@ export async function POST(request: Request) {
 // PUT update member
 export async function PUT(request: Request) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const body = await request.json()
-    const { id, ...data } = body
+    const { id, expiryDate, ...data } = body
 
     if (!id) {
       return NextResponse.json({ success: false, error: "Member ID is required" }, { status: 400 })
+    }
+
+    let parsedExpiryDate: Date | undefined
+    if (expiryDate !== undefined) {
+      parsedExpiryDate = new Date(expiryDate)
+      if (Number.isNaN(parsedExpiryDate.getTime())) {
+        return NextResponse.json({ success: false, error: "Invalid expiryDate" }, { status: 400 })
+      }
     }
 
     const member = await prisma.member.update({
       where: { id },
       data: {
         ...data,
-        updatedAt: new Date()
-      }
+        ...(parsedExpiryDate ? { expiryDate: parsedExpiryDate } : {}),
+      },
+      select: MEMBER_LIST_SELECT,
     })
 
     return NextResponse.json({ success: true, data: member, message: "Member updated successfully" })
@@ -87,6 +144,9 @@ export async function PUT(request: Request) {
 // DELETE members
 export async function DELETE(request: Request) {
   try {
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+
     const body = await request.json()
     const { ids } = body
 

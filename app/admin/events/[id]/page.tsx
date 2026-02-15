@@ -52,6 +52,17 @@ interface Order {
   tickets: any[]
 }
 
+interface PromoCode {
+  id: string
+  code: string
+  description?: string
+  discountType: string
+  discountValue: number
+  maxUses?: number | null
+  usedCount: number
+  active: boolean
+}
+
 export default function EventDetailsPage() {
   const params = useParams()
   const router = useRouter()
@@ -61,8 +72,10 @@ export default function EventDetailsPage() {
   const [event, setEvent] = useState<Event | null>(null)
   const [ticketTypes, setTicketTypes] = useState<TicketType[]>([])
   const [orders, setOrders] = useState<Order[]>([])
+  const [promoCodes, setPromoCodes] = useState<PromoCode[]>([])
   const [loading, setLoading] = useState(true)
   const [showTicketDialog, setShowTicketDialog] = useState(false)
+  const [showPromoDialog, setShowPromoDialog] = useState(false)
   const [editingTicket, setEditingTicket] = useState<TicketType | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -80,12 +93,23 @@ export default function EventDetailsPage() {
     active: true,
   })
 
+  const [promoForm, setPromoForm] = useState({
+    code: "",
+    description: "",
+    discountType: "percentage",
+    discountValue: 10,
+    maxUses: "",
+    active: true,
+  })
+
   useEffect(() => {
     if (eventId) {
       fetchEventDetails()
       fetchTicketTypes()
       fetchOrders()
+      fetchPromoCodes()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId])
 
   const fetchEventDetails = async () => {
@@ -123,6 +147,18 @@ export default function EventDetailsPage() {
       }
     } catch (error) {
       console.error("Error fetching orders:", error)
+    }
+  }
+
+  const fetchPromoCodes = async () => {
+    try {
+      const res = await fetch(`/api/admin/events/${eventId}/promo-codes`)
+      const data = await res.json()
+      if (data.success) {
+        setPromoCodes(data.data)
+      }
+    } catch (error) {
+      console.error("Error fetching promo codes:", error)
     }
   }
 
@@ -230,6 +266,85 @@ export default function EventDetailsPage() {
       toast({
         title: "Error",
         description: error.message || "Failed to delete ticket type",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const createPromoCode = async () => {
+    if (!promoForm.code || promoForm.discountValue <= 0) {
+      toast({
+        title: "Validation Error",
+        description: "Promo code and discount value are required",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/admin/events/${eventId}/promo-codes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: promoForm.code,
+          description: promoForm.description,
+          discountType: promoForm.discountType,
+          discountValue: promoForm.discountValue,
+          maxUses: promoForm.maxUses ? Number(promoForm.maxUses) : null,
+          active: promoForm.active,
+        }),
+      })
+      const data = await res.json()
+      if (!data.success) {
+        throw new Error(data.error || "Failed to create promo code")
+      }
+
+      toast({
+        title: "Success",
+        description: "Promo code created successfully",
+      })
+      setShowPromoDialog(false)
+      setPromoForm({
+        code: "",
+        description: "",
+        discountType: "percentage",
+        discountValue: 10,
+        maxUses: "",
+        active: true,
+      })
+      fetchPromoCodes()
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create promo code",
+        variant: "destructive",
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const deletePromoCode = async (id: string) => {
+    if (!confirm("Delete this promo code?")) return
+
+    try {
+      const res = await fetch(`/api/admin/events/${eventId}/promo-codes?id=${id}`, {
+        method: "DELETE",
+      })
+      const data = await res.json()
+      if (!data.success) {
+        throw new Error(data.error || "Failed to delete promo code")
+      }
+      toast({
+        title: "Success",
+        description: "Promo code deleted successfully",
+      })
+      fetchPromoCodes()
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete promo code",
         variant: "destructive",
       })
     }
@@ -481,14 +596,50 @@ export default function EventDetailsPage() {
         {/* Promo Codes Tab */}
         <TabsContent value="promo-codes" className="space-y-4">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
               <CardTitle>Promo Codes</CardTitle>
-              <CardDescription>Coming soon - Create discount codes for your event</CardDescription>
+                <CardDescription>Create and manage discount codes for this event</CardDescription>
+              </div>
+              <Button onClick={() => setShowPromoDialog(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Promo Code
+              </Button>
             </CardHeader>
-            <CardContent>
-              <p className="text-center py-8 text-gray-500">
-                Promo code management will be available in the next update
-              </p>
+            <CardContent className="space-y-3">
+              {promoCodes.length === 0 ? (
+                <p className="py-8 text-center text-gray-500">No promo codes created yet</p>
+              ) : (
+                promoCodes.map((promo) => (
+                  <div key={promo.id} className="flex items-center justify-between rounded-lg border p-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-mono text-base font-semibold">{promo.code}</p>
+                        <Badge variant={promo.active ? "default" : "secondary"}>
+                          {promo.active ? "active" : "inactive"}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600">{promo.description || "No description"}</p>
+                      <p className="text-xs text-gray-500">
+                        {promo.discountType === "percentage"
+                          ? `${promo.discountValue}% off`
+                          : `₹${promo.discountValue} off`}
+                        {" · "}
+                        Used {promo.usedCount}
+                        {promo.maxUses ? `/${promo.maxUses}` : ""}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => deletePromoCode(promo.id)}
+                      className="text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -642,6 +793,81 @@ export default function EventDetailsPage() {
             <Button onClick={saveTicketType} disabled={saving}>
               <Save className="h-4 w-4 mr-2" />
               {saving ? "Saving..." : editingTicket ? "Update" : "Create"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showPromoDialog} onOpenChange={setShowPromoDialog}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Create Promo Code</DialogTitle>
+            <DialogDescription>Add a discount code for this event</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="promo-code">Code</Label>
+              <Input
+                id="promo-code"
+                value={promoForm.code}
+                onChange={(e) => setPromoForm((prev) => ({ ...prev, code: e.target.value.toUpperCase() }))}
+                placeholder="EARLYBIRD"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="promo-description">Description</Label>
+              <Input
+                id="promo-description"
+                value={promoForm.description}
+                onChange={(e) => setPromoForm((prev) => ({ ...prev, description: e.target.value }))}
+                placeholder="Early registration offer"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="promo-type">Discount Type</Label>
+                <Select
+                  value={promoForm.discountType}
+                  onValueChange={(value) => setPromoForm((prev) => ({ ...prev, discountType: value }))}
+                >
+                  <SelectTrigger id="promo-type">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="percentage">Percentage</SelectItem>
+                    <SelectItem value="fixed">Fixed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="promo-value">Discount Value</Label>
+                <Input
+                  id="promo-value"
+                  type="number"
+                  min={1}
+                  value={promoForm.discountValue}
+                  onChange={(e) =>
+                    setPromoForm((prev) => ({ ...prev, discountValue: Number(e.target.value) || 0 }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="promo-max-uses">Max Uses (optional)</Label>
+              <Input
+                id="promo-max-uses"
+                value={promoForm.maxUses}
+                onChange={(e) => setPromoForm((prev) => ({ ...prev, maxUses: e.target.value }))}
+                placeholder="Unlimited if empty"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowPromoDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={createPromoCode} disabled={saving}>
+              {saving ? "Saving..." : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>

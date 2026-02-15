@@ -29,7 +29,7 @@ export function KeyboardShortcuts() {
         } else {
           toast({
             title: "Search",
-            description: "Search functionality coming soon",
+            description: "Search input is not available on this page",
           })
         }
       }

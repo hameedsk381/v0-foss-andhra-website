@@ -109,39 +109,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET - Admin endpoint to fetch volunteers (optional, for future admin panel)
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status')
-
-    const where = status ? { status } : {}
-
-    const volunteers = await prisma.volunteer.findMany({
-      where,
-      orderBy: {
-        appliedAt: 'desc',
-      },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        skills: true,
-        interests: true,
-        availability: true,
-        status: true,
-        appliedAt: true,
-      },
-    })
-
-    return NextResponse.json({ volunteers }, { status: 200 })
-  } catch (error) {
-    console.error('Error fetching volunteers:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch volunteers' },
-      { status: 500 }
-    )
-  }
+// GET is intentionally disabled on the public volunteers endpoint.
+// Admin list operations moved to /api/admin/volunteers.
+export async function GET() {
+  return NextResponse.json(
+    { error: "Method not allowed. Use /api/admin/volunteers." },
+    { status: 405 }
+  )
 }

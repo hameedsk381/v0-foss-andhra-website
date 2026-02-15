@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, GraduationCap, MapPin, CheckCircle, CalendarDays, Image } from "lucide-react"
+import { PROGRAMS_BY_ID } from "@/lib/programs"
 
 interface Program {
   title: string
@@ -16,8 +17,8 @@ interface Program {
 
 export default function FOSSynCPage() {
   const [programData, setProgramData] = useState<Program>({
-    title: "FOSSynC",
-    description: "Student-led FOSS clubs in educational institutions",
+    title: PROGRAMS_BY_ID.fossync.displayName,
+    description: PROGRAMS_BY_ID.fossync.description,
   })
 
   useEffect(() => {

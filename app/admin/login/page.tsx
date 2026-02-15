@@ -3,29 +3,44 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
+import { useEffect } from "react"
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const { data: session, status } = useSession()
   const router = useRouter()
   const { toast } = useToast()
+
+  useEffect(() => {
+    if (status !== "authenticated") return
+
+    if ((session?.user as any)?.userType === "admin") {
+      router.replace("/admin")
+      return
+    }
+
+    router.replace("/member")
+  }, [session, status, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn("admin-login", {
         email,
         password,
         redirect: false,
+        callbackUrl: "/admin",
       })
 
       if (result?.error) {
@@ -96,15 +111,13 @@ export default function AdminLogin() {
                 required
               />
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" className="rounded" />
-                <span>Remember me</span>
-              </label>
-              <a href="#" className="text-primary hover:underline">
-                Forgot password?
+            <p className="text-sm text-muted-foreground">
+              Forgot password? Contact{" "}
+              <a href="mailto:office@fossap.in" className="text-primary hover:underline">
+                office@fossap.in
               </a>
-            </div>
+              .
+            </p>
             <Button type="submit" className="w-full bg-primary" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>

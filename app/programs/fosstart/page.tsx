@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Lightbulb, DollarSign, Rocket, CheckCircle, Award, Image } from "lucide-react"
+import { PROGRAMS_BY_ID } from "@/lib/programs"
 
 interface Program {
   title: string
@@ -15,8 +16,8 @@ interface Program {
 
 export default function FOSStartPage() {
   const [programData, setProgramData] = useState<Program>({
-    title: "FOSStart",
-    description: "Entrepreneurship space for funding open source innovations",
+    title: PROGRAMS_BY_ID.fosstart.displayName,
+    description: PROGRAMS_BY_ID.fosstart.description,
   })
 
   useEffect(() => {

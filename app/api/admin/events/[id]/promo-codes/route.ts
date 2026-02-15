@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // GET all promo codes for an event
 export async function GET(
@@ -7,6 +8,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+
     const eventId = params.id
 
     const promoCodes = await prisma.eventPromoCode.findMany({
@@ -42,6 +46,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
     const eventId = params.id
     const body = await request.json()
 
@@ -103,6 +110,47 @@ export async function POST(
     console.error("Error creating promo code:", error)
     return NextResponse.json(
       { success: false, error: "Failed to create promo code" },
+      { status: 500 }
+    )
+  }
+}
+
+// DELETE promo code by query param id
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+
+    const eventId = params.id
+    const { searchParams } = new URL(request.url)
+    const promoCodeId = searchParams.get("id")
+
+    if (!promoCodeId) {
+      return NextResponse.json(
+        { success: false, error: "Promo code id is required" },
+        { status: 400 }
+      )
+    }
+
+    await prisma.promoCodeTicket.deleteMany({
+      where: { promoCodeId },
+    })
+
+    await prisma.eventPromoCode.deleteMany({
+      where: {
+        id: promoCodeId,
+        eventId,
+      },
+    })
+
+    return NextResponse.json({ success: true, message: "Promo code deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting promo code:", error)
+    return NextResponse.json(
+      { success: false, error: "Failed to delete promo code" },
       { status: 500 }
     )
   }

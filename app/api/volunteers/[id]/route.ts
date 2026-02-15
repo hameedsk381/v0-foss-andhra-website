@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
+import { requireAdminSession } from "@/lib/auth/admin"
 
 // PATCH - Update volunteer status (admin only)
 export async function PATCH(
@@ -8,11 +8,8 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Check authentication
-    const session = await getServerSession()
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const { session, authError } = await requireAdminSession(["editor", "admin"])
+    if (authError) return authError
 
     const { id } = params
     const body = await request.json()
@@ -64,11 +61,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Check authentication
-    const session = await getServerSession()
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const { authError } = await requireAdminSession(["admin"])
+    if (authError) return authError
 
     const { id } = params
 

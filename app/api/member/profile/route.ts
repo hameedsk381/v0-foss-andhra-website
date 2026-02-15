@@ -4,6 +4,23 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 
 export const dynamic = "force-dynamic"
+const MEMBER_PROFILE_SELECT = {
+  id: true,
+  name: true,
+  email: true,
+  phone: true,
+  organization: true,
+  designation: true,
+  experience: true,
+  interests: true,
+  membershipType: true,
+  status: true,
+  membershipId: true,
+  joinDate: true,
+  expiryDate: true,
+  createdAt: true,
+  updatedAt: true,
+} as const
 
 export async function GET() {
   try {
@@ -14,6 +31,7 @@ export async function GET() {
 
     const member = await prisma.member.findUnique({
       where: { id: (session.user as any).id },
+      select: MEMBER_PROFILE_SELECT,
     })
 
     if (!member) {
@@ -46,6 +64,7 @@ export async function PUT(request: Request) {
         designation,
         interests,
       },
+      select: MEMBER_PROFILE_SELECT,
     })
 
     return NextResponse.json({ success: true, data: updatedMember })

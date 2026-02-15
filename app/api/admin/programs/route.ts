@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { requireAdminAccess } from "@/lib/auth/admin"
 import { prisma } from "@/lib/prisma"
 
 export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
 
     const programs = await prisma.program.findMany({
       include: {
@@ -31,7 +28,20 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(programs)
+    const normalized = programs.map((program) => ({
+      ...program,
+      _count: {
+        initiatives: program._count.ProgramInitiative,
+        team: program._count.ProgramTeamMember,
+        casestudies: program._count.ProgramCaseStudy,
+        clubs: program._count.ProgramClub,
+        projects: program._count.ProgramProject,
+        startups: program._count.ProgramStartup,
+        repositories: program._count.ProgramRepository,
+      },
+    }))
+
+    return NextResponse.json(normalized)
   } catch (error) {
     console.error("Error fetching programs:", error)
     return NextResponse.json({ error: "Failed to fetch programs" }, { status: 500 })
@@ -40,10 +50,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
 
     const body = await request.json()
 
@@ -70,10 +78,8 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
 
     const { searchParams } = new URL(request.url)
     const id = searchParams.get("id")
@@ -107,10 +113,8 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
 
     const { searchParams } = new URL(request.url)
     const id = searchParams.get("id")

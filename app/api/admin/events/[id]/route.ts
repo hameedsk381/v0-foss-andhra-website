@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // GET single event
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const event = await prisma.event.findUnique({
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+const event = await prisma.event.findUnique({
       where: { id: params.id },
     })
 
@@ -40,12 +36,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 // PUT update event
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const body = await request.json()
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+const body = await request.json()
 
     // Validate required fields
     if (!body.title || !body.date || !body.location) {
@@ -139,12 +132,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // DELETE event
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    // Check if event exists before deleting
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+// Check if event exists before deleting
     const event = await prisma.event.findUnique({
       where: { id: params.id },
     })

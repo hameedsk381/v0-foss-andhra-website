@@ -3,11 +3,22 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { 
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts"
-import { TrendingUp, Users, DollarSign, Calendar, BookOpen, Eye } from "lucide-react"
+import { Users, DollarSign, Calendar, Eye } from "lucide-react"
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
@@ -34,32 +45,29 @@ export default function AnalyticsPage() {
   }
 
   if (loading) {
-    return <div className="flex items-center justify-center h-96">Loading analytics...</div>
+    return <div className="flex h-64 items-center justify-center text-slate-600">Loading analytics...</div>
   }
 
   if (!data) {
-    return <div className="flex items-center justify-center h-96">No data available</div>
+    return <div className="flex h-64 items-center justify-center text-slate-600">No data available</div>
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Advanced Analytics</h1>
-        <p className="text-gray-600 mt-1">Comprehensive insights and data visualization</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Advanced Analytics</h1>
+        <p className="mt-1 text-gray-600">Comprehensive insights and data visualization</p>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Member Growth</CardTitle>
             <Users className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              +{data.memberGrowth?.reduce((acc: number, item: any) => acc + Number(item.count), 0) || 0}
-            </div>
-            <p className="text-xs text-gray-500 mt-1">Last 30 days</p>
+            <div className="text-2xl font-bold">+{data.memberGrowth?.reduce((acc: number, item: any) => acc + Number(item.count), 0) || 0}</div>
+            <p className="mt-1 text-xs text-gray-500">Last 30 days</p>
           </CardContent>
         </Card>
 
@@ -70,9 +78,9 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ₹{data.donationTrends?.reduce((acc: number, item: any) => acc + Number(item.amount), 0).toLocaleString() || 0}
+              &#8377;{data.donationTrends?.reduce((acc: number, item: any) => acc + Number(item.amount), 0).toLocaleString() || 0}
             </div>
-            <p className="text-xs text-gray-500 mt-1">Last 30 days</p>
+            <p className="mt-1 text-xs text-gray-500">Last 30 days</p>
           </CardContent>
         </Card>
 
@@ -83,7 +91,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data.blogStats?._sum?.views || 0}</div>
-            <p className="text-xs text-gray-500 mt-1">{data.blogStats?.publishedPosts || 0} published posts</p>
+            <p className="mt-1 text-xs text-gray-500">{data.blogStats?.publishedPosts || 0} published posts</p>
           </CardContent>
         </Card>
 
@@ -94,13 +102,13 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data.eventTrends?.length || 0}</div>
-            <p className="text-xs text-gray-500 mt-1">Last 30 days</p>
+            <p className="mt-1 text-xs text-gray-500">Last 30 days</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="members" className="space-y-4">
-        <TabsList>
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1 sm:w-fit sm:grid-cols-4 dark:bg-slate-800">
           <TabsTrigger value="members">Members</TabsTrigger>
           <TabsTrigger value="donations">Donations</TabsTrigger>
           <TabsTrigger value="events">Events</TabsTrigger>
@@ -108,7 +116,7 @@ export default function AnalyticsPage() {
         </TabsList>
 
         <TabsContent value="members" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Member Growth Trend</CardTitle>
@@ -136,16 +144,8 @@ export default function AnalyticsPage() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie
-                      data={data.membersByStatus || []}
-                      dataKey="_count"
-                      nameKey="status"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={100}
-                      label
-                    >
-                      {(data.membersByStatus || []).map((entry: any, index: number) => (
+                    <Pie data={data.membersByStatus || []} dataKey="_count" nameKey="status" cx="50%" cy="50%" outerRadius={100} label>
+                      {(data.membersByStatus || []).map((_: any, index: number) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -178,7 +178,7 @@ export default function AnalyticsPage() {
         </TabsContent>
 
         <TabsContent value="donations" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Donation Trends</CardTitle>
@@ -192,7 +192,7 @@ export default function AnalyticsPage() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="amount" stroke="#82ca9d" name="Amount (₹)" />
+                    <Line type="monotone" dataKey="amount" stroke="#82ca9d" name="Amount (?)" />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -206,16 +206,8 @@ export default function AnalyticsPage() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie
-                      data={data.donationsByType || []}
-                      dataKey="_sum.amount"
-                      nameKey="type"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={100}
-                      label
-                    >
-                      {(data.donationsByType || []).map((entry: any, index: number) => (
+                    <Pie data={data.donationsByType || []} dataKey="_sum.amount" nameKey="type" cx="50%" cy="50%" outerRadius={100} label>
+                      {(data.donationsByType || []).map((_: any, index: number) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -251,7 +243,7 @@ export default function AnalyticsPage() {
         </TabsContent>
 
         <TabsContent value="blog" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle>Total Posts</CardTitle>

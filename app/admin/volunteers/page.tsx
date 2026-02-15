@@ -53,10 +53,10 @@ export default function VolunteersAdminPage() {
   const fetchVolunteers = async () => {
     setLoading(true)
     try {
-      const url = filter === "all" ? "/api/volunteers" : `/api/volunteers?status=${filter}`
+      const url = filter === "all" ? "/api/admin/volunteers" : `/api/admin/volunteers?status=${filter}`
       const response = await fetch(url)
       const data = await response.json()
-      setVolunteers(data.volunteers || [])
+      setVolunteers(data.data || [])
     } catch (error) {
       console.error("Error fetching volunteers:", error)
     } finally {
@@ -157,7 +157,7 @@ export default function VolunteersAdminPage() {
 
   const updateVolunteerStatus = async (id: string, newStatus: string) => {
     try {
-      const response = await fetch(`/api/volunteers/${id}`, {
+      const response = await fetch(`/api/admin/volunteers/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

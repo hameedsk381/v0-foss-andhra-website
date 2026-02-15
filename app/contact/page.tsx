@@ -18,6 +18,8 @@ function ContactForm() {
   const initialSubject = searchParams.get("subject") || ""
 
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,11 +44,36 @@ function ContactForm() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // In a real app, you would submit the form data to your backend or API here
-    console.log("Form submitted:", formData)
-    setFormSubmitted(true)
+    setIsSubmitting(true)
+    setSubmitError("")
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      })
+
+      const data = await response.json()
+      if (!response.ok || !data.success) {
+        setSubmitError(data.error || "Failed to submit contact form")
+        return
+      }
+
+      setFormSubmitted(true)
+    } catch {
+      setSubmitError("Network error. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -159,9 +186,10 @@ function ContactForm() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full">
-                  Send Message
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
+                {submitError ? <p className="text-sm text-red-600">{submitError}</p> : null}
               </form>
             )}
           </CardContent>

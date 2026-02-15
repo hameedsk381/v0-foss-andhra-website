@@ -227,11 +227,17 @@ export default function MembersManagement() {
   }
 
   const handleSendEmail = async (items: Member[]) => {
-    // Ideally opens an email composer or sends via API
-    toast({
-      title: "Feature coming soon",
-      description: `Email composer for ${items.length} member(s)`,
-    })
+    if (items.length === 0) {
+      toast({
+        title: "No Recipients",
+        description: "Select at least one member to send email.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    const bcc = items.map((member) => member.email).join(",")
+    window.location.href = `mailto:?bcc=${encodeURIComponent(bcc)}`
   }
 
   const columns: Column<Member>[] = [
@@ -331,13 +337,13 @@ export default function MembersManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Members Management</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Members Management</h1>
           <p className="text-gray-600 mt-1">Manage FOSStar memberships</p>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={openNewMemberDialog} className="bg-primary">
+        <div className="flex w-full gap-2 sm:w-auto">
+          <Button onClick={openNewMemberDialog} className="w-full bg-primary sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Member
           </Button>
@@ -345,7 +351,7 @@ export default function MembersManagement() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{members.length}</div>
@@ -375,9 +381,9 @@ export default function MembersManagement() {
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-3 xl:flex-row">
             <Select value={filter} onValueChange={setFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full xl:w-[180px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -388,7 +394,7 @@ export default function MembersManagement() {
               </SelectContent>
             </Select>
             <Select value={membershipTypeFilter} onValueChange={setMembershipTypeFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full xl:w-[180px]">
                 <SelectValue placeholder="Membership Type" />
               </SelectTrigger>
               <SelectContent>
@@ -398,12 +404,12 @@ export default function MembersManagement() {
                 <SelectItem value="FOSStar Student">FOSStar Student</SelectItem>
               </SelectContent>
             </Select>
-            <div className="flex-1" />
-            <Button variant="outline" onClick={() => handleExport(filteredMembers)}>
+            <div className="hidden flex-1 xl:block" />
+            <Button variant="outline" onClick={() => handleExport(filteredMembers)} className="w-full sm:w-auto">
               <Download className="h-4 w-4 mr-2" />
               Export CSV
             </Button>
-            <Button variant="outline" onClick={() => handleSendEmail(filteredMembers)}>
+            <Button variant="outline" onClick={() => handleSendEmail(filteredMembers)} className="w-full sm:w-auto">
               <Mail className="h-4 w-4 mr-2" />
               Send Email
             </Button>
@@ -446,7 +452,7 @@ export default function MembersManagement() {
 
       {/* Member Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingMember ? "Edit Member" : "Add New Member"}</DialogTitle>
             <DialogDescription>
@@ -454,7 +460,7 @@ export default function MembersManagement() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name *</Label>
                 <Input
@@ -476,7 +482,7 @@ export default function MembersManagement() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone *</Label>
                 <Input
@@ -505,7 +511,7 @@ export default function MembersManagement() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="organization">Organization</Label>
                 <Input
@@ -526,7 +532,7 @@ export default function MembersManagement() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
                 <Select

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 import { deleteFromMinio } from "@/lib/minio"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 // GET single media item
 export async function GET(
@@ -10,12 +9,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const media = await prisma.media.findUnique({
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
+const media = await prisma.media.findUnique({
       where: { id: params.id },
     })
 
@@ -36,12 +32,9 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const body = await request.json()
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+const body = await request.json()
 
     const media = await prisma.media.update({
       where: { id: params.id },
@@ -73,12 +66,9 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    // Get media to delete file from MinIO
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+// Get media to delete file from MinIO
     const media = await prisma.media.findUnique({
       where: { id: params.id },
     })

@@ -63,12 +63,13 @@ export function ResponsiveSidebar() {
   return (
     <>
       {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="lg:hidden fixed left-4 top-3 z-[70]">
         <Button
           variant="outline"
           size="icon"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="bg-white shadow-lg"
+          className="h-10 w-10 rounded-lg border-slate-200 bg-white/95 shadow-md backdrop-blur"
+          aria-label={isMobileMenuOpen ? "Close admin menu" : "Open admin menu"}
         >
           {isMobileMenuOpen ? (
             <X className="h-5 w-5" />
@@ -81,7 +82,7 @@ export function ResponsiveSidebar() {
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-[2px] lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -89,26 +90,27 @@ export function ResponsiveSidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-40 bg-primary text-white flex flex-col transition-transform duration-300 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-white/10 bg-primary text-white shadow-xl transition-transform duration-300 lg:translate-x-0 lg:shadow-none",
+          "sm:w-80 lg:sticky lg:top-0 lg:h-screen lg:w-64",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          isCollapsed && "lg:w-16"
+          isCollapsed && "lg:w-20"
         )}
-        style={{ width: isCollapsed ? "64px" : "256px" }}
       >
         {/* Header */}
-        <div className="p-6 border-b border-white/10">
+        <div className="border-b border-white/10 px-5 py-5">
           <div className="flex items-center justify-between">
             {!isCollapsed && (
               <div>
-                <h1 className="text-xl font-bold">FOSS Andhra</h1>
-                <p className="text-xs text-blue-100 mt-1">Admin Dashboard</p>
+                <h1 className="text-xl font-semibold tracking-tight">FOSS Andhra</h1>
+                <p className="mt-1 text-xs text-blue-100">Admin Dashboard</p>
               </div>
             )}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="hidden lg:flex text-white hover:bg-white/10"
+              className="hidden text-white hover:bg-white/10 lg:flex"
+              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <ChevronRight
                 className={cn(
@@ -121,7 +123,7 @@ export function ResponsiveSidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href || 
@@ -132,23 +134,23 @@ export function ResponsiveSidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-white/20 text-white"
+                    ? "bg-white/20 text-white shadow-inner"
                     : "text-blue-100 hover:bg-white/10 hover:text-white",
-                  isCollapsed && "justify-center"
+                  isCollapsed && "justify-center px-2"
                 )}
                 title={isCollapsed ? item.label : undefined}
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
-                {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
+                {!isCollapsed && <span>{item.label}</span>}
               </Link>
             )
           })}
         </nav>
 
         {/* User Section */}
-        <div className="p-4 border-t border-white/10">
+        <div className="border-t border-white/10 p-4">
           {!isCollapsed && (
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -166,7 +168,7 @@ export function ResponsiveSidebar() {
               variant="ghost"
               className={cn(
                 "w-full text-white hover:bg-white/10",
-                isCollapsed && "px-0 justify-center"
+                isCollapsed && "justify-center px-0"
               )}
             >
               <LogOut className="h-4 w-4" />

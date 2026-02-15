@@ -187,7 +187,7 @@ export function DataTable<T extends { id: string }>({
       {/* Search and Filters */}
       {searchable && (
         <div className="flex items-center gap-2">
-          <div className="relative flex-1">
+          <div className="relative w-full sm:max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder={searchPlaceholder}
@@ -294,13 +294,13 @@ export function DataTable<T extends { id: string }>({
 
       {/* Pagination */}
       {pagination && totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-xs text-gray-600 sm:text-sm">
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
             {Math.min(currentPage * pageSize, sortedData.length)} of{" "}
             {sortedData.length} results
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="outline"
               size="sm"

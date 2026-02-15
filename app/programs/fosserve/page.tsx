@@ -10,9 +10,11 @@ import { AnimatedButton } from "@/components/ui/animated-button"
 import { AnimatedCard } from "@/components/ui/animated-card"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ProgramContactSection } from "@/components/program-contact-section"
 import { ProgramHero } from "@/components/program-hero"
 import { Server, Database, Users, Code, Globe } from "lucide-react"
 import { BookOpen } from "lucide-react"
+import { PROGRAMS_BY_ID } from "@/lib/programs"
 
 interface Program {
   id: string
@@ -27,10 +29,11 @@ interface Program {
 
 export default function FOSServePage() {
   const [programData, setProgramData] = useState<Program>({
-    name: "fosserve",
-    title: "FOSServe",
-    description: "Promoting open-source solutions in education and governance",
+    name: PROGRAMS_BY_ID.fosserve.slug,
+    title: PROGRAMS_BY_ID.fosserve.displayName,
+    description: PROGRAMS_BY_ID.fosserve.description,
     color: "#9333ea",
+    logo: PROGRAMS_BY_ID.fosserve.logo,
   } as any)
   const [loading, setLoading] = useState(true)
 
@@ -755,155 +758,12 @@ export default function FOSServePage() {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section className="w-full py-12 md:py-24 bg-gray-50" id="contact">
-          <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <AnimatedSection variant="fadeRight">
-                <div className="space-y-6">
-                  <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Get In Touch</h2>
-                  <p className="text-gray-600">
-                    Interested in implementing open source solutions in your institution or department? Contact the
-                    FOSServe team.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="bg-purple-100 p-2 rounded-full">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 text-purple-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Email Us</h4>
-                        <p className="text-sm text-gray-500">office@fossap.in</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="bg-purple-100 p-2 rounded-full">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 text-purple-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Phone</h4>
-                        <p className="text-sm text-gray-500">+91 94944 63840</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="bg-purple-100 p-2 rounded-full">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 text-purple-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Office</h4>
-                        <p className="text-sm text-gray-500">
-                          Foss andhra, Yesj centre for excellence, Vijayawada 520008
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </AnimatedSection>
-
-              <AnimatedSection variant="fadeLeft">
-                <Card>
-                  <CardContent className="pt-6">
-                    <form className="space-y-4">
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div className="space-y-2">
-                          <label htmlFor="name" className="text-sm font-medium">
-                            Name
-                          </label>
-                          <input
-                            id="name"
-                            type="text"
-                            className="w-full px-3 py-2 border rounded-md"
-                            placeholder="Your name"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label htmlFor="email" className="text-sm font-medium">
-                            Email
-                          </label>
-                          <input
-                            id="email"
-                            type="email"
-                            className="w-full px-3 py-2 border rounded-md"
-                            placeholder="Your email"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="subject" className="text-sm font-medium">
-                          Subject
-                        </label>
-                        <input
-                          id="subject"
-                          type="text"
-                          className="w-full px-3 py-2 border rounded-md"
-                          placeholder="Subject"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="message" className="text-sm font-medium">
-                          Message
-                        </label>
-                        <textarea
-                          id="message"
-                          className="w-full px-3 py-2 border rounded-md min-h-[120px]"
-                          placeholder="Your message"
-                        ></textarea>
-                      </div>
-                      <AnimatedButton className="bg-purple-600 text-white hover:bg-purple-700 w-full">
-                        Send Message
-                      </AnimatedButton>
-                    </form>
-                  </CardContent>
-                </Card>
-              </AnimatedSection>
-            </div>
-          </div>
-        </section>
+        <ProgramContactSection
+          description="Interested in implementing open source solutions in your institution or department? Contact the FOSServe team."
+          iconBgClass="bg-purple-100"
+          iconClass="text-purple-600"
+          submitButtonClass="bg-purple-600 text-white hover:bg-purple-700"
+        />
       </div>
     </main>
   )

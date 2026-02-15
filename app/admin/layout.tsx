@@ -1,4 +1,5 @@
 import type React from "react"
+import { redirect } from "next/navigation"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { ResponsiveSidebar } from "@/components/admin/responsive-sidebar"
@@ -15,13 +16,19 @@ export default async function AdminLayout({
   if (!session) {
     return <>{children}</>
   }
+  
+  // Defense in depth: authenticated members should never view admin layout
+  if ((session.user as any).userType !== "admin") {
+    redirect("/member")
+  }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 lg:flex">
       <ResponsiveSidebar />
-      {/* Main Content */}
-      <main className="flex-1 lg:ml-64 overflow-auto">
-        <div className="p-4 lg:p-8">{children}</div>
+      <main className="min-w-0 flex-1 overflow-x-hidden">
+        <div className="mx-auto w-full max-w-7xl px-4 pb-8 pt-16 sm:px-6 sm:pt-20 lg:px-8 lg:pt-8">
+          {children}
+        </div>
       </main>
       <KeyboardShortcuts />
     </div>

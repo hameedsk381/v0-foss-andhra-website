@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +15,7 @@ import {
   Loader2, Plus, Download, Eye, MoreVertical
 } from "lucide-react"
 import Image from "next/image"
+import { PROGRAMS as PROGRAM_DEFINITIONS } from "@/lib/programs"
 
 interface MediaItem {
   id: string
@@ -31,12 +32,8 @@ interface MediaItem {
   createdAt: string
 }
 
-const PROGRAMS = ["fosstar", "fosserve", "fossync", "fosstorm", "fosstart", "fossterage", "fosspeaks"]
-const CATEGORIES = ["event", "workshop", "implementation", "community", "launch", "inauguration", "other"]
-
 export default function AdminGalleryPage() {
   const [media, setMedia] = useState<MediaItem[]>([])
-  const [filteredMedia, setFilteredMedia] = useState<MediaItem[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [showUploadDialog, setShowUploadDialog] = useState(false)
@@ -66,13 +63,16 @@ export default function AdminGalleryPage() {
     alt: "",
   })
 
-  useEffect(() => {
-    fetchMedia()
-  }, [])
+  const categoryOptions = useMemo(() => {
+    return Array.from(new Set(media.map((item) => item.category).filter(Boolean) as string[])).sort((a, b) =>
+      a.localeCompare(b)
+    )
+  }, [media])
 
   useEffect(() => {
-    filterMedia()
-  }, [media, searchTerm, filterProgram, filterCategory])
+    fetchMedia()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const fetchMedia = async () => {
     try {
@@ -100,27 +100,29 @@ export default function AdminGalleryPage() {
     }
   }
 
-  const filterMedia = () => {
+  const filteredMedia = useMemo(() => {
     let filtered = [...media]
 
     if (searchTerm) {
-      filtered = filtered.filter(item => 
-        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.tags?.toLowerCase().includes(searchTerm.toLowerCase())
+      const q = searchTerm.toLowerCase()
+      filtered = filtered.filter(
+        (item) =>
+          item.title?.toLowerCase().includes(q) ||
+          item.description?.toLowerCase().includes(q) ||
+          item.tags?.toLowerCase().includes(q)
       )
     }
 
     if (filterProgram !== "all") {
-      filtered = filtered.filter(item => item.program === filterProgram)
+      filtered = filtered.filter((item) => item.program === filterProgram)
     }
 
     if (filterCategory !== "all") {
-      filtered = filtered.filter(item => item.category === filterCategory)
+      filtered = filtered.filter((item) => item.category === filterCategory)
     }
 
-    setFilteredMedia(filtered)
-  }
+    return filtered
+  }, [media, searchTerm, filterProgram, filterCategory])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -312,9 +314,9 @@ export default function AdminGalleryPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Programs</SelectItem>
-                {PROGRAMS.map(program => (
-                  <SelectItem key={program} value={program}>
-                    {program.toUpperCase()}
+                {PROGRAM_DEFINITIONS.map((program) => (
+                  <SelectItem key={program.id} value={program.id}>
+                    {program.displayName}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -325,7 +327,7 @@ export default function AdminGalleryPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {CATEGORIES.map(category => (
+                {categoryOptions.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category.charAt(0).toUpperCase() + category.slice(1)}
                   </SelectItem>
@@ -458,16 +460,17 @@ export default function AdminGalleryPage() {
               <div className="space-y-2">
                 <Label htmlFor="program">Program</Label>
                 <Select
-                  value={uploadForm.program}
-                  onValueChange={(value) => setUploadForm({ ...uploadForm, program: value })}
+                  value={uploadForm.program || "none"}
+                  onValueChange={(value) => setUploadForm({ ...uploadForm, program: value === "none" ? "" : value })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select program" />
                   </SelectTrigger>
                   <SelectContent>
-                    {PROGRAMS.map(program => (
-                      <SelectItem key={program} value={program}>
-                        {program.toUpperCase()}
+                    <SelectItem value="none">No Program</SelectItem>
+                    {PROGRAM_DEFINITIONS.map((program) => (
+                      <SelectItem key={program.id} value={program.id}>
+                        {program.displayName}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -476,21 +479,12 @@ export default function AdminGalleryPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <Select
+                <Input
+                  id="category"
                   value={uploadForm.category}
-                  onValueChange={(value) => setUploadForm({ ...uploadForm, category: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map(category => (
-                      <SelectItem key={category} value={category}>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(e) => setUploadForm({ ...uploadForm, category: e.target.value })}
+                  placeholder="event, workshop, implementation"
+                />
               </div>
             </div>
 
@@ -577,16 +571,17 @@ export default function AdminGalleryPage() {
               <div className="space-y-2">
                 <Label htmlFor="edit-program">Program</Label>
                 <Select
-                  value={editForm.program}
-                  onValueChange={(value) => setEditForm({ ...editForm, program: value })}
+                  value={editForm.program || "none"}
+                  onValueChange={(value) => setEditForm({ ...editForm, program: value === "none" ? "" : value })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select program" />
                   </SelectTrigger>
                   <SelectContent>
-                    {PROGRAMS.map(program => (
-                      <SelectItem key={program} value={program}>
-                        {program.toUpperCase()}
+                    <SelectItem value="none">No Program</SelectItem>
+                    {PROGRAM_DEFINITIONS.map((program) => (
+                      <SelectItem key={program.id} value={program.id}>
+                        {program.displayName}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -595,21 +590,12 @@ export default function AdminGalleryPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="edit-category">Category</Label>
-                <Select
+                <Input
+                  id="edit-category"
                   value={editForm.category}
-                  onValueChange={(value) => setEditForm({ ...editForm, category: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map(category => (
-                      <SelectItem key={category} value={category}>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                  placeholder="event, workshop, implementation"
+                />
               </div>
             </div>
 

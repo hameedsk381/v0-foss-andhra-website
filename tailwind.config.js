@@ -24,12 +24,12 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#015ba7", // Primary color
-          foreground: "#ffffff",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#98d339", // Secondary color
-          foreground: "#000000",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -57,9 +57,8 @@ module.exports = {
         fossync: "#16a34a",
         fosstorm: "#ea580c",
         fosstart: "#dc2626",
-        fossterage: "#9333ea",
+        fossterage: "#2563eb",
         fosspeaks: "#0891b2",
-        fossstart: "#f59e0b",
       },
       borderRadius: {
         lg: "var(--radius)",

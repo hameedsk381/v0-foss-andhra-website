@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-
+import { useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
@@ -9,48 +8,59 @@ import {
   ArrowRight,
   Code,
   BookOpen,
-  Users,
-  Rocket,
   Server,
   Globe,
-  Database,
-  Megaphone,
-  GraduationCap,
   Heart,
 } from "lucide-react"
 import { AnimatedButton } from "@/components/ui/animated-button"
 import { AnimatedCard } from "@/components/ui/animated-card"
 import { AnimatedSection } from "@/components/ui/animated-section"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { programInfo } from "@/lib/utils"
+import { PROGRAMS, PROGRAM_TEXT_CLASS } from "@/lib/programs"
 import { SkipLink } from "@/components/skip-link"
 import { OrganizationJsonLd } from "@/components/structured-data"
-import { buttonHover, buttonTap, cardHover } from "@/lib/animations"
+import { buttonHover, buttonTap } from "@/lib/animations"
 
+interface HeroParticle {
+  top: string
+  left: string
+  yOffset: number
+  xOffset: number
+  duration: number
+  delay: number
+}
+
+function createSeededRandom(seed: number) {
+  let current = seed
+  return () => {
+    current = (current * 1664525 + 1013904223) % 4294967296
+    return current / 4294967296
+  }
+}
+
+function generateHeroParticles(seed: number, count: number): HeroParticle[] {
+  const random = createSeededRandom(seed)
+
+  return Array.from({ length: count }).map((_, index) => ({
+    top: `${Math.round(random() * 100)}%`,
+    left: `${Math.round(random() * 100)}%`,
+    yOffset: Math.round(random() * 60 - 30),
+    xOffset: Math.round(random() * 60 - 30),
+    duration: 10 + Math.round(random() * 8),
+    delay: index * 2,
+  }))
+}
 
 export default function Home() {
-  const programs = Object.entries(programInfo).map(([key, value]) => ({
-    id: key,
-    title: value.title,
-    description: value.description,
-    href: `/programs/${key}`,
-    color: value.color,
-    icon: value.icon,
-    logo: `/logos/${key}-logo.png`,
+  const programs = PROGRAMS.map((program) => ({
+    id: program.id,
+    title: program.displayName,
+    description: program.description,
+    href: `/programs/${program.slug}`,
+    logo: program.logo,
   }))
 
-  const getIconComponent = (iconName: string) => {
-    const icons: Record<string, React.ReactNode> = {
-      Users: <Users className="h-6 w-6" />,
-      BookOpen: <BookOpen className="h-6 w-6" />,
-      GraduationCap: <GraduationCap className="h-6 w-6" />,
-      Code: <Code className="h-6 w-6" />,
-      Rocket: <Rocket className="h-6 w-6" />,
-      Database: <Database className="h-6 w-6" />,
-      Megaphone: <Megaphone className="h-6 w-6" />,
-    }
-    return icons[iconName] || <Code className="h-6 w-6" />
-  }
+  const particles = useMemo(() => generateHeroParticles(20260215, 5), [])
 
   return (
     <>
@@ -110,24 +120,24 @@ export default function Home() {
             ></div>
 
             {/* Moving particles */}
-            {[...Array(5)].map((_, i) => (
+            {particles.map((particle, i) => (
               <motion.div
                 key={i}
-                className="absolute w-2 h-2 rounded-full bg-white/20"
+                className={i > 2 ? "absolute w-2 h-2 rounded-full bg-white/20 hidden md:block" : "absolute w-2 h-2 rounded-full bg-white/20"}
                 style={{
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
+                  top: particle.top,
+                  left: particle.left,
                 }}
                 animate={{
-                  y: [0, Math.random() * 100 - 50, 0],
-                  x: [0, Math.random() * 100 - 50, 0],
+                  y: [0, particle.yOffset, 0],
+                  x: [0, particle.xOffset, 0],
                   opacity: [0, 1, 0],
                 }}
                 transition={{
-                  duration: 10 + Math.random() * 10,
+                  duration: particle.duration,
                   repeat: Number.POSITIVE_INFINITY,
                   repeatType: "reverse",
-                  delay: i * 2,
+                  delay: particle.delay,
                 }}
               />
             ))}
@@ -273,7 +283,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-900">
                   Empowering Through Open Source
                 </h2>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl">
+                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                   Digitalizing education, governance, and society through free and open source software
                 </p>
               </div>
@@ -287,7 +297,7 @@ export default function Home() {
                     <BookOpen className="h-5 w-5 text-primary" />
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Promoting open knowledge and data accessibility for all, ensuring information is freely available
                       and shareable.
                     </p>
@@ -302,7 +312,7 @@ export default function Home() {
                     <Server className="h-5 w-5 text-primary" />
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Championing data privacy, ownership, and public welfare through transparent and secure open-source
                       solutions.
                     </p>
@@ -317,7 +327,7 @@ export default function Home() {
                     <Heart className="h-5 w-5 text-primary" />
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Prioritizing solutions that benefit society as a whole, not just individuals or corporations.
                     </p>
                   </CardContent>
@@ -331,7 +341,7 @@ export default function Home() {
                     <Globe className="h-5 w-5 text-primary" />
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Building offline-first solutions for inclusive digital access, ensuring technology works for
                       everyone regardless of connectivity.
                     </p>
@@ -353,7 +363,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-900">
                   Initiatives for Change
                 </h2>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl">
+                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                   Discover our initiatives to promote free and open source solutions across various domains
                 </p>
               </div>
@@ -376,10 +386,10 @@ export default function Home() {
                         </div>
                       </CardHeader>
                       <CardContent className="p-6">
-                        <CardDescription className="text-sm text-gray-500 mb-4">{program.description}</CardDescription>
+                        <CardDescription className="text-sm text-muted-foreground mb-4">{program.description}</CardDescription>
                       </CardContent>
                       <CardFooter className="bg-gray-50 p-4">
-                        <span className={`text-sm font-medium text-${program.color} flex items-center`}>
+                        <span className={`text-sm font-medium ${PROGRAM_TEXT_CLASS[program.id]} flex items-center`}>
                           Learn more <ArrowRight className="ml-1 h-4 w-4" />
                         </span>
                       </CardFooter>
@@ -431,13 +441,13 @@ export default function Home() {
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white">
                   Join the FOSS Movement
                 </h2>
-                <p className="mx-auto max-w-[700px] text-blue-100 md:text-xl">
+                <p className="mx-auto max-w-[700px] text-primary-foreground/80 md:text-xl">
                   Become a member and help us promote free and open source solutions across Andhra
                 </p>
                 <div className="flex flex-wrap justify-center gap-4 mt-4">
                   <Link href="/programs/fosstar#membership">
                     <motion.div whileHover={buttonHover} whileTap={buttonTap}>
-                      <AnimatedButton className="bg-secondary text-black hover:bg-secondary/90">
+                      <AnimatedButton className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
                         Become a Member
                       </AnimatedButton>
                     </motion.div>

@@ -2,17 +2,15 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { MainNav } from "@/components/main-nav"
-import { SiteFooter } from "@/components/site-footer"
 import { AuthProvider } from "@/components/auth-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { RegisterSW } from "./register-sw"
 import { InstallPrompt } from "@/components/install-prompt"
 import { OfflineIndicator } from "@/components/offline-indicator"
-import { BottomNav } from "@/components/bottom-nav"
 import { WebVitals } from "./web-vitals"
 import Script from "next/script"
+import { AppChrome } from "@/components/app-chrome"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -106,24 +104,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
-            <div className="flex flex-col min-h-screen">
-              <a
-                href="#main-content"
-                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded"
-              >
-                Skip to main content
-              </a>
-              <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="container flex h-16 items-center">
-                  <MainNav />
-                </div>
-              </header>
-              <main id="main-content" className="flex-1">
-                {children}
-              </main>
-              <SiteFooter />
-              <BottomNav />
-            </div>
+            <AppChrome>{children}</AppChrome>
             <Toaster />
             <RegisterSW />
             <InstallPrompt />

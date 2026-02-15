@@ -22,7 +22,6 @@ interface AnimatedButtonProps extends ButtonProps {
     | "fossync"
     | "fosstorm"
     | "fosstart"
-    | "fossstart"
     | "fossterage"
     | "fosspeaks"
 }
@@ -48,8 +47,6 @@ export function AnimatedButton({
         return "bg-fosstorm text-white hover:bg-fosstorm/90"
       case "fosstart":
         return "bg-fosstart text-white hover:bg-fosstart/90"
-      case "fossstart":
-        return "bg-fossstart text-white hover:bg-fossstart/90"
       case "fossterage":
         return "bg-fossterage text-white hover:bg-fossterage/90"
       case "fosspeaks":
@@ -59,7 +56,16 @@ export function AnimatedButton({
     }
   }
 
-  const isProgramVariant = variant.startsWith("foss")
+  const programVariants = new Set([
+    "fosstar",
+    "fosserve",
+    "fossync",
+    "fosstorm",
+    "fosstart",
+    "fossterage",
+    "fosspeaks",
+  ])
+  const isProgramVariant = programVariants.has(variant)
 
   return (
     <motion.div

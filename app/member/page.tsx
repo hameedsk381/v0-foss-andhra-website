@@ -9,29 +9,53 @@ import { Calendar, CreditCard, Bell, TrendingUp, Award, Users } from "lucide-rea
 import { Skeleton } from "@/components/skeleton-loader"
 import { ActivityTimeline } from "@/components/member/activity-timeline"
 import Link from "next/link"
-
 import { ChangePasswordModal } from "@/components/member/change-password-modal"
+
+interface DashboardResponse {
+  member: {
+    membershipId: string
+    membershipType: string
+    organization?: string | null
+    designation?: string | null
+    status: string
+    expiryDate: string
+    joinDate: string
+  }
+  stats: {
+    eventsAttended: number
+    eventsRegistered: number
+    certificatesEarned: number
+  }
+  activities: Array<{
+    id: string
+    type: "membership" | "event" | "payment" | "certificate" | "notification"
+    title: string
+    description?: string
+    date: string
+    status?: "success" | "pending" | "failed"
+  }>
+}
 
 export default function MemberDashboard() {
   const { data: session } = useSession()
-  const [memberData, setMemberData] = useState<any>(null)
+  const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (session) {
-      fetchMemberData()
+      fetchMemberDashboard()
     }
   }, [session])
 
-  const fetchMemberData = async () => {
+  const fetchMemberDashboard = async () => {
     try {
-      const res = await fetch("/api/member/profile")
+      const res = await fetch("/api/member/dashboard")
       const data = await res.json()
       if (data.success) {
-        setMemberData(data.data)
+        setDashboardData(data.data)
       }
     } catch (error) {
-      console.error("Error fetching member data:", error)
+      console.error("Error fetching member dashboard:", error)
     } finally {
       setLoading(false)
     }
@@ -40,8 +64,8 @@ export default function MemberDashboard() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-9 w-64 mb-2" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Skeleton className="mb-2 h-9 w-64" />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -49,7 +73,7 @@ export default function MemberDashboard() {
                 <Skeleton className="h-4 w-4 rounded" />
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="mb-2 h-8 w-16" />
                 <Skeleton className="h-3 w-32" />
               </CardContent>
             </Card>
@@ -59,32 +83,38 @@ export default function MemberDashboard() {
     )
   }
 
-  const daysUntilExpiry = memberData?.expiryDate
-    ? Math.ceil((new Date(memberData.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+  if (!dashboardData) {
+    return (
+      <div className="flex min-h-[30vh] items-center justify-center text-sm text-gray-500">
+        Failed to load dashboard data
+      </div>
+    )
+  }
+
+  const { member, stats, activities } = dashboardData
+
+  const daysUntilExpiry = member?.expiryDate
+    ? Math.ceil((new Date(member.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
     : 0
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Welcome Header */}
-      <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
-        <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
-          Welcome back, {session?.user?.name}! 👋
-        </h1>
-        <p className="text-gray-600 text-xs sm:text-sm mt-1">Here's what's happening with your membership</p>
+      <div className="rounded-lg bg-white p-3 shadow-sm sm:p-4">
+        <h1 className="text-lg font-bold text-gray-900 sm:text-2xl">Welcome back, {session?.user?.name}!</h1>
+        <p className="mt-1 text-xs text-gray-600 sm:text-sm">Here&apos;s what&apos;s happening with your membership</p>
       </div>
 
-      {/* Membership Status Alert */}
-      {memberData?.status === "active" && daysUntilExpiry < 30 && (
+      {member?.status === "active" && daysUntilExpiry < 30 && (
         <Card className="border-yellow-200 bg-yellow-50">
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
-              <Bell className="h-5 w-5 text-yellow-600 mt-0.5" />
+              <Bell className="mt-0.5 h-5 w-5 text-yellow-600" />
               <div>
                 <p className="font-medium text-yellow-900">Membership Renewal Reminder</p>
-                <p className="text-sm text-yellow-800 mt-1">
-                  Your membership expires in {daysUntilExpiry} days. Renew now to continue enjoying benefits!
+                <p className="mt-1 text-sm text-yellow-800">
+                  Your membership expires in {daysUntilExpiry} days. Renew now to continue enjoying benefits.
                 </p>
-                <Link href="/membership">
+                <Link href="/member/membership">
                   <Button className="mt-3" size="sm">
                     Renew Membership
                   </Button>
@@ -95,89 +125,83 @@ export default function MemberDashboard() {
         </Card>
       )}
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+      <div className="grid grid-cols-1 gap-2 sm:gap-3 md:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-2 sm:pt-3 px-3 sm:px-4">
-            <CardTitle className="text-[10px] sm:text-xs font-medium text-gray-500">Membership Status</CardTitle>
-            <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
+          <CardHeader className="flex flex-row items-center justify-between px-3 pb-1 pt-2 sm:px-4 sm:pt-3">
+            <CardTitle className="text-[10px] font-medium text-gray-500 sm:text-xs">Membership Status</CardTitle>
+            <CreditCard className="h-3 w-3 text-blue-600 sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent className="px-3 sm:px-4 pb-2 sm:pb-3">
-            <Badge className={`text-[10px] sm:text-xs ${memberData?.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-              {memberData?.status?.toUpperCase()}
+          <CardContent className="px-3 pb-2 sm:px-4 sm:pb-3">
+            <Badge className={`text-[10px] sm:text-xs ${member?.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+              {member?.status?.toUpperCase()}
             </Badge>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-1 truncate">
-              {memberData?.status === "active"
-                ? `Expires: ${new Date(memberData.expiryDate).toLocaleDateString()}`
-                : "Membership inactive"}
+            <p className="mt-1 truncate text-[10px] text-gray-500 sm:text-xs">
+              {member?.status === "active" ? `Expires: ${new Date(member.expiryDate).toLocaleDateString()}` : "Membership inactive"}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-2 sm:pt-3 px-3 sm:px-4">
-            <CardTitle className="text-[10px] sm:text-xs font-medium text-gray-500">Member Since</CardTitle>
-            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
+          <CardHeader className="flex flex-row items-center justify-between px-3 pb-1 pt-2 sm:px-4 sm:pt-3">
+            <CardTitle className="text-[10px] font-medium text-gray-500 sm:text-xs">Member Since</CardTitle>
+            <Calendar className="h-3 w-3 text-purple-600 sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent className="px-3 sm:px-4 pb-2 sm:pb-3">
-            <div className="text-lg sm:text-xl font-bold">{new Date(memberData?.joinDate).getFullYear()}</div>
-            <p className="text-[10px] sm:text-xs text-gray-500">
-              {new Date(memberData?.joinDate).toLocaleDateString()}
-            </p>
+          <CardContent className="px-3 pb-2 sm:px-4 sm:pb-3">
+            <div className="text-lg font-bold sm:text-xl">{new Date(member?.joinDate).getFullYear()}</div>
+            <p className="text-[10px] text-gray-500 sm:text-xs">{new Date(member?.joinDate).toLocaleDateString()}</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-2 sm:pt-3 px-3 sm:px-4">
-            <CardTitle className="text-[10px] sm:text-xs font-medium text-gray-500">Events Attended</CardTitle>
-            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600" />
+          <CardHeader className="flex flex-row items-center justify-between px-3 pb-1 pt-2 sm:px-4 sm:pt-3">
+            <CardTitle className="text-[10px] font-medium text-gray-500 sm:text-xs">Events Attended</CardTitle>
+            <Users className="h-3 w-3 text-orange-600 sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent className="px-3 sm:px-4 pb-2 sm:pb-3">
-            <div className="text-lg sm:text-xl font-bold">0</div>
-            <p className="text-[10px] sm:text-xs text-gray-500">Total events</p>
-            <Link href="/events" className="text-[10px] sm:text-xs text-primary hover:underline inline-block">
+          <CardContent className="px-3 pb-2 sm:px-4 sm:pb-3">
+            <div className="text-lg font-bold sm:text-xl">{stats.eventsAttended}</div>
+            <p className="text-[10px] text-gray-500 sm:text-xs">{stats.eventsRegistered} registered</p>
+            <Link href="/events" className="inline-block text-[10px] text-primary hover:underline sm:text-xs">
               Browse Events
             </Link>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-2 sm:pt-3 px-3 sm:px-4">
-            <CardTitle className="text-[10px] sm:text-xs font-medium text-gray-500">Certificates</CardTitle>
-            <Award className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
+          <CardHeader className="flex flex-row items-center justify-between px-3 pb-1 pt-2 sm:px-4 sm:pt-3">
+            <CardTitle className="text-[10px] font-medium text-gray-500 sm:text-xs">Certificates</CardTitle>
+            <Award className="h-3 w-3 text-green-600 sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent className="px-3 sm:px-4 pb-2 sm:pb-3">
-            <div className="text-lg sm:text-xl font-bold">0</div>
-            <p className="text-[10px] sm:text-xs text-gray-500">Earned certificates</p>
-            <Link href="/programs" className="text-[10px] sm:text-xs text-primary hover:underline inline-block">
+          <CardContent className="px-3 pb-2 sm:px-4 sm:pb-3">
+            <div className="text-lg font-bold sm:text-xl">{stats.certificatesEarned}</div>
+            <p className="text-[10px] text-gray-500 sm:text-xs">Earned certificates</p>
+            <Link href="/programs" className="inline-block text-[10px] text-primary hover:underline sm:text-xs">
               View Programs
             </Link>
           </CardContent>
         </Card>
       </div>
 
-      {/* Quick Actions */}
       <Card>
-        <CardHeader className="pb-2 px-3 sm:px-6">
+        <CardHeader className="px-3 pb-2 sm:px-6">
           <CardTitle className="text-sm sm:text-base">Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent className="pt-2 px-3 sm:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+        <CardContent className="px-3 pt-2 sm:px-6">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
             <Link href="/member/membership">
-              <Button className="w-full text-xs sm:text-sm h-9 sm:h-10" variant="outline">
-                <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <Button className="h-9 w-full text-xs sm:h-10 sm:text-sm" variant="outline">
+                <CreditCard className="mr-1 h-3 w-3 shrink-0 sm:mr-2 sm:h-4 sm:w-4" />
                 <span className="truncate">View Membership Card</span>
               </Button>
             </Link>
             <Link href="/member/profile">
-              <Button className="w-full text-xs sm:text-sm h-9 sm:h-10" variant="outline">
-                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <Button className="h-9 w-full text-xs sm:h-10 sm:text-sm" variant="outline">
+                <TrendingUp className="mr-1 h-3 w-3 shrink-0 sm:mr-2 sm:h-4 sm:w-4" />
                 <span className="truncate">Update Profile</span>
               </Button>
             </Link>
             <Link href="/events">
-              <Button className="w-full text-xs sm:text-sm h-9 sm:h-10" variant="outline">
-                <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <Button className="h-9 w-full text-xs sm:h-10 sm:text-sm" variant="outline">
+                <Calendar className="mr-1 h-3 w-3 shrink-0 sm:mr-2 sm:h-4 sm:w-4" />
                 <span className="truncate">Browse Events</span>
               </Button>
             </Link>
@@ -186,54 +210,42 @@ export default function MemberDashboard() {
         </CardContent>
       </Card>
 
-      {/* Membership Details */}
       <Card>
-        <CardHeader className="pb-2 px-3 sm:px-6">
+        <CardHeader className="px-3 pb-2 sm:px-6">
           <CardTitle className="text-sm sm:text-base">Membership Details</CardTitle>
         </CardHeader>
-        <CardContent className="pt-2 px-3 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 text-xs sm:text-sm">
+        <CardContent className="px-3 pt-2 sm:px-6">
+          <div className="grid grid-cols-2 gap-2 text-xs sm:gap-3 sm:text-sm md:grid-cols-4">
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs">Membership ID</p>
-              <p className="font-semibold truncate">{memberData?.membershipId}</p>
+              <p className="text-[10px] text-gray-600 dark:text-gray-400 sm:text-xs">Membership ID</p>
+              <p className="truncate font-semibold">{member?.membershipId}</p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs">Membership Type</p>
-              <p className="font-semibold truncate">{memberData?.membershipType}</p>
+              <p className="text-[10px] text-gray-600 dark:text-gray-400 sm:text-xs">Membership Type</p>
+              <p className="truncate font-semibold">{member?.membershipType}</p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs">Organization</p>
-              <p className="font-semibold truncate">{memberData?.organization || "N/A"}</p>
+              <p className="text-[10px] text-gray-600 dark:text-gray-400 sm:text-xs">Organization</p>
+              <p className="truncate font-semibold">{member?.organization || "N/A"}</p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs">Designation</p>
-              <p className="font-semibold truncate">{memberData?.designation || "N/A"}</p>
+              <p className="text-[10px] text-gray-600 dark:text-gray-400 sm:text-xs">Designation</p>
+              <p className="truncate font-semibold">{member?.designation || "N/A"}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6">
+        <CardHeader className="flex flex-row items-center justify-between px-3 pb-2 sm:px-6">
           <CardTitle className="text-sm sm:text-base">Recent Activity</CardTitle>
-          <Link href="/member/activity" className="text-[10px] sm:text-xs text-primary hover:underline">
-            View All
-          </Link>
         </CardHeader>
-        <CardContent className="pt-2 px-3 sm:px-6">
+        <CardContent className="px-3 pt-2 sm:px-6">
           <ActivityTimeline
-            activities={[
-              {
-                id: "1",
-                type: "membership",
-                title: "Membership Activated",
-                description: `Joined as ${memberData?.membershipType}`,
-                date: new Date(memberData?.joinDate || Date.now()),
-                status: "success",
-              },
-              // Add more activities from API
-            ]}
+            activities={activities.map((activity) => ({
+              ...activity,
+              date: new Date(activity.date),
+            }))}
           />
         </CardContent>
       </Card>

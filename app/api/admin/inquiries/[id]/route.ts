@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireAdminAccess } from "@/lib/auth/admin"
 
 export async function PATCH(
     request: Request,
     { params }: { params: { id: string } }
 ) {
     try {
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
+
         const { status } = await request.json()
         const inquiry = await prisma.inquiry.update({
             where: { id: params.id },
@@ -23,6 +27,9 @@ export async function DELETE(
     { params }: { params: { id: string } }
 ) {
     try {
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
+
         await prisma.inquiry.delete({
             where: { id: params.id },
         })

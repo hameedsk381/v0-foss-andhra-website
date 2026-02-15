@@ -12,7 +12,7 @@ build
 dist
 
 # Environment files
-
+.env
 .env*.local
 .env.development
 .env.test
@@ -49,6 +49,7 @@ logs
 # Docker
 .dockerignore
 # Note: Dockerfile is needed for Docker build, so it's NOT ignored
+# docker-compose files are not needed in image build context.
 docker-compose*.yml
 
 # Documentation

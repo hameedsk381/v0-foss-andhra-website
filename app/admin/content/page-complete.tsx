@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileText, Image, Video, Edit, Trash2, Plus, Save } from "lucide-react"
+import { FileText, ImageIcon, Video, Edit, Trash2, Plus, Save } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 interface ContentItem {
@@ -283,8 +283,8 @@ export default function ContentManagement() {
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
-                <p className="mb-4">Gallery feature coming soon</p>
-                <p className="text-sm">Upload and manage event photos and images</p>
+                <p className="mb-4">Use the Gallery module from the admin sidebar</p>
+                <p className="text-sm">Upload and manage event photos and images there</p>
               </div>
             </CardContent>
           </Card>
@@ -300,10 +300,10 @@ export default function ContentManagement() {
                 <div className="border-2 border-dashed rounded-lg p-8 text-center">
                   <div className="flex flex-col items-center gap-2">
                     <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                      <Image className="h-6 w-6 text-gray-400" />
+                      <ImageIcon className="h-6 w-6 text-gray-400" />
                     </div>
                     <p className="font-medium">Upload Media</p>
-                    <p className="text-sm text-gray-500">Media upload feature coming soon</p>
+                    <p className="text-sm text-gray-500">Use the dedicated Gallery page for uploads</p>
                   </div>
                 </div>
               </div>

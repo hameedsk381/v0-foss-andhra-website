@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { requireAdminAccess } from "@/lib/auth/admin"
 import { prisma } from "@/lib/prisma"
 
 // GET - Fetch single blog post
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    if (authError) return authError
 
     const post = await prisma.blogPost.findUnique({
       where: { id: params.id },
@@ -41,10 +38,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 // PUT - Update blog post
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const authError = await requireAdminAccess(["editor", "admin"])
+    if (authError) return authError
 
     const body = await request.json()
     const {
@@ -117,10 +112,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // DELETE - Delete blog post
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const authError = await requireAdminAccess(["admin"])
+    if (authError) return authError
 
     await prisma.blogPost.delete({
       where: { id: params.id },
