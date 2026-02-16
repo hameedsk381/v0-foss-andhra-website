@@ -5,11 +5,11 @@ import { PROGRAMS } from "@/lib/programs"
 
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-slate-50">
-      <div className="container px-4 md:px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-          <div className="col-span-2">
-            <Link href="/" className="flex items-center space-x-2">
+    <footer className="border-t border-border/80 bg-slate-50/80">
+      <div className="app-container py-14">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
+          <div className="md:col-span-2">
+            <Link href="/" className="inline-flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
               <Image
                 src="/logos/foss-andhra-logo.png"
                 alt="FOSS Andhra Logo"
@@ -18,13 +18,13 @@ export function SiteFooter() {
                 className="h-12 w-auto"
               />
             </Link>
-            <p className="text-muted-foreground mt-4 max-w-xs">
+            <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
               Fostering a vibrant ecosystem of free and open-source software development and adoption across Andhra
               Pradesh.
             </p>
-            <div className="flex space-x-4 mt-6">
+            <div className="mt-6 flex gap-3">
               <Link href="https://x.com/fossandhra" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" aria-label="Twitter">
+                <Button variant="ghost" size="icon" aria-label="Twitter" className="rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -42,7 +42,7 @@ export function SiteFooter() {
                 </Button>
               </Link>
               <Link href="https://github.com/fossandhra" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" aria-label="GitHub">
+                <Button variant="ghost" size="icon" aria-label="GitHub" className="rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -61,7 +61,7 @@ export function SiteFooter() {
                 </Button>
               </Link>
               <Link href="https://linkedin.com/company/fossandhra" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" aria-label="LinkedIn">
+                <Button variant="ghost" size="icon" aria-label="LinkedIn" className="rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -83,77 +83,77 @@ export function SiteFooter() {
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Programs</h3>
-            <ul className="space-y-2">
+            <h3 className="mb-4 text-base font-semibold text-foreground">Programs</h3>
+            <ul className="space-y-2.5">
               {PROGRAMS.map((program) => (
                 <li key={program.id}>
                   <Link
                     href={`/programs/${program.slug}`}
-                    className="text-muted-foreground hover:text-foreground flex items-center gap-2"
+                    className="group flex items-center gap-2 rounded-md px-1 py-1 text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <Image src={program.logo} alt={`${program.displayName} Logo`} width={80} height={20} className="h-5 w-auto" />
+                    <Image src={program.logo} alt={`${program.displayName} Logo`} width={80} height={20} className="h-5 w-auto transition-transform duration-200 group-hover:scale-[1.03]" />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">About</h3>
-            <ul className="space-y-2">
+            <h3 className="mb-4 text-base font-semibold text-foreground">About</h3>
+            <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/about" className="text-muted-foreground hover:text-foreground">
+                <Link href="/about" className="text-muted-foreground transition-colors hover:text-foreground">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/events" className="text-muted-foreground hover:text-foreground">
+                <Link href="/events" className="text-muted-foreground transition-colors hover:text-foreground">
                   Events
                 </Link>
               </li>
               <li>
-                <Link href="/gallery" className="text-muted-foreground hover:text-foreground">
+                <Link href="/gallery" className="text-muted-foreground transition-colors hover:text-foreground">
                   Gallery
                 </Link>
               </li>
               <li>
-                <Link href="/contribute" className="text-muted-foreground hover:text-foreground">
+                <Link href="/contribute" className="text-muted-foreground transition-colors hover:text-foreground">
                   Contribute
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-foreground">
+                <Link href="/contact" className="text-muted-foreground transition-colors hover:text-foreground">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-muted-foreground hover:text-foreground">
+                <Link href="/faq" className="text-muted-foreground transition-colors hover:text-foreground">
                   FAQ
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2">
+            <h3 className="mb-4 text-base font-semibold text-foreground">Legal</h3>
+            <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/privacy-policy" className="text-muted-foreground hover:text-foreground">
+                <Link href="/privacy-policy" className="text-muted-foreground transition-colors hover:text-foreground">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-service" className="text-muted-foreground hover:text-foreground">
+                <Link href="/terms-of-service" className="text-muted-foreground transition-colors hover:text-foreground">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/refund-policy" className="text-muted-foreground hover:text-foreground">
+                <Link href="/refund-policy" className="text-muted-foreground transition-colors hover:text-foreground">
                   Refund Policy
                 </Link>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-12 pt-6 border-t text-center text-muted-foreground">
+        <div className="mt-12 border-t border-border/70 pt-6 text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} FOSS Andhra. All rights reserved.</p>
         </div>
       </div>

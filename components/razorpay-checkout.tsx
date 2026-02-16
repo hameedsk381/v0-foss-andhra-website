@@ -6,8 +6,12 @@ import { createPaymentOrder, verifyPayment } from "@/app/actions/payment"
 import { useToast } from "@/hooks/use-toast"
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react"
 
+type CheckoutPurpose = "membership" | "donation"
+
 interface RazorpayCheckoutProps {
-  membershipType: string
+  membershipType?: string
+  paymentPurpose?: CheckoutPurpose
+  donationId?: string
   amount: number
   userDetails: {
     name: string
@@ -15,8 +19,8 @@ interface RazorpayCheckoutProps {
     phone: string
   }
   className?: string
-  onSuccess?: (membershipId: string) => void
-  additionalData?: any // ✅ Add additionalData prop
+  onSuccess?: (referenceId: string) => void
+  additionalData?: Record<string, unknown> | null
 }
 
 declare global {
@@ -60,6 +64,8 @@ interface RazorpayResponse {
 
 export function RazorpayCheckout({
   membershipType,
+  paymentPurpose = "membership",
+  donationId,
   amount,
   userDetails,
   className,
@@ -73,47 +79,36 @@ export function RazorpayCheckout({
 
   const handlePayment = async () => {
     try {
+      if (paymentPurpose === "donation" && !donationId) {
+        throw new Error("Donation reference is missing. Please restart the donation flow.")
+      }
+
       setIsLoading(true)
       setError(null)
 
-      console.log("Starting payment process for:", userDetails.email)
-
-      // Create order on server
       const orderResult = await createPaymentOrder({
-        amount: amount * 100, // Convert to paise
+        paymentPurpose,
+        donationId,
+        membershipType: membershipType || "FOSStar Annual",
+        amount,
         currency: "INR",
-        receipt: `receipt_${Date.now()}`,
-        notes: {
-          membershipType,
-          userEmail: userDetails.email,
-          userName: userDetails.name,
-        },
-        additionalData,
+        userDetails,
+        additionalData: additionalData || undefined,
       })
-
-      console.log("Order creation result:", orderResult)
 
       if (!orderResult.success || !orderResult.order || !orderResult.keyId) {
         throw new Error(orderResult.error || "Failed to create payment order")
       }
 
-      // Load Razorpay script if not already loaded
       if (!window.Razorpay) {
-        console.log("Loading Razorpay script...")
         const script = document.createElement("script")
         script.src = "https://checkout.razorpay.com/v1/checkout.js"
         script.async = true
         document.body.appendChild(script)
 
         await new Promise((resolve, reject) => {
-          script.onload = () => {
-            console.log("Razorpay script loaded successfully")
-            resolve(true)
-          }
-          script.onerror = () => {
-            console.error("Failed to load Razorpay script")
-            reject(new Error("Failed to load Razorpay script"))
-          }
+          script.onload = () => resolve(true)
+          script.onerror = () => reject(new Error("Failed to load Razorpay checkout script"))
         })
       }
 
@@ -122,7 +117,10 @@ export function RazorpayCheckout({
         amount: orderResult.order.amount,
         currency: orderResult.order.currency,
         name: "FOSS Andhra",
-        description: `${membershipType} Membership`,
+        description:
+          paymentPurpose === "donation"
+            ? "Donation Payment"
+            : `${membershipType || "FOSStar"} Membership Payment`,
         order_id: orderResult.order.id,
         prefill: {
           name: userDetails.name,
@@ -135,36 +133,41 @@ export function RazorpayCheckout({
         handler: async (response: RazorpayResponse) => {
           try {
             setIsVerifying(true)
-            console.log("Payment completed, verifying...")
 
-            // Verify payment on server
-            const verificationResult = await verifyPayment(
-              response.razorpay_order_id,
-              response.razorpay_payment_id,
-              response.razorpay_signature,
-              userDetails,
-              membershipType, // ✅ Pass membershipType to save in DB
-              additionalData, // ✅ Pass additionalData
-            )
+            const verificationResult = await verifyPayment({
+              orderId: response.razorpay_order_id,
+              paymentId: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+              paymentPurpose,
+              donationId,
+              userDetails: paymentPurpose === "membership" ? userDetails : undefined,
+              membershipType: paymentPurpose === "membership" ? membershipType || "FOSStar Annual" : undefined,
+              additionalData: paymentPurpose === "membership" ? additionalData || undefined : undefined,
+            })
 
-            if (verificationResult.success) {
-              toast({
-                title: "🎉 Payment Successful!",
-                description: `Welcome to FOSS Andhra! Your ${membershipType} membership is now active.`,
-              })
-
-              // Call success callback if provided
-              if (onSuccess && verificationResult.membershipId) {
-                onSuccess(verificationResult.membershipId)
-              }
-            } else {
-              throw new Error(verificationResult.error)
+            if (!verificationResult.success) {
+              throw new Error(verificationResult.error || "Payment verification failed")
             }
-          } catch (error) {
-            console.error("Payment verification error:", error)
+
             toast({
-              title: "Payment Verification Failed",
-              description: "Please contact support if amount was deducted from your account.",
+              title: "Payment successful",
+              description:
+                paymentPurpose === "donation"
+                  ? "Thank you for supporting FOSS Andhra."
+                  : "Your membership payment was successful.",
+            })
+
+            const referenceId =
+              verificationResult.referenceId || verificationResult.membershipId || verificationResult.donationId
+
+            if (onSuccess && referenceId) {
+              onSuccess(referenceId)
+            }
+          } catch (verificationError) {
+            console.error("Payment verification error:", verificationError)
+            toast({
+              title: "Payment verification failed",
+              description: "If money was deducted, contact support with your payment reference.",
               variant: "destructive",
             })
           } finally {
@@ -174,24 +177,22 @@ export function RazorpayCheckout({
         modal: {
           ondismiss: () => {
             setIsLoading(false)
-            console.log("Payment modal dismissed")
             toast({
-              title: "Payment Cancelled",
-              description: "Your payment was cancelled. You can try again anytime.",
+              title: "Payment cancelled",
+              description: "You can retry checkout whenever you're ready.",
             })
           },
         },
       }
 
-      console.log("Opening Razorpay checkout with options:", { ...options, key: "***" })
-      const rzp = new window.Razorpay(options)
-      rzp.open()
-    } catch (error) {
-      console.error("Payment error:", error)
-      const errorMessage = error instanceof Error ? error.message : "Something went wrong. Please try again."
+      const checkout = new window.Razorpay(options)
+      checkout.open()
+    } catch (paymentError) {
+      const errorMessage =
+        paymentError instanceof Error ? paymentError.message : "Payment failed. Please try again."
       setError(errorMessage)
       toast({
-        title: "Payment Error",
+        title: "Payment error",
         description: errorMessage,
         variant: "destructive",
       })
@@ -208,7 +209,7 @@ export function RazorpayCheckout({
         {isVerifying ? (
           <>
             <CheckCircle className="mr-2 h-4 w-4 animate-pulse" />
-            Verifying Payment...
+            Verifying payment...
           </>
         ) : isLoading ? (
           <>
@@ -216,12 +217,12 @@ export function RazorpayCheckout({
             Processing...
           </>
         ) : (
-          `Pay ₹${amount}`
+          `Pay ₹${amount.toLocaleString()}`
         )}
       </Button>
 
       {error && (
-        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded">
+        <div className="flex items-center gap-2 rounded bg-red-50 p-2 text-sm text-red-600">
           <AlertCircle className="h-4 w-4" />
           <span>{error}</span>
         </div>
@@ -229,3 +230,4 @@ export function RazorpayCheckout({
     </div>
   )
 }
+

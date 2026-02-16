@@ -1,82 +1,144 @@
 "use server"
 
-import { prisma } from "@/lib/prisma"
-import { sendMemberWelcomeEmail } from "@/lib/email"
+import { createRazorpayOrder, getRazorpayRuntimeConfig, verifyRazorpayPaymentSignature } from "@/lib/payment/razorpay"
+import {
+  completeDonationPayment,
+  completeMembershipPayment,
+  getDonationCheckoutContext,
+  getMembershipPaymentDefaults,
+  resolveMembershipAmount,
+  type PaymentPurpose,
+  type PaymentUserDetails,
+} from "@/lib/payment/fulfillment"
 
 interface CreateOrderData {
-  amount: number
-  currency: string
-  receipt: string
+  paymentPurpose?: PaymentPurpose
+  amount?: number
+  currency?: string
+  membershipType?: string
+  donationId?: string
+  userDetails: PaymentUserDetails
   notes?: Record<string, string>
-  additionalData?: any
+  additionalData?: Record<string, unknown> | null
+}
+
+interface VerifyPaymentData {
+  orderId: string
+  paymentId: string
+  signature: string
+  paymentPurpose?: PaymentPurpose
+  userDetails?: PaymentUserDetails
+  membershipType?: string
+  donationId?: string
+  additionalData?: Record<string, unknown> | null
+}
+
+function normalizeStringValue(value: unknown, maxLength = 250): string | undefined {
+  if (typeof value !== "string") {
+    return undefined
+  }
+
+  const trimmed = value.trim()
+  if (!trimmed) {
+    return undefined
+  }
+
+  return trimmed.slice(0, maxLength)
+}
+
+function additionalDataToNotes(additionalData?: Record<string, unknown> | null): Record<string, string> {
+  const source = additionalData && typeof additionalData === "object" ? additionalData : {}
+  const asRecord = source as Record<string, unknown>
+
+  const noteFields: Array<[string, string | undefined]> = [
+    ["organization", normalizeStringValue(asRecord.organization || asRecord.institution || asRecord.company)],
+    ["designation", normalizeStringValue(asRecord.designation || asRecord.course || asRecord.department)],
+    ["experience", normalizeStringValue(asRecord.experience || asRecord.year || asRecord.timeline)],
+    ["interests", normalizeStringValue(asRecord.interests || asRecord.contribution || asRecord.expectations)],
+    ["address", normalizeStringValue(asRecord.address, 500)],
+    ["referral", normalizeStringValue(asRecord.referral || asRecord.referrer)],
+  ]
+
+  return noteFields.reduce<Record<string, string>>((acc, [key, value]) => {
+    if (value) {
+      acc[key] = value
+    }
+    return acc
+  }, {})
 }
 
 export async function createPaymentOrder(data: CreateOrderData) {
   try {
-    // Debug: Log environment variables (remove in production)
-    console.log("RAZORPAY_KEY_ID exists:", !!process.env.RAZORPAY_KEY_ID)
-    console.log("RAZORPAY_KEY_SECRET exists:", !!process.env.RAZORPAY_KEY_SECRET)
+    const paymentPurpose: PaymentPurpose = data.paymentPurpose || "membership"
+    const currency = data.currency || "INR"
 
-    const keyId = process.env.RAZORPAY_KEY_ID
-    const keySecret = process.env.RAZORPAY_KEY_SECRET
+    if (paymentPurpose === "donation") {
+      if (!data.donationId) {
+        throw new Error("Donation ID is required for donation payments")
+      }
 
-    if (!keyId || !keySecret) {
-      console.error("Missing Razorpay credentials:", { keyId: !!keyId, keySecret: !!keySecret })
-      throw new Error("Razorpay configuration is missing. Please check environment variables.")
+      const donation = await getDonationCheckoutContext(data.donationId)
+      if (!donation) {
+        throw new Error("Donation record not found")
+      }
+
+      if (donation.status === "completed") {
+        throw new Error("This donation has already been completed")
+      }
+
+      const orderResult = await createRazorpayOrder({
+        amountInPaise: Math.round(donation.amount * 100),
+        currency,
+        receipt: `donation_${donation.id}_${Date.now()}`,
+        notes: {
+          ...(data.notes || {}),
+          paymentPurpose: "donation",
+          donationId: donation.id,
+          donationType: donation.type,
+          anonymous: String(donation.anonymous),
+          userName: donation.name,
+          userEmail: donation.email,
+          phone: donation.phone,
+        },
+      })
+
+      return {
+        success: true,
+        order: orderResult.order,
+        keyId: orderResult.keyId,
+        amount: donation.amount,
+        paymentPurpose,
+      }
     }
 
-    // Prepare notes from additionalData
-    const notes: Record<string, string> = {
-      ...data.notes,
-    }
+    const defaults = await getMembershipPaymentDefaults()
+    const membershipType = data.membershipType || "FOSStar Annual"
+    const amount = resolveMembershipAmount(membershipType, defaults)
 
-    if (data.additionalData) {
-      // Razorpay notes values must be strings and have length limits
-      // We truncate to ensure we don't hit limits safely, though 256 chars is usually enough for these fields
-      if (data.additionalData.organization) notes.organization = String(data.additionalData.organization).substring(0, 250)
-      if (data.additionalData.designation) notes.designation = String(data.additionalData.designation).substring(0, 250)
-      if (data.additionalData.experience) notes.experience = String(data.additionalData.experience).substring(0, 250)
-      if (data.additionalData.interests) notes.interests = String(data.additionalData.interests).substring(0, 250) // Truncate long interests
-      if (data.additionalData.referral) notes.referral = String(data.additionalData.referral).substring(0, 250)
-      if (data.additionalData.phone) notes.phone = String(data.additionalData.phone).substring(0, 40)
-    }
-
-    // Create order using Razorpay API
-    const orderData = {
-      amount: data.amount,
-      currency: data.currency,
-      receipt: data.receipt,
-      notes: notes,
-    }
-
-
-    console.log("Creating order with data:", orderData)
-
-    const response = await fetch("https://api.razorpay.com/v1/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString("base64")}`,
+    const orderResult = await createRazorpayOrder({
+      amountInPaise: Math.round(amount * 100),
+      currency,
+      receipt: `membership_${Date.now()}`,
+      notes: {
+        ...(data.notes || {}),
+        paymentPurpose: "membership",
+        membershipType,
+        userEmail: data.userDetails.email,
+        userName: data.userDetails.name,
+        phone: data.userDetails.phone,
+        ...additionalDataToNotes(data.additionalData),
       },
-      body: JSON.stringify(orderData),
     })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error("Razorpay API error:", response.status, errorText)
-      throw new Error(`Razorpay API error: ${response.status} - ${errorText}`)
-    }
-
-    const order = await response.json()
-    console.log("Order created successfully:", order.id)
 
     return {
       success: true,
-      order,
-      keyId: keyId,
+      order: orderResult.order,
+      keyId: orderResult.keyId,
+      amount,
+      paymentPurpose,
     }
   } catch (error) {
-    console.error("Error creating Razorpay order:", error)
+    console.error("Error creating payment order:", error)
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to create payment order",
@@ -84,120 +146,74 @@ export async function createPaymentOrder(data: CreateOrderData) {
   }
 }
 
-export async function verifyPayment(
-  orderId: string,
-  paymentId: string,
-  signature: string,
-  userDetails: {
-    name: string
-    email: string
-    phone: string
-  },
-  membershipType?: string,
-  additionalData?: any
-) {
+export async function verifyPayment(data: VerifyPaymentData) {
   try {
-    const keySecret = process.env.RAZORPAY_KEY_SECRET
+    const paymentPurpose: PaymentPurpose = data.paymentPurpose || "membership"
+    const { keySecret } = await getRazorpayRuntimeConfig({ requireSecret: true })
 
     if (!keySecret) {
-      throw new Error("Razorpay secret key is missing")
+      throw new Error("Razorpay key secret is not configured")
     }
 
-    const crypto = await import("crypto")
-    const expectedSignature = crypto
-      .createHmac("sha256", keySecret)
-      .update(orderId + "|" + paymentId)
-      .digest("hex")
+    const signatureValid = verifyRazorpayPaymentSignature({
+      orderId: data.orderId,
+      paymentId: data.paymentId,
+      signature: data.signature,
+      keySecret,
+    })
 
-    if (expectedSignature !== signature) {
-      console.error("Payment verification failed: signature mismatch")
+    if (!signatureValid) {
       return {
         success: false,
         error: "Payment verification failed - invalid signature",
       }
     }
 
-    // Payment is verified successfully
-    console.log("Payment verified for user:", userDetails.email)
-
-    // Generate unique membership ID
-    // Generate unique membership ID
-    const membershipId = `FOSS${Date.now()}`
-
-    // Generate secure reset token for password setting
-    const resetToken = crypto.randomBytes(32).toString("hex")
-    const resetTokenExpiry = new Date()
-    resetTokenExpiry.setHours(resetTokenExpiry.getHours() + 24) // Valid for 24 hours
-
-    // Generate a random initial password (not sent to user) to satisfy DB constraints if any,
-    // and to ensure account is not easily accessible until password is set.
-    const tempPassword = crypto.randomBytes(16).toString("hex")
-    const bcrypt = await import("bcryptjs")
-    const hashedPassword = await bcrypt.hash(tempPassword, 10)
-
-    const expiryDate = new Date()
-    expiryDate.setFullYear(expiryDate.getFullYear() + 1)
-
-    // Save member to database
-    try {
-      await prisma.member.create({
-        data: {
-          name: userDetails.name,
-          email: userDetails.email,
-          phone: userDetails.phone,
-          membershipType: membershipType || "FOSStar Annual",
-          status: "active",
-          membershipId,
-          expiryDate,
-          paymentId,
-          organization:
-            additionalData?.institution ||
-            additionalData?.institutionName ||
-            additionalData?.company ||
-            additionalData?.companyName ||
-            additionalData?.organizationName,
-          address: additionalData?.address,
-          designation: additionalData?.designation || additionalData?.course,
-          experience: additionalData?.experience || additionalData?.year,
-          interests: additionalData?.interests || additionalData?.contribution || additionalData?.expectations,
-          password: hashedPassword,
-          resetToken: resetToken,
-          resetTokenExpiry: resetTokenExpiry,
-        },
-      })
-
-      console.log("Member saved to database:", membershipId)
-
-      // Send welcome email with "Set Password" link
-      try {
-        await sendMemberWelcomeEmail(userDetails.email, {
-          name: userDetails.name,
-          membershipId,
-          expiryDate,
-          resetToken,
-        })
-        console.log("Welcome email sent to:", userDetails.email)
-      } catch (emailError) {
-        console.error("Warning: Member created but welcome email failed:", emailError)
+    if (paymentPurpose === "donation") {
+      if (!data.donationId) {
+        throw new Error("Donation ID is required for donation verification")
       }
+
+      const donationResult = await completeDonationPayment({
+        donationId: data.donationId,
+        paymentId: data.paymentId,
+        orderId: data.orderId,
+        signature: data.signature,
+      })
 
       return {
         success: true,
-        message: "Payment verified and membership activated successfully",
-        membershipId,
+        message: "Donation payment verified successfully",
+        paymentPurpose,
+        referenceId: donationResult.donationId,
+        donationId: donationResult.donationId,
       }
-    } catch (dbError) {
-      console.error("CRITICAL: Payment received but DB save failed:", dbError)
-      return {
-        success: false,
-        error: `Payment successful (ID: ${paymentId}), but account creation failed. Please contact support immediately.`,
-      }
+    }
+
+    if (!data.userDetails) {
+      throw new Error("User details are required for membership verification")
+    }
+
+    const memberResult = await completeMembershipPayment({
+      paymentId: data.paymentId,
+      orderId: data.orderId,
+      userDetails: data.userDetails,
+      membershipType: data.membershipType,
+      additionalData: data.additionalData,
+    })
+
+    return {
+      success: true,
+      message: "Payment verified and membership activated successfully",
+      paymentPurpose,
+      referenceId: memberResult.membershipId,
+      membershipId: memberResult.membershipId,
     }
   } catch (error) {
     console.error("Error verifying payment:", error)
     return {
       success: false,
-      error: "Payment verification failed",
+      error: error instanceof Error ? error.message : "Payment verification failed",
     }
   }
 }

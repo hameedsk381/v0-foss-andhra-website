@@ -2,21 +2,21 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft, Heart, DollarSign, CreditCard, Building, Users } from "lucide-react"
 import { processDonation } from "@/app/actions/donation"
 
 export default function DonatePage() {
-  const router = useRouter()
   const [donationType, setDonationType] = useState("one-time")
   const [amount, setAmount] = useState("")
   const [customAmount, setCustomAmount] = useState("")
+  const [anonymous, setAnonymous] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,7 +29,11 @@ export default function DonatePage() {
 
   const handleDonate = async () => {
     const finalAmount = customAmount || amount
-    if (!finalAmount || !formData.name || !formData.email || !formData.phone) {
+    const missingRequiredFields = anonymous
+      ? false
+      : !formData.name.trim() || !formData.email.trim() || !formData.phone.trim()
+
+    if (!finalAmount || missingRequiredFields) {
       alert("Please fill in all required fields")
       return
     }
@@ -43,6 +47,7 @@ export default function DonatePage() {
       formDataObj.append("name", formData.name)
       formDataObj.append("email", formData.email)
       formDataObj.append("phone", formData.phone)
+      formDataObj.append("anonymous", String(anonymous))
       if (formData.message) {
         formDataObj.append("message", formData.message)
       }
@@ -157,36 +162,46 @@ export default function DonatePage() {
                   {/* Personal Information */}
                   <div className="space-y-4">
                     <h3 className="text-base font-semibold">Your Information</h3>
+                    <div className="flex items-start gap-2 rounded-md border border-dashed border-muted p-3">
+                      <Checkbox
+                        id="anonymous"
+                        checked={anonymous}
+                        onCheckedChange={(checked) => setAnonymous(Boolean(checked))}
+                      />
+                      <Label htmlFor="anonymous" className="cursor-pointer text-sm">
+                        Donate anonymously (your name will not be shown in public reports)
+                      </Label>
+                    </div>
                     <div>
-                      <Label htmlFor="name">Full Name *</Label>
+                      <Label htmlFor="name">Full Name {anonymous ? "(Optional)" : "*"}</Label>
                       <Input
                         id="name"
                         placeholder="John Doe"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        required
+                        required={!anonymous}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="email">Email *</Label>
+                      <Label htmlFor="email">Email {anonymous ? "(Optional)" : "*"}</Label>
                       <Input
                         id="email"
                         type="email"
                         placeholder="john@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
+                        required={!anonymous}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="phone">Phone *</Label>
+                      <Label htmlFor="phone">Phone {anonymous ? "(Optional)" : "*"}</Label>
                       <Input
                         id="phone"
                         type="tel"
                         placeholder="+91 94944 63840"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        required
+                        required={!anonymous}
                       />
                     </div>
                     <div>

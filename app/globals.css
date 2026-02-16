@@ -23,8 +23,12 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
     --fosstar: #015ba7;
+    --surface-1: 210 20% 98%;
+    --surface-2: 210 18% 96%;
+    --shadow-soft: 0 8px 30px rgba(2, 17, 35, 0.06);
+    --shadow-lift: 0 14px 42px rgba(2, 17, 35, 0.12);
     --z-nav: 60;
     --z-nav-content: 65;
     --z-dropdown: 70;
@@ -58,7 +62,15 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    background-image: radial-gradient(circle at 10% 10%, rgba(1, 91, 167, 0.03), transparent 32%);
+  }
+
+  ::selection {
+    background: rgba(1, 91, 167, 0.2);
+    color: hsl(var(--foreground));
   }
 }
 
@@ -120,6 +132,33 @@
 
 .dropdown-layer {
   z-index: var(--z-dropdown);
+}
+
+.app-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2vw, 2rem);
+}
+
+.section-shell {
+  padding-block: clamp(2.5rem, 5vw, 6rem);
+}
+
+.surface-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) + 0.25rem);
+  box-shadow: var(--shadow-soft);
+}
+
+.interactive-lift {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.interactive-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
 }
 
 /* TipTap Editor Styles */

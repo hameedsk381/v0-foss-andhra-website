@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,6 +13,11 @@ import { useToast } from "@/hooks/use-toast"
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [secretMeta, setSecretMeta] = useState({
+    hasRazorpayKeySecret: false,
+    hasRazorpayWebhookSecret: false,
+    hasSmtpPass: false,
+  })
   const { toast } = useToast()
 
   const [settings, setSettings] = useState({
@@ -33,6 +38,7 @@ export default function SettingsPage() {
     fromName: "FOSS Andhra",
     razorpayKeyId: "",
     razorpayKeySecret: "",
+    razorpayWebhookSecret: "",
     razorpayTestMode: "true",
     enableCards: "true",
     enableUPI: "true",
@@ -40,16 +46,15 @@ export default function SettingsPage() {
     enableWallets: "true",
   })
 
-  useEffect(() => {
-    fetchSettings()
-  }, [])
-
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/settings")
       const data = await res.json()
       if (data.success && data.data) {
         setSettings((prev) => ({ ...prev, ...data.data }))
+        if (data.meta) {
+          setSecretMeta((prev) => ({ ...prev, ...data.meta }))
+        }
       }
     } catch (error) {
       console.error("Error fetching settings:", error)
@@ -61,7 +66,11 @@ export default function SettingsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    fetchSettings()
+  }, [fetchSettings])
 
   const handleSave = async (section: string) => {
     setSaving(true)
@@ -297,6 +306,9 @@ export default function SettingsPage() {
                     value={settings.smtpPass}
                     onChange={(e) => handleChange("smtpPass", e.target.value)}
                   />
+                  {secretMeta.hasSmtpPass && !settings.smtpPass && (
+                    <p className="text-xs text-gray-500">Password already configured. Leave blank to keep existing value.</p>
+                  )}
                 </div>
               </div>
 
@@ -359,6 +371,23 @@ export default function SettingsPage() {
                   value={settings.razorpayKeySecret}
                   onChange={(e) => handleChange("razorpayKeySecret", e.target.value)}
                 />
+                {secretMeta.hasRazorpayKeySecret && !settings.razorpayKeySecret && (
+                  <p className="text-xs text-gray-500">Secret key already configured. Leave blank to keep existing value.</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="razorpayWebhookSecret">Razorpay Webhook Secret</Label>
+                <Input
+                  id="razorpayWebhookSecret"
+                  type="password"
+                  placeholder="••••••••"
+                  value={settings.razorpayWebhookSecret}
+                  onChange={(e) => handleChange("razorpayWebhookSecret", e.target.value)}
+                />
+                {secretMeta.hasRazorpayWebhookSecret && !settings.razorpayWebhookSecret && (
+                  <p className="text-xs text-gray-500">Webhook secret already configured. Leave blank to keep existing value.</p>
+                )}
               </div>
 
               <div className="flex items-center justify-between">

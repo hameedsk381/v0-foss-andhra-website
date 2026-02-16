@@ -52,50 +52,50 @@ export function MainNav() {
   const [isOpen, setIsOpen] = React.useState(false)
 
   return (
-    <div className="flex w-full justify-between items-center">
-      <Link href="/" className="flex items-center space-x-2">
+    <div className="flex w-full items-center justify-between gap-4">
+      <Link href="/" className="flex items-center gap-2 rounded-lg py-1 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="relative h-10 w-auto"
+          className="relative h-11 w-auto"
         >
           <Image
             src="/logos/foss-andhra-logo.png"
             alt="FOSS Andhra Logo"
             width={180}
             height={40}
-            className="h-10 w-auto"
+            className="h-11 w-auto"
             priority
           />
         </motion.div>
       </Link>
 
       {/* Desktop Navigation */}
-      <div className="hidden md:flex">
+      <div className="hidden items-center md:flex">
         <NavigationMenu className="nav-layer">
-          <NavigationMenuList>
+          <NavigationMenuList className="gap-1.5">
             {navItems.map((item, index) => {
               if (item.hasChildren) {
                 return (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuTrigger
                       className={cn(
-                        "text-base nav-trigger-layer",
-                        pathname.startsWith("/programs") && "text-primary font-medium",
+                        "text-[15px] nav-trigger-layer",
+                        pathname.startsWith("/programs") && "bg-primary/10 text-primary",
                       )}
                     >
                       {item.title}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent className="nav-content-layer">
-                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      <ul className="grid w-[420px] gap-3 p-4 md:w-[520px] md:grid-cols-2 lg:w-[620px]">
                         {programs.map((program) => (
                           <li key={program.id}>
                             <NavigationMenuLink asChild>
                               <Link
                                 href={program.href}
                                 className={cn(
-                                  "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                                  "block select-none space-y-1 rounded-lg border border-transparent p-3 leading-none no-underline outline-none transition-colors hover:bg-accent/70 hover:text-accent-foreground hover:border-border focus:bg-accent/70 focus:text-accent-foreground",
                                   PROGRAM_HOVER_BG_CLASS[program.id],
                                 )}
                               >
@@ -131,8 +131,8 @@ export function MainNav() {
                       href={item.href}
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "text-base",
-                        pathname === item.href && "text-primary font-medium",
+                        "text-[15px]",
+                        pathname === item.href && "bg-primary/10 text-primary",
                       )}
                     >
                       {item.title}
@@ -144,18 +144,18 @@ export function MainNav() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <div className="ml-4 flex items-center gap-4">
+        <div className="ml-5 flex items-center gap-3">
           {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-9 w-9">
                     <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
                     <AvatarFallback>{session.user?.name?.charAt(0) || "U"}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 dropdown-layer" align="end" forceMount>
+              <DropdownMenuContent className="dropdown-layer w-56 rounded-xl" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{session.user?.name}</p>
@@ -185,7 +185,7 @@ export function MainNav() {
           ) : (
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/login">
-                <Button className="bg-secondary text-black hover:bg-secondary/90">Join Us / Login</Button>
+                <Button className="bg-secondary px-5 text-black hover:bg-secondary/90">Join Us / Login</Button>
               </Link>
             </motion.div>
           )}
@@ -196,12 +196,12 @@ export function MainNav() {
       <div className="md:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-10 w-10">
+            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-lg">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+          <SheetContent side="right" className="w-[320px] sm:w-[410px]">
             <div className="flex flex-col h-full">
               <div className="flex items-center justify-between mb-6">
                 <Link href="/" className="flex items-center space-x-2" onClick={() => setIsOpen(false)}>
@@ -219,14 +219,14 @@ export function MainNav() {
                 </Button>
               </div>
 
-              <div className="space-y-4 flex-1">
+              <div className="flex-1 space-y-4">
                 <AnimatePresence>
                   {navItems.map((item, index) => {
                     if (item.hasChildren) {
                       return (
                         <div key={index} className="space-y-2">
                           <div className="font-medium px-1 py-2">{item.title}</div>
-                          <div className="pl-4 space-y-3 border-l-2 border-muted">
+                          <div className="space-y-2 border-l-2 border-muted pl-4">
                             {programs.map((program) => (
                               <motion.div
                                 key={program.id}
@@ -237,7 +237,7 @@ export function MainNav() {
                                 <Link
                                   href={program.href}
                                   className={cn(
-                                    "flex items-center gap-2 py-3 px-1 rounded-md",
+                                    "flex items-center gap-2 rounded-md px-2 py-2.5",
                                     pathname === program.href
                                       ? cn(PROGRAM_TEXT_CLASS[program.id], "font-medium")
                                       : "text-foreground hover:text-primary",
@@ -270,7 +270,7 @@ export function MainNav() {
                         <Link
                           href={item.href}
                           className={cn(
-                            "block py-3 px-1 rounded-md",
+                            "block rounded-md px-2 py-2.5",
                             pathname === item.href ? "text-primary font-medium" : "text-foreground hover:text-primary",
                           )}
                           onClick={() => setIsOpen(false)}
