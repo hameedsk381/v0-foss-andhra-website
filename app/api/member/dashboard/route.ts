@@ -41,11 +41,17 @@ export async function GET() {
       return NextResponse.json({ error: "Member not found" }, { status: 404 })
     }
 
+    const memberEmail = member.email.trim()
+    const registrationWhere = {
+      email: { equals: memberEmail, mode: "insensitive" as const },
+      createdAt: { gte: member.joinDate },
+    }
+
     const [attendedCount, registeredCount, notifications, recentRegistrations] = await Promise.all([
       prisma.registration
         .count({
           where: {
-            email: member.email,
+            ...registrationWhere,
             attended: true,
           },
         })
@@ -55,9 +61,7 @@ export async function GET() {
         }),
       prisma.registration
         .count({
-          where: {
-            email: member.email,
-          },
+          where: registrationWhere,
         })
         .catch((error) => {
           if (isMissingRelationError(error)) return 0
@@ -78,7 +82,7 @@ export async function GET() {
       }),
       prisma.registration
         .findMany({
-          where: { email: member.email },
+          where: registrationWhere,
           include: {
             Event: {
               select: {

@@ -183,7 +183,7 @@ export default function MembershipPage() {
                 ? "Your membership is expiring soon. Renew now to continue enjoying benefits."
                 : "Your membership has expired. Renew to regain access to all benefits."}
             </p>
-            <Link href="/membership">
+            <Link href="/member/membership/renew">
               <Button>Renew Membership</Button>
             </Link>
           </CardContent>

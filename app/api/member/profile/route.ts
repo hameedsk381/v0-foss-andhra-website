@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
+import { z } from "zod"
 
 export const dynamic = "force-dynamic"
 const MEMBER_PROFILE_SELECT = {
@@ -18,9 +19,18 @@ const MEMBER_PROFILE_SELECT = {
   membershipId: true,
   joinDate: true,
   expiryDate: true,
+  lastLogin: true,
   createdAt: true,
   updatedAt: true,
 } as const
+
+const updateMemberProfileSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(120, "Name is too long"),
+  phone: z.string().trim().min(7, "Phone number is too short").max(20, "Phone number is too long"),
+  organization: z.string().trim().max(160, "Organization is too long").optional(),
+  designation: z.string().trim().max(160, "Designation is too long").optional(),
+  interests: z.string().trim().max(2000, "Interests must be under 2000 characters").optional(),
+})
 
 export async function GET() {
   try {
@@ -53,16 +63,24 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json()
-    const { name, phone, organization, designation, interests } = body
+    const parsed = updateMemberProfileSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid profile data" },
+        { status: 400 }
+      )
+    }
+
+    const { name, phone, organization, designation, interests } = parsed.data
 
     const updatedMember = await prisma.member.update({
       where: { id: (session.user as any).id },
       data: {
         name,
         phone,
-        organization,
-        designation,
-        interests,
+        organization: organization || null,
+        designation: designation || null,
+        interests: interests || null,
       },
       select: MEMBER_PROFILE_SELECT,
     })

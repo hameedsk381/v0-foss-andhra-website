@@ -26,6 +26,17 @@ function LoginPageContent() {
   const { toast } = useToast()
 
   const callbackUrl = searchParams.get("callbackUrl") || "/"
+  const safeCallbackUrl =
+    callbackUrl.startsWith("/") && !callbackUrl.startsWith("//")
+      ? callbackUrl
+      : null
+
+  const resolvePostLoginPath = (fallbackPath: string, userType: "admin" | "member") => {
+    if (!safeCallbackUrl) return fallbackPath
+    if (userType === "member" && safeCallbackUrl.startsWith("/admin")) return "/member"
+    if (userType === "admin" && safeCallbackUrl.startsWith("/member")) return "/admin"
+    return safeCallbackUrl
+  }
 
   const handleMemberLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,7 +64,7 @@ function LoginPageContent() {
           title: "Success!",
           description: "Login successful. Redirecting...",
         })
-        router.push("/member")
+        router.push(resolvePostLoginPath("/member", "member"))
       }
     } catch (error) {
       console.error("Login error:", error)
@@ -92,7 +103,7 @@ function LoginPageContent() {
           title: "Success!",
           description: "Login successful. Redirecting to admin dashboard...",
         })
-        router.push("/admin")
+        router.push(resolvePostLoginPath("/admin", "admin"))
       }
     } catch (error) {
       console.error("Login error:", error)

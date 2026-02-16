@@ -56,6 +56,8 @@ export default async function middleware(req: NextRequest) {
 
   if (pathname.startsWith("/member")) {
     if (!isAuthenticated) return redirectTo("/login", req)
+    if (userType === "admin") return redirectTo("/admin", req)
+    if (userType !== "member") return redirectTo("/login", req)
     return NextResponse.next()
   }
 
