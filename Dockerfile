@@ -41,11 +41,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/bun.lock ./bun.lock
-# Use a shell script to run migrations and then start the server
-RUN echo '#!/bin/sh\nprisma migrate deploy\nnode server.js' > /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY --from=builder --chown=nextjs:nodejs /app/entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
 USER nextjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=5 CMD curl -fsS http://127.0.0.1:3000/ >/dev/null || exit 1
-CMD ["dumb-init", "/app/entrypoint.sh"]
+CMD ["/usr/bin/dumb-init", "--", "./entrypoint.sh"]
