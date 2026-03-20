@@ -1,8 +1,8 @@
 module.exports = {
   apps: [{
     name: 'foss-andhra-website',
-    script: 'node_modules/.bin/next',
-    args: 'start',
+    script: 'bun',
+    args: 'run start',
     cwd: './',
     instances: 'max',
     exec_mode: 'cluster',
