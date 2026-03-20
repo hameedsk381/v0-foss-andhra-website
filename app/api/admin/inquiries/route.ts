@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdminAccess } from "@/lib/auth/admin"
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
     try {
     const authError = await requireAdminAccess(["viewer", "editor", "admin"])

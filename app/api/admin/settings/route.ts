@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAccess } from "@/lib/auth/admin"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 const SECRET_KEYS = new Set(["razorpayKeySecret", "razorpayWebhookSecret", "smtpPass"])
 
 function buildSecretMeta(settings: Record<string, string>) {
@@ -18,7 +20,7 @@ export async function GET() {
     if (authError) return authError
 
     const settingsRows = await prisma.settings.findMany()
-    const settings = settingsRows.reduce<Record<string, string>>((acc, row) => {
+    const settings = settingsRows.reduce<Record<string, string>>((acc: any, row: any) => {
       acc[row.key] = row.value
       return acc
     }, {})

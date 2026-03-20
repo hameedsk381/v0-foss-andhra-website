@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Transform data for gallery
-    const galleryItems = media.map(item => ({
+    const galleryItems = media.map((item: any) => ({
       id: item.id,
       title: item.caption || 'Untitled',
       description: item.caption || '',

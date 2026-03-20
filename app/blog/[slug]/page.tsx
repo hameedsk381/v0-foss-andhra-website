@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+
+export const dynamic = "force-dynamic"
 import { generateBlogPostMetadata } from "@/components/seo-metadata"
 import { BlogPostJsonLd, BreadcrumbJsonLd } from "@/components/structured-data"
 import { Metadata } from "next"
@@ -66,7 +68,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       ...postRaw,
       category: postRaw.BlogCategory,
       author: postRaw.Admin,
-      tags: postRaw.BlogPostTag.map((t) => ({ tag: t.BlogTag })),
+      tags: postRaw.BlogPostTag.map((t: any) => ({ tag: t.BlogTag })),
       comments: postRaw.BlogComment,
     }
     : null
