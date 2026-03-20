@@ -28,6 +28,7 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 RUN apk add --no-cache curl dumb-init
 RUN npm install -g prisma@6.17.1
+RUN npm install sharp
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
