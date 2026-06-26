@@ -1,13 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
-import crypto from "crypto"
-import { completeDonationPayment, completeMembershipPayment, type PaymentPurpose } from "@/lib/payment/fulfillment"
-import { getRazorpayRuntimeConfig } from "@/lib/payment/razorpay"
+import {
+  completeDonationPayment,
+  completeMembershipPayment,
+  type PaymentPurpose,
+} from "@/lib/payment/fulfillment"
+import {
+  getRazorpayRuntimeConfig,
+  verifyRazorpayWebhookSignature,
+} from "@/lib/payment/razorpay"
+import { prisma } from "@/lib/prisma"
+import { logPaymentEvent } from "@/lib/payment/logger"
 
 export const dynamic = "force-dynamic"
 
 interface RazorpayPaymentEntity {
   id: string
   order_id?: string
+  amount?: number
+  currency?: string
   email?: string
   contact?: string
   notes?: Record<string, string>
@@ -18,50 +28,98 @@ function resolvePurpose(notes?: Record<string, string>): PaymentPurpose {
 }
 
 export async function POST(request: NextRequest) {
+  const body = await request.text()
+  const signature = request.headers.get("x-razorpay-signature")
+
+  if (!signature) {
+    return NextResponse.json({ error: "Missing signature header" }, { status: 400 })
+  }
+
+  let webhookSecret: string | undefined
+
   try {
-    const body = await request.text()
-    const signature = request.headers.get("x-razorpay-signature")
-
-    if (!signature) {
-      return NextResponse.json({ error: "Missing signature header" }, { status: 400 })
-    }
-
-    const { webhookSecret, keySecret } = await getRazorpayRuntimeConfig({
+    const config = await getRazorpayRuntimeConfig({
       requireSecret: false,
-      requireWebhookSecret: false,
+      requireWebhookSecret: true, // Webhook secret is now mandatory.
     })
-    const effectiveWebhookSecret = webhookSecret || keySecret
+    webhookSecret = config.webhookSecret
+  } catch {
+    console.error("[webhook] Razorpay webhook secret is not configured")
+    return NextResponse.json({ error: "Webhook not configured" }, { status: 500 })
+  }
 
-    if (!effectiveWebhookSecret) {
-      console.error("Razorpay webhook secret is not configured")
-      return NextResponse.json({ error: "Webhook not configured" }, { status: 500 })
-    }
+  if (!webhookSecret) {
+    console.error("[webhook] Razorpay webhook secret resolved to empty")
+    return NextResponse.json({ error: "Webhook not configured" }, { status: 500 })
+  }
 
-    const expectedSignature = crypto.createHmac("sha256", effectiveWebhookSecret).update(body).digest("hex")
+  const signatureValid = verifyRazorpayWebhookSignature({ body, signature, webhookSecret })
+  if (!signatureValid) {
+    console.error("[webhook] Invalid Razorpay webhook signature")
+    await logPaymentEvent({
+      event: "webhook_signature_invalid",
+      metadata: { signaturePrefix: signature.slice(0, 8) },
+    })
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
+  }
 
-    if (expectedSignature !== signature) {
-      console.error("Invalid Razorpay webhook signature")
-      return NextResponse.json({ error: "Invalid signature" }, { status: 400 })
-    }
+  let event: unknown
+  try {
+    event = JSON.parse(body)
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
+  }
 
-    const event = JSON.parse(body)
-    if (event?.event !== "payment.captured") {
-      return NextResponse.json({ status: "ignored" })
-    }
+  const eventObj = event as Record<string, unknown>
 
-    const payment = event?.payload?.payment?.entity as RazorpayPaymentEntity | undefined
-    if (!payment?.id || !payment.order_id) {
-      return NextResponse.json({ status: "ignored", reason: "Missing payment metadata" })
-    }
+  if (eventObj?.event !== "payment.captured") {
+    return NextResponse.json({ status: "ignored" })
+  }
 
-    const notes = payment.notes || {}
-    const paymentPurpose = resolvePurpose(notes)
+  const payment = (eventObj?.payload as any)?.payment?.entity as
+    | RazorpayPaymentEntity
+    | undefined
 
+  if (!payment?.id || !payment.order_id) {
+    return NextResponse.json({ status: "ignored", reason: "Missing payment metadata" })
+  }
+
+  const notes = payment.notes || {}
+  const paymentPurpose = resolvePurpose(notes)
+
+  try {
     if (paymentPurpose === "donation") {
       const donationId = notes.donationId
       if (!donationId) {
-        console.warn(`Webhook donation payment ${payment.id} missing donationId`)
+        console.warn(`[webhook] donation payment ${payment.id} missing donationId`)
         return NextResponse.json({ status: "ignored", reason: "Missing donationId" })
+      }
+
+      // Ownership check: ensure the order belongs to this donation.
+      const donation = await prisma.donation.findUnique({
+        where: { id: donationId },
+        select: { id: true, status: true, razorpayOrderId: true, amount: true },
+      })
+
+      if (!donation) {
+        console.warn(`[webhook] donationId ${donationId} not found in DB`)
+        return NextResponse.json({ status: "ignored", reason: "Unknown donation" })
+      }
+
+      if (
+        donation.razorpayOrderId &&
+        donation.razorpayOrderId !== payment.order_id
+      ) {
+        console.error(
+          `[webhook] order_id mismatch for donation ${donationId}: ` +
+            `expected ${donation.razorpayOrderId}, got ${payment.order_id}`,
+        )
+        await logPaymentEvent({
+          event: "webhook_order_mismatch",
+          paymentId: payment.id,
+          metadata: { donationId, expected: donation.razorpayOrderId, got: payment.order_id },
+        })
+        return NextResponse.json({ error: "Order ID mismatch" }, { status: 400 })
       }
 
       await completeDonationPayment({
@@ -70,12 +128,19 @@ export async function POST(request: NextRequest) {
         orderId: payment.order_id,
       })
 
+      await logPaymentEvent({
+        event: "donation_completed_via_webhook",
+        paymentId: payment.id,
+        metadata: { donationId, orderId: payment.order_id },
+      })
+
       return NextResponse.json({ status: "ok", paymentPurpose })
     }
 
+    // Membership path
     const email = notes.userEmail || payment.email
     if (!email) {
-      console.warn(`Webhook membership payment ${payment.id} missing email`)
+      console.warn(`[webhook] membership payment ${payment.id} missing email`)
       return NextResponse.json({ status: "ignored", reason: "Missing email" })
     }
 
@@ -91,10 +156,21 @@ export async function POST(request: NextRequest) {
       additionalData: notes,
     })
 
+    await logPaymentEvent({
+      event: "membership_completed_via_webhook",
+      paymentId: payment.id,
+      metadata: { email, orderId: payment.order_id, membershipType: notes.membershipType },
+    })
+
     return NextResponse.json({ status: "ok", paymentPurpose })
   } catch (error) {
-    console.error("Webhook processing error:", error)
+    const message = error instanceof Error ? error.message : String(error)
+    console.error("[webhook] processing error:", message)
+    await logPaymentEvent({
+      event: "webhook_processing_error",
+      paymentId: payment.id,
+      metadata: { error: message, paymentPurpose },
+    })
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
-

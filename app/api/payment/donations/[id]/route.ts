@@ -1,7 +1,17 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { getDonationCheckoutContext } from "@/lib/payment/fulfillment"
+import { rateLimit, getRateLimitIdentifier } from "@/lib/rate-limit"
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+// 20 lookups per minute per IP — prevents donation-ID enumeration.
+const limiter = rateLimit({ uniqueTokenPerInterval: 20, interval: 60_000 })
+
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    await limiter.check(request, 20, getRateLimitIdentifier(request))
+  } catch (rateLimitResponse) {
+    return rateLimitResponse as NextResponse
+  }
+
   try {
     const donation = await getDonationCheckoutContext(params.id)
 

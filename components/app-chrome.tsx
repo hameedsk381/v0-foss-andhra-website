@@ -34,8 +34,8 @@ export function AppChrome({ children }: AppChromeProps) {
       >
         Skip to main content
       </a>
-      <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-        <div className="app-container flex h-[72px] min-h-[72px] items-center">
+      <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/75 shadow-[0_1px_0_0_hsl(var(--border)/0.5)]">
+        <div className="app-container flex h-[68px] min-h-[68px] items-center">
           <MainNav />
         </div>
       </header>

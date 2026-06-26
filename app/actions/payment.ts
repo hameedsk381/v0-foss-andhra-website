@@ -7,9 +7,11 @@ import {
   getDonationCheckoutContext,
   getMembershipPaymentDefaults,
   resolveMembershipAmount,
+  isValidMembershipType,
   type PaymentPurpose,
   type PaymentUserDetails,
 } from "@/lib/payment/fulfillment"
+import { logPaymentEvent } from "@/lib/payment/logger"
 
 interface CreateOrderData {
   paymentPurpose?: PaymentPurpose
@@ -113,7 +115,18 @@ export async function createPaymentOrder(data: CreateOrderData) {
 
     const defaults = await getMembershipPaymentDefaults()
     const membershipType = data.membershipType || "FOSStar Annual"
+
+    if (!isValidMembershipType(membershipType)) {
+      throw new Error(`Invalid membership type: ${membershipType}`)
+    }
+
     const amount = resolveMembershipAmount(membershipType, defaults)
+
+    await logPaymentEvent({
+      event: "order_created",
+      email: data.userDetails.email,
+      metadata: { membershipType, amount, paymentPurpose: "membership" },
+    })
 
     const orderResult = await createRazorpayOrder({
       amountInPaise: Math.round(amount * 100),
@@ -163,6 +176,10 @@ export async function verifyPayment(data: VerifyPaymentData) {
     })
 
     if (!signatureValid) {
+      await logPaymentEvent({
+        event: "signature_verification_failed",
+        metadata: { orderId: data.orderId, paymentId: data.paymentId, paymentPurpose },
+      })
       return {
         success: false,
         error: "Payment verification failed - invalid signature",

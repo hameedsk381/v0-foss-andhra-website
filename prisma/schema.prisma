@@ -141,6 +141,11 @@ model Donation {
   receiptUrl        String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@index([paymentId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([razorpayOrderId])
 }
 
 model Event {
@@ -225,6 +230,25 @@ model Member {
   address          String?
   resetToken       String?   @unique
   resetTokenExpiry DateTime?
+
+  @@index([status])
+  @@index([expiryDate])
+  @@index([paymentId])
+}
+
+model PaymentLog {
+  id          String   @id @default(cuid())
+  event       String
+  paymentId   String?
+  donationId  String?
+  membershipId String?
+  email       String?
+  metadata    String?  // JSON string
+  createdAt   DateTime @default(now())
+
+  @@index([paymentId])
+  @@index([event])
+  @@index([createdAt])
 }
 
 model Notification {

@@ -75,6 +75,7 @@ export function RazorpayCheckout({
   const [isLoading, setIsLoading] = useState(false)
   const [isVerifying, setIsVerifying] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [scriptLoading, setScriptLoading] = useState(false)
   const { toast } = useToast()
 
   const handlePayment = async () => {
@@ -101,15 +102,28 @@ export function RazorpayCheckout({
       }
 
       if (!window.Razorpay) {
-        const script = document.createElement("script")
-        script.src = "https://checkout.razorpay.com/v1/checkout.js"
-        script.async = true
-        document.body.appendChild(script)
+        if (!scriptLoading) {
+          setScriptLoading(true)
+          const script = document.createElement("script")
+          script.src = "https://checkout.razorpay.com/v1/checkout.js"
+          script.async = true
+          document.body.appendChild(script)
 
-        await new Promise((resolve, reject) => {
-          script.onload = () => resolve(true)
-          script.onerror = () => reject(new Error("Failed to load Razorpay checkout script"))
-        })
+          await new Promise<void>((resolve, reject) => {
+            script.onload = () => { setScriptLoading(false); resolve() }
+            script.onerror = () => {
+              setScriptLoading(false)
+              reject(new Error("Failed to load Razorpay checkout script"))
+            }
+          })
+        } else {
+          // Another click triggered while script is loading — wait for it.
+          await new Promise<void>((resolve) => {
+            const check = setInterval(() => {
+              if (window.Razorpay) { clearInterval(check); resolve() }
+            }, 100)
+          })
+        }
       }
 
       const options: RazorpayOptions = {
@@ -134,16 +148,25 @@ export function RazorpayCheckout({
           try {
             setIsVerifying(true)
 
-            const verificationResult = await verifyPayment({
-              orderId: response.razorpay_order_id,
-              paymentId: response.razorpay_payment_id,
-              signature: response.razorpay_signature,
-              paymentPurpose,
-              donationId,
-              userDetails: paymentPurpose === "membership" ? userDetails : undefined,
-              membershipType: paymentPurpose === "membership" ? membershipType || "FOSStar Annual" : undefined,
-              additionalData: paymentPurpose === "membership" ? additionalData || undefined : undefined,
-            })
+            const VERIFY_TIMEOUT_MS = 30_000
+            const verificationResult = await Promise.race([
+              verifyPayment({
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+                paymentPurpose,
+                donationId,
+                userDetails: paymentPurpose === "membership" ? userDetails : undefined,
+                membershipType: paymentPurpose === "membership" ? membershipType || "FOSStar Annual" : undefined,
+                additionalData: paymentPurpose === "membership" ? additionalData || undefined : undefined,
+              }),
+              new Promise<never>((_, reject) =>
+                setTimeout(
+                  () => reject(new Error("Verification timed out. Contact support with your payment ID.")),
+                  VERIFY_TIMEOUT_MS,
+                ),
+              ),
+            ])
 
             if (!verificationResult.success) {
               throw new Error(verificationResult.error || "Payment verification failed")

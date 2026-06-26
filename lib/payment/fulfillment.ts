@@ -8,7 +8,8 @@ const DEFAULT_MEMBERSHIP_DURATION_MONTHS = 12
 const ANONYMOUS_EMAIL_DOMAIN = "fossandhra.local"
 const ANONYMOUS_PHONE_FALLBACK = "0000000000"
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const PHONE_REGEX = /^\+?[0-9][0-9\s-]{7,19}$/
+// Must start and end with a digit, allowing spaces/dashes/parens in between.
+const PHONE_REGEX = /^\+?[0-9]([0-9\s()\-]{6,18})[0-9]$/
 
 const MEMBERSHIP_AMOUNT_MAP: Record<string, number> = {
   "fosstar annual": 300,
@@ -213,15 +214,20 @@ export async function getMembershipPaymentDefaults(): Promise<MembershipPaymentD
   }
 }
 
-export function resolveMembershipAmount(membershipType: string | undefined, defaults?: MembershipPaymentDefaults): number {
+export function resolveMembershipAmount(
+  membershipType: string | undefined,
+  defaults?: MembershipPaymentDefaults,
+): number {
   const normalizedType = normalizeMembershipTypeKey(membershipType)
   const matchedAmount = MEMBERSHIP_AMOUNT_MAP[normalizedType]
-
-  if (typeof matchedAmount === "number") {
-    return matchedAmount
-  }
-
+  if (typeof matchedAmount === "number") return matchedAmount
   return defaults?.annualFee ?? DEFAULT_MEMBERSHIP_FEE
+}
+
+export function isValidMembershipType(membershipType: string | undefined): boolean {
+  if (!membershipType?.trim()) return false
+  const key = normalizeMembershipTypeKey(membershipType)
+  return key in MEMBERSHIP_AMOUNT_MAP
 }
 
 export async function createPendingDonation(input: CreateDonationIntentInput) {
@@ -256,7 +262,7 @@ export async function createPendingDonation(input: CreateDonationIntentInput) {
       type: normalizeDonationType(input.donationType),
       status: "pending",
       anonymous,
-      notes: normalizeString(input.notes, 1000),
+      notes: normalizeString(input.notes, 250),
       program: normalizeString(input.program, 120),
     },
   })
@@ -289,6 +295,10 @@ export async function completeDonationPayment(input: CompleteDonationPaymentInpu
 
   if (!donation) {
     throw new Error("Donation record not found")
+  }
+
+  if (donation.status === "failed" || donation.status === "cancelled") {
+    throw new Error(`Cannot complete a donation with status "${donation.status}"`)
   }
 
   if (donation.status === "completed") {
@@ -383,10 +393,10 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
 
   const shouldGenerateCredentials = !existingMember || !existingMember.password
   const resetToken = shouldGenerateCredentials ? crypto.randomBytes(32).toString("hex") : undefined
-  const resetTokenExpiry = shouldGenerateCredentials ? new Date(now) : undefined
-  if (resetTokenExpiry) {
-    resetTokenExpiry.setHours(resetTokenExpiry.getHours() + 24)
-  }
+  // Use millisecond arithmetic instead of setHours to avoid DST edge cases.
+  const resetTokenExpiry = shouldGenerateCredentials
+    ? new Date(now.getTime() + 24 * 60 * 60 * 1_000)
+    : undefined
 
   const generatedPasswordHash = shouldGenerateCredentials
     ? await bcrypt.hash(crypto.randomBytes(16).toString("hex"), 10)
