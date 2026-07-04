@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 
-export const revalidate = 3600
+export const dynamic = "force-dynamic"
 import { generateBlogPostMetadata } from "@/components/seo-metadata"
 import { BlogPostJsonLd, BreadcrumbJsonLd } from "@/components/structured-data"
 import { Metadata } from "next"

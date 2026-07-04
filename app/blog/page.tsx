@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import BlogPageClient from "./BlogPageClient"
 
-export const revalidate = 3600
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Blog | FOSS Andhra",

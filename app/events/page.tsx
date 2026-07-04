@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import EventsClient from "./EventsClient"
 
-export const revalidate = 300
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Events - Upcoming FOSS Workshops & Meetups",
