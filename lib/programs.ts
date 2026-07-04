@@ -109,3 +109,13 @@ export const PROGRAM_HOVER_BG_CLASS: Record<ProgramId, string> = {
   fossterage: "hover:bg-fossterage/10",
   fosspeaks: "hover:bg-fosspeaks/10",
 }
+
+export const PROGRAM_PHOTOS: Record<ProgramId, string> = {
+  fosstar: "/stock/panel.jpg",
+  fosserve: "/gallery/fosserve-launch.jpg",
+  fossync: "/gallery/fossync-club.jpg",
+  fosstorm: "/gallery/fosstorm-workshop.jpg",
+  fosstart: "/gallery/fossart-startup.jpg",
+  fossterage: "/gallery/fossterage-database.jpg",
+  fosspeaks: "/gallery/fosspeaks-advocacy.jpg",
+}

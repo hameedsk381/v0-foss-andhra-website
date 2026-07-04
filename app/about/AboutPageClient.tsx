@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { AnimatedSection } from "@/components/ui/animated-section"
 import { AnimatedButton } from "@/components/ui/animated-button"
 import { LogoShowcase } from "@/components/logo-showcase"
+import { AnimatedCounter } from "@/components/motion-primitives"
 
 interface ContentData {
   title: string
@@ -28,25 +29,77 @@ export default function AboutPageClient() {
   }, [])
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="w-full py-20 md:py-28 bg-background relative overflow-hidden">
-        <div className="container px-4 md:px-6 relative z-10">
-          <AnimatedSection variant="fadeUp">
-            <div className="max-w-3xl space-y-5">
-              <div className="flex items-center gap-3">
-                <span className="inline-block w-8 h-0.5 bg-secondary rounded-full" />
-                <span className="text-sm font-semibold text-muted-foreground">Who we are</span>
-              </div>
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-foreground leading-tight tracking-tight text-balance">
-                About FOSS Andhra
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                Our mission, vision, and journey to build open source infrastructure across Andhra Pradesh.
-              </p>
-            </div>
-          </AnimatedSection>
+      {/* Hero Section — full-bleed photo */}
+      <section className="relative w-full min-h-[58vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/stock/workshop.jpg"
+            alt="FOSS Andhra community at work"
+            fill
+            priority
+            className="object-cover object-center"
+          />
         </div>
-        <div className="absolute bottom-0 inset-x-0 h-px bg-border" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(100deg, rgba(0,40,100,0.96) 0%, rgba(0,70,150,0.88) 40%, rgba(0,92,168,0.55) 70%, rgba(0,92,168,0.25) 100%)",
+          }}
+        />
+        <div className="container px-4 md:px-6 relative z-10 py-24">
+          <div className="max-w-3xl space-y-5">
+            <motion.div
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: -18 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="inline-block w-8 h-[2px] bg-white/60 rounded-full" />
+              <span className="text-sm font-semibold text-white/70 tracking-widest uppercase">Who we are</span>
+            </motion.div>
+            <motion.h1
+              className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight tracking-tight text-balance"
+              initial={{ opacity: 0, y: 28, filter: "blur(12px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              About FOSS Andhra
+            </motion.h1>
+            <motion.p
+              className="text-xl text-white/65 max-w-2xl leading-relaxed"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.55 }}
+            >
+              Our mission, vision, and journey to build open source infrastructure across Andhra Pradesh.
+            </motion.p>
+          </div>
+        </div>
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      </section>
+
+      {/* Animated stats strip */}
+      <section className="w-full py-12 bg-background">
+        <div className="container px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x divide-border">
+            {[
+              { value: 700, suffix: "+", label: "Community Members" },
+              { value: 9,   suffix: "+", label: "Campus Clubs" },
+              { value: 50,  suffix: "+", label: "Events Hosted" },
+              { value: 7,   suffix: "",  label: "Programmes" },
+            ].map(({ value, suffix, label }) => (
+              <div key={label} className="flex flex-col items-center text-center px-6">
+                <AnimatedCounter
+                  value={value}
+                  suffix={suffix}
+                  className="font-display text-5xl font-extrabold text-primary leading-none"
+                />
+                <span className="mt-2 text-sm font-medium text-muted-foreground">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* About Section */}

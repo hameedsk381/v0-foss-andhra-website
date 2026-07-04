@@ -7,7 +7,6 @@ import {
   motion,
   useScroll,
   useTransform,
-  useSpring,
   useReducedMotion,
 } from "framer-motion"
 import {
@@ -22,7 +21,7 @@ import {
   MapPin,
   Users,
 } from "lucide-react"
-import { PROGRAMS, PROGRAM_TEXT_CLASS } from "@/lib/programs"
+import { PROGRAMS, PROGRAM_TEXT_CLASS, PROGRAM_PHOTOS } from "@/lib/programs"
 import { SkipLink } from "@/components/skip-link"
 import { OrganizationJsonLd } from "@/components/structured-data"
 import { buttonHover, buttonTap } from "@/lib/animations"
@@ -34,16 +33,6 @@ const CAMPUS_NAMES = [
   "IIT Tirupati", "SVU Tirupati", "KL University",
   "VIT-AP", "RVR College", "GITAM",
 ]
-
-const PROGRAM_PHOTOS: Record<string, string> = {
-  fosstar:   "/stock/panel.jpg",
-  fosserve:  "/gallery/fosserve-launch.jpg",
-  fossync:   "/gallery/fossync-club.jpg",
-  fosstorm:  "/gallery/fosstorm-workshop.jpg",
-  fosstart:  "/gallery/fossart-startup.jpg",
-  fossterage:"/gallery/fossterage-database.jpg",
-  fosspeaks: "/gallery/fosspeaks-advocacy.jpg",
-}
 
 const stats = [
   { value: "700+", label: "Community Members" },
@@ -113,9 +102,6 @@ export default function Home() {
   const heroY   = useTransform(heroScroll, [0,1], reduced ? [0,0] : [0,-80])
   const heroOp  = useTransform(heroScroll, [0,0.75], [1,0])
 
-  const { scrollYProgress } = useScroll()
-  const bar = useSpring(scrollYProgress, { stiffness: 180, damping: 40, restDelta: 0.001 })
-
   const from = (p: object) => reduced ? {} : p
 
   return (
@@ -128,9 +114,6 @@ export default function Home() {
         description="Free and Open Source Software community in Andhra Pradesh"
         socialProfiles={["https://x.com/fossandhra","https://linkedin.com/company/fossandhra","https://github.com/fossandhra","https://youtube.com/@fossandhra"]}
       />
-
-      {/* Scroll progress */}
-      <motion.div className="fixed top-0 left-0 right-0 h-[3px] bg-white/70 origin-left z-[200] pointer-events-none" style={{ scaleX: bar }} />
 
       <div className="flex flex-col min-h-screen">
 
