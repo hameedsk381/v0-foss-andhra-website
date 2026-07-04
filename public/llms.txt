@@ -1,57 +1,64 @@
 # FOSS Andhra
 
-> Promoting free and open source software across Andhra Pradesh through education, governance, and community programs.
+> Building open source infrastructure for Andhra Pradesh — campus clubs, Telugu-language AI tools, civic tech, and policy advocacy for digital sovereignty.
 
 ## Organization
-- Type: Non-Governmental Organization (NGO)
+- Type: Non-Governmental Organisation (NGO)
 - Location: Yesj Centre for Excellence, Vijayawada, Andhra Pradesh 520008, India
 - Contact: office@fossap.in | +91 94944 63840
 - Website: https://fossap.in
 
 ## Mission
-Digitalizing education, governance, and society through free and open source solutions across Andhra Pradesh.
+To build Andhra Pradesh's open source layer — empowering students to contribute to global projects, deploying FOSS in schools and government, and developing Telugu-language computing tools that serve 82 million people.
+
+## 2026 Focus Areas
+- Open source AI infrastructure: helping AP institutions use and contribute to open models (Llama, Mistral, Whisper) rather than depending on proprietary AI
+- Telugu NLP and regional-language computing: closing the gap in Indic-language open source tooling
+- India DPI alignment: supporting AP government and institutions adopting DIGIT, ONDC, Beckn, and other open public infrastructure
+- Campus contributor pipeline: growing FOSSynC clubs into feeders for GSoC, Outreachy, and global open source projects
 
 ## Core Values
-- Open Knowledge: Making knowledge freely accessible to everyone
-- Data Privacy: Protecting user rights and digital sovereignty
-- Public Welfare: Prioritizing societal benefit over commercial interests
-- Offline First: Building solutions that work without constant internet access
+- Open Knowledge: knowledge must be freely accessible without paywalls or proprietary lock-in
+- Data Privacy: community-owned, auditable systems that protect digital sovereignty
+- Public Welfare: technology built for society, not shareholders — aligned with India's DPI ethos
+- Offline First: tools that work on low-end Android and 2G, because rural AP cannot wait
 
 ## Programs
 
-### FOSStar — Membership Program
-Connect with the FOSS community across Andhra Pradesh. Tiers for students, professionals, and institutions.
+### FOSStar — Membership Network
+700+ students, developers, and institutions across Andhra Pradesh. Tiers for students, professionals, and institutions.
 https://fossap.in/programs/fosstar
 
-### FOSServe — Education & Governance Solutions
-Promoting open source software adoption in Andhra Pradesh's educational institutions and government bodies.
+### FOSServe — Education and Governance Deployment
+Replacing proprietary software in AP schools and government offices with auditable, community-owned open source tools.
 https://fossap.in/programs/fosserve
 
-### FOSSynC — Student FOSS Clubs
-Establishing student-led open source clubs in colleges across Andhra Pradesh.
+### FOSSynC — Campus FOSS Clubs
+9+ active chapters at JNTU Kakinada, Andhra University, NIT Tadepalligudem, IIT Tirupati, SVU Tirupati, KL University, VIT-AP, RVR College, and GITAM. Building the next generation of open source contributors.
 https://fossap.in/programs/fossync
 
-### FOSStorm — Community Projects
-Developing open source projects that address local challenges in Andhra Pradesh.
+### FOSStorm — Community Software Projects
+Active projects: TeluguNLP (NLP toolkit for Telugu language, 120+ stars), OpenEdu (offline-first LMS), CivicDocs (government document management), FarmConnect (agricultural data platform). All code at github.com/fossandhra.
 https://fossap.in/programs/fosstorm
 
-### FOSStart — Startup Incubation
-Supporting open source startups in Andhra Pradesh with funding, mentorship, and networking.
+### FOSStart — Open Source Startup Incubation
+Seed funding support, mentorship, and licensing guidance for founders building on open source foundations in Andhra Pradesh.
 https://fossap.in/programs/fosstart
 
-### FOSSterage — Knowledge Repository
-Curated open source resources, documentation, and learning materials.
+### FOSSterage — Open Knowledge Repository
+Curated datasets, research archives, and learning materials for Telugu-language computing, Indic NLP, and open source AI toolchains.
 https://fossap.in/programs/fossterage
 
-### FOSSpeaks — Advocacy & Outreach
-Public speaking, workshops, and advocacy for FOSS adoption across Andhra Pradesh.
+### FOSSpeaks — Advocacy and Outreach
+Speakers, workshops, and policy advocacy for open source adoption in AP institutions and government. Available for college events and government seminars.
 https://fossap.in/programs/fosspeaks
 
 ## Community Stats
-- 500+ community members
+- 700+ community members
+- 9+ campus clubs across Andhra Pradesh
 - 50+ events hosted
-- 7 active programs
-- 20+ institutions reached
+- 4 active open source projects
+- 7 programmes
 
 ## Key Pages
 - Homepage: https://fossap.in
@@ -59,11 +66,12 @@ https://fossap.in/programs/fosspeaks
 - Programs: https://fossap.in/programs
 - Events: https://fossap.in/events
 - Membership: https://fossap.in/membership
+- Blog: https://fossap.in/blog
 - Contribute: https://fossap.in/contribute
 - Contact: https://fossap.in/contact
 - FAQ: https://fossap.in/faq
 
-## Social
+## Social and Code
 - GitHub: https://github.com/fossandhra
 - LinkedIn: https://linkedin.com/company/fossandhra
 - YouTube: https://youtube.com/@fossandhra

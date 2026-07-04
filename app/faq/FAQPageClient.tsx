@@ -13,15 +13,19 @@ export default function FAQPage() {
             questions: [
                 {
                     q: "What is FOSS Andhra?",
-                    a: "FOSS Andhra is a community-driven organization dedicated to promoting Free and Open Source Software (FOSS) across education, governance, and society in Andhra Pradesh, India. We aim to build a robust open-source ecosystem through various specialized programs."
+                    a: "FOSS Andhra (fossap.in) is an independent community organisation based in Vijayawada, Andhra Pradesh. We promote free and open source software across education, governance, and society through seven programmes: FOSStar, FOSServe, FOSSynC, FOSStorm, FOSStart, FOSSterage, and FOSSpeaks."
                 },
                 {
-                    q: "Is FOSS Andhra a government organization?",
-                    a: "No, FOSS Andhra is an independent community organization. However, we work closely with government bodies through our FOSServe program to implement open-source solutions in public services."
+                    q: "What is FOSS Andhra's role in the AI era?",
+                    a: "The most critical AI infrastructure in 2026 — PyTorch, Llama, Mistral, Hugging Face — is open source. FOSS Andhra helps AP students and institutions understand and contribute to this stack rather than depending solely on proprietary AI. Our FOSStorm programme builds Telugu-language NLP tools and open datasets to address the gap in regional-language AI resources."
                 },
                 {
-                    q: "How can I join the FOSS Andhra community?",
-                    a: "You can join by becoming a member through our FOSStar program, volunteering for specific initiatives via our Contribute page, or joining our online community platforms."
+                    q: "How does FOSS Andhra relate to India's Digital Public Infrastructure?",
+                    a: "India's DPI stack — UPI, ONDC, DIGIT, Beckn — is built on open source principles. FOSS Andhra advocates for AP government bodies to adopt DPI-compatible open source tools, and our FOSServe programme works directly with educational institutions and local government offices to deploy and support these solutions."
+                },
+                {
+                    q: "Is FOSS Andhra a government organisation?",
+                    a: "No. FOSS Andhra is an independent NGO. We collaborate with government bodies and educational institutions but are not affiliated with or funded by any government agency."
                 }
             ]
         },
@@ -29,16 +33,16 @@ export default function FAQPage() {
             category: "Membership",
             questions: [
                 {
-                    q: "What are the different types of membership?",
-                    a: "We offer three main membership types: Student (for individuals in educational institutions), Professional (for working individuals), and Institutional (for organizations and institutions)."
+                    q: "How can I join FOSS Andhra?",
+                    a: "Join through the FOSStar membership programme at fossap.in/programs/fosstar. Tiers are available for Students, Professionals, and Institutions. Members get access to events, workshops, the FOSS Andhra mentor network, and FOSStorm project opportunities."
                 },
                 {
                     q: "What are the benefits of being a member?",
-                    a: "Benefits include access to exclusive workshops, mentorship from FOSS experts, opportunities to contribute to real-world projects, voting rights in community decisions, and early access to educational resources."
+                    a: "Members get access to exclusive workshops, mentorship from open source practitioners, opportunities to contribute to FOSStorm projects, early access to events, and a network spanning 700+ students and professionals across Andhra Pradesh."
                 },
                 {
                     q: "Is there a fee for membership?",
-                    a: "Yes, we have nominal annual fees to support our community operations. Student membership is ₹500/year, Professional is ₹2,000/year, and Institutional is ₹10,000/year."
+                    a: "We have nominal annual fees to keep community operations sustainable. Visit fossap.in/membership for current pricing across Student, Professional, and Institutional tiers."
                 }
             ]
         },
@@ -46,29 +50,33 @@ export default function FAQPage() {
             category: "Programs",
             questions: [
                 {
-                    q: "What is FOSSynC?",
-                    a: "FOSSynC is our student-led FOSS clubs initiative. We help establish and mentor open-source clubs in educational institutions across Andhra Pradesh."
+                    q: "What is FOSSynC and how can my college start a club?",
+                    a: "FOSSynC is our campus club programme with 9+ active chapters at AP universities including JNTU Kakinada, Andhra University, NIT Tadepalligudem, and IIT Tirupati. To start a club, email office@fossap.in with your college name and a founding team of at least 10 students. We provide a resource kit, mentor access, and a speaker for your first event — free of charge."
                 },
                 {
-                    q: "How can my college start a FOSS club?",
-                    a: "You can reach out to us through the FOSSynC program page or the Contact Us form. We'll guide you through the process of setting up a club, providing resources, and connecting you with mentors."
+                    q: "What open source projects does FOSS Andhra build?",
+                    a: "FOSStorm builds community software for AP's specific needs: TeluguNLP (NLP toolkit for Telugu language), OpenEdu (offline-first LMS for schools with limited connectivity), CivicDocs (document management for local government), and FarmConnect (agricultural data platform for farmers). All code is on github.com/fossandhra under open licences."
                 },
                 {
                     q: "What is FOSStart?",
-                    a: "FOSStart is our entrepreneurship and incubation program. It provides funding, mentorship, and workspace for developers building open-source startups."
+                    a: "FOSStart is our incubation programme for founders building on open source foundations. It provides seed funding support, mentorship, open source licensing guidance, and connections to the wider AP tech ecosystem. Enquire at fossap.in/programs/fosstart."
+                },
+                {
+                    q: "What is FOSSterage?",
+                    a: "FOSSterage is our open knowledge repository — curated datasets, research archives, documentation, and learning materials focused on Telugu-language computing, regional data science, and FOSS toolchains. Particularly relevant for researchers and AI practitioners working with Indic languages."
                 }
             ]
         },
         {
-            category: "Contributions",
+            category: "Contributing",
             questions: [
                 {
-                    q: "How can I contribute if I'm not a developer?",
-                    a: "FOSS needs more than just code! You can help with documentation, translation, graphic design, community management, social media, and event organization. Visit our Contribute page to see all volunteer roles."
+                    q: "How can I contribute if I am not a developer?",
+                    a: "Non-developer contributions are essential: technical writing, Telugu translation, event organisation, graphic design, outreach to colleges, and financial support via donation or sponsorship. Visit fossap.in/contribute or email office@fossap.in to match your skills to an active need."
                 },
                 {
-                    q: "Can I sponsor a specific event or project?",
-                    a: "Yes! We offer tiered sponsorship packages and program-specific sponsorship opportunities. Please contact our sponsorship team via the Contribute page."
+                    q: "Can organisations sponsor FOSS Andhra?",
+                    a: "Yes. We offer event-level, programme-level, and annual sponsorship packages. Sponsors gain visibility across our 700+ member network, campus events, and online presence. Contact office@fossap.in or visit fossap.in/contribute/sponsor for details."
                 }
             ]
         }

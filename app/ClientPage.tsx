@@ -53,9 +53,9 @@ function generateHeroParticles(seed: number, count: number): HeroParticle[] {
 
 const stats = [
   { value: "7", label: "Active Programs", icon: Layers },
-  { value: "500+", label: "Community Members", icon: Users },
+  { value: "700+", label: "Community Members", icon: Users },
   { value: "50+", label: "Events Hosted", icon: CalendarDays },
-  { value: "20+", label: "Institutions Reached", icon: Globe },
+  { value: "9+", label: "Campus Clubs", icon: Globe },
 ]
 
 const values = [
@@ -63,7 +63,7 @@ const values = [
     icon: BookOpen,
     title: "Open Knowledge",
     description:
-      "Promoting free information and data accessibility for all — ensuring knowledge is openly available and shareable across society.",
+      "AI systems in 2026 are trained on public knowledge. We ensure that knowledge stays open — accessible to AP students, researchers, and communities without paywalls or proprietary lock-in.",
     color: "text-blue-600",
     bg: "bg-blue-50",
   },
@@ -71,7 +71,7 @@ const values = [
     icon: ShieldCheck,
     title: "Data Privacy",
     description:
-      "Championing data privacy and public welfare through transparent, secure, and community-owned open-source solutions.",
+      "From digital health records to e-governance, your data belongs to you. We champion community-owned, auditable open source systems that don't trade privacy for convenience.",
     color: "text-violet-600",
     bg: "bg-violet-50",
   },
@@ -79,7 +79,7 @@ const values = [
     icon: Heart,
     title: "Public Welfare",
     description:
-      "Building solutions that benefit society as a whole — not just individuals or corporations — for collective digital empowerment.",
+      "India's Digital Public Infrastructure — UPI, ONDC, DIGIT — runs on open source. We extend that ethos to every school, panchayat, and hospital in Andhra Pradesh.",
     color: "text-rose-600",
     bg: "bg-rose-50",
   },
@@ -87,7 +87,7 @@ const values = [
     icon: Globe,
     title: "Offline First",
     description:
-      "Designing inclusive digital tools that work regardless of connectivity, ensuring technology reaches every citizen.",
+      "Rural AP cannot wait for reliable 5G. We build tools that work on low-end Android, on 2G, on shared computers — because digital inclusion means no one is left behind.",
     color: "text-emerald-600",
     bg: "bg-emerald-50",
   },
@@ -109,13 +109,14 @@ export default function Home() {
       <SkipLink />
       <OrganizationJsonLd
         name="FOSS Andhra"
-        url="https://fossandhra.org"
-        logo="https://fossandhra.org/logos/foss-andhra-logo.png"
-        description="Free and Open Source Software Community in Andhra Pradesh promoting FOSS in education, governance, and society"
+        url="https://fossap.in"
+        logo="https://fossap.in/logos/foss-andhra-logo.png"
+        description="Free and Open Source Software community in Andhra Pradesh — building open source infrastructure for education, governance, and Telugu-language computing"
         socialProfiles={[
           "https://x.com/fossandhra",
-          "https://facebook.com/fossandhra",
           "https://linkedin.com/company/fossandhra",
+          "https://github.com/fossandhra",
+          "https://youtube.com/@fossandhra",
         ]}
       />
 
@@ -199,8 +200,8 @@ export default function Home() {
                       for All
                     </h1>
                     <p className="text-xl text-white/70 max-w-[520px] leading-relaxed">
-                      Digitalizing education, governance, and society through free and open source
-                      solutions across Andhra Pradesh.
+                      The most important AI and digital infrastructure in 2026 is open source.
+                      We're building Andhra Pradesh's share of it — in schools, government, and communities.
                     </p>
                   </div>
 
@@ -257,9 +258,9 @@ export default function Home() {
 
                   {/* Orbiting icon chips */}
                   {[
-                    { Icon: Code2, angle: 45, label: "Open Code" },
-                    { Icon: BookOpen, angle: 165, label: "Education" },
-                    { Icon: ShieldCheck, angle: 285, label: "Privacy" },
+                    { Icon: Code2, angle: 45, label: "Open AI Stack" },
+                    { Icon: BookOpen, angle: 165, label: "Telugu Computing" },
+                    { Icon: ShieldCheck, angle: 285, label: "Digital Rights" },
                   ].map(({ Icon, angle, label }, i) => (
                     <motion.div
                       key={i}
@@ -348,8 +349,8 @@ export default function Home() {
                   Initiatives for Change
                 </h2>
                 <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                  Seven community-led programs spanning education, entrepreneurship, advocacy, and
-                  open governance across the state.
+                  Seven programs covering campus clubs, open source projects, AI-ready datasets,
+                  startup incubation, and policy advocacy — all rooted in Andhra Pradesh.
                 </p>
               </div>
             </AnimatedSection>
@@ -423,11 +424,11 @@ export default function Home() {
               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="space-y-4 text-center md:text-left">
                   <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
-                    Ready to join the movement?
+                    Open source is Andhra Pradesh's advantage.
                   </h2>
                   <p className="text-white/70 text-lg max-w-lg">
-                    Become a member, volunteer, or sponsor — help us drive digital freedom across
-                    Andhra Pradesh.
+                    Join 700+ members — students, developers, educators, and institutions — building
+                    the open technology layer for AP's digital future.
                   </p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-4 flex-shrink-0">

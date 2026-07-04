@@ -88,16 +88,19 @@ export default function AboutPageClient() {
               <div className="space-y-6">
                 <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Story</h2>
                 <p className="text-gray-600">
-                  FOSS Andhra was established with a vision to promote the adoption of free and open source software
-                  across educational institutions, government bodies, and society at large in Andhra Pradesh. We believe
-                  that open source solutions offer numerous advantages including cost-effectiveness, transparency,
-                  security, and customizability.
+                  FOSS Andhra grew from a conviction that Andhra Pradesh's digital future should be built on software
+                  that its citizens can inspect, modify, and own — not rented from distant corporations. What started
+                  as a small circle of developers and educators in Vijayawada has expanded into a statewide network
+                  of campus clubs, community developers, and policy advocates spanning nine universities and over
+                  700 active members.
                 </p>
                 <p className="text-gray-600">
-                  Our journey began with a small group of FOSS enthusiasts who recognized the potential of open source
-                  software to transform digital infrastructure in the region. Today, we have grown into a vibrant
-                  community of developers, educators, policy advocates, and technology enthusiasts working together to
-                  advance the cause of free and open source software.
+                  In 2026, that conviction matters more than ever. The tools shaping education, governance, and daily
+                  life — AI assistants, data pipelines, administrative software — are increasingly proprietary and
+                  opaque. We build and advocate for the alternative: open source AI infrastructure, Telugu-language
+                  computing tools, and civic technology that any institution in AP can deploy, audit, and improve.
+                  Our seven programmes address every stage of that pipeline, from a student's first Linux install to
+                  a startup's first open source product.
                 </p>
                 <div className="pt-4">
                   <Link href="/contact">
@@ -149,7 +152,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Promote FOSS adoption in educational institutions</span>
+                    <span>Build Telugu-language AI and computing tools the community can own</span>
                   </li>
                   <li className="flex items-start">
                     <svg
@@ -161,7 +164,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Advocate for FOSS solutions in government</span>
+                    <span>Deploy open source software in AP schools and government offices</span>
                   </li>
                   <li className="flex items-start">
                     <svg
@@ -173,7 +176,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Build a vibrant community of FOSS contributors</span>
+                    <span>Grow campus contributors into global open source maintainers</span>
                   </li>
                   <li className="flex items-start">
                     <svg
@@ -185,7 +188,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Develop open source solutions for local challenges</span>
+                    <span>Advocate for digital sovereignty and open standards in public policy</span>
                   </li>
                 </ul>
               </div>
@@ -209,7 +212,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>FOSS-first approach in all educational institutions</span>
+                    <span>Every AP student who wants to contribute to open source can find a path to do so</span>
                   </li>
                   <li className="flex items-start">
                     <svg
@@ -221,7 +224,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Open source e-governance solutions</span>
+                    <span>AP government runs on auditable, community-owned software — not opaque proprietary systems</span>
                   </li>
                   <li className="flex items-start">
                     <svg
@@ -233,7 +236,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Thriving ecosystem of FOSS startups and innovations</span>
+                    <span>Telugu is a first-class language in open source AI and computing — not an afterthought</span>
                   </li>
                   <li className="flex items-start">
                     <svg
@@ -245,7 +248,7 @@ export default function AboutPageClient() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Digital inclusion through accessible FOSS solutions</span>
+                    <span>Open source startups from AP are recognised contributors to global technology</span>
                   </li>
                 </ul>
               </div>

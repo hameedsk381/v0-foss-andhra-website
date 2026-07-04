@@ -23,7 +23,7 @@ export const PROGRAMS: ProgramDefinition[] = [
     slug: "fosstar",
     logo: "/logos/fosstar-logo.png",
     themeClass: "text-fosstar",
-    description: "Membership program connecting and empowering the FOSS community",
+    description: "Connect with 700+ students, developers, and institutions driving open source adoption across Andhra Pradesh.",
   },
   {
     id: "fosserve",
@@ -31,7 +31,7 @@ export const PROGRAMS: ProgramDefinition[] = [
     slug: "fosserve",
     logo: "/logos/fosserve-logo.png",
     themeClass: "text-fosserve",
-    description: "Promoting open source solutions in education and governance",
+    description: "Helping AP schools and government offices replace proprietary software with auditable, community-owned tools.",
   },
   {
     id: "fossync",
@@ -39,7 +39,7 @@ export const PROGRAMS: ProgramDefinition[] = [
     slug: "fossync",
     logo: "/logos/fossync-logo.png",
     themeClass: "text-fossync",
-    description: "Student-led FOSS clubs in educational institutions",
+    description: "Student-led open source clubs on 9+ AP campuses — building the next generation of contributors and maintainers.",
   },
   {
     id: "fosstorm",
@@ -47,7 +47,7 @@ export const PROGRAMS: ProgramDefinition[] = [
     slug: "fosstorm",
     logo: "/logos/fosstorm-logo.png",
     themeClass: "text-fosstorm",
-    description: "Community-led open source projects developed by FOSS Andhra",
+    description: "Community developers building Telugu NLP, offline education software, and civic tech — all freely licensed.",
   },
   {
     id: "fosstart",
@@ -55,7 +55,7 @@ export const PROGRAMS: ProgramDefinition[] = [
     slug: "fosstart",
     logo: "/logos/fosstart-logo.png",
     themeClass: "text-fosstart",
-    description: "Entrepreneurship space for funding open source innovations",
+    description: "Seed funding, mentorship, and a network for founders building products on open source foundations.",
   },
   {
     id: "fossterage",
@@ -63,7 +63,7 @@ export const PROGRAMS: ProgramDefinition[] = [
     slug: "fossterage",
     logo: "/logos/fossterage-logo.png",
     themeClass: "text-fossterage",
-    description: "Repository of knowledge bases for researchers and data scientists",
+    description: "Open datasets, research archives, and curated resources for Telugu-language computing and AI development.",
   },
   {
     id: "fosspeaks",
@@ -71,7 +71,7 @@ export const PROGRAMS: ProgramDefinition[] = [
     slug: "fosspeaks",
     logo: "/logos/fosspeaks-logo.png",
     themeClass: "text-fosspeaks",
-    description: "Advocacy program for free and open-source technology for society",
+    description: "Speakers, workshops, and policy advocacy making the case for open source in AP institutions and government.",
   },
 ]
 
