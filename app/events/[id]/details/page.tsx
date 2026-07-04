@@ -80,7 +80,7 @@ export default function EventDetailsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading event details...</p>
+          <p className="text-muted-foreground">Loading event details...</p>
         </div>
       </div>
     )
@@ -92,7 +92,7 @@ export default function EventDetailsPage() {
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Event Not Found</h2>
-          <p className="text-gray-600 mb-4">The event you're looking for doesn't exist.</p>
+          <p className="text-muted-foreground mb-4">The event you're looking for doesn't exist.</p>
           <Link href="/events">
             <Button>Back to Events</Button>
           </Link>
@@ -104,7 +104,7 @@ export default function EventDetailsPage() {
   const seatsLeft = getSeatsLeft()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[hsl(var(--surface-1))]">
       {/* Header Image */}
       {event.imageUrl && (
         <div className="w-full h-96 bg-gray-900">
@@ -118,7 +118,7 @@ export default function EventDetailsPage() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Back Button */}
-        <Link href="/events" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6">
+        <Link href="/events" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Events
         </Link>
@@ -127,7 +127,7 @@ export default function EventDetailsPage() {
         <div className="mb-8">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{event.title}</h1>
+              <h1 className="font-display text-4xl font-extrabold text-foreground mb-2">{event.title}</h1>
               <div className="flex items-center gap-3 flex-wrap">
                 {event.program && (
                   <Badge className="bg-blue-100 text-blue-800">{event.program}</Badge>
@@ -147,7 +147,7 @@ export default function EventDetailsPage() {
             </Button>
           </div>
           <div
-            className="prose max-w-none text-gray-700"
+            className="prose max-w-none text-foreground"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
           />
         </div>
@@ -165,9 +165,9 @@ export default function EventDetailsPage() {
                   <Calendar className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <p className="font-semibold">Date</p>
-                    <p className="text-gray-600">{formatDate(event.date)}</p>
+                    <p className="text-muted-foreground">{formatDate(event.date)}</p>
                     {event.endDate && (
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         Ends: {formatDate(event.endDate)}
                       </p>
                     )}
@@ -178,7 +178,7 @@ export default function EventDetailsPage() {
                   <Clock className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <p className="font-semibold">Time</p>
-                    <p className="text-gray-600">{event.time}</p>
+                    <p className="text-muted-foreground">{event.time}</p>
                   </div>
                 </div>
 
@@ -186,7 +186,7 @@ export default function EventDetailsPage() {
                   <MapPin className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <p className="font-semibold">Location</p>
-                    <p className="text-gray-600">{event.location}</p>
+                    <p className="text-muted-foreground">{event.location}</p>
                   </div>
                 </div>
 
@@ -195,7 +195,7 @@ export default function EventDetailsPage() {
                     <Users className="h-5 w-5 text-primary mt-1" />
                     <div>
                       <p className="font-semibold">Capacity</p>
-                      <p className="text-gray-600">
+                      <p className="text-muted-foreground">
                         {event.currentAttendees} / {event.maxAttendees} registered
                         {seatsLeft !== null && seatsLeft > 0 && (
                           <span className="text-green-600 ml-2">({seatsLeft} seats left)</span>
@@ -219,17 +219,17 @@ export default function EventDetailsPage() {
                 <CardContent>
                   <div className="space-y-3">
                     {event.ticketTypes.slice(0, 3).map((ticket: any) => (
-                      <div key={ticket.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div key={ticket.id} className="flex items-center justify-between p-3 bg-[hsl(var(--surface-1))] rounded-lg">
                         <div>
                           <p className="font-medium">{ticket.name}</p>
                           {ticket.description && (
-                            <p className="text-sm text-gray-500">{ticket.description}</p>
+                            <p className="text-sm text-muted-foreground">{ticket.description}</p>
                           )}
                         </div>
                         <div className="text-right">
                           <p className="font-bold">₹{ticket.price}</p>
                           {ticket.quantity && (
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-muted-foreground">
                               {ticket.quantity - ticket.quantitySold} left
                             </p>
                           )}
@@ -254,7 +254,7 @@ export default function EventDetailsPage() {
                 </div>
 
                 <div className="pt-4 border-t mt-4">
-                  <p className="text-sm text-gray-600 mb-2">Share this event</p>
+                  <p className="text-sm text-muted-foreground mb-2">Share this event</p>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" className="flex-1">
                       Twitter

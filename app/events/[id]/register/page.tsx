@@ -101,8 +101,8 @@ export default function EventRegisterPage() {
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle className="h-10 w-10 text-green-600" />
                     </div>
-                    <h1 className="text-3xl font-bold mb-4">Registration Successful!</h1>
-                    <p className="text-gray-600 mb-8">
+                    <h1 className="font-display text-3xl font-extrabold text-foreground mb-4">Registration Successful!</h1>
+                    <p className="text-muted-foreground mb-8">
                         You have successfully registered for <strong>{event?.title}</strong>.
                         Confirmation details have been sent to your email.
                     </p>
@@ -133,12 +133,12 @@ export default function EventRegisterPage() {
                         <div className="flex justify-between items-start">
                             <div>
                                 <CardTitle className="text-3xl font-bold">Register for Event</CardTitle>
-                                <CardDescription className="text-lg text-gray-600 mt-2">
+                                <CardDescription className="text-lg text-muted-foreground mt-2">
                                     {event?.title}
                                 </CardDescription>
                             </div>
                         </div>
-                        <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-500 border-t pt-4">
+                        <div className="flex flex-wrap gap-4 mt-4 text-sm text-muted-foreground border-t pt-4">
                             <div className="flex items-center">
                                 <Calendar className="mr-2 h-4 w-4" /> {event && new Date(event.date).toLocaleDateString()}
                             </div>
@@ -210,7 +210,7 @@ export default function EventRegisterPage() {
                             </Button>
                         </form>
                     </CardContent>
-                    <CardFooter className="bg-gray-50 text-center text-xs text-gray-500 py-4">
+                    <CardFooter className="bg-[hsl(var(--surface-1))] text-center text-xs text-muted-foreground py-4">
                         By registering, you agree to our terms of participation and code of conduct.
                     </CardFooter>
                 </Card>

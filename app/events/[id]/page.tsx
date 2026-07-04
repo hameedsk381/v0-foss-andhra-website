@@ -120,7 +120,7 @@ export default function EventDetailsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading event details...</p>
+          <p className="text-muted-foreground">Loading event details...</p>
         </div>
       </div>
     )
@@ -131,7 +131,7 @@ export default function EventDetailsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-2">Event Not Found</h2>
-          <p className="text-gray-600 mb-4">The event you're looking for doesn't exist.</p>
+          <p className="text-muted-foreground mb-4">The event you're looking for doesn't exist.</p>
           <Button asChild>
             <Link href="/events">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -144,7 +144,7 @@ export default function EventDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[hsl(var(--surface-1))]">
       {/* Hero Section */}
       <div className="relative h-96 bg-gradient-to-r from-primary to-primary-600">
         {event.imageUrl && (
@@ -162,7 +162,7 @@ export default function EventDetailsPage() {
               Back to Events
             </Link>
             <Badge className="mb-4">{event.type}</Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{event.title}</h1>
+            <h1 className="font-display text-4xl md:text-5xl font-extrabold text-white mb-4">{event.title}</h1>
             <div className="flex flex-wrap gap-4 text-white/90">
               <div className="flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
@@ -196,7 +196,7 @@ export default function EventDetailsPage() {
               <CardContent className="pt-6">
                 <h2 className="text-2xl font-bold mb-4">About This Event</h2>
                 <div
-                  className="prose max-w-none text-gray-700"
+                  className="prose max-w-none text-foreground"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(event.description) }}
                 />
               </CardContent>
@@ -232,7 +232,7 @@ export default function EventDetailsPage() {
                     <Calendar className="h-5 w-5 text-primary mt-0.5" />
                     <div>
                       <p className="font-semibold">Date & Time</p>
-                      <p className="text-gray-600">
+                      <p className="text-muted-foreground">
                         {new Date(event.date).toLocaleDateString('en-US', { 
                           weekday: 'long', 
                           year: 'numeric', 
@@ -246,7 +246,7 @@ export default function EventDetailsPage() {
                           day: 'numeric' 
                         })}`}
                       </p>
-                      <p className="text-gray-600">{event.time}</p>
+                      <p className="text-muted-foreground">{event.time}</p>
                     </div>
                   </div>
                   
@@ -254,7 +254,7 @@ export default function EventDetailsPage() {
                     <MapPin className="h-5 w-5 text-primary mt-0.5" />
                     <div>
                       <p className="font-semibold">Location</p>
-                      <p className="text-gray-600">{event.location}</p>
+                      <p className="text-muted-foreground">{event.location}</p>
                     </div>
                   </div>
 
@@ -263,7 +263,7 @@ export default function EventDetailsPage() {
                       <Users className="h-5 w-5 text-primary mt-0.5" />
                       <div>
                         <p className="font-semibold">Capacity</p>
-                        <p className="text-gray-600">
+                        <p className="text-muted-foreground">
                           {event.currentAttendees} / {event.maxAttendees} attendees
                         </p>
                       </div>
@@ -337,7 +337,7 @@ export default function EventDetailsPage() {
                 {/* Event Status */}
                 <div className="mt-6 pt-6 border-t">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Status</span>
+                    <span className="text-sm text-muted-foreground">Status</span>
                     <Badge 
                       variant={event.status === 'upcoming' ? 'default' : event.status === 'ongoing' ? 'secondary' : 'outline'}
                     >
