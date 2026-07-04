@@ -29,43 +29,28 @@ export default function AboutPageClient() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="w-full py-16 md:py-24 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
+      <section className="w-full py-20 md:py-28 bg-background relative overflow-hidden">
         <div className="container px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <AnimatedSection variant="fadeRight">
-              <div className="flex flex-col space-y-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">About FOSS Andhra</h1>
-                <p className="text-xl text-white/90 max-w-[600px]">
-                  Our mission, vision, and journey to promote free and open source software across Andhra Pradesh
-                </p>
+          <AnimatedSection variant="fadeUp">
+            <div className="max-w-3xl space-y-5">
+              <div className="flex items-center gap-3">
+                <span className="inline-block w-8 h-0.5 bg-secondary rounded-full" />
+                <span className="text-sm font-semibold text-muted-foreground">Who we are</span>
               </div>
-            </AnimatedSection>
-
-            <AnimatedSection variant="fadeLeft">
-              <div className="relative h-[300px] md:h-[400px] flex items-center justify-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10"
-                >
-                  <Image
-                    src="/logos/foss-andhra-logo.png"
-                    alt="FOSS Andhra"
-                    width={300}
-                    height={100}
-                    className="object-contain"
-                  />
-                </motion.div>
-              </div>
-            </AnimatedSection>
-          </div>
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold text-foreground leading-tight tracking-tight text-balance">
+                About FOSS Andhra
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                Our mission, vision, and journey to build open source infrastructure across Andhra Pradesh.
+              </p>
+            </div>
+          </AnimatedSection>
         </div>
+        <div className="absolute bottom-0 inset-x-0 h-px bg-border" />
       </section>
 
       {/* About Section */}
-      <section className="w-full py-12 md:py-24 bg-white">
+      <section className="w-full py-12 md:py-24 bg-background">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <AnimatedSection variant="fadeRight">
@@ -86,15 +71,15 @@ export default function AboutPageClient() {
 
             <AnimatedSection variant="fadeLeft">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Story</h2>
-                <p className="text-gray-600">
+                <h2 className="font-display text-3xl font-bold tracking-tight text-foreground">Our Story</h2>
+                <p className="text-muted-foreground">
                   FOSS Andhra grew from a conviction that Andhra Pradesh's digital future should be built on software
                   that its citizens can inspect, modify, and own — not rented from distant corporations. What started
                   as a small circle of developers and educators in Vijayawada has expanded into a statewide network
                   of campus clubs, community developers, and policy advocates spanning nine universities and over
                   700 active members.
                 </p>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   In 2026, that conviction matters more than ever. The tools shaping education, governance, and daily
                   life — AI assistants, data pipelines, administrative software — are increasingly proprietary and
                   opaque. We build and advocate for the alternative: open source AI infrastructure, Telugu-language
@@ -114,12 +99,12 @@ export default function AboutPageClient() {
       </section>
 
       {/* Logo Showcase Section */}
-      <section className="w-full py-12 md:py-24 bg-gray-50">
+      <section className="w-full py-12 md:py-24 bg-[hsl(var(--surface-1))]">
         <div className="container px-4 md:px-6">
           <AnimatedSection variant="fadeUp">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Programs</h2>
-              <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+              <h2 className="font-display text-3xl font-bold tracking-tight text-foreground">Our Programs</h2>
+              <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
                 Discover our comprehensive range of initiatives designed to promote FOSS adoption
               </p>
             </div>
@@ -130,13 +115,13 @@ export default function AboutPageClient() {
       </section>
 
       {/* Mission & Vision Section */}
-      <section className="w-full py-12 md:py-24 bg-white">
+      <section className="w-full py-12 md:py-24 bg-background">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <AnimatedSection variant="fadeRight">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Mission</h2>
-                <p className="text-gray-600">
+                <h2 className="font-display text-3xl font-bold tracking-tight text-foreground">Our Mission</h2>
+                <p className="text-muted-foreground">
                   To promote the adoption of free and open source software across educational institutions, government
                   bodies, and society at large in Andhra Pradesh, fostering a culture of digital freedom, innovation,
                   and collaboration.
@@ -196,8 +181,8 @@ export default function AboutPageClient() {
 
             <AnimatedSection variant="fadeLeft">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Vision</h2>
-                <p className="text-gray-600">
+                <h2 className="font-display text-3xl font-bold tracking-tight text-foreground">Our Vision</h2>
+                <p className="text-muted-foreground">
                   A digitally empowered Andhra Pradesh where free and open source software forms the backbone of
                   education, governance, and society, ensuring digital sovereignty, inclusivity, and innovation.
                 </p>
@@ -281,7 +266,7 @@ export default function AboutPageClient() {
                 <Link href="/contribute">
                   <AnimatedButton
                     variant="outline"
-                    className="border-white text-white bg-transparent hover:bg-white/10"
+                    className="border-white text-white bg-transparent hover:bg-background/10"
                   >
                     Contribute
                   </AnimatedButton>

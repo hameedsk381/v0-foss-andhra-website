@@ -4,38 +4,38 @@
 
 @layer base {
   :root {
-    /* Core palette — FOSS Andhra blue refined */
-    --background: 210 20% 98%;
-    --foreground: 220 25% 10%;
+    /* Core palette — #005ca8 blue + cream white */
+    --background: 36 25% 97%;
+    --foreground: 210 30% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 10%;
+    --card-foreground: 210 30% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 10%;
+    --popover-foreground: 210 30% 12%;
 
-    /* Primary: deep sky blue */
-    --primary: 210 96% 32%;
+    /* Primary: #005ca8 */
+    --primary: 207 100% 33%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: vibrant lime-green */
-    --secondary: 84 64% 52%;
-    --secondary-foreground: 220 25% 10%;
+    /* Secondary: light blue tint */
+    --secondary: 207 55% 94%;
+    --secondary-foreground: 207 100% 28%;
 
-    --muted: 210 30% 94%;
-    --muted-foreground: 215 16% 50%;
-    --accent: 210 30% 94%;
-    --accent-foreground: 220 25% 10%;
+    --muted: 207 20% 93%;
+    --muted-foreground: 215 16% 48%;
+    --accent: 207 20% 93%;
+    --accent-foreground: 210 30% 12%;
     --destructive: 0 84% 58%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 28% 89%;
-    --input: 214 28% 89%;
-    --ring: 210 96% 42%;
+    --border: 207 20% 88%;
+    --input: 207 20% 88%;
+    --ring: 207 100% 43%;
 
     /* Radius */
     --radius: 0.625rem;
 
     /* Surface layers */
-    --surface-1: 210 20% 98%;
-    --surface-2: 210 25% 96%;
+    --surface-1: 36 20% 97%;
+    --surface-2: 207 25% 95%;
     --surface-raised: 0 0% 100%;
 
     /* Shadows — layered for depth */
@@ -48,6 +48,9 @@
     /* Legacy compat */
     --shadow-soft: var(--shadow-md);
     --shadow-lift: var(--shadow-lg);
+
+    /* Display font — Helvetica system stack */
+    --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     /* Z-index system */
     --z-nav: 60;
@@ -66,10 +69,10 @@
     --card-foreground: 210 40% 95%;
     --popover: 222 40% 9%;
     --popover-foreground: 210 40% 95%;
-    --primary: 210 96% 60%;
+    --primary: 207 85% 60%;
     --primary-foreground: 222 47% 6%;
-    --secondary: 84 60% 50%;
-    --secondary-foreground: 222 47% 6%;
+    --secondary: 207 45% 22%;
+    --secondary-foreground: 207 60% 90%;
     --muted: 222 35% 14%;
     --muted-foreground: 215 20% 60%;
     --accent: 222 35% 14%;
@@ -241,6 +244,22 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
   opacity: 0.35;
+}
+
+/* ─── Campus ticker ─────────────────────────────── */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none; }
 }
 
 /* ─── TipTap editor ─────────────────────────────── */
