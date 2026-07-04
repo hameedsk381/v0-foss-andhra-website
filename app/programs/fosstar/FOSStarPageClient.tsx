@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { ChevronRight, Users, Calendar, CheckCircle, Star, Heart } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/animated-section"
 import { AnimatedButton } from "@/components/ui/animated-button"
@@ -11,7 +10,8 @@ import { AnimatedCard } from "@/components/ui/animated-card"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProgramContactSection } from "@/components/program-contact-section"
-import { PROGRAMS_BY_ID, PROGRAM_BG_CLASS } from "@/lib/programs"
+import { ProgramHero } from "@/components/program-hero"
+import { PROGRAMS_BY_ID, PROGRAM_PHOTOS } from "@/lib/programs"
 
 interface Program {
   id: string
@@ -36,7 +36,6 @@ export default function FOSStarPage() {
     logo: PROGRAMS_BY_ID.fosstar.logo,
   })
   const [loading, setLoading] = useState(true)
-  const heroBgClass = PROGRAM_BG_CLASS.fosstar
 
   useEffect(() => {
     fetchProgramData()
@@ -59,121 +58,16 @@ export default function FOSStarPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className={`w-full py-16 md:py-24 ${heroBgClass} relative overflow-hidden`}>
-        <div className="absolute inset-0 bg-gradient-to-r from-fosstar/90 to-fosstar/70" />
-        <div className="container px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <AnimatedSection variant="fadeRight">
-              <div className="flex flex-col space-y-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">{programData.title}</h1>
-                <p className="text-xl text-white/90 max-w-[600px]">
-                  {programData.tagline || programData.description || "Our flagship membership program connecting and empowering the FOSS community across Andhra Pradesh"}
-                </p>
-                <div className="flex flex-wrap gap-4 mt-4">
-                  <Link href="#initiatives">
-                    <AnimatedButton className="bg-white text-fosstar hover:bg-white/90">Our Initiatives</AnimatedButton>
-                  </Link>
-                  <Link href="/register">
-                    <AnimatedButton
-                      variant="outline"
-                      className="border-white text-white bg-transparent hover:bg-white/10"
-                    >
-                      Become a Member
-                    </AnimatedButton>
-                  </Link>
-                </div>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection variant="fadeLeft">
-              <div className="relative h-[300px] md:h-[400px] flex items-center justify-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10"
-                >
-                  <Image
-                    src={programData.logo || "/logos/fosstar-logo.svg"}
-                    alt={programData.title}
-                    width={300}
-                    height={300}
-                    className="object-contain"
-                  />
-                </motion.div>
-
-                <motion.div
-                  className="absolute inset-0 z-0"
-                  animate={{
-                    rotate: 360,
-                  }}
-                  transition={{
-                    duration: 40,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
-                  }}
-                >
-                  <div className="absolute inset-0 rounded-full border-8 border-dashed border-white/20" />
-                </motion.div>
-
-                <motion.div
-                  className="absolute w-20 h-20 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center"
-                  animate={{
-                    x: [0, 100, 0],
-                    y: [0, -50, 0],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 15,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                  }}
-                >
-                  <Users className="text-white" />
-                </motion.div>
-
-                <motion.div
-                  className="absolute w-16 h-16 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center"
-                  animate={{
-                    x: [0, -80, 0],
-                    y: [0, 60, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 12,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                    delay: 1,
-                  }}
-                >
-                  <Calendar className="text-white" />
-                </motion.div>
-
-                <motion.div
-                  className="absolute w-12 h-12 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center"
-                  animate={{
-                    x: [0, 60, 0],
-                    y: [0, 80, 0],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 18,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                    delay: 2,
-                  }}
-                >
-                  <Star className="text-white" />
-                </motion.div>
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
+      <ProgramHero
+        title={programData.title}
+        description={programData.tagline || programData.description || "Our flagship membership program connecting and empowering the FOSS community across Andhra Pradesh"}
+        color="#0284c7"
+        logoSrc={programData.logo || "/logos/fosstar-logo.svg"}
+        image={PROGRAM_PHOTOS.fosstar}
+      />
 
       {/* About Section */}
-      <section className="w-full py-12 md:py-24 bg-white" id="about">
+      <section className="w-full py-12 md:py-24 bg-background" id="about">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <AnimatedSection variant="fadeRight">
@@ -189,17 +83,17 @@ export default function FOSStarPage() {
 
             <AnimatedSection variant="fadeLeft">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About {programData.title}</h2>
+                <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">About {programData.title}</h2>
                 {programData.mission ? (
-                  <p className="text-gray-600">{programData.mission}</p>
+                  <p className="text-muted-foreground">{programData.mission}</p>
                 ) : (
                   <>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       {programData.title} is FOSS Andhra's comprehensive membership program designed to connect individuals, students,
                       professionals, and institutions who share a common interest in promoting and adopting free and open
                       source software solutions.
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       Through {programData.title}, we aim to build a vibrant community of FOSS enthusiasts who collaborate, learn, and
                       advocate for open source adoption across educational institutions, government bodies, and society at
                       large.
@@ -213,7 +107,7 @@ export default function FOSStarPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Community</h4>
-                      <p className="text-sm text-gray-500">Building a strong FOSS network</p>
+                      <p className="text-sm text-muted-foreground">Building a strong FOSS network</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -222,7 +116,7 @@ export default function FOSStarPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Events</h4>
-                      <p className="text-sm text-gray-500">Regular meetups and workshops</p>
+                      <p className="text-sm text-muted-foreground">Regular meetups and workshops</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -231,7 +125,7 @@ export default function FOSStarPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Recognition</h4>
-                      <p className="text-sm text-gray-500">Acknowledging contributions</p>
+                      <p className="text-sm text-muted-foreground">Acknowledging contributions</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -240,7 +134,7 @@ export default function FOSStarPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Support</h4>
-                      <p className="text-sm text-gray-500">Resources for FOSS adoption</p>
+                      <p className="text-sm text-muted-foreground">Resources for FOSS adoption</p>
                     </div>
                   </div>
                 </div>
@@ -251,12 +145,12 @@ export default function FOSStarPage() {
       </section>
 
       {/* Initiatives Section */}
-      <section className="w-full py-12 md:py-24 bg-gray-50" id="initiatives">
+      <section className="w-full py-12 md:py-24 bg-[hsl(var(--surface-1))]" id="initiatives">
         <div className="container px-4 md:px-6">
           <AnimatedSection variant="fadeUp">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Initiatives</h2>
-              <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">Our Initiatives</h2>
+              <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
                 Discover our key initiatives to connect and empower the FOSS community
               </p>
             </div>
@@ -399,7 +293,7 @@ export default function FOSStarPage() {
                       <CardTitle className="text-xl text-fosstar">Workshops & Training</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Regular workshops and training sessions on various open source technologies, tools, and
                         practices.
                       </CardDescription>
@@ -427,7 +321,7 @@ export default function FOSStarPage() {
                       <CardTitle className="text-xl text-fosstar">Meetups & Networking</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Regular community meetups, both in-person and virtual, to foster networking and collaboration.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -454,7 +348,7 @@ export default function FOSStarPage() {
                       <CardTitle className="text-xl text-fosstar">Hackathons & Projects</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Collaborative coding events and long-term projects that address local challenges.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -489,7 +383,7 @@ export default function FOSStarPage() {
                       <CardTitle className="text-2xl">FOSStar Member</CardTitle>
                       <CardDescription>Join the FOSS Andhra community</CardDescription>
                       <div className="text-4xl font-bold text-fosstar mt-4">
-                        ₹300<span className="text-lg font-normal text-gray-500">/year</span>
+                        ₹300<span className="text-lg font-normal text-muted-foreground">/year</span>
                       </div>
                     </CardHeader>
                     <CardContent className="pt-6">
@@ -554,12 +448,12 @@ export default function FOSStarPage() {
       </section>
 
       {/* Team Section */}
-      <section className="w-full py-12 md:py-24 bg-white">
+      <section className="w-full py-12 md:py-24 bg-background">
         <div className="container px-4 md:px-6">
           <AnimatedSection variant="fadeUp">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Team</h2>
-              <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">Our Team</h2>
+              <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
                 Meet the community leaders driving the FOSStar program
               </p>
             </div>
@@ -568,12 +462,12 @@ export default function FOSStarPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <AnimatedSection variant="fadeUp" delay={0.1}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Rajesh Kumar</h3>
-                  <p className="text-sm text-gray-500">Community Director</p>
+                  <p className="text-sm text-muted-foreground">Community Director</p>
                   <p className="text-sm mt-2">Leads the FOSStar community initiatives and membership programs.</p>
                 </CardContent>
               </AnimatedCard>
@@ -581,12 +475,12 @@ export default function FOSStarPage() {
 
             <AnimatedSection variant="fadeUp" delay={0.2}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Priya Reddy</h3>
-                  <p className="text-sm text-gray-500">Events Coordinator</p>
+                  <p className="text-sm text-muted-foreground">Events Coordinator</p>
                   <p className="text-sm mt-2">Organizes FOSStar events, workshops, and networking opportunities.</p>
                 </CardContent>
               </AnimatedCard>
@@ -594,12 +488,12 @@ export default function FOSStarPage() {
 
             <AnimatedSection variant="fadeUp" delay={0.3}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Anil Sharma</h3>
-                  <p className="text-sm text-gray-500">Membership Manager</p>
+                  <p className="text-sm text-muted-foreground">Membership Manager</p>
                   <p className="text-sm mt-2">Handles membership registrations and member relations.</p>
                 </CardContent>
               </AnimatedCard>
@@ -607,12 +501,12 @@ export default function FOSStarPage() {
 
             <AnimatedSection variant="fadeUp" delay={0.4}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Lakshmi Devi</h3>
-                  <p className="text-sm text-gray-500">Education Lead</p>
+                  <p className="text-sm text-muted-foreground">Education Lead</p>
                   <p className="text-sm mt-2">Develops educational resources and training programs for members.</p>
                 </CardContent>
               </AnimatedCard>

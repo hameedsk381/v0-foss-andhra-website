@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Code, Github, Star, CheckCircle, Image } from "lucide-react"
-import { PROGRAMS_BY_ID } from "@/lib/programs"
+import { ProgramHero } from "@/components/program-hero"
+import { PROGRAMS_BY_ID, PROGRAM_PHOTOS } from "@/lib/programs"
 
 interface Program {
   title: string
@@ -27,16 +28,17 @@ export default function FOSStormPage() {
       .catch(console.error)
   }, [])
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-2 mb-6">
-          <Badge variant="outline" className="px-3 py-1 text-orange-600 border-orange-200 font-medium">
-            Program
-          </Badge>
-          <h1 className="text-4xl font-bold">{programData.title}</h1>
-        </div>
+    <div className="flex flex-col min-h-screen">
+      <ProgramHero
+        title={programData.title}
+        description={programData.description || "Community-built open source projects for Andhra Pradesh"}
+        color="#ea580c"
+        logoSrc={PROGRAMS_BY_ID.fosstorm.logo}
+        image={PROGRAM_PHOTOS.fosstorm}
+      />
 
-        <p className="text-xl text-orange-600 mb-8">{programData.description}</p>
+      <div className="app-container py-12">
+      <div className="max-w-5xl mx-auto">
 
         <Tabs defaultValue="overview" className="mb-12">
           <TabsList className="grid w-full grid-cols-4">
@@ -82,23 +84,23 @@ export default function FOSStormPage() {
             </div>
 
             {/* Why open source for AP */}
-            <div className="bg-orange-50 rounded-lg p-6 mb-8">
+            <div className="bg-fosstorm/5 rounded-lg p-6 mb-8">
               <h3 className="text-xl font-bold mb-3">Why Open Source Matters for Andhra Pradesh</h3>
-              <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+              <div className="grid md:grid-cols-2 gap-4 text-sm text-foreground">
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-fosstorm mt-0.5 flex-shrink-0" />
                   <span><strong>Cost savings for institutions</strong> — schools, panchayats, and hospitals can deploy FOSStorm tools at zero licensing cost, redirecting budgets to services.</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-fosstorm mt-0.5 flex-shrink-0" />
                   <span><strong>Telugu language computing</strong> — our NLP and localisation projects directly improve software usability for the 82 million Telugu speakers in the state.</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-fosstorm mt-0.5 flex-shrink-0" />
                   <span><strong>Skill development</strong> — contributing to real production code teaches version control, code review, and collaborative workflows that classroom projects rarely replicate.</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-fosstorm mt-0.5 flex-shrink-0" />
                   <span><strong>Data sovereignty</strong> — open source tools let communities inspect and control how their data is processed, critical for government and healthcare deployments.</span>
                 </div>
               </div>
@@ -112,9 +114,9 @@ export default function FOSStormPage() {
                 { value: "315+", label: "GitHub Stars" },
                 { value: "100%", label: "Open Source" },
               ].map((stat) => (
-                <div key={stat.label} className="text-center p-4 rounded-lg bg-orange-50">
-                  <div className="text-3xl font-bold text-orange-700 mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                <div key={stat.label} className="text-center p-4 rounded-lg bg-fosstorm/5">
+                  <div className="text-3xl font-bold text-fosstorm mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -123,12 +125,12 @@ export default function FOSStormPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Code className="mr-2 h-5 w-5 text-orange-600" />
+                    <Code className="mr-2 h-5 w-5 text-fosstorm" />
                     Development
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">
                     Collaborative development of open source software projects that address real-world needs and
                     challenges.
                   </p>
@@ -138,12 +140,12 @@ export default function FOSStormPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Github className="mr-2 h-5 w-5 text-orange-600" />
+                    <Github className="mr-2 h-5 w-5 text-fosstorm" />
                     Open Source
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">
                     All projects are released under open source licenses, allowing free use, modification, and
                     distribution.
                   </p>
@@ -153,19 +155,19 @@ export default function FOSStormPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Star className="mr-2 h-5 w-5 text-orange-600" />
+                    <Star className="mr-2 h-5 w-5 text-fosstorm" />
                     Impact
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">
                     Creating software solutions that have real impact on communities, organizations, and individuals.
                   </p>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="bg-orange-50 p-8 rounded-lg my-12">
+            <div className="bg-fosstorm/5 p-8 rounded-lg my-12">
               <h3 className="text-2xl font-bold mb-4">Join FOSStorm</h3>
               <p className="mb-6">
                 Are you a developer, designer, or domain expert interested in contributing to open source projects? Join
@@ -173,10 +175,10 @@ export default function FOSStormPage() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link href="/contact?subject=Join FOSStorm">
-                  <Button className="bg-orange-600 hover:bg-orange-700">Join as a Contributor</Button>
+                  <Button className="bg-fosstorm hover:bg-fosstorm/90">Join as a Contributor</Button>
                 </Link>
                 <Link href="#projects">
-                  <Button variant="outline" className="border-orange-200 text-orange-600">
+                  <Button variant="outline" className="border-fosstorm/30 text-fosstorm">
                     Explore Projects
                   </Button>
                 </Link>
@@ -187,7 +189,7 @@ export default function FOSStormPage() {
           <TabsContent value="projects" className="mt-6" id="projects">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <Code className="mr-2 h-6 w-6 text-orange-600" />
+                <Code className="mr-2 h-6 w-6 text-fosstorm" />
                 Active Projects
               </h3>
 
@@ -208,20 +210,20 @@ export default function FOSStormPage() {
                       sentiment analysis, and more. Aimed at improving Telugu language computing and accessibility.
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Python
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         NLP
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Machine Learning
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Telugu
                       </Badge>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500 gap-x-4">
+                    <div className="flex items-center text-sm text-muted-foreground gap-x-4">
                       <div className="flex items-center">
                         <Star className="mr-1 h-4 w-4" />
                         <span>120 stars</span>
@@ -234,13 +236,13 @@ export default function FOSStormPage() {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Link href="https://github.com/fossandhra/telugu-nlp" target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="flex items-center text-orange-600">
+                      <Button variant="outline" className="flex items-center text-fosstorm">
                         <Github className="mr-2 h-4 w-4" />
                         GitHub
                       </Button>
                     </Link>
                     <Link href="/contact?subject=Project Inquiry: TeluguNLP">
-                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
+                      <Button className="bg-fosstorm hover:bg-fosstorm/90">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -261,20 +263,20 @@ export default function FOSStormPage() {
                       connectivity. Supports content synchronization, multimedia lessons, and assessment tools.
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         JavaScript
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         React
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Node.js
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Education
                       </Badge>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500 gap-x-4">
+                    <div className="flex items-center text-sm text-muted-foreground gap-x-4">
                       <div className="flex items-center">
                         <Star className="mr-1 h-4 w-4" />
                         <span>85 stars</span>
@@ -287,13 +289,13 @@ export default function FOSStormPage() {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Link href="https://github.com/fossandhra/open-edu" target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="flex items-center text-orange-600">
+                      <Button variant="outline" className="flex items-center text-fosstorm">
                         <Github className="mr-2 h-4 w-4" />
                         GitHub
                       </Button>
                     </Link>
                     <Link href="/contact?subject=Project Inquiry: OpenEdu">
-                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
+                      <Button className="bg-fosstorm hover:bg-fosstorm/90">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -314,20 +316,20 @@ export default function FOSStormPage() {
                       document digitization, workflow automation, e-signatures, and public records access.
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Python
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Django
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         PostgreSQL
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Governance
                       </Badge>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500 gap-x-4">
+                    <div className="flex items-center text-sm text-muted-foreground gap-x-4">
                       <div className="flex items-center">
                         <Star className="mr-1 h-4 w-4" />
                         <span>62 stars</span>
@@ -340,13 +342,13 @@ export default function FOSStormPage() {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Link href="https://github.com/fossandhra/civic-docs" target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="flex items-center text-orange-600">
+                      <Button variant="outline" className="flex items-center text-fosstorm">
                         <Github className="mr-2 h-4 w-4" />
                         GitHub
                       </Button>
                     </Link>
                     <Link href="/contact?subject=Project Inquiry: CivicDocs">
-                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
+                      <Button className="bg-fosstorm hover:bg-fosstorm/90">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -368,20 +370,20 @@ export default function FOSStormPage() {
                       connectivity.
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         React Native
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Node.js
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         MongoDB
                       </Badge>
-                      <Badge variant="secondary" className="bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted">
                         Agriculture
                       </Badge>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500 gap-x-4">
+                    <div className="flex items-center text-sm text-muted-foreground gap-x-4">
                       <div className="flex items-center">
                         <Star className="mr-1 h-4 w-4" />
                         <span>48 stars</span>
@@ -394,13 +396,13 @@ export default function FOSStormPage() {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Link href="https://github.com/fossandhra/farm-connect" target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="flex items-center text-orange-600">
+                      <Button variant="outline" className="flex items-center text-fosstorm">
                         <Github className="mr-2 h-4 w-4" />
                         GitHub
                       </Button>
                     </Link>
                     <Link href="/contact?subject=Project Inquiry: FarmConnect">
-                      <Button className="bg-orange-600 hover:bg-orange-700">Project Info</Button>
+                      <Button className="bg-fosstorm hover:bg-fosstorm/90">Project Info</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -408,7 +410,7 @@ export default function FOSStormPage() {
 
               <div className="mt-8 text-center">
                 <Link href="#projects">
-                  <Button variant="outline" className="mt-4 border-orange-200 text-orange-600">
+                  <Button variant="outline" className="mt-4 border-fosstorm/30 text-fosstorm">
                     Refresh Projects
                   </Button>
                 </Link>
@@ -419,7 +421,7 @@ export default function FOSStormPage() {
           <TabsContent value="contribute" className="mt-6" id="contribute">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <Github className="mr-2 h-6 w-6 text-orange-600" />
+                <Github className="mr-2 h-6 w-6 text-fosstorm" />
                 How to Contribute
               </h3>
 
@@ -434,7 +436,7 @@ export default function FOSStormPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <CheckCircle className="mr-2 h-5 w-5 text-orange-600" />
+                      <CheckCircle className="mr-2 h-5 w-5 text-fosstorm" />
                       Find a Project
                     </CardTitle>
                   </CardHeader>
@@ -444,7 +446,7 @@ export default function FOSStormPage() {
                       its own GitHub repository with detailed information about the project goals and architecture.
                     </p>
                     <Link href="#projects">
-                      <Button variant="outline" className="w-full text-orange-600 border-orange-200">
+                      <Button variant="outline" className="w-full text-fosstorm border-fosstorm/30">
                         Browse Projects
                       </Button>
                     </Link>
@@ -454,7 +456,7 @@ export default function FOSStormPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <CheckCircle className="mr-2 h-5 w-5 text-orange-600" />
+                      <CheckCircle className="mr-2 h-5 w-5 text-fosstorm" />
                       Setup Development Environment
                     </CardTitle>
                   </CardHeader>
@@ -464,7 +466,7 @@ export default function FOSStormPage() {
                       include detailed instructions for getting started with development.
                     </p>
                     <Link href="/contact?subject=Developer Setup Guide">
-                      <Button variant="outline" className="w-full text-orange-600 border-orange-200">
+                      <Button variant="outline" className="w-full text-fosstorm border-fosstorm/30">
                         Inquire for Guide
                       </Button>
                     </Link>
@@ -474,7 +476,7 @@ export default function FOSStormPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <CheckCircle className="mr-2 h-5 w-5 text-orange-600" />
+                      <CheckCircle className="mr-2 h-5 w-5 text-fosstorm" />
                       Pick an Issue
                     </CardTitle>
                   </CardHeader>
@@ -484,7 +486,7 @@ export default function FOSStormPage() {
                       Issues labeled "good first issue" are great starting points for new contributors.
                     </p>
                     <Link href="https://github.com/fossandhra" target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="w-full text-orange-600 border-orange-200">
+                      <Button variant="outline" className="w-full text-fosstorm border-fosstorm/30">
                         <Github className="mr-2 h-4 w-4" />
                         Browse Issues
                       </Button>
@@ -495,7 +497,7 @@ export default function FOSStormPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <CheckCircle className="mr-2 h-5 w-5 text-orange-600" />
+                      <CheckCircle className="mr-2 h-5 w-5 text-fosstorm" />
                       Make Contributions
                     </CardTitle>
                   </CardHeader>
@@ -505,7 +507,7 @@ export default function FOSStormPage() {
                       the repository, creating a branch, making changes, and submitting a pull request.
                     </p>
                     <Link href="/contact?subject=Contribution Guide">
-                      <Button variant="outline" className="w-full text-orange-600 border-orange-200">
+                      <Button variant="outline" className="w-full text-fosstorm border-fosstorm/30">
                         Inquire for Guide
                       </Button>
                     </Link>
@@ -514,7 +516,7 @@ export default function FOSStormPage() {
               </div>
 
 
-              <div className="bg-orange-50 p-8 rounded-lg">
+              <div className="bg-fosstorm/5 p-8 rounded-lg">
                 <h4 className="text-xl font-bold mb-4">Join the FOSStorm Developer Community</h4>
                 <p className="mb-6">
                   Connect with other contributors, get help with issues, and stay updated on project developments by
@@ -522,10 +524,10 @@ export default function FOSStormPage() {
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Link href="https://discord.gg/fossandhra" target="_blank" rel="noopener noreferrer">
-                    <Button className="bg-orange-600 hover:bg-orange-700">Join Discord Community</Button>
+                    <Button className="bg-fosstorm hover:bg-fosstorm/90">Join Discord Community</Button>
                   </Link>
                   <Link href="https://matrix.to/#/#fossandhra:matrix.org" target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" className="border-orange-200 text-orange-600">
+                    <Button variant="outline" className="border-fosstorm/30 text-fosstorm">
                       Join Matrix Channel
                     </Button>
                   </Link>
@@ -536,7 +538,7 @@ export default function FOSStormPage() {
 
           <TabsContent value="gallery" className="mt-6" id="gallery">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
-              <Image className="mr-2 h-6 w-6 text-orange-600" />
+              <Image className="mr-2 h-6 w-6 text-fosstorm" />
               FOSStorm Project Gallery
             </h3>
 
@@ -549,7 +551,7 @@ export default function FOSStormPage() {
                 { id: 5, src: "/gallery/fossart-startup.jpg", title: "Architecture Review" },
                 { id: 6, src: "/gallery/fosstar-event-1.jpg", title: "NLP Tool Kit Demo" },
               ].map((item) => (
-                <div key={item.id} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
+                <div key={item.id} className="overflow-hidden rounded-lg bg-muted aspect-video relative group">
                   <img
                     src={item.src}
                     alt={item.title}
@@ -565,13 +567,14 @@ export default function FOSStormPage() {
 
             <div className="text-center">
               <Link href="/gallery">
-                <Button variant="outline" className="mt-4 border-orange-200 text-orange-600">
+                <Button variant="outline" className="mt-4 border-fosstorm/30 text-fosstorm">
                   View All Gallery Images
                 </Button>
               </Link>
             </div>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </div>
   )

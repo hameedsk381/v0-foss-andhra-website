@@ -4,10 +4,10 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, GraduationCap, MapPin, CheckCircle, CalendarDays, Image } from "lucide-react"
-import { PROGRAMS_BY_ID } from "@/lib/programs"
+import { ProgramHero } from "@/components/program-hero"
+import { PROGRAMS_BY_ID, PROGRAM_PHOTOS } from "@/lib/programs"
 
 interface Program {
   title: string
@@ -28,16 +28,17 @@ export default function FOSSynCPage() {
       .catch(console.error)
   }, [])
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-2 mb-6">
-          <Badge variant="outline" className="px-3 py-1 text-green-600 border-green-200 font-medium">
-            Program
-          </Badge>
-          <h1 className="text-4xl font-bold">{programData.title}</h1>
-        </div>
+    <div className="flex flex-col min-h-screen">
+      <ProgramHero
+        title={programData.title}
+        description={programData.description || "Student-led open source clubs on 9+ AP campuses"}
+        color="#16a34a"
+        logoSrc={PROGRAMS_BY_ID.fossync.logo}
+        image={PROGRAM_PHOTOS.fossync}
+      />
 
-        <p className="text-xl text-green-600 mb-8">{programData.description}</p>
+      <div className="app-container py-12">
+      <div className="max-w-5xl mx-auto">
 
         <Tabs defaultValue="overview" className="mb-12">
           <TabsList className="grid w-full grid-cols-4">
@@ -109,13 +110,13 @@ export default function FOSSynCPage() {
                     body: "Host your first campus event — an install fest or intro-to-Linux workshop works well — using the ready-made slide decks and facilitation guides in the resource kit. FOSS Andhra can send a speaker for your inaugural event.",
                   },
                 ].map((item) => (
-                  <div key={item.step} className="flex gap-4 p-4 rounded-lg border bg-white">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold flex items-center justify-center text-sm">
+                  <div key={item.step} className="flex gap-4 p-4 rounded-lg border bg-background">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-fossync/10 text-fossync font-bold flex items-center justify-center text-sm">
                       {item.step}
                     </div>
                     <div>
                       <h4 className="font-semibold mb-1">{item.title}</h4>
-                      <p className="text-sm text-gray-600">{item.body}</p>
+                      <p className="text-sm text-muted-foreground">{item.body}</p>
                     </div>
                   </div>
                 ))}
@@ -130,9 +131,9 @@ export default function FOSSynCPage() {
                 { value: "25+", label: "Events Per Year" },
                 { value: "3", label: "States Reached" },
               ].map((stat) => (
-                <div key={stat.label} className="text-center p-4 rounded-lg bg-green-50">
-                  <div className="text-3xl font-bold text-green-700 mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                <div key={stat.label} className="text-center p-4 rounded-lg bg-fossync/5">
+                  <div className="text-3xl font-bold text-fossync mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -141,12 +142,12 @@ export default function FOSSynCPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <GraduationCap className="mr-2 h-5 w-5 text-green-600" />
+                    <GraduationCap className="mr-2 h-5 w-5 text-fossync" />
                     Learning
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">
                     Regular workshops, training sessions, and learning resources on open source technologies and best
                     practices.
                   </p>
@@ -156,12 +157,12 @@ export default function FOSSynCPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Users className="mr-2 h-5 w-5 text-green-600" />
+                    <Users className="mr-2 h-5 w-5 text-fossync" />
                     Community
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">
                     Building a supportive community of like-minded students interested in open source technology and
                     innovation.
                   </p>
@@ -171,19 +172,19 @@ export default function FOSSynCPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <CalendarDays className="mr-2 h-5 w-5 text-green-600" />
+                    <CalendarDays className="mr-2 h-5 w-5 text-fossync" />
                     Events
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">
                     Organizing hackathons, code sprints, and other events to apply FOSS skills to real-world problems.
                   </p>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="bg-green-50 p-8 rounded-lg my-12">
+            <div className="bg-fossync/5 p-8 rounded-lg my-12">
               <h3 className="text-2xl font-bold mb-4">Start a FOSSynC Club at Your Institution</h3>
               <p className="mb-6">
                 Are you a student or faculty member interested in starting a FOSSynC club at your educational
@@ -192,10 +193,10 @@ export default function FOSSynCPage() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link href="/contact?subject=Start a FOSSynC Club">
-                  <Button className="bg-green-600 hover:bg-green-700">Start a Club</Button>
+                  <Button className="bg-fossync hover:bg-fossync/90">Start a Club</Button>
                 </Link>
                 <Link href="/contact?subject=FOSSynC Resources">
-                  <Button variant="outline" className="border-green-200 text-green-600">
+                  <Button variant="outline" className="border-fossync/30 text-fossync">
                     View Resources
                   </Button>
                 </Link>
@@ -206,7 +207,7 @@ export default function FOSSynCPage() {
           <TabsContent value="clubs" className="mt-6" id="clubs">
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <MapPin className="mr-2 h-6 w-6 text-green-600" />
+                <MapPin className="mr-2 h-6 w-6 text-fossync" />
                 FOSSynC Club Network
               </h3>
 
@@ -266,11 +267,11 @@ export default function FOSSynCPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-500">Members:</span>
+                        <span className="text-muted-foreground">Members:</span>
                         <span className="font-medium">{club.members}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Established:</span>
+                        <span className="text-muted-foreground">Established:</span>
                         <span className="font-medium">{club.established}</span>
                       </div>
                     </CardContent>
@@ -279,7 +280,7 @@ export default function FOSSynCPage() {
                         href="/contact?subject=Club Inquiry"
                         className="w-full"
                       >
-                        <Button variant="outline" className="w-full text-green-600 border-green-200">
+                        <Button variant="outline" className="w-full text-fossync border-fossync/30">
                           Inquire for Details
                         </Button>
                       </Link>
@@ -290,7 +291,7 @@ export default function FOSSynCPage() {
 
               <div className="mt-8 text-center">
                 <Link href="#clubs">
-                  <Button variant="outline" className="mt-4 border-green-200 text-green-600">
+                  <Button variant="outline" className="mt-4 border-fossync/30 text-fossync">
                     Refresh Club Network
                   </Button>
                 </Link>
@@ -311,35 +312,35 @@ export default function FOSSynCPage() {
                   </p>
                   <ul className="space-y-3">
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">Weekly Meetups</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           Regular club meetings to discuss projects, share knowledge, and plan activities
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">Technical Workshops</h4>
-                        <p className="text-sm text-gray-600">Hands-on sessions on open source technologies and tools</p>
+                        <p className="text-sm text-muted-foreground">Hands-on sessions on open source technologies and tools</p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">Project Collaboration</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           Working together on open source projects and contributions
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">Guest Lectures</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           Inviting industry experts and FOSS contributors for talks
                         </p>
                       </div>
@@ -358,37 +359,37 @@ export default function FOSSynCPage() {
                   </p>
                   <ul className="space-y-3">
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">FOSSHack</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           Open source hackathons focused on solving real-world problems
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">Install Fest</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           Events to help students install and configure Linux and open source software
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">Software Freedom Day</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           Celebrating free software and open source with various campus activities
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium">FOSS Fair</h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           Exhibition of open source projects and solutions developed by students
                         </p>
                       </div>
@@ -419,29 +420,29 @@ export default function FOSSynCPage() {
                       <h4 className="font-semibold mb-2">Summit Highlights:</h4>
                       <ul className="space-y-2 mb-4">
                         <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                           <span>Keynote speeches from FOSS leaders and industry experts</span>
                         </li>
                         <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                           <span>Inter-college hackathon with exciting prizes</span>
                         </li>
                         <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                           <span>Project showcase and competition</span>
                         </li>
                         <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                           <span>Workshops on emerging open source technologies</span>
                         </li>
                         <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="h-5 w-5 text-fossync mr-2 mt-0.5 flex-shrink-0" />
                           <span>FOSSynC Club Excellence Awards</span>
                         </li>
                       </ul>
 
                       <Link href="/contact?subject=FOSSynC Summit Inquiry">
-                        <Button className="bg-green-600 hover:bg-green-700">Learn More About the Summit</Button>
+                        <Button className="bg-fossync hover:bg-fossync/90">Learn More About the Summit</Button>
                       </Link>
                     </div>
                   </div>
@@ -452,7 +453,7 @@ export default function FOSSynCPage() {
 
           <TabsContent value="gallery" className="mt-6" id="gallery">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
-              <Image className="mr-2 h-6 w-6 text-green-600" />
+              <Image className="mr-2 h-6 w-6 text-fossync" />
               FOSSynC Events Gallery
             </h3>
 
@@ -465,7 +466,7 @@ export default function FOSSynCPage() {
                 { id: 5, src: "/gallery/fossart-startup.jpg", title: "Project Demo Day" },
                 { id: 6, src: "/gallery/fosspeaks-advocacy.jpg", title: "Tech Talk on Campus" },
               ].map((item) => (
-                <div key={item.id} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
+                <div key={item.id} className="overflow-hidden rounded-lg bg-muted aspect-video relative group">
                   <img
                     src={item.src}
                     alt={item.title}
@@ -481,13 +482,14 @@ export default function FOSSynCPage() {
 
             <div className="text-center">
               <Link href="/gallery">
-                <Button variant="outline" className="mt-4 border-green-200 text-green-600">
+                <Button variant="outline" className="mt-4 border-fossync/30 text-fossync">
                   View All Gallery Images
                 </Button>
               </Link>
             </div>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </div>
   )

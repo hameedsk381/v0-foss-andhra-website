@@ -2,16 +2,14 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
 import { ChevronRight, Megaphone, Globe, BookOpen, Presentation, Users, Newspaper } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/animated-section"
-import { AnimatedButton } from "@/components/ui/animated-button"
 import { AnimatedCard } from "@/components/ui/animated-card"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProgramContactSection } from "@/components/program-contact-section"
-import { PROGRAMS_BY_ID, PROGRAM_BG_CLASS } from "@/lib/programs"
+import { ProgramHero } from "@/components/program-hero"
+import { PROGRAMS_BY_ID, PROGRAM_PHOTOS } from "@/lib/programs"
 
 interface Program {
   title: string
@@ -27,7 +25,6 @@ export default function FOSSpeaksPage() {
     description: PROGRAMS_BY_ID.fosspeaks.description,
     logo: PROGRAMS_BY_ID.fosspeaks.logo,
   })
-  const heroBgClass = PROGRAM_BG_CLASS.fosspeaks
 
   useEffect(() => {
     fetch("/api/programs/fosspeaks")
@@ -38,123 +35,16 @@ export default function FOSSpeaksPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className={`w-full py-16 md:py-24 ${heroBgClass} relative overflow-hidden`}>
-        <div className="absolute inset-0 bg-gradient-to-r from-fosspeaks/90 to-fosspeaks/70" />
-        <div className="container px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <AnimatedSection variant="fadeRight">
-              <div className="flex flex-col space-y-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">{programData.title}</h1>
-                <p className="text-xl text-white/90 max-w-[600px]">
-                  {programData.tagline || programData.description || "Advocacy program for free and open-source technology for society"}
-                </p>
-                <div className="flex flex-wrap gap-4 mt-4">
-                  <Link href="#initiatives">
-                    <AnimatedButton className="bg-white text-fosspeaks hover:bg-white/90">
-                      Our Initiatives
-                    </AnimatedButton>
-                  </Link>
-                  <Link href="#contact">
-                    <AnimatedButton
-                      variant="outline"
-                      className="border-white text-white bg-transparent hover:bg-white/10"
-                    >
-                      Contact Us
-                    </AnimatedButton>
-                  </Link>
-                </div>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection variant="fadeLeft">
-              <div className="relative h-[300px] md:h-[400px] flex items-center justify-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10"
-                >
-                  <Image
-                    src={programData.logo || "/placeholder.svg"}
-                    alt={programData.title}
-                    width={300}
-                    height={300}
-                    className="object-contain"
-                  />
-                </motion.div>
-
-                <motion.div
-                  className="absolute inset-0 z-0"
-                  animate={{
-                    rotate: 360,
-                  }}
-                  transition={{
-                    duration: 40,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
-                  }}
-                >
-                  <div className="absolute inset-0 rounded-full border-8 border-dashed border-white/20" />
-                </motion.div>
-
-                <motion.div
-                  className="absolute w-20 h-20 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center"
-                  animate={{
-                    x: [0, 100, 0],
-                    y: [0, -50, 0],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 15,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                  }}
-                >
-                  <Megaphone className="text-white" />
-                </motion.div>
-
-                <motion.div
-                  className="absolute w-16 h-16 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center"
-                  animate={{
-                    x: [0, -80, 0],
-                    y: [0, 60, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 12,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                    delay: 1,
-                  }}
-                >
-                  <Globe className="text-white" />
-                </motion.div>
-
-                <motion.div
-                  className="absolute w-12 h-12 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center"
-                  animate={{
-                    x: [0, 60, 0],
-                    y: [0, 80, 0],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 18,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                    delay: 2,
-                  }}
-                >
-                  <BookOpen className="text-white" />
-                </motion.div>
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
+      <ProgramHero
+        title={programData.title}
+        description={programData.tagline || programData.description || "Advocacy program for free and open-source technology for society"}
+        color="#0891b2"
+        logoSrc={programData.logo || "/logos/fosspeaks-logo.svg"}
+        image={PROGRAM_PHOTOS.fosspeaks}
+      />
 
       {/* About Section */}
-      <section className="w-full py-12 md:py-24 bg-white" id="about">
+      <section className="w-full py-12 md:py-24 bg-background" id="about">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <AnimatedSection variant="fadeRight">
@@ -175,17 +65,17 @@ export default function FOSSpeaksPage() {
 
             <AnimatedSection variant="fadeLeft">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About {programData.title}</h2>
+                <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">About {programData.title}</h2>
                 {programData.mission ? (
-                  <p className="text-gray-600">{programData.mission}</p>
+                  <p className="text-muted-foreground">{programData.mission}</p>
                 ) : (
                   <>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       {programData.title} is the advocacy and public outreach arm of FOSS Andhra dedicated to promoting the adoption
                       and benefits of free and open-source software across society. We work to influence policy, raise
                       awareness, and foster understanding about the importance of digital freedom.
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       Through various communication channels, educational programs, and policy advocacy, we amplify the
                       message of FOSS and its relevance to education, governance, privacy, and digital independence.
                     </p>
@@ -198,7 +88,7 @@ export default function FOSSpeaksPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Public Advocacy</h4>
-                      <p className="text-sm text-gray-500">Promoting FOSS awareness</p>
+                      <p className="text-sm text-muted-foreground">Promoting FOSS awareness</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -207,7 +97,7 @@ export default function FOSSpeaksPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Policy Influence</h4>
-                      <p className="text-sm text-gray-500">Shaping digital policy</p>
+                      <p className="text-sm text-muted-foreground">Shaping digital policy</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -216,7 +106,7 @@ export default function FOSSpeaksPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Educational Outreach</h4>
-                      <p className="text-sm text-gray-500">FOSS workshops and seminars</p>
+                      <p className="text-sm text-muted-foreground">FOSS workshops and seminars</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -225,7 +115,7 @@ export default function FOSSpeaksPage() {
                     </div>
                     <div>
                       <h4 className="font-medium">Media Engagement</h4>
-                      <p className="text-sm text-gray-500">Press and public relations</p>
+                      <p className="text-sm text-muted-foreground">Press and public relations</p>
                     </div>
                   </div>
                 </div>
@@ -236,12 +126,12 @@ export default function FOSSpeaksPage() {
       </section>
 
       {/* Initiatives Section */}
-      <section className="w-full py-12 md:py-24 bg-gray-50" id="initiatives">
+      <section className="w-full py-12 md:py-24 bg-[hsl(var(--surface-1))]" id="initiatives">
         <div className="container px-4 md:px-6">
           <AnimatedSection variant="fadeUp">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Initiatives</h2>
-              <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">Our Initiatives</h2>
+              <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
                 Discover our key initiatives to promote FOSS adoption and advocacy
               </p>
             </div>
@@ -264,7 +154,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">FOSS Awareness Campaigns</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Public awareness campaigns highlighting the benefits and importance of free and open source
                         software.
                       </CardDescription>
@@ -292,7 +182,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">Media Relations Program</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Building relationships with media to promote coverage of FOSS initiatives and benefits.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -319,7 +209,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">Digital Rights Advocacy</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Promoting digital rights, privacy, and freedom through advocacy and awareness campaigns.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -350,7 +240,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">Government FOSS Policy</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Advocating for government policies that prioritize and mandate FOSS solutions.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -377,7 +267,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">Digital Sovereignty Initiative</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Promoting digital sovereignty through local control of technology and data.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -404,7 +294,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">Education Policy Reform</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Advocating for FOSS integration in educational curricula and institutional policies.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -435,7 +325,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">FOSS Literacy Program</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Educational programs to improve understanding of FOSS principles and applications.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -462,7 +352,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">Public Speaker Program</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Training advocates to speak effectively about FOSS benefits and applications.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -489,7 +379,7 @@ export default function FOSSpeaksPage() {
                       <CardTitle className="text-xl text-fosspeaks">Educational Content Creation</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <CardDescription className="text-gray-600 mb-4 min-h-[80px]">
+                      <CardDescription className="text-muted-foreground mb-4 min-h-[80px]">
                         Developing educational content about FOSS for various audiences and contexts.
                       </CardDescription>
                       <ul className="space-y-2 text-sm">
@@ -516,12 +406,12 @@ export default function FOSSpeaksPage() {
       </section>
 
       {/* Team Section */}
-      <section className="w-full py-12 md:py-24 bg-white">
+      <section className="w-full py-12 md:py-24 bg-background">
         <div className="container px-4 md:px-6">
           <AnimatedSection variant="fadeUp">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Team</h2>
-              <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground">Our Team</h2>
+              <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
                 Meet the advocates and communicators spreading the message of FOSS
               </p>
             </div>
@@ -530,12 +420,12 @@ export default function FOSSpeaksPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <AnimatedSection variant="fadeUp" delay={0.1}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Vijay Singh</h3>
-                  <p className="text-sm text-gray-500">Advocacy Director</p>
+                  <p className="text-sm text-muted-foreground">Advocacy Director</p>
                   <p className="text-sm mt-2">
                     Communications specialist with 10+ years experience in technology advocacy.
                   </p>
@@ -545,12 +435,12 @@ export default function FOSSpeaksPage() {
 
             <AnimatedSection variant="fadeUp" delay={0.2}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Lakshmi Devi</h3>
-                  <p className="text-sm text-gray-500">Policy Coordinator</p>
+                  <p className="text-sm text-muted-foreground">Policy Coordinator</p>
                   <p className="text-sm mt-2">
                     Former policy advisor specializing in digital policy development and government relations.
                   </p>
@@ -560,12 +450,12 @@ export default function FOSSpeaksPage() {
 
             <AnimatedSection variant="fadeUp" delay={0.3}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Anand Kumar</h3>
-                  <p className="text-sm text-gray-500">Media Relations</p>
+                  <p className="text-sm text-muted-foreground">Media Relations</p>
                   <p className="text-sm mt-2">
                     Journalist turned advocate with extensive contacts in regional and national media.
                   </p>
@@ -575,12 +465,12 @@ export default function FOSSpeaksPage() {
 
             <AnimatedSection variant="fadeUp" delay={0.4}>
               <AnimatedCard className="overflow-hidden">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <Users className="h-24 w-24 text-gray-400" />
+                <div className="h-48 bg-muted flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground" />
                 </div>
                 <CardContent className="pt-4">
                   <h3 className="font-bold">Divya Singh</h3>
-                  <p className="text-sm text-gray-500">Educational Outreach</p>
+                  <p className="text-sm text-muted-foreground">Educational Outreach</p>
                   <p className="text-sm mt-2">
                     Curriculum developer specializing in technology literacy and digital skills education.
                   </p>

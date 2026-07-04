@@ -12,9 +12,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProgramContactSection } from "@/components/program-contact-section"
 import { ProgramHero } from "@/components/program-hero"
-import { Server, Database, Users, Code, Globe } from "lucide-react"
 import { BookOpen } from "lucide-react"
-import { PROGRAMS_BY_ID } from "@/lib/programs"
+import { PROGRAMS_BY_ID, PROGRAM_PHOTOS } from "@/lib/programs"
 
 interface Program {
   id: string
@@ -32,7 +31,7 @@ export default function FOSServePage() {
     name: PROGRAMS_BY_ID.fosserve.slug,
     title: PROGRAMS_BY_ID.fosserve.displayName,
     description: PROGRAMS_BY_ID.fosserve.description,
-    color: "#9333ea",
+    color: "#7c3aed",
     logo: PROGRAMS_BY_ID.fosserve.logo,
   } as any)
   const [loading, setLoading] = useState(true)
@@ -54,68 +53,14 @@ export default function FOSServePage() {
       setLoading(false)
     }
   }
-  // Icons for the hero section
-  const HeroIcons = () => (
-    <>
-      <motion.div
-        className="absolute top-20 left-[10%] text-purple-400 opacity-20 animate-float"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ delay: 0.5 }}
-      >
-        <Server size={40} />
-      </motion.div>
-      <motion.div
-        className="absolute top-40 right-[15%] text-purple-400 opacity-20 animate-float-delay-1"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ delay: 0.7 }}
-      >
-        <Database size={50} />
-      </motion.div>
-      <motion.div
-        className="absolute bottom-20 left-[20%] text-purple-400 opacity-20 animate-float-delay-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ delay: 0.9 }}
-      >
-        <Users size={45} />
-      </motion.div>
-      <motion.div
-        className="absolute bottom-40 right-[25%] text-purple-400 opacity-20 animate-float"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ delay: 1.1 }}
-      >
-        <BookOpen size={35} />
-      </motion.div>
-      <motion.div
-        className="absolute top-1/2 left-[30%] text-purple-400 opacity-20 animate-float-delay-1"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ delay: 1.3 }}
-      >
-        <Code size={55} />
-      </motion.div>
-      <motion.div
-        className="absolute top-1/3 right-[5%] text-purple-400 opacity-20 animate-float-delay-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ delay: 1.5 }}
-      >
-        <Globe size={40} />
-      </motion.div>
-    </>
-  )
-
   return (
     <main className="min-h-screen">
       <ProgramHero
         title={programData.title}
         description={programData.tagline || programData.description || "Promoting open-source solutions in education and governance to enhance digital infrastructure and services."}
-        color={programData.color || "#9333ea"}
+        color={programData.color || "#7c3aed"}
         logoSrc={programData.logo || "/logos/fosserve-logo.png"}
-        icons={<HeroIcons />}
+        image={PROGRAM_PHOTOS.fosserve}
       />
 
       {/* Rest of the page content */}
@@ -123,7 +68,7 @@ export default function FOSServePage() {
 
       <div className="flex flex-col min-h-screen">
         {/* About Section */}
-        <section className="w-full py-12 md:py-24 bg-white" id="about">
+        <section className="w-full py-12 md:py-24 bg-background" id="about">
           <div className="container px-4 md:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <AnimatedSection variant="fadeRight">
@@ -134,7 +79,7 @@ export default function FOSServePage() {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/80 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-fosserve/80 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 right-4 text-white">
                     <h3 className="text-xl font-bold">Education & Governance</h3>
                     <p className="text-sm">Implementing open source solutions for public benefit</p>
@@ -144,18 +89,18 @@ export default function FOSServePage() {
 
               <AnimatedSection variant="fadeLeft">
                 <div className="space-y-6">
-                  <h2 className="text-3xl font-bold tracking-tighter text-gray-900">About {programData.title}</h2>
+                  <h2 className="text-3xl font-bold tracking-tighter text-foreground">About {programData.title}</h2>
                   {programData.mission ? (
-                    <p className="text-gray-600">{programData.mission}</p>
+                    <p className="text-muted-foreground">{programData.mission}</p>
                   ) : (
                     <>
-                      <p className="text-gray-600">
+                      <p className="text-muted-foreground">
                         {programData.title} is our dedicated program focused on promoting and implementing open source solutions in
                         educational institutions, government bodies, and the broader society. We believe that open source
                         software offers numerous advantages including cost-effectiveness, transparency, customizability, and
                         security.
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-muted-foreground">
                         Through {programData.title}, we work closely with schools, colleges, universities, and government departments
                         to help them transition to open source alternatives, providing training, support, and custom
                         implementation services.
@@ -164,39 +109,39 @@ export default function FOSServePage() {
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                     <div className="flex items-start space-x-3">
-                      <div className="bg-purple-100 p-2 rounded-full">
-                        <GraduationCap className="h-5 w-5 text-purple-600" />
+                      <div className="bg-fosserve/10 p-2 rounded-full">
+                        <GraduationCap className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
                         <h4 className="font-medium">Education</h4>
-                        <p className="text-sm text-gray-500">FOSS solutions for educational institutions</p>
+                        <p className="text-sm text-muted-foreground">FOSS solutions for educational institutions</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="bg-purple-100 p-2 rounded-full">
-                        <Building className="h-5 w-5 text-purple-600" />
+                      <div className="bg-fosserve/10 p-2 rounded-full">
+                        <Building className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
                         <h4 className="font-medium">Governance</h4>
-                        <p className="text-sm text-gray-500">Open source for government departments</p>
+                        <p className="text-sm text-muted-foreground">Open source for government departments</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="bg-purple-100 p-2 rounded-full">
-                        <BookOpen className="h-5 w-5 text-purple-600" />
+                      <div className="bg-fosserve/10 p-2 rounded-full">
+                        <BookOpen className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
                         <h4 className="font-medium">Society</h4>
-                        <p className="text-sm text-gray-500">Broader access to technology</p>
+                        <p className="text-sm text-muted-foreground">Broader access to technology</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="bg-purple-100 p-2 rounded-full">
-                        <CheckCircle className="h-5 w-5 text-purple-600" />
+                      <div className="bg-fosserve/10 p-2 rounded-full">
+                        <CheckCircle className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
                         <h4 className="font-medium">Implementation</h4>
-                        <p className="text-sm text-gray-500">Custom deployment and support</p>
+                        <p className="text-sm text-muted-foreground">Custom deployment and support</p>
                       </div>
                     </div>
                   </div>
@@ -207,12 +152,12 @@ export default function FOSServePage() {
         </section>
 
         {/* Initiatives Section */}
-        <section className="w-full py-12 md:py-24 bg-gray-50" id="initiatives">
+        <section className="w-full py-12 md:py-24 bg-[hsl(var(--surface-1))]" id="initiatives">
           <div className="container px-4 md:px-6">
             <AnimatedSection variant="fadeUp">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Initiatives</h2>
-                <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+                <h2 className="text-3xl font-bold tracking-tighter text-foreground">Our Initiatives</h2>
+                <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
                   Discover our key initiatives to promote open source adoption in education and governance
                 </p>
               </div>
@@ -254,12 +199,12 @@ export default function FOSServePage() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center">
-                        <GraduationCap className="mr-2 h-5 w-5 text-purple-600" />
+                        <GraduationCap className="mr-2 h-5 w-5 text-fosserve" />
                         Education
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-600">
+                      <p className="text-muted-foreground">
                         Promoting FOSS solutions in schools, colleges, and universities through training and
                         implementation support.
                       </p>
@@ -269,12 +214,12 @@ export default function FOSServePage() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center">
-                        <Building className="mr-2 h-5 w-5 text-purple-600" />
+                        <Building className="mr-2 h-5 w-5 text-fosserve" />
                         Governance
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-600">
+                      <p className="text-muted-foreground">
                         Supporting government departments in adopting open source solutions for efficient and
                         transparent governance.
                       </p>
@@ -284,12 +229,12 @@ export default function FOSServePage() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center">
-                        <BookOpen className="mr-2 h-5 w-5 text-purple-600" />
+                        <BookOpen className="mr-2 h-5 w-5 text-fosserve" />
                         Society
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-600">
+                      <p className="text-muted-foreground">
                         Enabling broader access to technology through open source solutions for community organizations
                         and the public.
                       </p>
@@ -297,7 +242,7 @@ export default function FOSServePage() {
                   </Card>
                 </div>
 
-                <div className="bg-purple-50 p-8 rounded-lg my-12">
+                <div className="bg-fosserve/5 p-8 rounded-lg my-12">
                   <h3 className="text-2xl font-bold mb-4">Partner with FOSServe</h3>
                   <p className="mb-6">
                     Are you an educational institution or government department interested in implementing open source
@@ -305,12 +250,12 @@ export default function FOSServePage() {
                   </p>
                   <div className="flex flex-wrap gap-4">
                     <Link href="#contact">
-                      <AnimatedButton className="bg-purple-600 hover:bg-purple-700 text-white">
+                      <AnimatedButton className="bg-fosserve hover:bg-fosserve/90 text-white">
                         Contact Us
                       </AnimatedButton>
                     </Link>
                     <Link href="#casestudies">
-                      <AnimatedButton variant="outline" className="border-purple-200 text-purple-600">
+                      <AnimatedButton variant="outline" className="border-fosserve/30 text-fosserve">
                         View Case Studies
                       </AnimatedButton>
                     </Link>
@@ -321,7 +266,7 @@ export default function FOSServePage() {
               <TabsContent value="initiatives" className="mt-0" id="initiatives">
                 <div className="grid gap-6 md:grid-cols-2">
                   <Card>
-                    <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
+                    <CardHeader className="bg-fosserve/10">
                       <CardTitle>FOSS Campus</CardTitle>
                       <CardDescription>Open source solutions for educational institutions</CardDescription>
                     </CardHeader>
@@ -351,7 +296,7 @@ export default function FOSServePage() {
                     </CardContent>
                     <CardFooter className="flex justify-end">
                       <Link href="#contact">
-                        <AnimatedButton variant="ghost" className="text-purple-600">
+                        <AnimatedButton variant="ghost" className="text-fosserve">
                           Learn More
                         </AnimatedButton>
                       </Link>
@@ -359,7 +304,7 @@ export default function FOSServePage() {
                   </Card>
 
                   <Card>
-                    <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
+                    <CardHeader className="bg-fosserve/10">
                       <CardTitle>FOSS Gov</CardTitle>
                       <CardDescription>Open source solutions for government departments</CardDescription>
                     </CardHeader>
@@ -389,7 +334,7 @@ export default function FOSServePage() {
                     </CardContent>
                     <CardFooter className="flex justify-end">
                       <Link href="#contact">
-                        <AnimatedButton variant="ghost" className="text-purple-600">
+                        <AnimatedButton variant="ghost" className="text-fosserve">
                           Learn More
                         </AnimatedButton>
                       </Link>
@@ -397,7 +342,7 @@ export default function FOSServePage() {
                   </Card>
 
                   <Card>
-                    <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
+                    <CardHeader className="bg-fosserve/10">
                       <CardTitle>FOSS Library</CardTitle>
                       <CardDescription>Open source digital library solutions</CardDescription>
                     </CardHeader>
@@ -427,7 +372,7 @@ export default function FOSServePage() {
                     </CardContent>
                     <CardFooter className="flex justify-end">
                       <Link href="#contact">
-                        <AnimatedButton variant="ghost" className="text-purple-600">
+                        <AnimatedButton variant="ghost" className="text-fosserve">
                           Learn More
                         </AnimatedButton>
                       </Link>
@@ -435,7 +380,7 @@ export default function FOSServePage() {
                   </Card>
 
                   <Card>
-                    <CardHeader className="bg-gradient-to-r from-purple-100 to-purple-200">
+                    <CardHeader className="bg-fosserve/10">
                       <CardTitle>FOSS Training</CardTitle>
                       <CardDescription>Capacity building for FOSS adoption</CardDescription>
                     </CardHeader>
@@ -465,7 +410,7 @@ export default function FOSServePage() {
                     </CardContent>
                     <CardFooter className="flex justify-end">
                       <Link href="#contact">
-                        <AnimatedButton variant="ghost" className="text-purple-600">
+                        <AnimatedButton variant="ghost" className="text-fosserve">
                           Learn More
                         </AnimatedButton>
                       </Link>
@@ -477,7 +422,7 @@ export default function FOSServePage() {
               <TabsContent value="casestudies" className="mt-0" id="casestudies">
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold mb-6 flex items-center">
-                    <FileText className="mr-2 h-6 w-6 text-purple-600" />
+                    <FileText className="mr-2 h-6 w-6 text-fosserve" />
                     Success Stories
                   </h3>
 
@@ -523,7 +468,7 @@ export default function FOSServePage() {
                             </div>
                             <div className="mt-4">
                               <Link href="#contact">
-                                <AnimatedButton variant="outline" size="sm" className="text-purple-600">
+                                <AnimatedButton variant="outline" size="sm" className="text-fosserve">
                                   Inquire for Details
                                 </AnimatedButton>
                               </Link>
@@ -574,7 +519,7 @@ export default function FOSServePage() {
                             </div>
                             <div className="mt-4">
                               <Link href="#contact">
-                                <AnimatedButton variant="outline" size="sm" className="text-purple-600">
+                                <AnimatedButton variant="outline" size="sm" className="text-fosserve">
                                   Inquire for Details
                                 </AnimatedButton>
                               </Link>
@@ -625,7 +570,7 @@ export default function FOSServePage() {
                             </div>
                             <div className="mt-4">
                               <Link href="#contact">
-                                <AnimatedButton variant="outline" size="sm" className="text-purple-600">
+                                <AnimatedButton variant="outline" size="sm" className="text-fosserve">
                                   Inquire for Details
                                 </AnimatedButton>
                               </Link>
@@ -640,7 +585,7 @@ export default function FOSServePage() {
 
               <TabsContent value="gallery" className="mt-0" id="gallery">
                 <h3 className="text-2xl font-bold mb-6 flex items-center">
-                  <ImageIcon className="mr-2 h-6 w-6 text-purple-600" />
+                  <ImageIcon className="mr-2 h-6 w-6 text-fosserve" />
                   FOSServe Implementation Gallery
                 </h3>
 
@@ -653,7 +598,7 @@ export default function FOSServePage() {
                     { id: 5, src: "/gallery/fossync-club.jpg", title: "Campus Implementation" },
                     { id: 6, src: "/gallery/fosstar-summit.jpg", title: "Program Review" },
                   ].map((item) => (
-                    <div key={item.id} className="overflow-hidden rounded-lg bg-gray-100 aspect-video relative group">
+                    <div key={item.id} className="overflow-hidden rounded-lg bg-muted aspect-video relative group">
                       <Image
                         src={item.src}
                         alt={item.title}
@@ -671,7 +616,7 @@ export default function FOSServePage() {
 
                 <div className="text-center">
                   <Link href="/gallery">
-                    <AnimatedButton variant="outline" className="mt-4 border-purple-200 text-purple-600">
+                    <AnimatedButton variant="outline" className="mt-4 border-fosserve/30 text-fosserve">
                       View All Gallery Images
                     </AnimatedButton>
                   </Link>
@@ -683,12 +628,12 @@ export default function FOSServePage() {
         </section>
 
         {/* Team Section */}
-        <section className="w-full py-12 md:py-24 bg-white">
+        <section className="w-full py-12 md:py-24 bg-background">
           <div className="container px-4 md:px-6">
             <AnimatedSection variant="fadeUp">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900">Our Team</h2>
-                <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+                <h2 className="text-3xl font-bold tracking-tighter text-foreground">Our Team</h2>
+                <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
                   Meet the experts working to implement open source solutions in education and governance
                 </p>
               </div>
@@ -697,12 +642,12 @@ export default function FOSServePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               <AnimatedSection variant="fadeUp" delay={0.1}>
                 <AnimatedCard className="overflow-hidden">
-                  <div className="h-48 bg-gray-200 flex items-center justify-center">
-                    <Building className="h-24 w-24 text-gray-400" />
+                  <div className="h-48 bg-muted flex items-center justify-center">
+                    <Building className="h-24 w-24 text-muted-foreground" />
                   </div>
                   <CardContent className="pt-4">
                     <h3 className="font-bold">Dr. Suresh Kumar</h3>
-                    <p className="text-sm text-gray-500">Program Director</p>
+                    <p className="text-sm text-muted-foreground">Program Director</p>
                     <p className="text-sm mt-2">
                       Leads the FOSServe program and coordinates with educational institutions and government bodies.
                     </p>
@@ -712,12 +657,12 @@ export default function FOSServePage() {
 
               <AnimatedSection variant="fadeUp" delay={0.2}>
                 <AnimatedCard className="overflow-hidden">
-                  <div className="h-48 bg-gray-200 flex items-center justify-center">
-                    <GraduationCap className="h-24 w-24 text-gray-400" />
+                  <div className="h-48 bg-muted flex items-center justify-center">
+                    <GraduationCap className="h-24 w-24 text-muted-foreground" />
                   </div>
                   <CardContent className="pt-4">
                     <h3 className="font-bold">Anita Reddy</h3>
-                    <p className="text-sm text-gray-500">Education Specialist</p>
+                    <p className="text-sm text-muted-foreground">Education Specialist</p>
                     <p className="text-sm mt-2">
                       Develops FOSS implementation strategies for educational institutions.
                     </p>
@@ -727,12 +672,12 @@ export default function FOSServePage() {
 
               <AnimatedSection variant="fadeUp" delay={0.3}>
                 <AnimatedCard className="overflow-hidden">
-                  <div className="h-48 bg-gray-200 flex items-center justify-center">
-                    <BookOpen className="h-24 w-24 text-gray-400" />
+                  <div className="h-48 bg-muted flex items-center justify-center">
+                    <BookOpen className="h-24 w-24 text-muted-foreground" />
                   </div>
                   <CardContent className="pt-4">
                     <h3 className="font-bold">Ramesh Patel</h3>
-                    <p className="text-sm text-gray-500">Training Coordinator</p>
+                    <p className="text-sm text-muted-foreground">Training Coordinator</p>
                     <p className="text-sm mt-2">
                       Organizes and conducts training programs for institutions adopting FOSS solutions.
                     </p>
@@ -742,12 +687,12 @@ export default function FOSServePage() {
 
               <AnimatedSection variant="fadeUp" delay={0.4}>
                 <AnimatedCard className="overflow-hidden">
-                  <div className="h-48 bg-gray-200 flex items-center justify-center">
-                    <CheckCircle className="h-24 w-24 text-gray-400" />
+                  <div className="h-48 bg-muted flex items-center justify-center">
+                    <CheckCircle className="h-24 w-24 text-muted-foreground" />
                   </div>
                   <CardContent className="pt-4">
                     <h3 className="font-bold">Kavita Singh</h3>
-                    <p className="text-sm text-gray-500">Implementation Lead</p>
+                    <p className="text-sm text-muted-foreground">Implementation Lead</p>
                     <p className="text-sm mt-2">
                       Oversees the technical implementation of FOSS solutions in partner organizations.
                     </p>
@@ -760,9 +705,9 @@ export default function FOSServePage() {
 
         <ProgramContactSection
           description="Interested in implementing open source solutions in your institution or department? Contact the FOSServe team."
-          iconBgClass="bg-purple-100"
-          iconClass="text-purple-600"
-          submitButtonClass="bg-purple-600 text-white hover:bg-purple-700"
+          iconBgClass="bg-fosserve/10"
+          iconClass="text-fosserve"
+          submitButtonClass="bg-fosserve text-white hover:bg-fosserve/90"
         />
       </div>
     </main>
