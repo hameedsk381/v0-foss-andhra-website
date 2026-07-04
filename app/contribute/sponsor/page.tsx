@@ -83,7 +83,7 @@ export default function SponsorPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           {/* Back Button */}
@@ -96,17 +96,17 @@ export default function SponsorPage() {
 
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-full mb-4">
               <Building className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold mb-3">Become a Sponsor</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h1 className="font-display text-4xl font-extrabold mb-3 text-foreground">Become a Sponsor</h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Partner with FOSS Andhra to promote open-source solutions and support the tech community in Andhra Pradesh
             </p>
           </div>
 
           {/* Why Sponsor */}
-          <Card className="mb-12 bg-gradient-to-br from-purple-600 to-blue-600 text-white">
+          <Card className="mb-12 bg-primary text-white">
             <CardHeader>
               <CardTitle className="text-2xl text-white">Why Sponsor FOSS Andhra?</CardTitle>
             </CardHeader>
@@ -115,21 +115,21 @@ export default function SponsorPage() {
                 <div>
                   <Users className="h-8 w-8 mb-3" />
                   <h3 className="font-semibold text-lg mb-2">Reach Talent</h3>
-                  <p className="text-purple-100 text-sm">
+                  <p className="text-white/70 text-sm">
                     Connect with skilled developers, students, and tech professionals
                   </p>
                 </div>
                 <div>
                   <Star className="h-8 w-8 mb-3" />
                   <h3 className="font-semibold text-lg mb-2">Brand Visibility</h3>
-                  <p className="text-purple-100 text-sm">
+                  <p className="text-white/70 text-sm">
                     Enhance your brand presence in the open-source community
                   </p>
                 </div>
                 <div>
                   <Trophy className="h-8 w-8 mb-3" />
                   <h3 className="font-semibold text-lg mb-2">Give Back</h3>
-                  <p className="text-purple-100 text-sm">
+                  <p className="text-white/70 text-sm">
                     Support the growth of FOSS ecosystem and education
                   </p>
                 </div>
@@ -146,7 +146,7 @@ export default function SponsorPage() {
                   <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${tier.color}`} />
                   <CardHeader>
                     <CardTitle className="text-xl">{tier.name}</CardTitle>
-                    <CardDescription className="text-2xl font-bold text-gray-900">
+                    <CardDescription className="text-2xl font-bold text-foreground">
                       {tier.amount}
                     </CardDescription>
                   </CardHeader>
@@ -168,7 +168,7 @@ export default function SponsorPage() {
           {/* Program Sponsorship */}
           <div className="mb-12">
             <h2 className="text-3xl font-bold mb-4 text-center">Program Sponsorship</h2>
-            <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
               Sponsor specific programs that align with your organization's goals and values
             </p>
             <div className="grid gap-6 md:grid-cols-2">
@@ -179,9 +179,9 @@ export default function SponsorPage() {
                     <CardDescription>{program.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <div className="text-sm font-semibold text-blue-900 mb-1">Impact</div>
-                      <div className="text-sm text-blue-700">{program.impact}</div>
+                    <div className="bg-primary/5 p-4 rounded-lg">
+                      <div className="text-sm font-semibold text-primary mb-1">Impact</div>
+                      <div className="text-sm text-foreground">{program.impact}</div>
                     </div>
                     <Link href={`/programs/${program.program.toLowerCase()}`} className="mt-4 block">
                       <Button variant="outline" className="w-full">
@@ -204,33 +204,33 @@ export default function SponsorPage() {
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
+                <div className="bg-[hsl(var(--surface-1))] p-4 rounded-lg text-center">
                   <div className="font-semibold mb-1">Event Sponsorship</div>
-                  <div className="text-sm text-gray-600">Sponsor workshops, hackathons, or conferences</div>
+                  <div className="text-sm text-muted-foreground">Sponsor workshops, hackathons, or conferences</div>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
+                <div className="bg-[hsl(var(--surface-1))] p-4 rounded-lg text-center">
                   <div className="font-semibold mb-1">Infrastructure Support</div>
-                  <div className="text-sm text-gray-600">Provide servers, hosting, or technical resources</div>
+                  <div className="text-sm text-muted-foreground">Provide servers, hosting, or technical resources</div>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-lg text-center">
+                <div className="bg-[hsl(var(--surface-1))] p-4 rounded-lg text-center">
                   <div className="font-semibold mb-1">In-Kind Contributions</div>
-                  <div className="text-sm text-gray-600">Software licenses, training, or services</div>
+                  <div className="text-sm text-muted-foreground">Software licenses, training, or services</div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Contact CTA */}
-          <Card className="bg-gradient-to-br from-purple-600 to-blue-600 text-white text-center">
+          <Card className="bg-primary text-white text-center">
             <CardContent className="py-12">
               <Mail className="h-16 w-16 mx-auto mb-4" />
               <h2 className="text-3xl font-bold mb-4">Ready to Partner with Us?</h2>
-              <p className="text-purple-100 mb-8 max-w-2xl mx-auto">
+              <p className="text-white/70 mb-8 max-w-2xl mx-auto">
                 Get in touch to discuss sponsorship opportunities and how we can work together to promote FOSS in Andhra Pradesh
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/contact">
-                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
+                  <Button size="lg" className="bg-white text-primary hover:bg-white/90">
                     Contact Sponsorship Team
                   </Button>
                 </Link>

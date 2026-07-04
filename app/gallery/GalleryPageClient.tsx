@@ -4,11 +4,12 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { Search, Filter, X } from "lucide-react"
-import { AnimatedSection } from "@/components/ui/animated-section"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { programColors, programInfo } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
+import { PageHero } from "@/components/page-hero"
+import { Reveal, StaggerGroup, StaggerItem, HoverLift } from "@/components/motion-primitives"
 
 type GalleryItem = {
   id: string
@@ -89,43 +90,36 @@ export default function GalleryPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="w-full py-16 md:py-24 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary/80" />
-        <div className="container px-4 md:px-6 relative z-10">
-          <AnimatedSection variant="fadeUp">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">FOSS Andhra Gallery</h1>
-              <p className="mx-auto max-w-[700px] text-white/90 md:text-xl">
-                Explore events, implementations, and initiatives from our various programs
-              </p>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Gallery"
+        title="Events,"
+        titleLine2="captured."
+        subtitle="Explore implementations and initiatives from our seven programmes."
+        image="/stock/panel.jpg"
+      />
 
       {loading ? (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading gallery...</p>
+            <p className="text-muted-foreground">Loading gallery...</p>
           </div>
         </div>
       ) : (
         <>
 
       {/* Filter Section */}
-      <section className="w-full py-8 bg-white border-b">
-        <div className="container px-4 md:px-6">
+      <section className="w-full py-8 bg-background border-b border-border">
+        <div className="app-container">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
             <div className="col-span-1 md:col-span-2">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-10 pr-12 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                  className="block w-full pl-10 pr-12 py-2 border border-border rounded-md bg-background focus:ring-primary focus:border-primary"
                   placeholder="Search for images, events, or tags..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -135,7 +129,7 @@ export default function GalleryPage() {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     onClick={() => setSearchTerm("")}
                   >
-                    <X className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <X className="h-5 w-5 text-muted-foreground hover:text-foreground" />
                   </button>
                 )}
               </div>
@@ -143,8 +137,8 @@ export default function GalleryPage() {
 
             <div className="col-span-1">
               <div className="flex items-center space-x-2">
-                <Filter className="h-5 w-5 text-gray-400" />
-                <span className="text-sm font-medium">Filter by tags:</span>
+                <Filter className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium text-foreground">Filter by tags:</span>
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
                 {allTags.slice(0, 5).map((tag) => (
@@ -154,14 +148,14 @@ export default function GalleryPage() {
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
                       selectedTags.includes(tag)
                         ? "bg-primary text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        : "bg-muted text-muted-foreground hover:bg-muted/70"
                     }`}
                   >
                     {tag}
                   </button>
                 ))}
                 {allTags.length > 5 && (
-                  <button className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200">
+                  <button className="px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground hover:bg-muted/70">
                     +{allTags.length - 5} more
                   </button>
                 )}
@@ -172,10 +166,10 @@ export default function GalleryPage() {
       </section>
 
       {/* Gallery Section */}
-      <section className="w-full py-12 md:py-24 bg-gray-50">
-        <div className="container px-4 md:px-6">
+      <section className="w-full section-shell bg-[hsl(var(--surface-1))]">
+        <div className="app-container">
           <Tabs defaultValue="all" className="w-full">
-            <AnimatedSection variant="fadeUp" delay={0.1}>
+            <Reveal delay={0.1}>
               <TabsList className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 max-w-4xl mx-auto mb-8">
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="fosstar">FOSStar</TabsTrigger>
@@ -186,13 +180,14 @@ export default function GalleryPage() {
                 <TabsTrigger value="fossterage">FOSSterage</TabsTrigger>
                 <TabsTrigger value="fosspeaks">FOSSpeaks</TabsTrigger>
               </TabsList>
-            </AnimatedSection>
+            </Reveal>
 
             <TabsContent value="all" className="mt-0">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredItems.length > 0 ? (
-                  filteredItems.map((item) => (
-                    <AnimatedSection key={item.id} variant="fadeUp" delay={0.1}>
+                  filteredItems.map((item, i) => (
+                    <Reveal key={item.id} delay={Math.min(i * 0.04, 0.3)}>
+                      <HoverLift>
                       <Card className="overflow-hidden">
                         <motion.div
                           className="relative h-48 w-full"
@@ -208,7 +203,7 @@ export default function GalleryPage() {
                           <div className="absolute top-2 right-2">
                             <span
                               className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-white ${
-                                programColors[item.program as keyof typeof programColors]?.split(" ")[0] || "bg-gray-500"
+                                programColors[item.program as keyof typeof programColors]?.split(" ")[0] || "bg-primary"
                               }`}
                             >
                               {getProgramLabel(item.program)}
@@ -216,16 +211,16 @@ export default function GalleryPage() {
                           </div>
                         </motion.div>
                         <CardContent className="p-4">
-                          <h3 className="font-bold text-lg mb-1">{item.title}</h3>
-                          <p className="text-sm text-gray-500 mb-2">{item.description}</p>
+                          <h3 className="font-display font-bold text-lg mb-1 text-foreground">{item.title}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
                           <div className="flex flex-wrap gap-1 mt-2">
                             {item.tags.map((tag) => (
-                              <span key={tag} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
+                              <span key={tag} className="px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs">
                                 {tag}
                               </span>
                             ))}
                           </div>
-                          <p className="text-xs text-gray-400 mt-2">
+                          <p className="text-xs text-muted-foreground/70 mt-2">
                             {new Date(item.date).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",
@@ -234,15 +229,16 @@ export default function GalleryPage() {
                           </p>
                         </CardContent>
                       </Card>
-                    </AnimatedSection>
+                      </HoverLift>
+                    </Reveal>
                   ))
                 ) : (
                   <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex flex-col items-center justify-center p-12">
-                    <div className="bg-gray-100 p-8 rounded-full mb-4">
-                      <Search className="h-10 w-10 text-gray-400" />
+                    <div className="bg-muted p-8 rounded-full mb-4">
+                      <Search className="h-10 w-10 text-muted-foreground" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">No results found</h3>
-                    <p className="text-gray-500 text-center mb-6">
+                    <h3 className="font-display text-xl font-bold text-foreground mb-2">No results found</h3>
+                    <p className="text-muted-foreground text-center mb-6">
                       We couldn't find any gallery items matching your search or filters.
                     </p>
                     <button
@@ -266,8 +262,9 @@ export default function GalleryPage() {
                   {filteredItems.filter((item) => item.program === program).length > 0 ? (
                     filteredItems
                       .filter((item) => item.program === program)
-                      .map((item) => (
-                        <AnimatedSection key={item.id} variant="fadeUp" delay={0.1}>
+                      .map((item, i) => (
+                        <Reveal key={item.id} delay={Math.min(i * 0.04, 0.3)}>
+                          <HoverLift>
                           <Card className="overflow-hidden">
                             <motion.div
                               className="relative h-48 w-full"
@@ -282,19 +279,19 @@ export default function GalleryPage() {
                               />
                             </motion.div>
                             <CardContent className="p-4">
-                              <h3 className="font-bold text-lg mb-1">{item.title}</h3>
-                              <p className="text-sm text-gray-500 mb-2">{item.description}</p>
+                              <h3 className="font-display font-bold text-lg mb-1 text-foreground">{item.title}</h3>
+                              <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
                               <div className="flex flex-wrap gap-1 mt-2">
                                 {item.tags.map((tag) => (
                                   <span
                                     key={tag}
-                                    className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs"
+                                    className="px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs"
                                   >
                                     {tag}
                                   </span>
                                 ))}
                               </div>
-                              <p className="text-xs text-gray-400 mt-2">
+                              <p className="text-xs text-muted-foreground/70 mt-2">
                                 {new Date(item.date).toLocaleDateString("en-US", {
                                   year: "numeric",
                                   month: "long",
@@ -303,15 +300,16 @@ export default function GalleryPage() {
                               </p>
                             </CardContent>
                           </Card>
-                        </AnimatedSection>
+                          </HoverLift>
+                        </Reveal>
                       ))
                   ) : (
                     <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex flex-col items-center justify-center p-12">
-                      <div className="bg-gray-100 p-8 rounded-full mb-4">
-                        <Search className="h-10 w-10 text-gray-400" />
+                      <div className="bg-muted p-8 rounded-full mb-4">
+                        <Search className="h-10 w-10 text-muted-foreground" />
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">No results found</h3>
-                      <p className="text-gray-500 text-center mb-6">
+                      <h3 className="font-display text-xl font-bold text-foreground mb-2">No results found</h3>
+                      <p className="text-muted-foreground text-center mb-6">
                         We couldn't find any gallery items for {getProgramLabel(program)} matching your search or
                         filters.
                       </p>

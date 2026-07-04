@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   })
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[hsl(var(--surface-1))]">
       {/* SEO: Structured Data */}
       <BlogPostJsonLd post={post} />
       <BreadcrumbJsonLd
@@ -98,7 +98,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Article Header */}
-        <article className="bg-white rounded-lg shadow-md overflow-hidden">
+        <article className="bg-card rounded-lg shadow-md overflow-hidden border border-border">
           {post.coverImage && (
             <div className="aspect-video w-full">
               <img
@@ -111,8 +111,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           <div className="p-8">
             {/* Category & Reading Time */}
-            <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full">
                 {post.category.name}
               </span>
               {post.readingTime && (
@@ -122,12 +122,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="font-display text-4xl font-extrabold text-foreground mb-4">
               {post.title}
             </h1>
 
             {/* Excerpt */}
-            <p className="text-xl text-gray-600 mb-6">{post.excerpt}</p>
+            <p className="text-xl text-muted-foreground mb-6">{post.excerpt}</p>
 
             {/* Meta Info */}
             <div className="flex items-center gap-4 pb-6 border-b">
@@ -139,8 +139,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 />
               )}
               <div>
-                <p className="font-semibold text-gray-900">{post.author.name}</p>
-                <p className="text-sm text-gray-600">
+                <p className="font-semibold text-foreground">{post.author.name}</p>
+                <p className="text-sm text-muted-foreground">
                   {new Date(post.publishedAt || post.createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -169,7 +169,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     <a
                       key={tag.id}
                       href={`/blog/tag/${tag.slug}`}
-                      className="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm text-gray-700 transition"
+                      className="bg-muted hover:bg-muted/70 px-3 py-1 rounded-full text-sm text-foreground transition"
                     >
                       #{tag.name}
                     </a>
@@ -182,7 +182,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Comments Section */}
         {post.comments.length > 0 && (
-          <div className="mt-8 bg-white rounded-lg shadow-md p-8">
+          <div className="mt-8 bg-card rounded-lg shadow-md p-8 border border-border">
             <h2 className="text-2xl font-bold mb-6">
               Comments ({post.comments.length})
             </h2>
@@ -190,15 +190,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {post.comments.map((comment: any) => (
                 <div key={comment.id} className="border-b pb-6 last:border-b-0">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-semibold">
                       {comment.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1">
                       <p className="font-semibold">{comment.name}</p>
-                      <p className="text-sm text-gray-500 mb-2">
+                      <p className="text-sm text-muted-foreground mb-2">
                         {new Date(comment.createdAt).toLocaleDateString()}
                       </p>
-                      <p className="text-gray-700">{comment.content}</p>
+                      <p className="text-foreground">{comment.content}</p>
                     </div>
                   </div>
                 </div>

@@ -1,10 +1,11 @@
 "use client"
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { AnimatedSection } from "@/components/ui/animated-section"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Search, Mail, MessageSquare } from "lucide-react"
+import { PageHero } from "@/components/page-hero"
+import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 
 export default function FAQPage() {
     const faqs = [
@@ -83,58 +84,55 @@ export default function FAQPage() {
     ]
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50">
-            {/* Header */}
-            <section className="w-full py-16 md:py-24 bg-primary text-white">
-                <div className="container px-4 md:px-6">
-                    <AnimatedSection variant="fadeUp" className="text-center">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6">Frequently Asked Questions</h1>
-                        <p className="mx-auto max-w-[700px] text-xl text-blue-100 mb-8">
-                            Find answers to common questions about FOSS Andhra, our programs, and how you can get involved.
-                        </p>
-                        <div className="relative max-w-xl mx-auto">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                            <input
-                                type="text"
-                                placeholder="Search for answers..."
-                                className="w-full pl-12 pr-4 py-4 rounded-full text-gray-900 border-none shadow-lg focus:ring-2 focus:ring-secondary outline-none"
-                            />
-                        </div>
-                    </AnimatedSection>
+        <div className="flex flex-col min-h-screen bg-background">
+            <PageHero
+                eyebrow="Support"
+                title="Frequently asked"
+                titleLine2="questions."
+                subtitle="Find answers about FOSS Andhra, our programmes, and how you can get involved."
+                image="/stock/classroom.jpg"
+            >
+                <div className="relative max-w-xl mt-8">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                    <input
+                        type="text"
+                        placeholder="Search for answers..."
+                        className="w-full pl-12 pr-4 py-4 rounded-full text-foreground bg-white border-none shadow-lg focus:ring-2 focus:ring-secondary outline-none"
+                    />
                 </div>
-            </section>
+            </PageHero>
 
             {/* FAQ content */}
-            <section className="w-full py-12 md:py-24">
-                <div className="container px-4 md:px-6">
+            <section className="w-full section-shell bg-background">
+                <div className="app-container">
                     <div className="max-w-4xl mx-auto space-y-12">
                         {faqs.map((cat, i) => (
-                            <AnimatedSection key={i} variant="fadeUp" delay={i * 0.1}>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b">{cat.category}</h2>
-                                <Accordion type="single" collapsible className="w-full bg-white rounded-xl shadow-sm border px-6">
+                            <Reveal key={i} delay={i * 0.08}>
+                                <h2 className="font-display text-2xl font-bold text-foreground mb-6 pb-2 border-b border-border">{cat.category}</h2>
+                                <Accordion type="single" collapsible className="w-full bg-card rounded-xl shadow-sm border border-border px-6">
                                     {cat.questions.map((faq, j) => (
                                         <AccordionItem key={j} value={`item-${i}-${j}`} className={j === cat.questions.length - 1 ? "border-b-0" : ""}>
-                                            <AccordionTrigger className="text-left py-4 hover:no-underline font-semibold text-lg text-gray-800">
+                                            <AccordionTrigger className="text-left py-4 hover:no-underline font-semibold text-lg text-foreground">
                                                 {faq.q}
                                             </AccordionTrigger>
-                                            <AccordionContent className="text-gray-600 pb-4 text-base leading-relaxed">
+                                            <AccordionContent className="text-muted-foreground pb-4 text-base leading-relaxed">
                                                 {faq.a}
                                             </AccordionContent>
                                         </AccordionItem>
                                     ))}
                                 </Accordion>
-                            </AnimatedSection>
+                            </Reveal>
                         ))}
                     </div>
                 </div>
             </section>
 
             {/* Still have questions? */}
-            <section className="w-full py-12 md:py-24 bg-white">
-                <div className="container px-4 md:px-6 text-center">
-                    <AnimatedSection variant="fadeUp">
-                        <h2 className="text-3xl font-bold mb-6">Still have questions?</h2>
-                        <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+            <section className="w-full section-shell bg-[hsl(var(--surface-1))]">
+                <div className="app-container text-center">
+                    <Reveal>
+                        <h2 className="font-display text-3xl font-extrabold text-foreground mb-6">Still have questions?</h2>
+                        <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
                             If you couldn't find the answer you were looking for, please don't hesitate to get in touch with our team.
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
@@ -149,7 +147,7 @@ export default function FAQPage() {
                                 </Button>
                             </Link>
                         </div>
-                    </AnimatedSection>
+                    </Reveal>
                 </div>
             </section>
         </div>

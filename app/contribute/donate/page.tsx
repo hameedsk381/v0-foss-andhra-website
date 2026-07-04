@@ -74,10 +74,10 @@ export default function DonatePage() {
 
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-[#015ba7] rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-full mb-4">
               <Heart className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold mb-3">Support FOSS Andhra</h1>
+            <h1 className="font-display text-4xl font-extrabold mb-3 text-foreground">Support FOSS Andhra</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Your generous donation helps us promote Free and Open Source Software across Andhra Pradesh
             </p>
@@ -103,7 +103,7 @@ export default function DonatePage() {
                           <RadioGroupItem value="one-time" id="one-time" className="peer sr-only" />
                           <Label
                             htmlFor="one-time"
-                            className="flex items-center justify-center rounded-lg border-2 border-muted p-4 cursor-pointer hover:border-[#015ba7] peer-checked:border-[#015ba7] peer-checked:bg-[#015ba7]/10"
+                            className="flex items-center justify-center rounded-lg border-2 border-muted p-4 cursor-pointer hover:border-primary peer-checked:border-primary peer-checked:bg-primary/10"
                           >
                             <DollarSign className="mr-2 h-5 w-5" />
                             One-Time
@@ -113,7 +113,7 @@ export default function DonatePage() {
                           <RadioGroupItem value="monthly" id="monthly" className="peer sr-only" />
                           <Label
                             htmlFor="monthly"
-                            className="flex items-center justify-center rounded-lg border-2 border-muted p-4 cursor-pointer hover:border-[#015ba7] peer-checked:border-[#015ba7] peer-checked:bg-[#015ba7]/10"
+                            className="flex items-center justify-center rounded-lg border-2 border-muted p-4 cursor-pointer hover:border-primary peer-checked:border-primary peer-checked:bg-primary/10"
                           >
                             <CreditCard className="mr-2 h-5 w-5" />
                             Monthly
@@ -136,7 +136,7 @@ export default function DonatePage() {
                             setAmount(amt)
                             setCustomAmount("")
                           }}
-                          className={`h-14 text-lg font-semibold ${amount === amt ? "bg-[#015ba7] hover:bg-[#015ba7]/90" : ""
+                          className={`h-14 text-lg font-semibold ${amount === amt ? "bg-primary hover:bg-primary/90" : ""
                             }`}
                         >
                           ₹{parseInt(amt).toLocaleString()}
@@ -220,8 +220,7 @@ export default function DonatePage() {
                   <Button
                     onClick={handleDonate}
                     disabled={loading || (!amount && !customAmount)}
-                    className="w-full h-12 text-lg"
-                    style={{ backgroundColor: '#015ba7' }}
+                    className="w-full h-12 text-lg bg-primary hover:bg-primary/90 text-white"
                   >
                     {loading ? "Processing..." : `Donate ₹${(customAmount || amount || "0")}`}
                   </Button>
@@ -235,30 +234,30 @@ export default function DonatePage() {
 
             {/* Sidebar - Impact Info */}
             <div className="space-y-6">
-              <Card className="bg-[#015ba7] text-white border-0">
+              <Card className="bg-primary text-white border-0">
                 <CardHeader>
                   <CardTitle className="text-white">Your Impact</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start">
-                    <Users className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-[#98d339]" />
+                    <Users className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-secondary" />
                     <div>
                       <div className="font-semibold">Support Education</div>
-                      <div className="text-sm text-blue-100">Fund workshops and training programs</div>
+                      <div className="text-sm text-white/70">Fund workshops and training programs</div>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <Building className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-[#98d339]" />
+                    <Building className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-secondary" />
                     <div>
                       <div className="font-semibold">Infrastructure</div>
-                      <div className="text-sm text-blue-100">Improve community resources and tools</div>
+                      <div className="text-sm text-white/70">Improve community resources and tools</div>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <Heart className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-[#98d339]" />
+                    <Heart className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-secondary" />
                     <div>
                       <div className="font-semibold">Community Growth</div>
-                      <div className="text-sm text-blue-100">Expand FOSS adoption in AP</div>
+                      <div className="text-sm text-white/70">Expand FOSS adoption in AP</div>
                     </div>
                   </div>
                 </CardContent>

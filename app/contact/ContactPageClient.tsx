@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Mail, Phone, MapPin, MessageSquare, CheckCircle } from "lucide-react"
+import { PageHero } from "@/components/page-hero"
+import { StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 
 function ContactForm() {
   const searchParams = useSearchParams()
@@ -82,7 +84,7 @@ function ContactForm() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <MessageSquare className="mr-2 h-5 w-5 text-blue-600" />
+              <MessageSquare className="mr-2 h-5 w-5 text-primary" />
               Send Us a Message
             </CardTitle>
             <CardDescription>
@@ -92,12 +94,12 @@ function ContactForm() {
           <CardContent>
             {formSubmitted ? (
               <div className="text-center py-8">
-                <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-green-800 mb-2">Message Sent Successfully!</h3>
-                <p className="text-green-700 mb-6">
+                <CheckCircle className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="font-display text-xl font-bold text-foreground mb-2">Message Sent Successfully!</h3>
+                <p className="text-muted-foreground mb-6">
                   Thank you for contacting FOSS Andhra. We'll get back to you shortly.
                 </p>
-                <Button onClick={() => setFormSubmitted(false)}>Send Another Message</Button>
+                <Button onClick={() => setFormSubmitted(false)} className="bg-primary hover:bg-primary/90 text-white">Send Another Message</Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -203,7 +205,7 @@ function ContactForm() {
             <CardDescription>Our office location in Vijayawada, Andhra Pradesh</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-200 rounded-lg h-[300px] flex items-center justify-center mb-4 relative overflow-hidden">
+            <div className="bg-muted rounded-lg h-[300px] flex items-center justify-center mb-4 relative overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3825.467439167232!2d80.6582522!3d16.5079054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDMwJzI4LjUiTiA4MMKwMzknMjkuNyJF!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                 width="100%"
@@ -218,19 +220,19 @@ function ContactForm() {
               <h4 className="font-medium">Office Hours</h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
-                  <span className="text-gray-500">Monday - Friday:</span>
+                  <span className="text-muted-foreground">Monday - Friday:</span>
                 </div>
                 <div>
                   <span>9:00 AM - 5:00 PM</span>
                 </div>
                 <div>
-                  <span className="text-gray-500">Saturday:</span>
+                  <span className="text-muted-foreground">Saturday:</span>
                 </div>
                 <div>
                   <span>10:00 AM - 2:00 PM</span>
                 </div>
                 <div>
-                  <span className="text-gray-500">Sunday:</span>
+                  <span className="text-muted-foreground">Sunday:</span>
                 </div>
                 <div>
                   <span>Closed</span>
@@ -254,22 +256,22 @@ function ContactForm() {
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium mb-1">How can I become a member of FOSS Andhra?</h4>
-                <p className="text-sm text-gray-600">
+                <h4 className="font-medium mb-1 text-foreground">How can I become a member of FOSS Andhra?</h4>
+                <p className="text-sm text-muted-foreground">
                   You can register for membership through our FOSStar program. Visit the Membership page for
                   details.
                 </p>
               </div>
               <div>
-                <h4 className="font-medium mb-1">Do you provide technical support for FOSS implementations?</h4>
-                <p className="text-sm text-gray-600">
+                <h4 className="font-medium mb-1 text-foreground">Do you provide technical support for FOSS implementations?</h4>
+                <p className="text-sm text-muted-foreground">
                   Yes, we offer technical support through our FOSServe program for educational institutions and
                   government bodies.
                 </p>
               </div>
               <div>
-                <h4 className="font-medium mb-1">How can I volunteer with FOSS Andhra?</h4>
-                <p className="text-sm text-gray-600">
+                <h4 className="font-medium mb-1 text-foreground">How can I volunteer with FOSS Andhra?</h4>
+                <p className="text-sm text-muted-foreground">
                   Visit our Contribute page and fill out the volunteer registration form to join our volunteer
                   network.
                 </p>
@@ -291,67 +293,78 @@ function ContactForm() {
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold mb-2">Contact Us</h1>
-        <p className="text-xl text-gray-600 mb-8">
-          Get in touch with us for inquiries, support, or collaboration opportunities
-        </p>
+    <div className="flex flex-col min-h-screen bg-background">
+      <PageHero
+        eyebrow="Get in touch"
+        title="Contact"
+        titleLine2="FOSS Andhra."
+        subtitle="Inquiries, support, or collaboration opportunities — we'd love to hear from you."
+        image="/stock/team-meeting.jpg"
+      />
 
-        <div className="grid gap-8 md:grid-cols-3 mb-12">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Mail className="mr-2 h-5 w-5 text-blue-600" />
-                Email
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Send us an email and we'll get back to you within 24-48 hours.</p>
-              <a href="mailto:office@fossap.in" className="text-blue-600 font-medium block mt-2 hover:underline">
-                office@fossap.in
-              </a>
-            </CardContent>
-          </Card>
+      <div className="app-container py-12 md:py-16">
+        <div className="max-w-5xl mx-auto">
+          <StaggerGroup className="grid gap-6 md:grid-cols-3 mb-12">
+            <StaggerItem from="left">
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Mail className="mr-2 h-5 w-5 text-primary" />
+                    Email
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Send us an email and we'll get back to you within 24-48 hours.</p>
+                  <a href="mailto:office@fossap.in" className="text-primary font-medium block mt-2 hover:underline">
+                    office@fossap.in
+                  </a>
+                </CardContent>
+              </Card>
+            </StaggerItem>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Phone className="mr-2 h-5 w-5 text-blue-600" />
-                Phone
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Call us during business hours (9 AM - 5 PM, Monday to Friday).</p>
-              <a href="tel:+919494463840" className="text-blue-600 font-medium block mt-2 hover:underline">
-                +91 94944 63840
-              </a>
-            </CardContent>
-          </Card>
+            <StaggerItem>
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Phone className="mr-2 h-5 w-5 text-primary" />
+                    Phone
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Call us during business hours (9 AM - 5 PM, Monday to Friday).</p>
+                  <a href="tel:+919494463840" className="text-primary font-medium block mt-2 hover:underline">
+                    +91 94944 63840
+                  </a>
+                </CardContent>
+              </Card>
+            </StaggerItem>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <MapPin className="mr-2 h-5 w-5 text-blue-600" />
-                Location
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Visit our office in Visakhapatnam, Andhra Pradesh.</p>
-              <address className="not-italic text-blue-600 font-medium block mt-2">
-                Foss andhra, Yesj centre for excellence,
-                <br />
-                Vijayawada - 520008
-                <br />
-                Andhra Pradesh, India
-              </address>
-            </CardContent>
-          </Card>
+            <StaggerItem from="right">
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <MapPin className="mr-2 h-5 w-5 text-primary" />
+                    Location
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Visit our office in Visakhapatnam, Andhra Pradesh.</p>
+                  <address className="not-italic text-primary font-medium block mt-2">
+                    Foss andhra, Yesj centre for excellence,
+                    <br />
+                    Vijayawada - 520008
+                    <br />
+                    Andhra Pradesh, India
+                  </address>
+                </CardContent>
+              </Card>
+            </StaggerItem>
+          </StaggerGroup>
+
+          <Suspense fallback={<div>Loading form...</div>}>
+            <ContactForm />
+          </Suspense>
         </div>
-
-        <Suspense fallback={<div>Loading form...</div>}>
-          <ContactForm />
-        </Suspense>
       </div>
     </div>
   )

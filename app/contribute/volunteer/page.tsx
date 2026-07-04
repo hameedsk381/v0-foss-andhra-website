@@ -72,16 +72,16 @@ export default function VolunteerPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-md mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-[#98d339] rounded-full mb-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-full mb-6">
               <CheckCircle className="h-10 w-10 text-white" />
             </div>
-            <h2 className="text-3xl font-bold mb-4">Thank You for Volunteering!</h2>
+            <h2 className="font-display text-3xl font-extrabold mb-4 text-foreground">Thank You for Volunteering!</h2>
             <p className="text-muted-foreground mb-8">
               We've received your application. Our team will review it and get in touch with you soon.
             </p>
             <div className="space-y-3">
               <Link href="/contribute">
-                <Button className="w-full" style={{ backgroundColor: '#015ba7' }}>
+                <Button className="w-full bg-primary hover:bg-primary/90 text-white">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Contribute
                 </Button>
@@ -112,10 +112,10 @@ export default function VolunteerPage() {
 
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-[#98d339] rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-full mb-4">
               <Users className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold mb-3">Volunteer with Us</h1>
+            <h1 className="font-display text-4xl font-extrabold mb-3 text-foreground">Volunteer with Us</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Join our community of volunteers making a difference in promoting FOSS across Andhra Pradesh
             </p>
@@ -222,7 +222,6 @@ export default function VolunteerPage() {
                       type="submit"
                       disabled={loading}
                       className="w-full h-12 text-lg"
-                      style={{ backgroundColor: '#98d339' }}
                     >
                       {loading ? "Submitting..." : (
                         <>
@@ -238,30 +237,30 @@ export default function VolunteerPage() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <Card className="bg-[#015ba7] text-white border-0">
+              <Card className="bg-primary text-white border-0">
                 <CardHeader>
                   <CardTitle className="text-white">Why Volunteer?</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start">
-                    <CheckCircle className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-[#98d339]" />
+                    <CheckCircle className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-secondary" />
                     <div>
                       <div className="font-semibold">Make an Impact</div>
-                      <div className="text-sm text-blue-100">Promote FOSS adoption in your community</div>
+                      <div className="text-sm text-white/70">Promote FOSS adoption in your community</div>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-[#98d339]" />
+                    <CheckCircle className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-secondary" />
                     <div>
                       <div className="font-semibold">Learn & Grow</div>
-                      <div className="text-sm text-blue-100">Develop new skills and expertise</div>
+                      <div className="text-sm text-white/70">Develop new skills and expertise</div>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-[#98d339]" />
+                    <CheckCircle className="h-5 w-5 mr-3 mt-1 flex-shrink-0 text-secondary" />
                     <div>
                       <div className="font-semibold">Network</div>
-                      <div className="text-sm text-blue-100">Connect with like-minded individuals</div>
+                      <div className="text-sm text-white/70">Connect with like-minded individuals</div>
                     </div>
                   </div>
                 </CardContent>
