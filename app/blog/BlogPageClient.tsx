@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -21,37 +21,21 @@ interface BlogPost {
   tags: Array<{ tag: { name: string; slug: string } }>
 }
 
-export default function BlogPage() {
-  const [posts, setPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(true)
+interface Props {
+  initialPosts?: BlogPost[]
+}
+
+export default function BlogPageClient({ initialPosts = [] }: Props) {
   const [searchTerm, setSearchTerm] = useState("")
 
-  useEffect(() => {
-    fetchPosts()
-  }, [])
-
-  const fetchPosts = async () => {
-    try {
-      const res = await fetch("/api/blog/posts")
-      const data = await res.json()
-      if (data.success) {
-        setPosts(data.data)
-      }
-    } catch (error) {
-      console.error("Error fetching posts:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const filteredPosts = posts.filter((post) =>
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPosts = initialPosts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-primary text-white py-16">
         <div className="container mx-auto px-4">
           <h1 className="text-5xl font-bold mb-4">FOSS Andhra Blog</h1>
@@ -62,7 +46,6 @@ export default function BlogPage() {
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        {/* Search */}
         <div className="mb-8">
           <div className="relative max-w-xl mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -75,10 +58,10 @@ export default function BlogPage() {
           </div>
         </div>
 
-        {loading ? (
-          <p className="text-center py-12 text-gray-500">Loading...</p>
-        ) : filteredPosts.length === 0 ? (
-          <p className="text-center py-12 text-gray-500">No blog posts found.</p>
+        {filteredPosts.length === 0 ? (
+          <p className="text-center py-12 text-gray-500">
+            {searchTerm ? "No posts match your search." : "No blog posts published yet."}
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post) => (

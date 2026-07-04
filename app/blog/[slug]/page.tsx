@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 import { generateBlogPostMetadata } from "@/components/seo-metadata"
 import { BlogPostJsonLd, BreadcrumbJsonLd } from "@/components/structured-data"
 import { Metadata } from "next"
@@ -89,10 +89,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <BlogPostJsonLd post={post} />
       <BreadcrumbJsonLd
         items={[
-          { name: "Home", url: process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org" },
-          { name: "Blog", url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"}/blog` },
-          { name: post.category.name, url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"}/blog/category/${post.category.slug}` },
-          { name: post.title, url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"}/blog/${post.slug}` },
+          { name: "Home", url: process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in" },
+          { name: "Blog", url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"}/blog` },
+          { name: post.category.name, url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"}/blog/category/${post.category.slug}` },
+          { name: post.title, url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"}/blog/${post.slug}` },
         ]}
       />
 

@@ -49,22 +49,74 @@ export default function FOSStormPage() {
           <TabsContent value="overview" className="mt-6" id="overview">
             <div className="prose prose-lg max-w-none mb-8">
               <p>
-                FOSStorm is our initiative to develop community-led open source projects that address local challenges
-                and contribute to the global FOSS ecosystem. Under this program, we bring together developers,
-                designers, and domain experts to collaborate on impactful software solutions.
+                FOSStorm is FOSS Andhra's community-driven software development programme that builds open source
+                projects addressing real challenges in Andhra Pradesh — from regional language computing and rural
+                education to local governance and agricultural connectivity. Each project is initiated through a
+                public proposal process and developed collaboratively by volunteers from across the state and the
+                wider open source community.
               </p>
 
               <p>
-                Our projects focus on key areas like education, governance, digital inclusion, and regional language
-                computing. All code developed under FOSStorm is released under open source licenses, allowing anyone to
-                use, modify, and contribute to these projects.
+                All code produced under FOSStorm is released under recognised open source licences (GPL, MIT, or
+                Apache 2.0), ensuring that individuals, institutions, and governments can freely use, study, modify,
+                and distribute the software. Contributions come from professional developers, college students,
+                designers, translators, and domain experts — anyone with skills to offer is welcome, regardless of
+                experience level.
+              </p>
+
+              <p>
+                FOSStorm projects are hosted on GitHub under the <strong>fossandhra</strong> organisation. Each
+                repository follows a structured contribution workflow: issues labelled <em>good first issue</em>
+                are reserved for new contributors, while <em>help wanted</em> issues are open to all. Monthly
+                virtual contributor meetups keep the community connected, and an annual in-person sprint brings
+                teams together to make concentrated progress on priority milestones.
               </p>
 
               <h3>Mission</h3>
               <p>
-                To create a thriving ecosystem of open source projects that address local needs, showcase local talent,
-                and contribute to the global open source community while promoting collaboration and knowledge sharing.
+                To build a sustainable ecosystem of locally-relevant open source software that showcases Andhra
+                Pradesh talent, solves real community problems, and contributes meaningfully to the global open
+                source commons — while growing a culture of collaborative, public-interest technology development
+                across the region.
               </p>
+            </div>
+
+            {/* Why open source for AP */}
+            <div className="bg-orange-50 rounded-lg p-6 mb-8">
+              <h3 className="text-xl font-bold mb-3">Why Open Source Matters for Andhra Pradesh</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <span><strong>Cost savings for institutions</strong> — schools, panchayats, and hospitals can deploy FOSStorm tools at zero licensing cost, redirecting budgets to services.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <span><strong>Telugu language computing</strong> — our NLP and localisation projects directly improve software usability for the 82 million Telugu speakers in the state.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <span><strong>Skill development</strong> — contributing to real production code teaches version control, code review, and collaborative workflows that classroom projects rarely replicate.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <span><strong>Data sovereignty</strong> — open source tools let communities inspect and control how their data is processed, critical for government and healthcare deployments.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Impact metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              {[
+                { value: "4", label: "Active Projects" },
+                { value: "120+", label: "Contributors" },
+                { value: "315+", label: "GitHub Stars" },
+                { value: "100%", label: "Open Source" },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center p-4 rounded-lg bg-orange-50">
+                  <div className="text-3xl font-bold text-orange-700 mb-1">{stat.value}</div>
+                  <div className="text-sm text-gray-600">{stat.label}</div>
+                </div>
+              ))}
             </div>
 
             <div className="grid gap-6 md:grid-cols-3 mb-8">

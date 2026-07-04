@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,7 +12,7 @@ interface Event {
   id: string
   title: string
   description: string
-  date: Date
+  date: string
   time: string
   location: string
   type: string
@@ -29,10 +29,14 @@ interface Event {
   }
 }
 
-export default function EventsClient() {
-  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([])
-  const [pastEvents, setPastEvents] = useState<Event[]>([])
-  const [loading, setLoading] = useState(true)
+interface Props {
+  initialUpcomingEvents?: Event[]
+  initialPastEvents?: Event[]
+}
+
+export default function EventsClient({ initialUpcomingEvents = [], initialPastEvents = [] }: Props) {
+  const [upcomingEvents] = useState<Event[]>(initialUpcomingEvents)
+  const [pastEvents] = useState<Event[]>(initialPastEvents)
 
   const stripHtml = (html: string) => {
     return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim()
@@ -43,35 +47,7 @@ export default function EventsClient() {
     return text.length > max ? text.slice(0, max - 1) + "…" : text
   }
 
-  useEffect(() => {
-    fetchEvents()
-  }, [])
-
-  const fetchEvents = async () => {
-    setLoading(true)
-    try {
-      const [upcomingRes, pastRes] = await Promise.all([
-        fetch("/api/events?status=upcoming"),
-        fetch("/api/events?status=past")
-      ])
-
-      const upcomingData = await upcomingRes.json()
-      const pastData = await pastRes.json()
-
-      if (upcomingData.success) {
-        setUpcomingEvents(upcomingData.data)
-      }
-      if (pastData.success) {
-        setPastEvents(pastData.data)
-      }
-    } catch (error) {
-      console.error("Failed to fetch events:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const formatDate = (date: Date) => {
+  const formatDate = (date: string | Date) => {
     return new Date(date).toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
@@ -217,11 +193,7 @@ export default function EventsClient() {
           </TabsList>
 
           <TabsContent value="upcoming" className="mt-6">
-            {loading ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500">Loading events...</p>
-              </div>
-            ) : upcomingEvents.length === 0 ? (
+            {upcomingEvents.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500 mb-4">No upcoming events at the moment.</p>
                 <p className="text-sm text-gray-400">Check back soon for new events!</p>
@@ -234,11 +206,7 @@ export default function EventsClient() {
           </TabsContent>
 
           <TabsContent value="past" className="mt-6">
-            {loading ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500">Loading events...</p>
-              </div>
-            ) : pastEvents.length === 0 ? (
+            {pastEvents.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500">No past events to display.</p>
               </div>

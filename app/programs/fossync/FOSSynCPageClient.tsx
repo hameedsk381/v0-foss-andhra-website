@@ -50,22 +50,91 @@ export default function FOSSynCPage() {
           <TabsContent value="overview" className="mt-6" id="overview">
             <div className="prose prose-lg max-w-none mb-8">
               <p>
-                FOSSynC is our initiative to establish and support student-led FOSS clubs in educational institutions
-                across Andhra Pradesh. These clubs serve as hubs for open source learning, collaboration, and innovation
-                on campus, helping students develop valuable technical and community skills.
+                FOSSynC (FOSS on Campus) is FOSS Andhra's flagship initiative to establish and sustain student-led
+                open source clubs in engineering colleges, universities, and polytechnic institutions across Andhra
+                Pradesh. Each FOSSynC chapter operates as an independent student body that serves as a hub for open
+                source learning, peer collaboration, and community-driven innovation on campus.
               </p>
 
               <p>
-                Our FOSSynC clubs are run by students for students, with support and mentorship from FOSS Andhra. Club
-                members participate in workshops, hackathons, coding sessions, and community events that promote free
-                and open source software.
+                Our FOSSynC clubs are run by students for students, with mentorship and organisational support from
+                FOSS Andhra. Club members participate in weekly coding sessions, Linux install fests, inter-college
+                hackathons, and community events. Through these activities, students build practical skills in Git,
+                Linux, Python, and web development — skills that complement formal coursework with real-world open
+                source experience that employers actively look for.
+              </p>
+
+              <p>
+                Since its launch, FOSSynC has grown to nine active chapters with over 700 student members across
+                Andhra Pradesh. Alumni of the programme have gone on to contribute to major open source projects,
+                secure internships at technology companies, and mentor the next cohort of student contributors.
               </p>
 
               <h3>Mission</h3>
               <p>
-                To empower students as leaders in the open source movement by providing resources, mentorship, and
-                opportunities to build a vibrant FOSS community on campuses across Andhra Pradesh.
+                To empower students as confident leaders in the open source movement by providing resources,
+                mentorship, and real contribution opportunities — building a vibrant, self-sustaining FOSS community
+                on every campus in Andhra Pradesh.
               </p>
+            </div>
+
+            {/* How to start a club */}
+            <div className="mb-10">
+              <h3 className="text-2xl font-bold mb-6">How to Start a FOSSynC Club at Your College</h3>
+              <div className="space-y-4">
+                {[
+                  {
+                    step: "1",
+                    title: "Express Interest",
+                    body: "Fill out the interest form at fossap.in/contact or email office@fossap.in with your college name, department, and the number of students ready to join. A FOSS Andhra coordinator will respond within 3 working days.",
+                  },
+                  {
+                    step: "2",
+                    title: "Find a Faculty Advisor",
+                    body: "Identify a faculty member willing to serve as an institutional point-of-contact. The advisor does not need prior open source experience — FOSS Andhra provides orientation materials and connects advisors with peer mentors.",
+                  },
+                  {
+                    step: "3",
+                    title: "Register Your Chapter",
+                    body: "Submit a short application with your founding team (minimum 10 students), faculty advisor details, and your first semester activity plan. Registration is free and takes approximately one week to process.",
+                  },
+                  {
+                    step: "4",
+                    title: "Attend Onboarding",
+                    body: "Your founding team participates in a half-day virtual onboarding session covering club governance, event planning, access to the FOSSynC resource kit, and introduction to the FOSS Andhra mentor network.",
+                  },
+                  {
+                    step: "5",
+                    title: "Launch and Grow",
+                    body: "Host your first campus event — an install fest or intro-to-Linux workshop works well — using the ready-made slide decks and facilitation guides in the resource kit. FOSS Andhra can send a speaker for your inaugural event.",
+                  },
+                ].map((item) => (
+                  <div key={item.step} className="flex gap-4 p-4 rounded-lg border bg-white">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold flex items-center justify-center text-sm">
+                      {item.step}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">{item.title}</h4>
+                      <p className="text-sm text-gray-600">{item.body}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Impact stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              {[
+                { value: "9+", label: "Active Chapters" },
+                { value: "700+", label: "Student Members" },
+                { value: "25+", label: "Events Per Year" },
+                { value: "3", label: "States Reached" },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center p-4 rounded-lg bg-green-50">
+                  <div className="text-3xl font-bold text-green-700 mb-1">{stat.value}</div>
+                  <div className="text-sm text-gray-600">{stat.label}</div>
+                </div>
+              ))}
             </div>
 
             <div className="grid gap-6 md:grid-cols-3 mb-8">
