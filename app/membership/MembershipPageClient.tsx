@@ -12,6 +12,56 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { CheckCircle, Users, Star, BookOpen, Rocket } from "lucide-react"
+import { PricingSection, type PricingTier } from "@/components/ui/pricing-section"
+
+const membershipTiers: PricingTier[] = [
+  {
+    id: "student",
+    name: "Student",
+    description: "For students interested in FOSS",
+    price: "₹300",
+    period: "/year",
+    cta: "Select Student",
+    features: [
+      "Access to community forums",
+      "Invitations to student events",
+      "Basic learning resources",
+      "Student mentorship program",
+    ],
+  },
+  {
+    id: "professional",
+    name: "Professional",
+    description: "For working professionals",
+    price: "₹1,000",
+    period: "/year",
+    cta: "Select Professional",
+    popular: true,
+    badge: "Most Popular",
+    features: [
+      "All Student benefits",
+      "Voting rights in community decisions",
+      "Advanced workshops & training",
+      "Project collaboration opportunities",
+      "FOSS certification program",
+    ],
+  },
+  {
+    id: "institutional",
+    name: "Institutional",
+    description: "For organizations and institutions",
+    price: "₹5,000",
+    period: "/year",
+    cta: "Select Institutional",
+    features: [
+      "All Professional benefits",
+      "Up to 10 member accounts",
+      "On-site training for your team",
+      "Custom FOSS implementation support",
+      "Logo on our website & events",
+    ],
+  },
+]
 
 export default function MembershipPage() {
   const [formData, setFormData] = useState({
@@ -176,121 +226,11 @@ export default function MembershipPage() {
               </TabsContent>
 
               <TabsContent value="types" className="mt-6">
-                <div className="grid gap-6 md:grid-cols-3">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Student Member</CardTitle>
-                      <CardDescription>For students interested in FOSS</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold mb-4">
-                        ₹300<span className="text-sm font-normal text-gray-500">/year</span>
-                      </div>
-                      <ul className="space-y-2 mb-6">
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Access to community forums</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Invitations to student events</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Basic learning resources</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Student mentorship program</span>
-                        </li>
-                      </ul>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="w-full" onClick={() => handleMembershipSelect("student")}>
-                        Select Student
-                      </Button>
-                    </CardFooter>
-                  </Card>
-
-                  <Card className="border-blue-200 shadow-md">
-                    <CardHeader className="bg-blue-50">
-                      <div className="text-center text-blue-600 text-sm font-medium mb-1">POPULAR</div>
-                      <CardTitle>Professional Member</CardTitle>
-                      <CardDescription>For working professionals</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold mb-4">
-                        ₹1,000<span className="text-sm font-normal text-gray-500">/year</span>
-                      </div>
-                      <ul className="space-y-2 mb-6">
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>All Student benefits</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Voting rights in community decisions</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Advanced workshops & training</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Project collaboration opportunities</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>FOSS certification program</span>
-                        </li>
-                      </ul>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="w-full" onClick={() => handleMembershipSelect("professional")}>
-                        Select Professional
-                      </Button>
-                    </CardFooter>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Institutional Member</CardTitle>
-                      <CardDescription>For organizations and institutions</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold mb-4">
-                        ₹5,000<span className="text-sm font-normal text-gray-500">/year</span>
-                      </div>
-                      <ul className="space-y-2 mb-6">
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>All Professional benefits</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Up to 10 member accounts</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>On-site training for your team</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Custom FOSS implementation support</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Logo on our website & events</span>
-                        </li>
-                      </ul>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="w-full" onClick={() => handleMembershipSelect("institutional")}>
-                        Select Institutional
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </div>
+                <PricingSection
+                  tiers={membershipTiers}
+                  onSelect={handleMembershipSelect}
+                  className="py-6"
+                />
               </TabsContent>
 
               <TabsContent value="register" className="mt-6">
