@@ -36,7 +36,7 @@ const CAMPUS_NAMES = [
 ]
 
 const PROGRAM_PHOTOS: Record<string, string> = {
-  fosstar:   "/gallery/fosstar-summit.jpg",
+  fosstar:   "/stock/panel.jpg",
   fosserve:  "/gallery/fosserve-launch.jpg",
   fossync:   "/gallery/fossync-club.jpg",
   fosstorm:  "/gallery/fosstorm-workshop.jpg",
@@ -80,10 +80,10 @@ const values = [
 ]
 
 const communityPhotos = [
-  { src: "/gallery/fosstar-event-1.jpg",      title: "FOSStar Annual Meet",    sub: "Vijayawada" },
-  { src: "/gallery/fosstorm-workshop.jpg",     title: "FOSStorm Hackathon",     sub: "Telugu NLP sprint" },
-  { src: "/gallery/fosspeaks-advocacy.jpg",    title: "FOSSpeaks at Assembly",  sub: "Policy outreach" },
-  { src: "/gallery/fosserve-launch.jpg",       title: "FOSServe School Launch", sub: "Digital classrooms" },
+  { src: "/gallery/fosstar-event-1.jpg", title: "Planning Sprints",    sub: "Roadmaps & working groups" },
+  { src: "/stock/code-screen.jpg",       title: "Hack Nights",         sub: "Shipping open code" },
+  { src: "/stock/workshop.jpg",          title: "Hands-on Workshops",  sub: "Skills, live and in person" },
+  { src: "/stock/collaboration.jpg",     title: "Campus Meetups",      sub: "9+ clubs statewide" },
 ]
 
 /* ── Animation helpers ────────────────────────────────── */
@@ -143,7 +143,7 @@ export default function Home() {
           {/* Background photo */}
           <div className="absolute inset-0">
             <Image
-              src="/gallery/fosstar-summit.jpg"
+              src="/stock/hero-community.jpg"
               alt="FOSS Andhra community summit"
               fill
               priority
@@ -499,7 +499,7 @@ export default function Home() {
               >
                 <Image
                   src="/gallery/fosstar-summit.jpg"
-                  alt="FOSStar Summit 2025"
+                  alt="Annual community summit"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -508,8 +508,8 @@ export default function Home() {
                   <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold mb-2 backdrop-blur-sm">
                     Featured
                   </span>
-                  <p className="text-white font-display font-bold text-xl leading-snug">FOSStar Summit 2025</p>
-                  <p className="text-white/65 text-sm mt-0.5">900+ attendees · Vijayawada</p>
+                  <p className="text-white font-display font-bold text-xl leading-snug">Annual Summit</p>
+                  <p className="text-white/65 text-sm mt-0.5">Our largest gathering of the year</p>
                 </div>
               </motion.div>
 

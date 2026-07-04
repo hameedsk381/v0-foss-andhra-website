@@ -56,7 +56,7 @@ export default function AboutPageClient() {
             <AnimatedSection variant="fadeRight">
               <div className="relative rounded-xl overflow-hidden h-[400px]">
                 <Image
-                  src="/gallery/fosstar-summit.jpg"
+                  src="/gallery/fosstar-event-1.jpg"
                   alt="FOSS Andhra Team"
                   fill
                   className="object-cover"
