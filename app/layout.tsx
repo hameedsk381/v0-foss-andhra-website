@@ -92,9 +92,8 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
+  alternates: {
+    canonical: "https://fossap.in",
   },
   generator: 'Next.js',
 }
@@ -107,7 +106,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href="https://fossap.in" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
@@ -131,7 +129,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
+              "@type": "NGO",
               name: "FOSS Andhra",
               url: "https://fossap.in",
               logo: "https://fossap.in/logos/foss-andhra-logo.png",
@@ -154,6 +152,7 @@ export default function RootLayout({
                 "https://twitter.com/fossandhra",
                 "https://github.com/fossandhra",
                 "https://linkedin.com/company/fossandhra",
+                "https://youtube.com/@fossandhra",
               ],
             }),
           }}

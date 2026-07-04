@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Join FOSS Andhra to promote free and open source software in education, governance, and society. Discover our programs, events, and community initiatives in Andhra Pradesh.",
   keywords:
     "FOSS Andhra, open source software, free software, Andhra Pradesh, Linux community, FOSS education, open source training",
+  alternates: { canonical: "/" },
 }
 
 export default function Home() {

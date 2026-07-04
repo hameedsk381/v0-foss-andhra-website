@@ -1,0 +1,70 @@
+# FOSS Andhra
+
+> Promoting free and open source software across Andhra Pradesh through education, governance, and community programs.
+
+## Organization
+- Type: Non-Governmental Organization (NGO)
+- Location: Yesj Centre for Excellence, Vijayawada, Andhra Pradesh 520008, India
+- Contact: office@fossap.in | +91 94944 63840
+- Website: https://fossap.in
+
+## Mission
+Digitalizing education, governance, and society through free and open source solutions across Andhra Pradesh.
+
+## Core Values
+- Open Knowledge: Making knowledge freely accessible to everyone
+- Data Privacy: Protecting user rights and digital sovereignty
+- Public Welfare: Prioritizing societal benefit over commercial interests
+- Offline First: Building solutions that work without constant internet access
+
+## Programs
+
+### FOSStar — Membership Program
+Connect with the FOSS community across Andhra Pradesh. Tiers for students, professionals, and institutions.
+https://fossap.in/programs/fosstar
+
+### FOSServe — Education & Governance Solutions
+Promoting open source software adoption in Andhra Pradesh's educational institutions and government bodies.
+https://fossap.in/programs/fosserve
+
+### FOSSynC — Student FOSS Clubs
+Establishing student-led open source clubs in colleges across Andhra Pradesh.
+https://fossap.in/programs/fossync
+
+### FOSStorm — Community Projects
+Developing open source projects that address local challenges in Andhra Pradesh.
+https://fossap.in/programs/fosstorm
+
+### FOSStart — Startup Incubation
+Supporting open source startups in Andhra Pradesh with funding, mentorship, and networking.
+https://fossap.in/programs/fosstart
+
+### FOSSterage — Knowledge Repository
+Curated open source resources, documentation, and learning materials.
+https://fossap.in/programs/fossterage
+
+### FOSSpeaks — Advocacy & Outreach
+Public speaking, workshops, and advocacy for FOSS adoption across Andhra Pradesh.
+https://fossap.in/programs/fosspeaks
+
+## Community Stats
+- 500+ community members
+- 50+ events hosted
+- 7 active programs
+- 20+ institutions reached
+
+## Key Pages
+- Homepage: https://fossap.in
+- About: https://fossap.in/about
+- Programs: https://fossap.in/programs
+- Events: https://fossap.in/events
+- Membership: https://fossap.in/membership
+- Contribute: https://fossap.in/contribute
+- Contact: https://fossap.in/contact
+- FAQ: https://fossap.in/faq
+
+## Social
+- GitHub: https://github.com/fossandhra
+- LinkedIn: https://linkedin.com/company/fossandhra
+- YouTube: https://youtube.com/@fossandhra
+- Twitter/X: https://twitter.com/fossandhra

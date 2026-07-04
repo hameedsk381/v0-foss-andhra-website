@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn about FOSS Andhra's mission to promote free and open source software across education, governance, and society in Andhra Pradesh.",
   keywords: "FOSS Andhra, about, mission, vision, open source, free software, Andhra Pradesh",
+  alternates: { canonical: "/about" },
 }
 
 export default function AboutPage() {

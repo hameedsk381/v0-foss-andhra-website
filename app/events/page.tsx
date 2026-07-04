@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     description:
         "Join our upcoming events, workshops, and meetups. Learn about Linux, Python, Go, and more with FOSS Andhra community.",
     keywords: "tech events Andhra Pradesh, FOSS workshops, Linux meetups, Vijayawada tech events",
+    alternates: { canonical: "/events" },
 }
 
 export default function EventsPage() {

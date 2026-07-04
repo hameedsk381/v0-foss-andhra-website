@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     description:
         "Explore FOSS Andhra's flagship programs like FOSStar, FOSServe, FOSSync, FOSStorm, and more. Join our initiatives to promote open source.",
     keywords: "FOSS programs, open source initiatives, Andhra Pradesh tech programs, FOSStar, FOSServe, FOSSync",
+    alternates: { canonical: "/programs" },
 }
 
 export default function ProgramsPage() {
