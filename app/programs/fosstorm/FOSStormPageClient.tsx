@@ -74,7 +74,7 @@ export default function FOSStormPage() {
                 teams together to make concentrated progress on priority milestones.
               </p>
 
-              <h3>Mission</h3>
+              <h2 className="text-xl font-bold mt-8 mb-3">Mission</h2>
               <p>
                 To build a sustainable ecosystem of locally-relevant open source software that showcases Andhra
                 Pradesh talent, solves real community problems, and contributes meaningfully to the global open
@@ -85,7 +85,7 @@ export default function FOSStormPage() {
 
             {/* Why open source for AP */}
             <div className="bg-fosstorm/5 rounded-lg p-6 mb-8">
-              <h3 className="text-xl font-bold mb-3">Why Open Source Matters for Andhra Pradesh</h3>
+              <h2 className="text-xl font-bold mb-3">Why Open Source Matters for Andhra Pradesh</h2>
               <div className="grid md:grid-cols-2 gap-4 text-sm text-foreground">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 text-fosstorm mt-0.5 flex-shrink-0" />
@@ -168,7 +168,7 @@ export default function FOSStormPage() {
             </div>
 
             <div className="bg-fosstorm/5 p-8 rounded-lg my-12">
-              <h3 className="text-2xl font-bold mb-4">Join FOSStorm</h3>
+              <h2 className="text-2xl font-bold mb-4">Join FOSStorm</h2>
               <p className="mb-6">
                 Are you a developer, designer, or domain expert interested in contributing to open source projects? Join
                 FOSStorm and help us build impactful software solutions through community collaboration.
@@ -188,10 +188,10 @@ export default function FOSStormPage() {
 
           <TabsContent value="projects" className="mt-6" id="projects">
             <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl font-bold mb-6 flex items-center">
                 <Code className="mr-2 h-6 w-6 text-fosstorm" />
-                Active Projects
-              </h3>
+                FOSStorm Active Projects
+              </h2>
 
               <div className="grid gap-6 md:grid-cols-2">
                 <Card>
@@ -420,10 +420,10 @@ export default function FOSStormPage() {
 
           <TabsContent value="contribute" className="mt-6" id="contribute">
             <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl font-bold mb-6 flex items-center">
                 <Github className="mr-2 h-6 w-6 text-fosstorm" />
                 How to Contribute
-              </h3>
+              </h2>
 
               <div className="prose prose-lg max-w-none mb-8">
                 <p>
@@ -537,10 +537,10 @@ export default function FOSStormPage() {
           </TabsContent>
 
           <TabsContent value="gallery" className="mt-6" id="gallery">
-            <h3 className="text-2xl font-bold mb-6 flex items-center">
+            <h2 className="text-2xl font-bold mb-6 flex items-center">
               <Image className="mr-2 h-6 w-6 text-fosstorm" />
               FOSStorm Project Gallery
-            </h3>
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[

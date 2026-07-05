@@ -62,7 +62,7 @@ export default function FOSStartPage() {
                 value and jobs.
               </p>
 
-              <h3>Mission</h3>
+              <h2 className="text-xl font-bold mt-8 mb-3">Mission</h2>
               <p>
                 To foster a thriving ecosystem of open source startups in Andhra Pradesh by providing funding,
                 mentorship, and support for entrepreneurs who build businesses around open source solutions and
@@ -117,7 +117,7 @@ export default function FOSStartPage() {
             </div>
 
             <div className="bg-fosstart/5 p-8 rounded-lg my-12">
-              <h3 className="text-2xl font-bold mb-4">Apply for FOSStart Funding</h3>
+              <h2 className="text-2xl font-bold mb-4">Apply for FOSStart Funding</h2>
               <p className="mb-6">
                 Are you building a business around open source solutions? Apply for FOSStart funding and support to take
                 your open source innovation to the next level.
@@ -137,10 +137,10 @@ export default function FOSStartPage() {
 
           <TabsContent value="startups" className="mt-6" id="startups">
             <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl font-bold mb-6 flex items-center">
                 <Award className="mr-2 h-6 w-6 text-fosstart" />
                 FOSStart Supported Startups
-              </h3>
+              </h2>
 
               <div className="grid gap-6 md:grid-cols-2">
                 <Card>
@@ -440,10 +440,10 @@ export default function FOSStartPage() {
 
           <TabsContent value="apply" className="mt-6" id="apply">
             <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl font-bold mb-6 flex items-center">
                 <Rocket className="mr-2 h-6 w-6 text-fosstart" />
                 FOSStart Funding Programs
-              </h3>
+              </h2>
 
               <div className="grid gap-6 md:grid-cols-2 mb-8">
                 <Card>
@@ -607,10 +607,10 @@ export default function FOSStartPage() {
           </TabsContent>
 
           <TabsContent value="gallery" className="mt-6" id="gallery">
-            <h3 className="text-2xl font-bold mb-6 flex items-center">
+            <h2 className="text-2xl font-bold mb-6 flex items-center">
               <Image className="mr-2 h-6 w-6 text-fosstart" />
               FOSStart Events & Startups Gallery
-            </h3>
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[

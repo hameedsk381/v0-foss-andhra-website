@@ -47,6 +47,9 @@ function UnsubscribePageContent() {
       <div className="w-full max-w-md">
         <Card>
           <CardHeader>
+            <h1 className="sr-only">
+              {success ? "Unsubscribed Successfully" : "Unsubscribe from Newsletter"}
+            </h1>
             <CardTitle className="flex items-center gap-2">
               {success ? (
                 <>

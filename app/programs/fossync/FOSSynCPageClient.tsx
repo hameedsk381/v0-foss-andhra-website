@@ -71,7 +71,7 @@ export default function FOSSynCPage() {
                 secure internships at technology companies, and mentor the next cohort of student contributors.
               </p>
 
-              <h3>Mission</h3>
+              <h2 className="text-xl font-bold mt-8 mb-3">Mission</h2>
               <p>
                 To empower students as confident leaders in the open source movement by providing resources,
                 mentorship, and real contribution opportunities — building a vibrant, self-sustaining FOSS community
@@ -81,7 +81,7 @@ export default function FOSSynCPage() {
 
             {/* How to start a club */}
             <div className="mb-10">
-              <h3 className="text-2xl font-bold mb-6">How to Start a FOSSynC Club at Your College</h3>
+              <h2 className="text-2xl font-bold mb-6">How to Start a FOSSynC Club at Your College</h2>
               <div className="space-y-4">
                 {[
                   {
@@ -185,7 +185,7 @@ export default function FOSSynCPage() {
             </div>
 
             <div className="bg-fossync/5 p-8 rounded-lg my-12">
-              <h3 className="text-2xl font-bold mb-4">Start a FOSSynC Club at Your Institution</h3>
+              <h2 className="text-2xl font-bold mb-4">Start a FOSSynC Club at Your Institution</h2>
               <p className="mb-6">
                 Are you a student or faculty member interested in starting a FOSSynC club at your educational
                 institution? We provide resources, mentorship, and support to help you establish and grow your campus

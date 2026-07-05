@@ -68,6 +68,12 @@ function VerifyEmailContent() {
             {state === "error" && <XCircle className="h-8 w-8 text-red-500" />}
             {state === "no-token" && <MailCheck className="h-8 w-8 text-primary" />}
           </div>
+          <h1 className="sr-only">
+            {state === "verifying" && "Verifying your email"}
+            {state === "success" && "Email verified"}
+            {state === "error" && "Email verification failed"}
+            {state === "no-token" && "Verify your email"}
+          </h1>
           <CardTitle className="font-display text-2xl">
             {state === "verifying" && "Verifying your email…"}
             {state === "success" && "Email verified!"}

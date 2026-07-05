@@ -109,6 +109,7 @@ function SetPasswordForm() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
             <Card className="w-full max-w-md">
                 <CardHeader>
+                    <h1 className="sr-only">Set Your Password</h1>
                     <CardTitle>Set Your Password</CardTitle>
                     <CardDescription>
                         Create a secure password for your FOSS Andhra account.
