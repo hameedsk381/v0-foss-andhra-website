@@ -11,8 +11,9 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
-import { Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X, Download, MessageSquare, Check, XOctagon } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X, Download, MessageSquare, Check, XOctagon, Sparkles, Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { SeoChecklist } from "@/components/admin/seo-checklist"
 import { DataTable, Column } from "@/components/admin/data-table"
 import { BulkActions } from "@/components/admin/bulk-actions"
 import { AdvancedFilters, FilterOption } from "@/components/admin/advanced-filters"
@@ -82,6 +83,68 @@ export default function BlogManagement() {
 
   const [categoryForm, setCategoryForm] = useState({ name: "", slug: "", description: "" })
   const [tagForm, setTagForm] = useState({ name: "", slug: "" })
+
+  // AI writing assistant state
+  const [aiBrief, setAiBrief] = useState("")
+  const [aiTone, setAiTone] = useState("informative")
+  const [aiKeyword, setAiKeyword] = useState("")
+  const [aiGenerating, setAiGenerating] = useState(false)
+  const [showAiPanel, setShowAiPanel] = useState(false)
+
+  const generateWithAI = async () => {
+    if (aiBrief.trim().length < 20) {
+      toast({
+        title: "Add more detail",
+        description: "Give the AI at least a few sentences of notes or content to work from",
+        variant: "destructive",
+      })
+      return
+    }
+    setAiGenerating(true)
+    try {
+      const categoryName = categories.find((c) => c.id === postForm.categoryId)?.name || ""
+      const res = await fetch("/api/admin/blog/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brief: aiBrief,
+          tone: aiTone,
+          targetKeyword: aiKeyword,
+          categoryName,
+        }),
+      })
+      const data = await res.json()
+      if (!data.success) throw new Error(data.error || "Generation failed")
+
+      const g = data.data
+      setPostForm((prev) => ({
+        ...prev,
+        title: g.title,
+        slug: g.slug,
+        excerpt: g.excerpt,
+        content: g.contentHtml,
+        metaDescription: g.metaDescription,
+        metaKeywords: g.metaKeywords,
+        focusKeyword: g.focusKeyword,
+        ogTitle: g.ogTitle,
+        ogDescription: g.ogDescription,
+      }))
+      toast({
+        title: "Draft generated",
+        description: `AI wrote a ~${g.readingTime} min read. Review and edit before publishing${
+          g.suggestedTags?.length ? ` — suggested tags: ${g.suggestedTags.join(", ")}` : ""
+        }`,
+      })
+    } catch (error) {
+      toast({
+        title: "AI generation failed",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      })
+    } finally {
+      setAiGenerating(false)
+    }
+  }
 
   useEffect(() => {
     fetchPosts()
@@ -361,6 +424,9 @@ export default function BlogManagement() {
       twitterCard: "summary_large_image",
       focusKeyword: "",
     })
+    setAiBrief("")
+    setAiKeyword("")
+    setShowAiPanel(true)
     setShowPostDialog(true)
   }
 
@@ -383,6 +449,9 @@ export default function BlogManagement() {
       twitterCard: (post as any).twitterCard || "summary_large_image",
       focusKeyword: (post as any).focusKeyword || "",
     })
+    setAiBrief("")
+    setAiKeyword("")
+    setShowAiPanel(false)
     setShowPostDialog(true)
   }
 
@@ -404,10 +473,17 @@ export default function BlogManagement() {
 
       const method = editingPost ? "PUT" : "POST"
 
+      // Auto-compute reading time from content word count (~200 wpm)
+      const wordCount = postForm.content
+        .replace(/<[^>]+>/g, " ")
+        .split(/\s+/)
+        .filter(Boolean).length
+      const readingTime = Math.max(1, Math.round(wordCount / 200))
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(postForm),
+        body: JSON.stringify({ ...postForm, readingTime }),
       })
 
       const data = await res.json()
@@ -707,6 +783,86 @@ export default function BlogManagement() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+
+            {/* ── AI Writing Assistant ─────────────────────── */}
+            <div className="rounded-xl border border-primary/25 bg-primary/5 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setShowAiPanel(!showAiPanel)}
+                className="w-full flex items-center justify-between px-4 py-3 text-left"
+              >
+                <span className="flex items-center gap-2 font-semibold text-sm text-primary">
+                  <Sparkles className="h-4 w-4" />
+                  Write with AI
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {showAiPanel ? "Hide" : "Paste notes, get a full SEO-ready draft"}
+                </span>
+              </button>
+
+              {showAiPanel && (
+                <div className="px-4 pb-4 space-y-3">
+                  <Textarea
+                    value={aiBrief}
+                    onChange={(e) => setAiBrief(e.target.value)}
+                    placeholder="Paste your rough notes, bullet points, event recap, or a full rough draft. The AI will write the post, excerpt, and all SEO fields — you review and edit before publishing."
+                    rows={5}
+                    disabled={aiGenerating}
+                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Tone</Label>
+                      <Select value={aiTone} onValueChange={setAiTone} disabled={aiGenerating}>
+                        <SelectTrigger className="h-9">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="informative">Informative</SelectItem>
+                          <SelectItem value="tutorial">Tutorial / How-to</SelectItem>
+                          <SelectItem value="announcement">Announcement</SelectItem>
+                          <SelectItem value="event recap">Event Recap</SelectItem>
+                          <SelectItem value="opinion / advocacy">Opinion / Advocacy</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Focus keyword (optional)</Label>
+                      <Input
+                        value={aiKeyword}
+                        onChange={(e) => setAiKeyword(e.target.value)}
+                        placeholder="e.g. open source education AP"
+                        className="h-9"
+                        disabled={aiGenerating}
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={generateWithAI}
+                    disabled={aiGenerating || aiBrief.trim().length < 20}
+                    className="w-full bg-primary hover:bg-primary/90 text-white"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Writing your post…
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Generate Draft
+                      </>
+                    )}
+                  </Button>
+                  {editingPost && (
+                    <p className="text-xs text-muted-foreground">
+                      Generating will replace the current title, content, and SEO fields below.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="title">Title *</Label>
               <Input
@@ -794,6 +950,20 @@ export default function BlogManagement() {
             {/* SEO Section */}
             <div className="border-t pt-4 mt-4">
               <h3 className="font-semibold mb-3">SEO Settings</h3>
+
+              <div className="mb-4">
+                <SeoChecklist
+                  post={{
+                    title: postForm.title,
+                    slug: postForm.slug,
+                    excerpt: postForm.excerpt,
+                    content: postForm.content,
+                    metaDescription: postForm.metaDescription,
+                    focusKeyword: postForm.focusKeyword,
+                    coverImage: postForm.coverImage,
+                  }}
+                />
+              </div>
 
               <div className="space-y-4">
                 <div className="space-y-2">
