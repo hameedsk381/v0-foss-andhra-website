@@ -70,6 +70,7 @@ export const authOptions: AuthOptions = {
             password: true,
             membershipId: true,
             status: true,
+            emailVerified: true,
           },
         })
 
@@ -84,6 +85,14 @@ export const authOptions: AuthOptions = {
 
         if (!isValidPassword) {
           throw new Error("Invalid credentials")
+        }
+
+        if (!member.emailVerified) {
+          throw new Error("EMAIL_NOT_VERIFIED")
+        }
+
+        if (member.status === "suspended") {
+          throw new Error("ACCOUNT_SUSPENDED")
         }
 
         // Update last login

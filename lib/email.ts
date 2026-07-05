@@ -411,6 +411,67 @@ export async function sendWelcomeEmail(email: string, name?: string) {
   return sendNewsletterEmail(email, 'Welcome to FOSS Andhra Foundation!', content)
 }
 
+// Send email-address verification link (member onboarding / login gate)
+export async function sendVerificationEmail(to: string, data: {
+  name: string
+  token: string
+}) {
+  const { name, token } = data
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3002'
+  const verifyLink = `${baseUrl}/verify-email?token=${token}`
+
+  const mailOptions = {
+    from: `"${process.env.SMTP_FROM_NAME || 'FOSS Andhra'}" <${process.env.SMTP_USER}>`,
+    to,
+    subject: 'Verify your email — FOSS Andhra',
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #005ca8; color: white; padding: 20px; text-align: center; }
+          .content { background: #f9f9f9; padding: 30px; }
+          .footer { background: #333; color: white; padding: 20px; text-align: center; font-size: 12px; }
+          .button { display: inline-block; padding: 14px 32px; background: #005ca8; color: #ffffff !important; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Verify Your Email</h1>
+          </div>
+          <div class="content">
+            <h2>Hello ${name},</h2>
+            <p>Please confirm your email address to activate your FOSS Andhra member account.</p>
+            <center>
+              <a href="${verifyLink}" class="button">Verify Email Address</a>
+            </center>
+            <p style="font-size: 13px; color: #666;">This link is valid for 24 hours. If the button doesn't work, copy this URL into your browser:</p>
+            <p style="font-size: 12px; color: #666; word-break: break-all;">${verifyLink}</p>
+            <p style="font-size: 13px; color: #666;">If you didn't create an account with FOSS Andhra, you can safely ignore this email.</p>
+            <p>Best regards,<br><strong>FOSS Andhra Team</strong></p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} FOSS Andhra. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }
+
+  try {
+    const info = await transporter.sendMail(mailOptions)
+    console.log('✅ Verification email sent:', info.messageId)
+    return { success: true, messageId: info.messageId }
+  } catch (error) {
+    console.error('❌ Error sending verification email:', error)
+    return { success: false, error }
+  }
+}
+
 // Verify transporter configuration
 export async function verifyEmailConfig() {
   try {

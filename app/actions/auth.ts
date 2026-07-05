@@ -30,7 +30,8 @@ export async function setPassword(token: string, password: string) {
         // Hash new password
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // Update member password and clear token
+        // Update member password and clear token. Reaching this point required
+        // the token from the member's inbox, so their email is verified too.
         await prisma.member.update({
             where: { id: member.id },
             data: {
@@ -38,6 +39,7 @@ export async function setPassword(token: string, password: string) {
                 resetToken: null,
                 resetTokenExpiry: null,
                 status: "active", // Ensure account is active
+                emailVerified: member.emailVerified ?? new Date(),
             },
         })
 

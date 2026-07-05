@@ -50,6 +50,29 @@ function LoginPageContent() {
       })
 
       if (result?.error) {
+        if (result.error === "EMAIL_NOT_VERIFIED") {
+          toast({
+            title: "Email not verified",
+            description: "Please verify your email first — sending you a fresh link now.",
+          })
+          // Fire a resend and take them to the verification page
+          fetch("/api/auth/verify-email", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: memberEmail }),
+          }).catch(() => {})
+          router.push("/verify-email")
+          return
+        }
+        if (result.error === "ACCOUNT_SUSPENDED") {
+          toast({
+            title: "Account suspended",
+            description: "Your account has been suspended. Contact office@fossap.in for help.",
+            variant: "destructive",
+          })
+          setIsLoading(false)
+          return
+        }
         toast({
           title: "Login Failed",
           description: "Invalid email or password. Please try again.",

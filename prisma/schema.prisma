@@ -230,6 +230,9 @@ model Member {
   address          String?
   resetToken       String?   @unique
   resetTokenExpiry DateTime?
+  emailVerified     DateTime?
+  verifyToken       String?   @unique
+  verifyTokenExpiry DateTime?
 
   @@index([status])
   @@index([expiryDate])

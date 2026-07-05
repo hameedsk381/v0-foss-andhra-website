@@ -314,10 +314,37 @@ export default function MembersManagement() {
     },
   ]
 
+  const resendWelcomeEmail = async (member: Member) => {
+    try {
+      const res = await fetch(`/api/admin/members/${member.id}/resend-welcome`, { method: "POST" })
+      const data = await res.json()
+      if (data.success) {
+        toast({ title: "Email sent", description: data.message })
+      } else {
+        throw new Error(data.error)
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to send",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      })
+    }
+  }
+
   const actions = (member: Member) => (
     <>
       <Button variant="ghost" size="sm" title="Edit" onClick={() => openEditMemberDialog(member)}>
         <Edit className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        title="Resend welcome / set-password email"
+        onClick={() => resendWelcomeEmail(member)}
+        className="text-primary"
+      >
+        <Mail className="h-4 w-4" />
       </Button>
       <Button
         variant="ghost"

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdminAccess } from "@/lib/auth/admin"
+import { sendMemberWelcomeEmail } from "@/lib/email"
+import crypto from "crypto"
+import bcrypt from "bcryptjs"
 
 export const dynamic = "force-dynamic"
 const MEMBER_LIST_SELECT = {
@@ -80,6 +83,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid expiryDate" }, { status: 400 })
     }
 
+    // Onboarding credentials: unguessable placeholder password + a 24h
+    // set-password token delivered by email. Clicking the link both sets the
+    // password and verifies the email address.
+    const resetToken = crypto.randomBytes(32).toString("hex")
+    const resetTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000)
+    const placeholderPassword = await bcrypt.hash(crypto.randomBytes(16).toString("hex"), 10)
+
     const member = await prisma.member.create({
       data: {
         name: body.name,
@@ -93,11 +103,33 @@ export async function POST(request: Request) {
         membershipId,
         expiryDate,
         status: body.status || "active",
+        password: placeholderPassword,
+        resetToken,
+        resetTokenExpiry,
       },
       select: MEMBER_LIST_SELECT,
     })
 
-    return NextResponse.json({ success: true, data: member, message: "Member created successfully" })
+    let emailSent = false
+    try {
+      const emailResult = await sendMemberWelcomeEmail(body.email, {
+        name: body.name,
+        membershipId,
+        expiryDate,
+        resetToken,
+      })
+      emailSent = Boolean(emailResult.success)
+    } catch (emailError) {
+      console.error("Welcome email failed for admin-created member:", emailError)
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: member,
+      message: emailSent
+        ? "Member created — welcome email with set-password link sent"
+        : "Member created, but the welcome email failed to send. Use the resend button once SMTP is configured.",
+    })
   } catch (error) {
     console.error("Error creating member:", error)
     return NextResponse.json({ success: false, error: "Failed to create member" }, { status: 500 })
