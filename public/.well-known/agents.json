@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "name": "FOSS Andhra",
+  "description": "FOSS Andhra promotes Free and Open Source Software adoption through community initiatives, education, events, and collaboration across Andhra Pradesh.",
+  "url": "https://fossap.in",
+  "capabilities": [
+    "search",
+    "browse",
+    "events",
+    "contact",
+    "resources"
+  ],
+  "contact": "office@fossap.in"
+}

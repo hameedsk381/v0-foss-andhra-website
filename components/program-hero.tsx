@@ -27,7 +27,7 @@ export function ProgramHero({ title, description, color, logoSrc, image, eyebrow
   return (
     <section className="relative w-full min-h-[56vh] flex items-center overflow-hidden">
       <div className="absolute inset-0">
-        <Image src={image} alt="" fill priority className="object-cover object-center" />
+        <Image src={image} alt={`${title} — FOSS Andhra programme background`} fill priority className="object-cover object-center" />
       </div>
       <div
         className="absolute inset-0"

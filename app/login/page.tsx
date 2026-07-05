@@ -152,6 +152,7 @@ function LoginPageContent() {
               className="h-12 w-auto"
             />
           </div>
+          <h1 className="sr-only">Member Login</h1>
           <CardTitle className="text-2xl">Welcome Back</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>

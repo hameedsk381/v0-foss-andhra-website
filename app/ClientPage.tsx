@@ -594,7 +594,7 @@ export default function Home() {
               />
               {/* Image collage top-right */}
               <div className="absolute top-0 right-0 bottom-0 w-2/5 hidden lg:block overflow-hidden opacity-25">
-                <Image src="/gallery/fosstorm-workshop.jpg" alt="" fill className="object-cover object-left" />
+                <Image src="/gallery/fosstorm-workshop.jpg" alt="FOSStorm community workshop session" fill className="object-cover object-left" />
               </div>
 
               <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-10 lg:max-w-[60%]">

@@ -3,10 +3,15 @@
 > Building open source infrastructure for Andhra Pradesh — campus clubs, Telugu-language AI tools, civic tech, and policy advocacy for digital sovereignty.
 
 ## Organization
+- Name: FOSS Andhra (Free and Open Source Software Andhra Pradesh)
 - Type: Non-Governmental Organisation (NGO)
 - Location: Yesj Centre for Excellence, Vijayawada, Andhra Pradesh 520008, India
 - Contact: office@fossap.in | +91 94944 63840
 - Website: https://fossap.in
+- GitHub: https://github.com/fossandhra
+- LinkedIn: https://linkedin.com/company/fossandhra
+- YouTube: https://youtube.com/@fossandhra
+- Twitter/X: https://twitter.com/fossandhra
 
 ## Mission
 To build Andhra Pradesh's open source layer — empowering students to contribute to global projects, deploying FOSS in schools and government, and developing Telugu-language computing tools that serve 82 million people.
@@ -70,9 +75,20 @@ https://fossap.in/programs/fosspeaks
 - Contribute: https://fossap.in/contribute
 - Contact: https://fossap.in/contact
 - FAQ: https://fossap.in/faq
+- AI Info: https://fossap.in/ai
 
 ## Social and Code
 - GitHub: https://github.com/fossandhra
 - LinkedIn: https://linkedin.com/company/fossandhra
 - YouTube: https://youtube.com/@fossandhra
 - Twitter/X: https://twitter.com/fossandhra
+
+## Preferred URLs
+- https://fossap.in/
+- https://fossap.in/events
+- https://fossap.in/blog
+- https://fossap.in/programs
+- https://fossap.in/community
+
+## License
+Public website content may be summarized with attribution.

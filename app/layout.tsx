@@ -125,9 +125,15 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "NGO",
               name: "FOSS Andhra",
+              alternateName: "FOSSAP",
               url: "https://fossap.in",
               logo: "https://fossap.in/logos/foss-andhra-logo.png",
-              description: "Non-profit organization promoting free and open source software in Andhra Pradesh",
+              description: "Non-profit organization promoting free and open source software in Andhra Pradesh through community initiatives, education, events, and collaboration.",
+              foundingDate: "2023",
+              areaServed: {
+                "@type": "State",
+                name: "Andhra Pradesh"
+              },
               address: {
                 "@type": "PostalAddress",
                 streetAddress: "Yesj Centre for Excellence",
@@ -147,6 +153,14 @@ export default function RootLayout({
                 "https://github.com/fossandhra",
                 "https://linkedin.com/company/fossandhra",
                 "https://youtube.com/@fossandhra",
+              ],
+              knowsAbout: [
+                "Free and Open Source Software",
+                "Open Source AI",
+                "Telugu NLP",
+                "Digital Public Infrastructure",
+                "Developer Communities",
+                "Open Source Education",
               ],
             }),
           }}

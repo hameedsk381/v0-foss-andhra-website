@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import Script from "next/script"
 import EventsClient from "./EventsClient"
 
 export const dynamic = "force-dynamic"
@@ -51,5 +52,19 @@ export default async function EventsPage() {
     getEvents("upcoming"),
     getEvents("past"),
   ])
-  return <EventsClient initialUpcomingEvents={upcomingEvents} initialPastEvents={pastEvents} />
+  return (
+    <>
+      <Script id="breadcrumb-schema" type="application/ld+json" strategy="afterInteractive">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://fossap.in" },
+            { "@type": "ListItem", position: 2, name: "Events", item: "https://fossap.in/events" },
+          ],
+        })}
+      </Script>
+      <EventsClient initialUpcomingEvents={upcomingEvents} initialPastEvents={pastEvents} />
+    </>
+  )
 }

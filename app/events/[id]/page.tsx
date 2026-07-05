@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
+import Script from "next/script"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -115,6 +116,45 @@ export default function EventDetailsPage() {
     window.open(calendarUrl, '_blank')
   }
 
+  const eventSchema = useMemo(() => {
+    if (!event) return null
+    return {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: event.title,
+      description: event.description.replace(/<[^>]+>/g, "").substring(0, 500),
+      startDate: event.date,
+      endDate: event.endDate || undefined,
+      eventStatus: event.status === "upcoming" ? "https://schema.org/EventScheduled" : event.status === "ongoing" ? "https://schema.org/EventActive" : "https://schema.org/EventCompleted",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      location: {
+        "@type": "Place",
+        name: event.location,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: event.location,
+          addressRegion: "Andhra Pradesh",
+          addressCountry: "IN",
+        },
+      },
+      organizer: {
+        "@type": "Organization",
+        name: "FOSS Andhra",
+        url: "https://fossap.in",
+      },
+    }
+  }, [event])
+
+  const breadcrumbSchema = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://fossap.in" },
+      { "@type": "ListItem", position: 2, name: "Events", item: "https://fossap.in/events" },
+      { "@type": "ListItem", position: 3, name: event?.title || "Event", item: `https://fossap.in/events/${id}` },
+    ],
+  }), [event, id])
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -145,6 +185,14 @@ export default function EventDetailsPage() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--surface-1))]">
+      {eventSchema && (
+        <Script id="event-schema" type="application/ld+json" strategy="afterInteractive">
+          {JSON.stringify(eventSchema)}
+        </Script>
+      )}
+      <Script id="breadcrumb-schema" type="application/ld+json" strategy="afterInteractive">
+        {JSON.stringify(breadcrumbSchema)}
+      </Script>
       {/* Hero Section */}
       <div className="relative h-96 bg-gradient-to-r from-primary to-primary-600">
         {event.imageUrl && (

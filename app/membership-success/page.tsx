@@ -19,6 +19,7 @@ function MembershipSuccessContent() {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
               <Users className="w-8 h-8 text-blue-600" />
             </div>
+            <h1 className="sr-only">Membership Activated</h1>
             <CardTitle className="text-2xl text-green-800">🎉 Welcome to FOSS Andhra!</CardTitle>
           </CardHeader>
           <CardContent>

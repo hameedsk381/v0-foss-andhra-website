@@ -19,6 +19,7 @@ function DonationSuccessContent() {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
               <Heart className="w-8 h-8 text-red-600" />
             </div>
+            <h1 className="sr-only">Donation Successful</h1>
             <CardTitle className="text-2xl text-green-800">🎉 Thank You for Your Donation!</CardTitle>
           </CardHeader>
           <CardContent>

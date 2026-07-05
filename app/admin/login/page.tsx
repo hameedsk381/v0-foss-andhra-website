@@ -84,6 +84,7 @@ export default function AdminLogin() {
               className="h-12 w-auto"
             />
           </div>
+          <h1 className="sr-only">Admin Login</h1>
           <CardTitle className="text-2xl">Admin Login</CardTitle>
           <CardDescription>Sign in to access the CMS dashboard</CardDescription>
         </CardHeader>

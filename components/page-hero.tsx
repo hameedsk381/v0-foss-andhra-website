@@ -31,7 +31,7 @@ export function PageHero({
   return (
     <section className={`relative w-full ${minHeight} flex items-center overflow-hidden`}>
       <div className="absolute inset-0">
-        <Image src={image} alt="" fill priority className="object-cover object-center" />
+        <Image src={image} alt={`${title} — ${eyebrow}`} fill priority className="object-cover object-center" />
       </div>
       <div
         className="absolute inset-0"
