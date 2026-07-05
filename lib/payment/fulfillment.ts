@@ -427,6 +427,10 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
           interests: profile.interests,
           address: profile.address,
           referral: profile.referral,
+          // Renewal starts a fresh expiry cycle — clear reminder flags so the
+          // 30/7-day nudges fire again ahead of the new expiry date.
+          renewal30ReminderSentAt: null,
+          renewal7ReminderSentAt: null,
           ...(resetToken && resetTokenExpiry
             ? {
                 resetToken,

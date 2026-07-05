@@ -233,6 +233,8 @@ model Member {
   emailVerified     DateTime?
   verifyToken       String?   @unique
   verifyTokenExpiry DateTime?
+  renewal30ReminderSentAt DateTime?
+  renewal7ReminderSentAt  DateTime?
 
   @@index([status])
   @@index([expiryDate])

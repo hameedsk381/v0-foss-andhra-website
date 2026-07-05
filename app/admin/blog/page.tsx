@@ -11,9 +11,10 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
-import { Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X, Download, MessageSquare, Check, XOctagon, Sparkles, Loader2 } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, FileText, Tag, FolderOpen, Save, X, Download, MessageSquare, Check, XOctagon, Sparkles, Loader2, Image as ImageIcon } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { SeoChecklist } from "@/components/admin/seo-checklist"
+import { MediaPicker } from "@/components/admin/media-picker"
 import { DataTable, Column } from "@/components/admin/data-table"
 import { BulkActions } from "@/components/admin/bulk-actions"
 import { AdvancedFilters, FilterOption } from "@/components/admin/advanced-filters"
@@ -90,6 +91,7 @@ export default function BlogManagement() {
   const [aiKeyword, setAiKeyword] = useState("")
   const [aiGenerating, setAiGenerating] = useState(false)
   const [showAiPanel, setShowAiPanel] = useState(false)
+  const [showMediaPicker, setShowMediaPicker] = useState(false)
 
   const generateWithAI = async () => {
     if (aiBrief.trim().length < 20) {
@@ -480,10 +482,13 @@ export default function BlogManagement() {
         .filter(Boolean).length
       const readingTime = Math.max(1, Math.round(wordCount / 200))
 
+      // Default the social-share image to the cover image if none was set
+      const ogImage = postForm.ogImage || postForm.coverImage
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...postForm, readingTime }),
+        body: JSON.stringify({ ...postForm, readingTime, ogImage }),
       })
 
       const data = await res.json()
@@ -967,12 +972,50 @@ export default function BlogManagement() {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="coverImage">Cover Image URL</Label>
+                  <Label htmlFor="coverImage">Cover Image</Label>
+                  {postForm.coverImage ? (
+                    <div className="relative rounded-lg overflow-hidden border border-border h-40 bg-muted">
+                      <img
+                        src={postForm.coverImage}
+                        alt="Cover preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2 right-2 flex gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setShowMediaPicker(true)}
+                        >
+                          Change
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => setPostForm({ ...postForm, coverImage: "" })}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-24 border-dashed"
+                      onClick={() => setShowMediaPicker(true)}
+                    >
+                      <ImageIcon className="h-5 w-5 mr-2" />
+                      Choose from media library
+                    </Button>
+                  )}
                   <Input
                     id="coverImage"
                     value={postForm.coverImage}
                     onChange={(e) => setPostForm({ ...postForm, coverImage: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
+                    placeholder="Or paste an image URL directly"
+                    className="text-xs"
                   />
                 </div>
 
@@ -1057,6 +1100,11 @@ export default function BlogManagement() {
             </Button>
           </DialogFooter>
         </DialogContent>
+        <MediaPicker
+          open={showMediaPicker}
+          onOpenChange={setShowMediaPicker}
+          onSelect={(url) => setPostForm((prev) => ({ ...prev, coverImage: url }))}
+        />
       </Dialog>
 
       {/* Category Dialog */}

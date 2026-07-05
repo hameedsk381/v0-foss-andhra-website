@@ -32,3 +32,21 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
+
+  # Daily membership renewal reminders (30-day and 7-day nudges). Runs inside
+  # the container network so it can reach the app by service name.
+  cron:
+    image: alpine:3.20
+    container_name: foss-andhra-cron
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    env_file:
+      - .env.prod
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        apk add --no-cache curl >/dev/null
+        echo "0 6 * * * curl -fsS -H \"x-cron-secret: $$CRON_SECRET\" http://app:3000/api/cron/renewal-reminders >> /var/log/cron.log 2>&1" > /etc/crontabs/root
+        crond -f -l 2
