@@ -62,7 +62,7 @@ export const authOptions: AuthOptions = {
         }
 
         const member = await prisma.member.findUnique({
-          where: { email: credentials.email },
+          where: { email: credentials.email.trim().toLowerCase() },
           select: {
             id: true,
             email: true,

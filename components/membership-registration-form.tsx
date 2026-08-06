@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { RazorpayCheckout } from "./razorpay-checkout"
 import { AnimatedSection } from "@/components/ui/animated-section"
 import { ArrowLeft, CheckCircle, PartyPopper } from "lucide-react"
+import { getMembershipPricing } from "@/app/actions/payment"
 
 interface FormData {
   name: string
@@ -39,6 +40,13 @@ export function MembershipRegistrationForm() {
 
   const [currentStep, setCurrentStep] = useState<"form" | "payment" | "success">("form")
   const [membershipId, setMembershipId] = useState<string>("")
+  const [membershipFee, setMembershipFee] = useState<number>(300)
+
+  useEffect(() => {
+    getMembershipPricing()
+      .then((pricing) => setMembershipFee(pricing.annualFee))
+      .catch(() => {})
+  }, [])
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData((prev: FormData) => ({ ...prev, [field]: value }))
@@ -133,7 +141,7 @@ export function MembershipRegistrationForm() {
               {currentStep === "success" && "🎉 Welcome to FOSS Andhra!"}
             </CardTitle>
             <CardDescription>
-              {currentStep === "form" && "Join the FOSS Andhra community for just ₹300/year"}
+              {currentStep === "form" && `Join the FOSS Andhra community for just ₹${membershipFee}/year`}
               {currentStep === "payment" && "Secure payment to activate your membership"}
               {currentStep === "success" && "Your membership has been successfully activated"}
             </CardDescription>
@@ -278,7 +286,7 @@ export function MembershipRegistrationForm() {
                       <a href="/privacy-policy" className="text-fosstar hover:underline">
                         Privacy Policy
                       </a>
-                      . I understand that my membership fee of ₹300 is non-refundable and valid for one year.
+                      . I understand that my membership fee of ₹{membershipFee} is non-refundable and valid for one year.
                     </Label>
                   </div>
                 </div>
@@ -323,7 +331,7 @@ export function MembershipRegistrationForm() {
                   <div className="border-t pt-4 mt-4">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold">Total Amount:</span>
-                      <span className="text-2xl font-bold text-fosstar">₹300</span>
+                      <span className="text-2xl font-bold text-fosstar">₹{membershipFee.toLocaleString("en-IN")}</span>
                     </div>
                   </div>
                 </div>
@@ -339,7 +347,7 @@ export function MembershipRegistrationForm() {
                   </Button>
                   <RazorpayCheckout
                     membershipType="FOSStar Annual"
-                    amount={300}
+                    amount={membershipFee}
                     userDetails={{
                       name: formData.name,
                       email: formData.email,

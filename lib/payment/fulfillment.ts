@@ -1,7 +1,7 @@
 import crypto from "crypto"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
-import { sendDonationReceiptEmail, sendMemberWelcomeEmail } from "@/lib/email"
+import { sendDonationReceiptEmail, sendMemberWelcomeEmail, sendVerificationEmail } from "@/lib/email"
 
 const DEFAULT_MEMBERSHIP_FEE = 300
 const DEFAULT_MEMBERSHIP_DURATION_MONTHS = 12
@@ -11,10 +11,9 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // Must start and end with a digit, allowing spaces/dashes/parens in between.
 const PHONE_REGEX = /^\+?[0-9]([0-9\s()\-]{6,18})[0-9]$/
 
+// Tiered (audience-specific) memberships are priced from this catalog.
 const MEMBERSHIP_AMOUNT_MAP: Record<string, number> = {
-  "fosstar annual": 300,
   "fosstar lifetime": 5000,
-  "fosstar membership": 300,
   "fosstar student": 300,
   "fosstar teacher": 500,
   "fosstar institution": 5000,
@@ -30,6 +29,10 @@ const MEMBERSHIP_AMOUNT_MAP: Record<string, number> = {
   company: 10000,
   ngo: 2000,
 }
+
+// The base "FOSStar Annual" membership price is controlled by the admin
+// `membershipFee` setting, so it must NOT be hardcoded in the tier map.
+const BASE_MEMBERSHIP_TYPE_KEYS = new Set(["fosstar annual", "fosstar membership"])
 
 export type PaymentPurpose = "membership" | "donation"
 
@@ -219,6 +222,10 @@ export function resolveMembershipAmount(
   defaults?: MembershipPaymentDefaults,
 ): number {
   const normalizedType = normalizeMembershipTypeKey(membershipType)
+  // Base "FOSStar Annual" membership is priced from the admin setting.
+  if (BASE_MEMBERSHIP_TYPE_KEYS.has(normalizedType)) {
+    return defaults?.annualFee ?? DEFAULT_MEMBERSHIP_FEE
+  }
   const matchedAmount = MEMBERSHIP_AMOUNT_MAP[normalizedType]
   if (typeof matchedAmount === "number") return matchedAmount
   return defaults?.annualFee ?? DEFAULT_MEMBERSHIP_FEE
@@ -227,7 +234,7 @@ export function resolveMembershipAmount(
 export function isValidMembershipType(membershipType: string | undefined): boolean {
   if (!membershipType?.trim()) return false
   const key = normalizeMembershipTypeKey(membershipType)
-  return key in MEMBERSHIP_AMOUNT_MAP
+  return key in MEMBERSHIP_AMOUNT_MAP || BASE_MEMBERSHIP_TYPE_KEYS.has(key)
 }
 
 export async function createPendingDonation(input: CreateDonationIntentInput) {
@@ -353,7 +360,7 @@ export async function completeDonationPayment(input: CompleteDonationPaymentInpu
 }
 
 export async function completeMembershipPayment(input: CompleteMembershipPaymentInput) {
-  const email = normalizeString(input.userDetails.email, 200)
+  const email = normalizeString(input.userDetails.email, 200)?.toLowerCase()
   const name = normalizeString(input.userDetails.name, 120) || "Member"
   const phone = normalizeString(input.userDetails.phone, 30) || ""
 
@@ -383,6 +390,7 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
       membershipId: true,
       expiryDate: true,
       password: true,
+      emailVerified: true,
     },
   })
 
@@ -392,9 +400,14 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
   const expiryDate = addMonths(baseDate, defaults.durationMonths)
 
   const shouldGenerateCredentials = !existingMember || !existingMember.password
+  const needsVerification = !existingMember || !existingMember.emailVerified
   const resetToken = shouldGenerateCredentials ? crypto.randomBytes(32).toString("hex") : undefined
   // Use millisecond arithmetic instead of setHours to avoid DST edge cases.
   const resetTokenExpiry = shouldGenerateCredentials
+    ? new Date(now.getTime() + 24 * 60 * 60 * 1_000)
+    : undefined
+  const verifyToken = needsVerification ? crypto.randomBytes(32).toString("hex") : undefined
+  const verifyTokenExpiry = needsVerification
     ? new Date(now.getTime() + 24 * 60 * 60 * 1_000)
     : undefined
 
@@ -405,6 +418,8 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
   let member:
     | {
         membershipId: string
+        resetToken: string | null
+        verifyToken: string | null
       }
     | null = null
 
@@ -438,6 +453,12 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
                 password: generatedPasswordHash,
               }
             : {}),
+          ...(verifyToken && verifyTokenExpiry
+            ? {
+                verifyToken,
+                verifyTokenExpiry,
+              }
+            : {}),
         },
         create: {
           name,
@@ -457,9 +478,13 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
           password: generatedPasswordHash || (await bcrypt.hash(crypto.randomBytes(16).toString("hex"), 10)),
           resetToken,
           resetTokenExpiry,
+          verifyToken,
+          verifyTokenExpiry,
         },
         select: {
           membershipId: true,
+          resetToken: true,
+          verifyToken: true,
         },
       })
       break
@@ -474,7 +499,11 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
     throw new Error("Unable to activate membership")
   }
 
-  if (resetToken) {
+  // Only send the welcome/verification emails if THIS call's tokens are the
+  // ones currently persisted. The client-side `verifyPayment` and the Razorpay
+  // webhook can race; the final writer wins, and only that call emails (so the
+  // user never gets a stale, invalid reset/verify link).
+  if (resetToken && member.resetToken === resetToken) {
     try {
       await sendMemberWelcomeEmail(email, {
         name,
@@ -484,6 +513,14 @@ export async function completeMembershipPayment(input: CompleteMembershipPayment
       })
     } catch (emailError) {
       console.error("Member welcome email failed:", emailError)
+    }
+  }
+
+  if (verifyToken && member.verifyToken === verifyToken) {
+    try {
+      await sendVerificationEmail(email, { name, token: verifyToken })
+    } catch (emailError) {
+      console.error("Member verification email failed:", emailError)
     }
   }
 

@@ -41,6 +41,10 @@ export async function GET() {
       return NextResponse.json({ error: "Member not found" }, { status: 404 })
     }
 
+    if (member.status === "suspended") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
     const memberEmail = member.email.trim()
     const registrationWhere = {
       email: { equals: memberEmail, mode: "insensitive" as const },

@@ -15,11 +15,22 @@ function preferencesKey(memberId: string) {
   return `member-notification-preferences:${memberId}`
 }
 
+async function memberGate(id: string) {
+  const member = await prisma.member.findUnique({
+    where: { id },
+    select: { status: true },
+  })
+  return member && member.status !== "suspended"
+}
+
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user as any).userType !== "member") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    if (!(await memberGate((session.user as any).id))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
     const key = preferencesKey((session.user as any).id)
@@ -51,6 +62,9 @@ export async function PUT(request: Request) {
     const session = await getServerSession(authOptions)
     if (!session || (session.user as any).userType !== "member") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    if (!(await memberGate((session.user as any).id))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
     const body = await request.json()

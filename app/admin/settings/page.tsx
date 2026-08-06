@@ -205,7 +205,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="membershipFee">Annual Membership Fee (₹)</Label>
+                  <Label htmlFor="membershipFee">Base Annual Membership Fee (₹)</Label>
                   <Input
                     id="membershipFee"
                     type="number"

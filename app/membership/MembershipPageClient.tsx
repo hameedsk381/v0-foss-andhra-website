@@ -100,9 +100,15 @@ export default function MembershipPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Redirect to register page with pre-filled data via query params
+    // Redirect to the audience-specific registration form, pre-filling the
+    // data the user already entered on this tab.
     const audience = formData.membershipType || 'professional'
-    router.push(`/register?type=${audience}`)
+    const params = new URLSearchParams({ type: audience })
+    if (formData.name) params.set('name', formData.name)
+    if (formData.email) params.set('email', formData.email)
+    if (formData.phone) params.set('phone', formData.phone)
+    if (formData.organization) params.set('organization', formData.organization)
+    router.push(`/register?${params.toString()}`)
   }
 
   return (
@@ -303,9 +309,9 @@ export default function MembershipPage() {
                             <SelectValue placeholder="Select your membership type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="student">Student Member (₹500/year)</SelectItem>
-                            <SelectItem value="professional">Professional Member (₹2000/year)</SelectItem>
-                            <SelectItem value="institutional">Institutional Member (₹10,000/year)</SelectItem>
+                            <SelectItem value="student">Student Member (₹300/year)</SelectItem>
+                            <SelectItem value="professional">Professional Member (₹1,000/year)</SelectItem>
+                            <SelectItem value="institutional">Institutional Member (₹5,000/year)</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

@@ -69,6 +69,14 @@ function additionalDataToNotes(additionalData?: Record<string, unknown> | null):
   }, {})
 }
 
+export async function getMembershipPricing() {
+  const defaults = await getMembershipPaymentDefaults()
+  return {
+    annualFee: defaults.annualFee,
+    durationMonths: defaults.durationMonths,
+  }
+}
+
 export async function createPaymentOrder(data: CreateOrderData) {
   try {
     const paymentPurpose: PaymentPurpose = data.paymentPurpose || "membership"

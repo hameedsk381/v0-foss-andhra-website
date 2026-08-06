@@ -48,6 +48,10 @@ export async function GET() {
       return NextResponse.json({ error: "Member not found" }, { status: 404 })
     }
 
+    if (member.status === "suspended") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
     return NextResponse.json({ success: true, data: member })
   } catch (error) {
     console.error("Error fetching member profile:", error)
@@ -69,6 +73,14 @@ export async function PUT(request: Request) {
         { error: parsed.error.issues[0]?.message || "Invalid profile data" },
         { status: 400 }
       )
+    }
+
+    const suspendedMember = await prisma.member.findUnique({
+      where: { id: (session.user as any).id },
+      select: { status: true },
+    })
+    if (!suspendedMember || suspendedMember.status === "suspended") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
     const { name, phone, organization, designation, interests } = parsed.data

@@ -24,6 +24,7 @@ vi.mock("@/lib/prisma", () => ({
 vi.mock("@/lib/email", () => ({
   sendDonationReceiptEmail: vi.fn().mockResolvedValue(undefined),
   sendMemberWelcomeEmail: vi.fn().mockResolvedValue(undefined),
+  sendVerificationEmail: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock("@/lib/payment/logger", () => ({
@@ -42,6 +43,7 @@ import {
   completeDonationPayment,
   completeMembershipPayment,
 } from "../fulfillment"
+import { sendVerificationEmail, sendMemberWelcomeEmail } from "@/lib/email"
 import { prisma } from "@/lib/prisma"
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -132,6 +134,19 @@ describe("resolveMembershipAmount", () => {
 
   it("returns 10000 for FOSStar Company", () => {
     expect(resolveMembershipAmount("FOSStar Company")).toBe(10000)
+  })
+
+  it("uses the configured admin fee for the base FOSStar Annual membership", () => {
+    const defaults = { annualFee: 500, durationMonths: 12 }
+    expect(resolveMembershipAmount("FOSStar Annual", defaults)).toBe(500)
+    expect(resolveMembershipAmount("FOSStar Membership", defaults)).toBe(500)
+  })
+
+  it("keeps fixed tiered pricing even when the admin fee is changed", () => {
+    const defaults = { annualFee: 500, durationMonths: 12 }
+    expect(resolveMembershipAmount("professional", defaults)).toBe(1000)
+    expect(resolveMembershipAmount("student", defaults)).toBe(300)
+    expect(resolveMembershipAmount("FOSStar Lifetime", defaults)).toBe(5000)
   })
 })
 
@@ -262,7 +277,14 @@ describe("completeMembershipPayment", () => {
     vi.clearAllMocks()
     vi.mocked(prisma.member.findFirst).mockResolvedValue(null)
     vi.mocked(prisma.member.findUnique).mockResolvedValue(null)
-    vi.mocked(prisma.member.upsert).mockResolvedValue({ membershipId: "FOSS12345678" } as any)
+    vi.mocked(prisma.member.upsert).mockImplementation(async (args: any) => {
+      const data = args?.create ?? args?.update ?? {}
+      return {
+        membershipId: data.membershipId ?? "FOSS12345678",
+        resetToken: data.resetToken ?? null,
+        verifyToken: data.verifyToken ?? null,
+      }
+    })
     vi.mocked(prisma.settings.findMany).mockResolvedValue([])
   })
 
@@ -284,6 +306,67 @@ describe("completeMembershipPayment", () => {
       ...baseInput,
       userDetails: { ...baseInput.userDetails, email: "" },
     })).rejects.toThrow("email")
+  })
+
+  it("normalizes the email to lowercase for lookup and storage", async () => {
+    await completeMembershipPayment({
+      ...baseInput,
+      userDetails: { ...baseInput.userDetails, email: "  Alice@Example.COM " },
+    })
+
+    expect(prisma.member.findUnique).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { email: "alice@example.com" } }),
+    )
+
+    const upsertCall = vi.mocked(prisma.member.upsert).mock.calls.at(-1)![0]
+    expect(upsertCall.where).toEqual({ email: "alice@example.com" })
+    expect(upsertCall.create.email).toBe("alice@example.com")
+    expect(upsertCall.create.name).toBe("Alice")
+  })
+
+  it("issues a verification token for a new (unverified) member", async () => {
+    await completeMembershipPayment(baseInput)
+
+    const upsertCall = vi.mocked(prisma.member.upsert).mock.calls.at(-1)![0]
+    expect(typeof upsertCall.create.verifyToken).toBe("string")
+    expect(upsertCall.create.verifyToken).toHaveLength(64)
+    expect(upsertCall.create.verifyTokenExpiry).toBeInstanceOf(Date)
+    expect(vi.mocked(sendVerificationEmail)).toHaveBeenCalledWith(
+      "alice@example.com",
+      expect.objectContaining({ name: "Alice", token: upsertCall.create.verifyToken }),
+    )
+  })
+
+  it("does not rotate the verification token for an already-verified renewing member", async () => {
+    vi.mocked(prisma.member.findUnique).mockResolvedValueOnce({
+      id: "mem_1",
+      email: "alice@example.com",
+      membershipId: "FOSS_OLD",
+      expiryDate: new Date(),
+      password: "hashed",
+      emailVerified: new Date(),
+    } as any)
+
+    await completeMembershipPayment(baseInput)
+
+    const upsertCall = vi.mocked(prisma.member.upsert).mock.calls.at(-1)![0]
+    expect(upsertCall.update.verifyToken).toBeUndefined()
+    expect(vi.mocked(sendVerificationEmail)).not.toHaveBeenCalled()
+  })
+
+  it("skips emails when a concurrent request overwrote the tokens (last writer wins)", async () => {
+    // Simulate the webhook finishing after the client verify call: the stored
+    // token belongs to the other request, so only that one should email.
+    vi.mocked(prisma.member.upsert).mockResolvedValueOnce({
+      membershipId: "FOSS_OTHER",
+      resetToken: "other-token",
+      verifyToken: "other-verify-token",
+    } as any)
+
+    await completeMembershipPayment(baseInput)
+
+    expect(vi.mocked(sendMemberWelcomeEmail)).not.toHaveBeenCalled()
+    expect(vi.mocked(sendVerificationEmail)).not.toHaveBeenCalled()
   })
 
   it("sets expiry date ~12 months from now for a new member", async () => {

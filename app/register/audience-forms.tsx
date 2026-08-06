@@ -244,6 +244,44 @@ export function AudienceSpecificForms() {
     collaboration: "",
   })
 
+  // Prefill base fields passed as query params from the /membership page.
+  useEffect(() => {
+    if (!typeParam || !audienceConfig[typeParam]) return
+    const name = searchParams.get("name") ?? ""
+    const email = searchParams.get("email") ?? ""
+    const phone = searchParams.get("phone") ?? ""
+    const organization = searchParams.get("organization") ?? ""
+    if (!name && !email && !phone && !organization) return
+
+    const mergeBase = <T extends { name: string; email: string; phone: string }>(base: T): T => ({
+      ...base,
+      name: name || base.name,
+      email: email || base.email,
+      phone: phone || base.phone,
+    })
+
+    switch (typeParam) {
+      case "student":
+        setStudentData((prev) => ({ ...mergeBase(prev), institution: organization || prev.institution }))
+        break
+      case "teacher":
+        setTeacherData((prev) => ({ ...mergeBase(prev), institution: organization || prev.institution }))
+        break
+      case "institution":
+        setInstitutionData((prev) => ({ ...mergeBase(prev), institutionName: organization || prev.institutionName }))
+        break
+      case "professional":
+        setProfessionalData((prev) => ({ ...mergeBase(prev), company: organization || prev.company }))
+        break
+      case "company":
+        setCompanyData((prev) => ({ ...mergeBase(prev), companyName: organization || prev.companyName }))
+        break
+      case "ngo":
+        setNGOData((prev) => ({ ...mergeBase(prev), organizationName: organization || prev.organizationName }))
+        break
+    }
+  }, [typeParam, searchParams])
+
   const handleAudienceSelect = (audience: AudienceType) => {
     setSelectedAudience(audience)
     setCurrentStep("form")
