@@ -1,0 +1,327 @@
+{
+  "domain": "fossap.in",
+  "audit_date": "2026-07-04",
+  "summary": {
+    "health_score": 31,
+    "business_type": "Non-profit community organization (Publisher + Local Service hybrid)",
+    "top_findings": [
+      "robots.txt sitemap URL points to fossandhra.org (dead domain) — only 1 page indexed in Google",
+      "Zero meta descriptions across all 17+ pages",
+      "No JSON-LD structured data on any page",
+      "Blog and Events pages render as empty shells (JavaScript-rendered, not crawlable)",
+      "No canonical URLs, no OG tags, no Twitter Card tags"
+    ],
+    "quick_wins": [
+      "Fix robots.txt sitemap URL: change fossandhra.org to fossap.in (5 min)",
+      "Regenerate sitemap with fossap.in base URL (15 min)",
+      "Add homepage meta description (10 min)",
+      "Add Organization JSON-LD to app/layout.tsx (30 min)",
+      "Create /public/llms.txt (15 min)"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 28,
+      "weight": 0.22,
+      "what_works": [
+        "HTTPS enforced",
+        "Clean URL structure",
+        "robots.txt present",
+        "Next.js 14 framework",
+        "No redirect loops"
+      ],
+      "findings": [
+        {
+          "title": "Sitemap Domain Mismatch in robots.txt",
+          "severity": "Critical",
+          "description": "robots.txt at fossap.in points to https://fossandhra.org/sitemap.xml which does not resolve (DNS NXDOMAIN). Sitemap URLs also use fossandhra.org domain. Google has only indexed 1 page.",
+          "recommendation": "Update public/robots.txt to Sitemap: https://fossap.in/sitemap.xml and regenerate sitemap with fossap.in base URL."
+        },
+        {
+          "title": "Blog and Events Content Not Crawlable (JS-Rendered)",
+          "severity": "Critical",
+          "description": "Blog shows 'Loading...' and Events shows 'Loading events...' in static HTML. Search engines cannot index any blog posts or events.",
+          "recommendation": "Convert blog and events to Next.js Server Components or use ISR to pre-render content at build time."
+        },
+        {
+          "title": "No Canonical URLs",
+          "severity": "Critical",
+          "description": "No <link rel=\"canonical\"> found on any page. Risk of duplicate content from URL parameter variations.",
+          "recommendation": "Add canonical tags via generateMetadata() in each page's metadata export."
+        },
+        {
+          "title": "No Security Headers",
+          "severity": "High",
+          "description": "Missing X-Content-Type-Options, X-Frame-Options, and Content-Security-Policy headers.",
+          "recommendation": "Add security headers in next.config.js using the headers() function."
+        },
+        {
+          "title": "Sitemap URLs Reference Dead Domain",
+          "severity": "High",
+          "description": "fossap.in/sitemap.xml contains 17 URLs all pointing to fossandhra.org — a domain that does not resolve.",
+          "recommendation": "Regenerate sitemap using fossap.in as baseUrl. Use next-sitemap package."
+        },
+        {
+          "title": "No llms.txt",
+          "severity": "Medium",
+          "description": "No structured AI-readable entry point for AI crawlers.",
+          "recommendation": "Create /public/llms.txt with organization description, programs, and key URLs."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 35,
+      "weight": 0.23,
+      "what_works": [
+        "Clear organizational mission statement",
+        "7 dedicated program pages",
+        "Consistent NAP across all pages",
+        "Legal compliance pages present",
+        "Privacy Policy is comprehensive",
+        "FAQ page with 12 structured questions"
+      ],
+      "findings": [
+        {
+          "title": "Zero Meta Descriptions Site-Wide",
+          "severity": "Critical",
+          "description": "Not a single page across the entire 17+ page site has a meta description tag. Google writes its own snippets which are often suboptimal.",
+          "recommendation": "Write unique 150–160 character meta descriptions for every page using generateMetadata()."
+        },
+        {
+          "title": "Blog Has No Indexable Content",
+          "severity": "Critical",
+          "description": "Blog listing page renders as empty shell. All posts are loaded client-side and invisible to search engines.",
+          "recommendation": "Implement SSR/ISR for blog listing and individual post pages."
+        },
+        {
+          "title": "Thin Content on Program Pages",
+          "severity": "High",
+          "description": "FOSSynC: ~280 words, FOSStorm: ~350 words — both below the 400-word minimum for indexable content. Several other program pages may also be thin.",
+          "recommendation": "Expand each program page to 600+ words with: program history, outcomes, testimonials, step-by-step participation guide, and related events."
+        },
+        {
+          "title": "Events Has No Indexable Content",
+          "severity": "High",
+          "description": "Events page is a JS-rendered empty shell. No past or upcoming events are crawlable.",
+          "recommendation": "Server-render events with ISR. Even a static list of past events would provide crawlable content."
+        },
+        {
+          "title": "No OG / Twitter Card Tags",
+          "severity": "High",
+          "description": "Zero social sharing metadata. All pages show blank previews when shared on LinkedIn, Twitter/X, or WhatsApp.",
+          "recommendation": "Add openGraph and twitter fields to generateMetadata() globally and per-page."
+        },
+        {
+          "title": "About Page Lacks E-E-A-T Signals",
+          "severity": "Medium",
+          "description": "About page is ~450 words with no named team members, no founding dates, no partner institutions, no media mentions.",
+          "recommendation": "Add team bios, organizational timeline, partner logos, and any press mentions."
+        },
+        {
+          "title": "Duplicate Title Tag on Privacy Policy",
+          "severity": "Medium",
+          "description": "Title reads 'Privacy Policy | FOSS Andhra | FOSS Andhra' — organization name duplicated.",
+          "recommendation": "Fix to 'Privacy Policy | FOSS Andhra'."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 23,
+      "weight": 0.20,
+      "what_works": [
+        "Homepage title well-optimized with geo-modifier",
+        "Events page has unique descriptive title",
+        "About page has unique title",
+        "H1 tags present on all audited pages",
+        "Navigation logically structured"
+      ],
+      "findings": [
+        {
+          "title": "Multiple Pages Missing Unique Title Tags",
+          "severity": "Critical",
+          "description": "FOSStar, FOSServe, FOSSynC, FOSStorm, FOSStart, Contact, Contribute, and Membership pages all fall back to the homepage default title tag.",
+          "recommendation": "Add generateMetadata() export to every page component with a unique, keyword-rich title."
+        },
+        {
+          "title": "No Open Graph or Social Sharing Tags",
+          "severity": "Critical",
+          "description": "Confirmed absence of og:title, og:description, og:image, twitter:card on all pages.",
+          "recommendation": "Implement via Next.js generateMetadata() globally."
+        },
+        {
+          "title": "Footer Headings Appear in Page Heading Hierarchy",
+          "severity": "Medium",
+          "description": "About page H2 list includes 'Programs', 'About', 'Contribute', 'Legal' — these are footer section headings bleeding into the page's semantic heading structure.",
+          "recommendation": "Change footer column headings to <p> or <span> elements with font-weight styling, not <h3>/<h2>."
+        },
+        {
+          "title": "Local Geo-Modifiers Missing from Program Page Titles",
+          "severity": "Medium",
+          "description": "Program pages miss opportunities to rank for local searches with 'Andhra Pradesh' or 'Vijayawada' in titles.",
+          "recommendation": "Include state/city in title tags where relevant: 'FOSSynC — Student FOSS Clubs in Andhra Pradesh | FOSS Andhra'."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 10,
+      "weight": 0.10,
+      "what_works": [],
+      "findings": [
+        {
+          "title": "No Structured Data on Any Page",
+          "severity": "Critical",
+          "description": "Zero JSON-LD, Microdata, or RDFa found across the entire site. No Organization, Event, Article, FAQPage, or BreadcrumbList schema.",
+          "recommendation": "Implement Organization/NGO schema in app/layout.tsx as the highest priority, then FAQPage, Event, and BreadcrumbList."
+        },
+        {
+          "title": "FAQ Page Has No FAQPage Schema",
+          "severity": "High",
+          "description": "12 well-structured questions exist on /faq with no FAQPage JSON-LD. Missed AI citation opportunity.",
+          "recommendation": "Add FAQPage JSON-LD for AI Overview / Perplexity / ChatGPT citability benefit."
+        },
+        {
+          "title": "No Event Schema on Events Page",
+          "severity": "High",
+          "description": "Events data is not marked up with Event schema — missing local event rich results.",
+          "recommendation": "After fixing JS-rendering, add Event JSON-LD to each event."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 55,
+      "weight": 0.10,
+      "what_works": [
+        "Next.js 14 with built-in optimizations",
+        "Tailwind CSS (minimal bundle)",
+        "Code splitting per route"
+      ],
+      "findings": [
+        {
+          "title": "Client-Side Data Fetching Delays LCP",
+          "severity": "High",
+          "description": "Blog and Events use client-side fetching, showing 'Loading...' and delaying LCP by 1–3s on mobile.",
+          "recommendation": "Switch to Server Components or ISR for data-heavy pages."
+        },
+        {
+          "title": "No Performance Baseline Established",
+          "severity": "Medium",
+          "description": "No PageSpeed Insights data available. Cannot confirm current CWV thresholds.",
+          "recommendation": "Run PageSpeed Insights for mobile: https://pagespeed.web.dev/?url=https%3A%2F%2Ffossap.in and establish a baseline."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 25,
+      "weight": 0.10,
+      "what_works": [
+        "All AI crawlers permitted via robots.txt",
+        "Clear mission statement citable from homepage",
+        "Contact info consistent and citable"
+      ],
+      "findings": [
+        {
+          "title": "No llms.txt",
+          "severity": "High",
+          "description": "No structured AI-readable entry point exists. AI crawlers must parse the entire HTML to understand the organization.",
+          "recommendation": "Create /public/llms.txt (see geo.md for recommended content)."
+        },
+        {
+          "title": "No Entity Structured Data for AI Knowledge Graph",
+          "severity": "High",
+          "description": "Without Organization/NGO JSON-LD, AI systems cannot confidently build a knowledge entity for FOSS Andhra.",
+          "recommendation": "Add Organization schema with sameAs links to social profiles."
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 50,
+      "weight": 0.05,
+      "what_works": [
+        "Logo has alt text across instances",
+        "Program logos have descriptive names",
+        "Team photo on About has alt text"
+      ],
+      "findings": [
+        {
+          "title": "Social Media Icon Alt Text Unknown",
+          "severity": "Low",
+          "description": "Footer social media icon SVGs/images may lack accessible aria-labels or alt text.",
+          "recommendation": "Add aria-label to all social media icon links: <a aria-label='Follow us on GitHub'>."
+        },
+        {
+          "title": "No OG Image Defined",
+          "severity": "High",
+          "description": "No og:image tag means social shares show no preview image.",
+          "recommendation": "Create a 1200x630px branded OG image and reference it in metadata."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Technical Fixes",
+        "timeframe": "Week 1",
+        "items": [
+          "Fix robots.txt — change sitemap URL from fossandhra.org to fossap.in",
+          "Regenerate sitemap.xml with fossap.in base URL",
+          "Submit sitemap to Google Search Console",
+          "Add canonical URLs to all pages via generateMetadata()",
+          "Add meta descriptions to all 17+ pages",
+          "Fix duplicate Privacy Policy title tag",
+          "Add Organization/NGO JSON-LD to app/layout.tsx"
+        ]
+      },
+      {
+        "name": "Phase 2: On-Page & Social Optimization",
+        "timeframe": "Weeks 2–3",
+        "items": [
+          "Add unique title tags to all pages missing them (8+ pages)",
+          "Add OG and Twitter Card tags globally",
+          "Create branded 1200x630 OG image",
+          "Add FAQPage JSON-LD to /faq",
+          "Create /public/llms.txt",
+          "Fix footer heading elements (h3 → p/span) to clean heading hierarchy",
+          "Add BreadcrumbList schema to all program pages"
+        ]
+      },
+      {
+        "name": "Phase 3: Content & Rendering",
+        "timeframe": "Month 2",
+        "items": [
+          "Convert Blog to SSR/ISR — make posts crawlable",
+          "Convert Events to SSR/ISR — make event listings crawlable",
+          "Expand FOSSynC page to 600+ words",
+          "Expand FOSStorm page to 600+ words",
+          "Expand About page with team bios and timeline",
+          "Write and publish 5 blog posts on FOSS topics",
+          "Add Event JSON-LD to events",
+          "Add security headers in next.config.js"
+        ]
+      },
+      {
+        "name": "Phase 4: Authority & Monitoring",
+        "timeframe": "Ongoing",
+        "items": [
+          "Set up Google Search Console and monitor index coverage",
+          "Run PageSpeed Insights monthly and track CWV",
+          "Create Wikidata entry for FOSS Andhra",
+          "Build citations from Deccan Chronicle, NDTV Tech, The Hindu",
+          "Add testimonials and case studies to program pages",
+          "Cross-link related programs and resources internally"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
