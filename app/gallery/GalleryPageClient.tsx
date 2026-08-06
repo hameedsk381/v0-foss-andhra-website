@@ -5,6 +5,7 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { Search, Filter, X } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { programColors, programInfo } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
@@ -21,12 +22,20 @@ type GalleryItem = {
   tags: string[]
 }
 
+const ITEMS_PER_PAGE = 12
+
 export default function GalleryPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE)
   const { toast } = useToast()
+
+  // Reset pagination on filter change
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_PAGE)
+  }, [searchTerm, selectedTags])
 
   // Fetch gallery items from database
   useEffect(() => {
@@ -170,7 +179,7 @@ export default function GalleryPage() {
         <div className="app-container">
           <Tabs defaultValue="all" className="w-full">
             <Reveal delay={0.1}>
-              <TabsList className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 max-w-4xl mx-auto mb-8">
+              <TabsList className="flex overflow-x-auto w-full sm:grid sm:grid-cols-4 md:grid-cols-8 max-w-4xl mx-auto mb-8 p-1 gap-1 sm:gap-0 justify-start sm:justify-center">
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="fosstar">FOSStar</TabsTrigger>
                 <TabsTrigger value="fosserve">FOSServe</TabsTrigger>
@@ -185,7 +194,7 @@ export default function GalleryPage() {
             <TabsContent value="all" className="mt-0">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredItems.length > 0 ? (
-                  filteredItems.map((item, i) => (
+                  filteredItems.slice(0, visibleCount).map((item, i) => (
                     <Reveal key={item.id} delay={Math.min(i * 0.04, 0.3)}>
                       <HoverLift>
                       <Card className="overflow-hidden">
@@ -198,6 +207,7 @@ export default function GalleryPage() {
                             src={item.image || "/placeholder.svg"}
                             alt={item.title}
                             fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             className="object-cover"
                           />
                           <div className="absolute top-2 right-2">
@@ -253,80 +263,110 @@ export default function GalleryPage() {
                   </div>
                 )}
               </div>
+
+              {filteredItems.length > visibleCount && (
+                <div className="flex justify-center mt-10">
+                  <Button
+                    onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
+                    variant="outline"
+                    size="lg"
+                    className="rounded-full px-8"
+                  >
+                    Load More Images ({filteredItems.length - visibleCount} remaining)
+                  </Button>
+                </div>
+              )}
             </TabsContent>
 
             {/* Program-specific tabs */}
-            {Object.keys(programInfo).map((program) => (
-              <TabsContent key={program} value={program} className="mt-0">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {filteredItems.filter((item) => item.program === program).length > 0 ? (
-                    filteredItems
-                      .filter((item) => item.program === program)
-                      .map((item, i) => (
-                        <Reveal key={item.id} delay={Math.min(i * 0.04, 0.3)}>
-                          <HoverLift>
-                          <Card className="overflow-hidden">
-                            <motion.div
-                              className="relative h-48 w-full"
-                              whileHover={{ scale: 1.05 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              <Image
-                                src={item.image || "/placeholder.svg"}
-                                alt={item.title}
-                                fill
-                                className="object-cover"
-                              />
-                            </motion.div>
-                            <CardContent className="p-4">
-                              <h3 className="font-display font-bold text-lg mb-1 text-foreground">{item.title}</h3>
-                              <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
-                              <div className="flex flex-wrap gap-1 mt-2">
-                                {item.tags.map((tag) => (
-                                  <span
-                                    key={tag}
-                                    className="px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
-                              <p className="text-xs text-muted-foreground/70 mt-2">
-                                {new Date(item.date).toLocaleDateString("en-US", {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                })}
-                              </p>
-                            </CardContent>
-                          </Card>
-                          </HoverLift>
-                        </Reveal>
-                      ))
-                  ) : (
-                    <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex flex-col items-center justify-center p-12">
-                      <div className="bg-muted p-8 rounded-full mb-4">
-                        <Search className="h-10 w-10 text-muted-foreground" />
+            {Object.keys(programInfo).map((program) => {
+              const programItems = filteredItems.filter((item) => item.program === program)
+              return (
+                <TabsContent key={program} value={program} className="mt-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {programItems.length > 0 ? (
+                      programItems
+                        .slice(0, visibleCount)
+                        .map((item, i) => (
+                          <Reveal key={item.id} delay={Math.min(i * 0.04, 0.3)}>
+                            <HoverLift>
+                            <Card className="overflow-hidden">
+                              <motion.div
+                                className="relative h-48 w-full"
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <Image
+                                  src={item.image || "/placeholder.svg"}
+                                  alt={item.title}
+                                  fill
+                                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                  className="object-cover"
+                                />
+                              </motion.div>
+                              <CardContent className="p-4">
+                                <h3 className="font-display font-bold text-lg mb-1 text-foreground">{item.title}</h3>
+                                <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {item.tags.map((tag) => (
+                                    <span
+                                      key={tag}
+                                      className="px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs"
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                                <p className="text-xs text-muted-foreground/70 mt-2">
+                                  {new Date(item.date).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
+                                </p>
+                              </CardContent>
+                            </Card>
+                            </HoverLift>
+                          </Reveal>
+                        ))
+                    ) : (
+                      <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex flex-col items-center justify-center p-12">
+                        <div className="bg-muted p-8 rounded-full mb-4">
+                          <Search className="h-10 w-10 text-muted-foreground" />
+                        </div>
+                        <h3 className="font-display text-xl font-bold text-foreground mb-2">No results found</h3>
+                        <p className="text-muted-foreground text-center mb-6">
+                          We couldn't find any gallery items for {getProgramLabel(program)} matching your search or
+                          filters.
+                        </p>
+                        <button
+                          onClick={() => {
+                            setSearchTerm("")
+                            setSelectedTags([])
+                          }}
+                          className="text-primary hover:underline"
+                        >
+                          Clear all filters
+                        </button>
                       </div>
-                      <h3 className="font-display text-xl font-bold text-foreground mb-2">No results found</h3>
-                      <p className="text-muted-foreground text-center mb-6">
-                        We couldn't find any gallery items for {getProgramLabel(program)} matching your search or
-                        filters.
-                      </p>
-                      <button
-                        onClick={() => {
-                          setSearchTerm("")
-                          setSelectedTags([])
-                        }}
-                        className="text-primary hover:underline"
+                    )}
+                  </div>
+
+                  {programItems.length > visibleCount && (
+                    <div className="flex justify-center mt-10">
+                      <Button
+                        onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
+                        variant="outline"
+                        size="lg"
+                        className="rounded-full px-8"
                       >
-                        Clear all filters
-                      </button>
+                        Load More Images ({programItems.length - visibleCount} remaining)
+                      </Button>
                     </div>
                   )}
-                </div>
-              </TabsContent>
-            ))}
+                </TabsContent>
+              )
+            })}
           </Tabs>
         </div>
       </section>

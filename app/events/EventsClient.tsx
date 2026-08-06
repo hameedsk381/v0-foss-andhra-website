@@ -106,11 +106,13 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
         </CardHeader>
         <CardContent className="pt-6">
           {isFeatured && event.imageUrl && (
-            <div className="mb-4">
-              <img
+            <div className="mb-4 relative h-48 w-full overflow-hidden rounded-lg">
+              <Image
                 src={event.imageUrl}
                 alt={event.title}
-                className="rounded-lg w-full h-48 object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
               />
             </div>
           )}

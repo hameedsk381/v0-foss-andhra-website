@@ -139,8 +139,8 @@ export function GlobalSearch() {
               )}
 
               {!loading && results && results.total === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  No results found for "{query}"
+                <div className="text-center py-12 text-muted-foreground">
+                  No results found for &quot;{query}&quot;
                 </div>
               )}
 

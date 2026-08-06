@@ -38,7 +38,7 @@ export default function TermsOfServicePageClient() {
           <motion.section variants={fadeIn} className="space-y-4">
             <h2 className="font-display text-2xl font-bold text-foreground">Introduction</h2>
             <p className="text-muted-foreground md:text-lg/relaxed">
-              These Terms of Service ("Terms") govern your access to and use of the FOSS Andhra website and services. By
+              These Terms of Service (&quot;Terms&quot;) govern your access to and use of the FOSS Andhra website and services. By
               accessing or using our website and services, you agree to be bound by these Terms and our Privacy Policy.
             </p>
             <p className="text-muted-foreground md:text-lg/relaxed">
@@ -53,14 +53,14 @@ export default function TermsOfServicePageClient() {
               Throughout these Terms, the following terms have the following meanings:
             </p>
             <ul className="list-disc list-inside text-muted-foreground md:text-lg/relaxed space-y-1 pl-4">
-              <li>"FOSS Andhra," "we," "us," and "our" refer to FOSS Andhra, its programs, and its services.</li>
-              <li>"You" and "your" refer to the individual or entity accessing or using our website and services.</li>
+              <li>&quot;FOSS Andhra,&quot; &quot;we,&quot; &quot;us,&quot; and &quot;our&quot; refer to FOSS Andhra, its programs, and its services.</li>
+              <li>&quot;You&quot; and &quot;your&quot; refer to the individual or entity accessing or using our website and services.</li>
               <li>
-                "Website" refers to the FOSS Andhra website, including all content, pages, and services available
+                &quot;Website&quot; refers to the FOSS Andhra website, including all content, pages, and services available
                 through the domain.
               </li>
-              <li>"Services" refers to all programs, initiatives, events, and activities offered by FOSS Andhra.</li>
-              <li>"Content" refers to all text, images, videos, audio, code, and other materials on our website.</li>
+              <li>&quot;Services&quot; refers to all programs, initiatives, events, and activities offered by FOSS Andhra.</li>
+              <li>&quot;Content&quot; refers to all text, images, videos, audio, code, and other materials on our website.</li>
             </ul>
           </motion.section>
 
@@ -71,7 +71,7 @@ export default function TermsOfServicePageClient() {
               website and services, you represent and warrant that you are at least 13 years old.
             </p>
             <p className="text-muted-foreground md:text-lg/relaxed">
-              If you are under 18 years old, you represent and warrant that you have your parent's or guardian's
+              If you are under 18 years old, you represent and warrant that you have your parent&apos;s or guardian&apos;s
               permission to access or use our website and services, and that your parent or guardian has read and agrees
               to these Terms on your behalf.
             </p>
@@ -123,7 +123,7 @@ export default function TermsOfServicePageClient() {
           <motion.section variants={fadeIn} className="space-y-4">
             <h2 className="font-display text-2xl font-bold text-foreground">User Content</h2>
             <p className="text-muted-foreground md:text-lg/relaxed">
-              You may be able to post, upload, publish, submit, or transmit content on our website ("User Content"). By
+              You may be able to post, upload, publish, submit, or transmit content on our website (&quot;User Content&quot;). By
               submitting User Content, you grant us a worldwide, irrevocable, perpetual, non-exclusive, transferable,
               royalty-free license to use, copy, modify, create derivative works based upon, distribute, publicly
               display, publicly perform, and otherwise exploit your User Content in connection with our website and
@@ -165,7 +165,7 @@ export default function TermsOfServicePageClient() {
           <motion.section variants={fadeIn} className="space-y-4">
             <h2 className="font-display text-2xl font-bold text-foreground">Disclaimer of Warranties</h2>
             <p className="text-muted-foreground md:text-lg/relaxed">
-              Our website and services are provided "as is" and "as available" without any warranties of any kind,
+              Our website and services are provided &quot;as is&quot; and &quot;as available&quot; without any warranties of any kind,
               either express or implied, including, but not limited to, the implied warranties of merchantability,
               fitness for a particular purpose, or non-infringement.
             </p>
@@ -196,7 +196,7 @@ export default function TermsOfServicePageClient() {
             <p className="text-muted-foreground md:text-lg/relaxed">
               You agree to indemnify, defend, and hold harmless FOSS Andhra, its directors, employees, partners, agents,
               suppliers, and affiliates, from and against any claims, liabilities, damages, judgments, awards, losses,
-              costs, expenses, or fees (including reasonable attorneys' fees) arising out of or relating to your
+              costs, expenses, or fees (including reasonable attorneys&apos; fees) arising out of or relating to your
               violation of these Terms or your use of our website and services.
             </p>
           </motion.section>

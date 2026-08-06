@@ -226,22 +226,22 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.98 }}
               >
-                <Link href="/programs/fosstar#membership">
-                  <motion.button
-                    whileHover={buttonHover} whileTap={buttonTap}
+                <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
+                  <Link
+                    href="/programs/fosstar#membership"
                     className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-primary bg-white hover:bg-white/90 shadow-xl transition-colors"
                   >
                     Join the Community <ArrowRight className="h-4 w-4" />
-                  </motion.button>
-                </Link>
-                <Link href="/events">
-                  <motion.button
-                    whileHover={buttonHover} whileTap={buttonTap}
+                  </Link>
+                </motion.div>
+                <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
+                  <Link
+                    href="/events"
                     className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white border border-white/30 hover:bg-white/10 transition-colors"
                   >
                     Upcoming Events
-                  </motion.button>
-                </Link>
+                  </Link>
+                </motion.div>
               </motion.div>
 
               {/* Stat pills */}
@@ -396,22 +396,22 @@ export default function Home() {
                   free and open to everyone.
                 </p>
                 <div className="flex gap-4 mt-8 flex-wrap">
-                  <Link href="/events">
-                    <motion.button
-                      whileHover={buttonHover} whileTap={buttonTap}
+                  <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
+                    <Link
+                      href="/events"
                       className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-primary bg-white hover:bg-white/90 shadow-lg transition-colors"
                     >
                       See all events <ArrowRight className="h-4 w-4" />
-                    </motion.button>
-                  </Link>
-                  <Link href="/contact">
-                    <motion.button
-                      whileHover={buttonHover} whileTap={buttonTap}
+                    </Link>
+                  </motion.div>
+                  <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
+                    <Link
+                      href="/contact"
                       className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white border border-white/25 hover:bg-white/10 transition-colors"
                     >
                       Invite us to your campus
-                    </motion.button>
-                  </Link>
+                    </Link>
+                  </motion.div>
                 </div>
               </motion.div>
 
@@ -606,22 +606,22 @@ export default function Home() {
                     Join 700+ members building the open technology layer for Andhra Pradesh&apos;s digital future.
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
-                    <Link href="/programs/fosstar#membership">
-                      <motion.button
-                        whileHover={buttonHover} whileTap={buttonTap}
+                    <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
+                      <Link
+                        href="/programs/fosstar#membership"
                         className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-primary bg-white hover:bg-white/90 shadow-lg transition-colors"
                       >
                         Become a Member
-                      </motion.button>
-                    </Link>
-                    <Link href="/contribute">
-                      <motion.button
-                        whileHover={buttonHover} whileTap={buttonTap}
+                      </Link>
+                    </motion.div>
+                    <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
+                      <Link
+                        href="/contribute"
                         className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white border border-white/25 hover:bg-white/10 transition-colors"
                       >
                         Contribute <ArrowRight className="h-4 w-4" />
-                      </motion.button>
-                    </Link>
+                      </Link>
+                    </motion.div>
                   </div>
                 </div>
               </div>

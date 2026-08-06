@@ -16,51 +16,57 @@ interface BlogPostPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const postRaw = await prisma.blogPost.findUnique({
-    where: { slug: params.slug },
-    include: {
-      BlogCategory: true,
-      Admin: {
-        select: { name: true },
+  try {
+    const postRaw = await prisma.blogPost.findUnique({
+      where: { slug: params.slug },
+      include: {
+        BlogCategory: true,
+        Admin: {
+          select: { name: true },
+        },
       },
-    },
-  })
+    })
 
-  // Map to expected structure
-  const post = postRaw
-    ? {
-      ...postRaw,
-      category: postRaw.BlogCategory,
-      author: postRaw.Admin,
-    }
-    : null
+    const post = postRaw
+      ? {
+        ...postRaw,
+        category: postRaw.BlogCategory,
+        author: postRaw.Admin,
+      }
+      : null
 
-  if (!post) {
-    return {
-      title: "Post Not Found",
+    if (!post) {
+      return { title: "Post Not Found" }
     }
+
+    return generateBlogPostMetadata(post)
+  } catch {
+    return { title: "Blog Post | FOSS Andhra" }
   }
-
-  return generateBlogPostMetadata(post)
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const postRaw = await prisma.blogPost.findUnique({
-    where: { slug: params.slug },
-    include: {
-      BlogCategory: true,
-      Admin: {
-        select: { id: true, name: true, email: true, avatar: true },
+  let postRaw = null
+  try {
+    postRaw = await prisma.blogPost.findUnique({
+      where: { slug: params.slug },
+      include: {
+        BlogCategory: true,
+        Admin: {
+          select: { id: true, name: true, email: true, avatar: true },
+        },
+        BlogPostTag: {
+          include: { BlogTag: true },
+        },
+        BlogComment: {
+          where: { status: "approved" },
+          orderBy: { createdAt: "desc" },
+        },
       },
-      BlogPostTag: {
-        include: { BlogTag: true },
-      },
-      BlogComment: {
-        where: { status: "approved" },
-        orderBy: { createdAt: "desc" },
-      },
-    },
-  })
+    })
+  } catch (error) {
+    console.error("Database connection error in blog page:", error)
+  }
 
   // Map to expected structure
   const post = postRaw
@@ -77,11 +83,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound()
   }
 
-  // Increment view count
-  await prisma.blogPost.update({
-    where: { id: post.id },
-    data: { views: { increment: 1 } },
-  })
+  // Increment view count (fire and forget safely)
+  try {
+    await prisma.blogPost.update({
+      where: { id: post.id },
+      data: { views: { increment: 1 } },
+    })
+  } catch {
+    // Ignore view count update errors during build/preview
+  }
 
   return (
     <div className="min-h-screen bg-[hsl(var(--surface-1))]">

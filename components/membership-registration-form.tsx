@@ -184,6 +184,7 @@ export function MembershipRegistrationForm() {
                     <Input
                       id="phone"
                       type="tel"
+                      inputMode="tel"
                       value={formData.phone}
                       onChange={(e) => handleInputChange("phone", e.target.value)}
                       placeholder="Enter your phone number"
@@ -374,11 +375,11 @@ export function MembershipRegistrationForm() {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900">What's Next?</h4>
+                  <h4 className="font-semibold text-gray-900">What&apos;s Next?</h4>
                   <ul className="text-left space-y-2 text-sm text-gray-600">
                     <li className="flex items-start">
                       <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>You'll receive a confirmation email with your membership details</span>
+                      <span>You&apos;ll receive a confirmation email with your membership details</span>
                     </li>
                     <li className="flex items-start">
                       <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />

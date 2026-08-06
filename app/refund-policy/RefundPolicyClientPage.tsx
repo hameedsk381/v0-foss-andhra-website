@@ -38,7 +38,7 @@ export default function RefundPolicyClientPage() {
           <motion.section variants={fadeIn} className="space-y-4">
             <h2 className="font-display text-2xl font-bold text-foreground">Introduction</h2>
             <p className="text-muted-foreground md:text-lg/relaxed">
-              This Refund Policy outlines the terms and conditions for refunds related to FOSS Andhra's programs,
+              This Refund Policy outlines the terms and conditions for refunds related to FOSS Andhra&apos;s programs,
               events, memberships, and other services. By making a payment to FOSS Andhra, you agree to be bound by this
               Refund Policy.
             </p>

@@ -25,7 +25,7 @@ export default function NotFound() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-4xl font-bold tracking-tighter sm:text-5xl text-gray-900"
+              className="text-4xl font-bold tracking-tighter sm:text-5xl text-foreground"
             >
               404 - Page Not Found
             </motion.h1>
@@ -34,9 +34,9 @@ export default function NotFound() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="mx-auto max-w-[600px] text-gray-500 md:text-xl"
+              className="mx-auto max-w-[600px] text-muted-foreground md:text-xl"
             >
-              The page you're looking for doesn't exist or has been moved.
+              The page you&apos;re looking for doesn&apos;t exist or has been moved.
             </motion.p>
 
             <motion.div
@@ -44,9 +44,9 @@ export default function NotFound() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <Link href="/">
-                <Button className="bg-primary text-white hover:bg-primary/90">Return to Home</Button>
-              </Link>
+              <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Link href="/">Return to Home</Link>
+              </Button>
             </motion.div>
           </div>
         </div>

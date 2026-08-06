@@ -16,16 +16,13 @@ const navItems = [
 export function BottomNav() {
   const pathname = usePathname()
 
-  // Only show on mobile and for public pages
-  const isPublicPage = !pathname.startsWith("/admin")
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768
-
-  if (!isPublicPage || !isMobile) {
+  // Don't show on admin pages
+  if (pathname.startsWith("/admin")) {
     return null
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 z-50 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-md border-t border-border z-40 md:hidden pb-[env(safe-area-inset-bottom)]">
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon
@@ -39,8 +36,8 @@ export function BottomNav() {
               className={cn(
                 "flex flex-col items-center justify-center flex-1 h-full transition-colors",
                 isActive
-                  ? "text-primary"
-                  : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                  ? "text-primary font-medium"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               <Icon className="h-5 w-5 mb-1" />
