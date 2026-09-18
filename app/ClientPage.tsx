@@ -152,6 +152,8 @@ export default function Home() {
           />
           {/* Bottom fade so ticker connects cleanly */}
           <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-primary to-transparent" />
+          <div className="absolute -right-28 top-20 hidden h-72 w-72 rounded-full border border-[var(--lime)]/35 lg:block" aria-hidden="true" />
+          <div className="absolute -right-16 top-32 hidden h-48 w-48 rounded-full border border-white/20 lg:block" aria-hidden="true" />
 
           {/* Content */}
           <motion.div
@@ -229,7 +231,7 @@ export default function Home() {
                 <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
                   <Link
                     href="/programs/fosstar#membership"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-primary bg-white hover:bg-white/90 shadow-xl transition-colors"
+                    className="cta-primary bg-[var(--lime)] text-[var(--ink)]"
                   >
                     Join the Community <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -237,7 +239,7 @@ export default function Home() {
                 <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
                   <Link
                     href="/events"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white border border-white/30 hover:bg-white/10 transition-colors"
+                    className="cta-secondary border-white/35 text-white hover:bg-white hover:text-[var(--ink)]"
                   >
                     Upcoming Events
                   </Link>
@@ -399,7 +401,7 @@ export default function Home() {
                   <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
                     <Link
                       href="/events"
-                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-primary bg-white hover:bg-white/90 shadow-lg transition-colors"
+                      className="cta-primary bg-[var(--lime)] text-[var(--ink)]"
                     >
                       See all events <ArrowRight className="h-4 w-4" />
                     </Link>
@@ -407,7 +409,7 @@ export default function Home() {
                   <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
                     <Link
                       href="/contact"
-                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white border border-white/25 hover:bg-white/10 transition-colors"
+                      className="cta-secondary border-white/25 text-white hover:bg-white hover:text-[var(--ink)]"
                     >
                       Invite us to your campus
                     </Link>
@@ -609,7 +611,7 @@ export default function Home() {
                     <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
                       <Link
                         href="/programs/fosstar#membership"
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-primary bg-white hover:bg-white/90 shadow-lg transition-colors"
+                        className="cta-primary bg-[var(--lime)] text-[var(--ink)]"
                       >
                         Become a Member
                       </Link>
@@ -617,7 +619,7 @@ export default function Home() {
                     <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
                       <Link
                         href="/contribute"
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white border border-white/25 hover:bg-white/10 transition-colors"
+                        className="cta-secondary border-white/25 text-white hover:bg-white hover:text-[var(--ink)]"
                       >
                         Contribute <ArrowRight className="h-4 w-4" />
                       </Link>

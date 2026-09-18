@@ -29,10 +29,11 @@ export function PageHero({
   const from = (p: object) => (reduced ? {} : p)
 
   return (
-    <section className={`relative w-full ${minHeight} flex items-center overflow-hidden`}>
+    <section className={`relative w-full ${minHeight} flex items-center overflow-hidden bg-[var(--ink)]`}>
       <div className="absolute inset-0">
         <Image src={image} alt={`${title} — ${eyebrow}`} fill priority className="object-cover object-center" />
       </div>
+      <div className="absolute inset-0 maximalist-grid opacity-20" aria-hidden="true" />
       <div
         className="absolute inset-0"
         style={{
@@ -49,13 +50,13 @@ export function PageHero({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="inline-block w-8 h-[2px] bg-white/60 rounded-full" />
-            <span className="text-sm font-semibold text-white/70 tracking-widest uppercase">
+            <span className="inline-block h-[3px] w-8 rounded-full bg-[var(--lime)]" />
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-white/70">
               {eyebrow}
             </span>
           </motion.div>
 
-          <h1 className="font-display text-[clamp(2.4rem,5vw,4rem)] font-extrabold leading-[0.98] tracking-tight text-white text-balance">
+          <h1 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black leading-[0.92] tracking-[-0.055em] text-white text-balance">
             <motion.span
               className="block"
               initial={from({ opacity: 0, y: 28, filter: "blur(12px)" })}
@@ -66,7 +67,7 @@ export function PageHero({
             </motion.span>
             {titleLine2 && (
               <motion.span
-                className="block text-white/85"
+                className="block text-[var(--lime)]"
                 initial={from({ opacity: 0, y: 28, filter: "blur(12px)" })}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.75, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
@@ -78,7 +79,7 @@ export function PageHero({
 
           {subtitle && (
             <motion.p
-              className="mt-6 text-lg md:text-xl text-white/65 leading-relaxed max-w-lg"
+              className="mt-7 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg md:text-xl"
               initial={from({ opacity: 0, y: 16 })}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.62 }}

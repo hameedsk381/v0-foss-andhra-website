@@ -21,7 +21,7 @@ export default function ProgramsClient() {
         <div className="flex flex-col min-h-screen">
 
             {/* ══ HERO — full-bleed photo ══════════════════════ */}
-            <section className="relative w-full min-h-[62vh] flex items-center overflow-hidden">
+            <section className="relative w-full min-h-[62vh] flex items-center overflow-hidden bg-[var(--ink)]">
                 <div className="absolute inset-0">
                     <Image
                         src="/gallery/fosstar-summit.jpg"
@@ -31,6 +31,7 @@ export default function ProgramsClient() {
                         className="object-cover object-center"
                     />
                 </div>
+                <div className="absolute inset-0 maximalist-grid opacity-20" aria-hidden="true" />
                 <div
                     className="absolute inset-0"
                     style={{
@@ -47,13 +48,13 @@ export default function ProgramsClient() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                         >
-                            <span className="inline-block w-8 h-[2px] bg-white/60 rounded-full" />
-                            <span className="text-sm font-semibold text-white/70 tracking-widest uppercase">
+                            <span className="inline-block h-[3px] w-8 rounded-full bg-[var(--lime)]" />
+                            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-white/70">
                                 What we do
                             </span>
                         </motion.div>
 
-                        <h1 className="font-display text-[clamp(2.6rem,5.5vw,4.5rem)] font-extrabold leading-[0.95] tracking-tight text-white text-balance">
+                        <h1 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black leading-[0.92] tracking-[-0.055em] text-white text-balance">
                             <motion.span
                                 className="block"
                                 initial={reduced ? {} : { opacity: 0, y: 28, filter: "blur(12px)" }}
@@ -63,7 +64,7 @@ export default function ProgramsClient() {
                                 Seven programmes.
                             </motion.span>
                             <motion.span
-                                className="block text-white/85"
+                                className="block text-[var(--lime)]"
                                 initial={reduced ? {} : { opacity: 0, y: 28, filter: "blur(12px)" }}
                                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                                 transition={{ duration: 0.75, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
@@ -81,6 +82,19 @@ export default function ProgramsClient() {
                             From a student&apos;s first Linux install to statewide open source policy —
                             each programme covers one stage of AP&apos;s open source pipeline.
                         </motion.p>
+                        <motion.div
+                            className="mt-8 flex flex-wrap gap-3"
+                            initial={reduced ? {} : { opacity: 0, y: 14 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.55, delay: 0.82 }}
+                        >
+                            <Link href="/membership" className="cta-primary">
+                                Find your programme <ArrowRight className="h-4 w-4" />
+                            </Link>
+                            <Link href="/events" className="cta-secondary border-white/35 text-white hover:bg-white hover:text-[var(--ink)]">
+                                Meet the community
+                            </Link>
+                        </motion.div>
                     </div>
                 </div>
 

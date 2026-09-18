@@ -3,6 +3,7 @@
 import type React from "react"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { CheckCircle, Users, Star, BookOpen, Rocket } from "lucide-react"
+import { CheckCircle, Users, Star, BookOpen, Rocket, ArrowUpRight } from "lucide-react"
 import { PricingSection, type PricingTier } from "@/components/ui/pricing-section"
 
 const membershipTiers: PricingTier[] = [
@@ -112,15 +113,26 @@ export default function MembershipPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="relative overflow-hidden bg-background px-4 py-10 sm:py-14">
+      <div className="pointer-events-none absolute -right-24 top-10 hidden h-72 w-72 rounded-full border border-primary/15 lg:block" aria-hidden="true" />
+      <div className="pointer-events-none absolute -right-10 top-24 hidden h-44 w-44 rounded-full border border-[var(--coral)]/25 lg:block" aria-hidden="true" />
       <div className="max-w-4xl mx-auto">
         <>
-            <h1 className="text-4xl font-bold mb-2">FOSStar Membership Program</h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="eyebrow mb-5">Belong to the open future</p>
+            <h1 className="max-w-3xl font-display text-5xl font-black leading-[0.94] tracking-[-0.055em] text-foreground sm:text-6xl">FOSStar Membership Program</h1>
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
               Join our community of open source enthusiasts and help us promote free and open source solutions.
             </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/register?type=professional" className="cta-primary">
+                Choose your membership <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <Link href="/events" className="cta-secondary text-primary">
+                Meet the community
+              </Link>
+            </div>
 
-            <Tabs defaultValue="benefits" className="mb-12">
+            <Tabs id="membership-options" defaultValue="benefits" className="mb-12 mt-14">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="benefits">Membership Benefits</TabsTrigger>
                 <TabsTrigger value="types">Membership Types</TabsTrigger>

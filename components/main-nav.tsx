@@ -18,7 +18,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, X, BookOpen, User, LogOut, LayoutDashboard, ChevronRight } from "lucide-react"
+import { Menu, X, BookOpen, User, LogOut, LayoutDashboard, ChevronRight, ArrowUpRight } from "lucide-react"
 import { useSession, signOut } from "next-auth/react"
 import {
   DropdownMenu,
@@ -197,12 +197,12 @@ export function MainNav() {
             </DropdownMenu>
           ) : (
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link href="/login">
+              <Link href="/membership">
                 <Button
                   size="sm"
-                  className="bg-primary hover:bg-primary/90 text-white px-5 rounded-xl font-semibold shadow-sm shadow-primary/20"
+                  className="bg-[var(--lime)] text-[var(--ink)] hover:bg-[#d7fb85] px-5 rounded-full font-extrabold shadow-sm shadow-lime-200"
                 >
-                  Join Us
+                  Join the movement <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
                 </Button>
               </Link>
             </motion.div>
@@ -338,9 +338,9 @@ export function MainNav() {
                     </Button>
                   </>
                 ) : (
-                  <Link href="/login" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full rounded-xl bg-primary hover:bg-primary/90 font-semibold">
-                      Join Us / Login
+                  <Link href="/membership" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full rounded-full bg-[var(--lime)] text-[var(--ink)] hover:bg-[#d7fb85] font-extrabold">
+                      Join the movement <ArrowUpRight className="ml-1 h-4 w-4" />
                     </Button>
                   </Link>
                 )}

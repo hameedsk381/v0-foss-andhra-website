@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { PROGRAMS } from "@/lib/programs"
-import { Mail, Phone, MapPin } from "lucide-react"
+import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react"
 
 const footerLinks = {
   about: [
@@ -65,7 +65,26 @@ const socialLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-card text-card-foreground border-t border-border">
+    <footer className="bg-[var(--ink)] text-white border-t border-white/10">
+      <div className="app-container pt-8">
+        <div className="relative overflow-hidden rounded-[2rem] bg-primary px-6 py-8 shadow-2xl shadow-black/20 sm:px-10 sm:py-10">
+          <div className="absolute inset-0 maximalist-grid opacity-20" aria-hidden="true" />
+          <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-xl">
+              <p className="eyebrow text-[var(--lime)] before:bg-[var(--lime)]">Your next contribution</p>
+              <h2 className="mt-3 max-w-lg font-display text-3xl font-black leading-tight text-white sm:text-4xl">
+                Put open technology to work.
+              </h2>
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
+                Join the people building a more capable, inclusive, and self-reliant Andhra Pradesh.
+              </p>
+            </div>
+            <Link href="/membership" className="cta-primary shrink-0">
+              Become a member <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
       {/* Main footer grid */}
       <div className="app-container py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
