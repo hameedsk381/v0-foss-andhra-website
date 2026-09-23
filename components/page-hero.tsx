@@ -13,94 +13,45 @@ interface PageHeroProps {
   children?: React.ReactNode
 }
 
-// Full-bleed photo hero used across marketing pages — directional blue
-// gradient (opaque left where text sits, photo visible on the right),
-// two-line blur-reveal headline, bottom fade into the page background.
-export function PageHero({
-  eyebrow,
-  title,
-  titleLine2,
-  subtitle,
-  image,
-  minHeight = "min-h-[52vh]",
-  children,
-}: PageHeroProps) {
+// Flat, two-column hero used across marketing pages — plain surface
+// background, left-aligned copy, a bordered photo card on the right.
+export function PageHero({ eyebrow, title, titleLine2, subtitle, image, children }: PageHeroProps) {
   const reduced = useReducedMotion()
   const from = (p: object) => (reduced ? {} : p)
 
   return (
-    <section className={`relative w-full ${minHeight} flex items-center overflow-hidden bg-[var(--ink)]`}>
-      <div className="absolute inset-0">
-        <Image src={image} alt={`${title} — ${eyebrow}`} fill priority className="object-cover object-center" />
-      </div>
-      <div className="absolute inset-0 maximalist-grid opacity-20" aria-hidden="true" />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(100deg, rgba(0,40,100,0.96) 0%, rgba(0,70,150,0.88) 40%, rgba(0,92,168,0.55) 70%, rgba(0,92,168,0.25) 100%)",
-        }}
-      />
+    <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+      <div className="app-container grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
+        <motion.div
+          initial={from({ opacity: 0, y: 16 })}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <p className="eyebrow mb-4">{eyebrow}</p>
 
-      <div className="app-container relative z-10 py-20 w-full">
-        <div className="max-w-2xl">
-          <motion.div
-            className="flex items-center gap-3 mb-7"
-            initial={from({ opacity: 0, x: -18 })}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="inline-block h-[3px] w-8 rounded-full bg-[var(--lime)]" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-white/70">
-              {eyebrow}
-            </span>
-          </motion.div>
-
-          <h1 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black leading-[0.92] tracking-[-0.055em] text-white text-balance">
-            <motion.span
-              className="block"
-              initial={from({ opacity: 0, y: 28, filter: "blur(12px)" })}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {title}
-            </motion.span>
-            {titleLine2 && (
-              <motion.span
-                className="block text-[var(--lime)]"
-                initial={from({ opacity: 0, y: 28, filter: "blur(12px)" })}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.75, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {titleLine2}
-              </motion.span>
-            )}
+          <h1 className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
+            {title}
+            {titleLine2 && <span className="block text-primary">{titleLine2}</span>}
           </h1>
 
           {subtitle && (
-            <motion.p
-              className="mt-7 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg md:text-xl"
-              initial={from({ opacity: 0, y: 16 })}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.62 }}
-            >
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
               {subtitle}
-            </motion.p>
+            </p>
           )}
 
-          {children && (
-            <motion.div
-              initial={from({ opacity: 0, y: 14 })}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.75 }}
-            >
-              {children}
-            </motion.div>
-          )}
-        </div>
+          {children && <div className="mt-6">{children}</div>}
+        </motion.div>
+
+        <motion.div
+          className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border"
+          initial={from({ opacity: 0, y: 16 })}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image src={image} alt={`${title} — ${eyebrow}`} fill priority className="object-cover object-center" />
+        </motion.div>
       </div>
-
-      <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-background to-transparent" />
     </section>
   )
 }

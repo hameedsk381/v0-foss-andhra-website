@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { EventCountdownCard } from "@/components/ui/event-countdown-card"
-import { CalendarDays, MapPin, Clock, Users, Ticket } from "lucide-react"
+import { CalendarDays, MapPin, Clock, Users, Ticket, ArrowRight } from "lucide-react"
 
 interface Event {
   id: string
@@ -192,82 +192,34 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
   return (
     <div className="flex flex-col min-h-screen">
 
-      {/* ══ HERO — full-bleed photo + live countdown ══════ */}
-      <section className="relative w-full min-h-[62vh] flex items-center overflow-hidden bg-[var(--ink)]">
-        <div className="absolute inset-0">
-          <Image
-            src="/stock/speaker.jpg"
-            alt="FOSS Andhra events"
-            fill
-            priority
-            className="object-cover object-center"
-          />
-        </div>
-        <div className="absolute inset-0 maximalist-grid opacity-20" aria-hidden="true" />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(100deg, rgba(0,40,100,0.96) 0%, rgba(0,70,150,0.9) 45%, rgba(0,92,168,0.6) 75%, rgba(0,92,168,0.35) 100%)",
-          }}
-        />
+      {/* ══ HERO — flat, two-column ═══════════════════════ */}
+      <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+        <div className="app-container">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+            <motion.div
+              className="flex-1 min-w-0"
+              initial={reduced ? {} : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <p className="eyebrow mb-4">Workshops · Hackathons · Meetups</p>
 
-        <div className="app-container relative z-10 py-20 w-full">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-            <div className="flex-1 min-w-0">
-              <motion.div
-                className="flex items-center gap-3 mb-7"
-                initial={reduced ? {} : { opacity: 0, x: -18 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <span className="inline-block h-[3px] w-8 rounded-full bg-[var(--lime)]" />
-                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-white/70">
-                  Workshops · Hackathons · Meetups
-                </span>
-              </motion.div>
-
-              <h1 className="font-display text-[clamp(2.7rem,6vw,5.5rem)] font-black leading-[0.92] tracking-[-0.055em] text-white text-balance">
-                <motion.span
-                  className="block"
-                  initial={reduced ? {} : { opacity: 0, y: 28, filter: "blur(12px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  Come build
-                </motion.span>
-                <motion.span
-                  className="block text-[var(--lime)]"
-                  initial={reduced ? {} : { opacity: 0, y: 28, filter: "blur(12px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.75, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  with us, in person.
-                </motion.span>
+              <h1 className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
+                Come build <span className="text-primary">with us, in person.</span>
               </h1>
 
-              <motion.p
-                className="mt-7 text-lg md:text-xl text-white/65 leading-relaxed max-w-lg"
-                initial={reduced ? {} : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.66 }}
-              >
+              <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed max-w-lg">
                 Free and open to everyone — across 9 campuses and counting.
-              </motion.p>
-              <motion.div
-                className="mt-8 flex flex-wrap gap-3"
-                initial={reduced ? {} : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.82 }}
-              >
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/membership" className="cta-primary">
                   Join the community <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/contact" className="cta-secondary border-white/35 text-white hover:bg-white hover:text-[var(--ink)]">
+                <Link href="/contact" className="cta-secondary">
                   Host an event
                 </Link>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
 
             {nextEvent && (
               <div className="w-full max-w-sm shrink-0">
@@ -282,8 +234,6 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
             )}
           </div>
         </div>
-
-        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* ══ EVENT LIST ════════════════════════════════════ */}
@@ -322,7 +272,7 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
           </TabsContent>
         </Tabs>
 
-        <div className="bg-[hsl(var(--surface-2))] border border-border p-8 rounded-2xl my-12">
+        <div className="bg-muted/40 border border-border p-8 rounded-lg my-12">
           <h3 className="font-display text-2xl font-bold text-foreground mb-4">Host Your Own FOSS Event</h3>
           <p className="mb-6 text-muted-foreground">
             Are you interested in hosting a FOSS event at your institution or organization? FOSS Andhra provides

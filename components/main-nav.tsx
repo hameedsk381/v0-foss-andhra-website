@@ -4,9 +4,8 @@ import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { PROGRAMS, PROGRAM_HOVER_BG_CLASS, PROGRAM_TEXT_CLASS } from "@/lib/programs"
+import { PROGRAMS_BY_ID, PILLARS, PROGRAM_HOVER_BG_CLASS, PROGRAM_TEXT_CLASS } from "@/lib/programs"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -30,12 +29,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-const programs = PROGRAMS.map((program) => ({
-  ...program,
-  title: program.displayName,
-  href: `/programs/${program.slug}`,
-}))
-
 const navItems = [
   { title: "Home", href: "/" },
   { title: "About", href: "/about" },
@@ -58,25 +51,18 @@ export function MainNav() {
         href="/"
         className="flex items-center gap-2 rounded-lg py-1 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="relative h-10 w-auto"
-        >
-          <Image
-            src="/logos/foss-andhra-logo.png"
-            alt="FOSS Andhra Logo"
-            width={180}
-            height={40}
-            className="h-10 w-auto"
-            priority
-          />
-        </motion.div>
+        <Image
+          src="/logos/foss-andhra-logo.png"
+          alt="FOSS Andhra Logo"
+          width={180}
+          height={40}
+          className="h-10 w-auto"
+          priority
+        />
       </Link>
 
       {/* Desktop Navigation */}
-      <div className="hidden items-center md:flex">
+      <div className="hidden items-center lg:flex">
         <NavigationMenu className="nav-layer">
           <NavigationMenuList className="gap-0.5">
             {navItems.map((item, index) => {
@@ -94,39 +80,42 @@ export function MainNav() {
                       {item.title}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent className="nav-content-layer">
-                      <ul className="grid w-[440px] gap-2 p-4 md:w-[540px] md:grid-cols-2 lg:w-[640px]">
-                        {programs.map((program) => (
-                          <li key={program.id}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                href={program.href}
-                                className={cn(
-                                  "group flex select-none items-start gap-3 rounded-xl border border-transparent p-3 no-underline outline-none transition-all hover:bg-muted hover:border-border focus:bg-muted",
-                                  PROGRAM_HOVER_BG_CLASS[program.id],
-                                )}
-                              >
-                                <div className="h-7 w-auto flex-shrink-0 flex items-center">
-                                  <Image
-                                    src={program.logo || "/placeholder.svg"}
-                                    alt={`${program.title} Logo`}
-                                    width={100}
-                                    height={28}
-                                    className="h-7 w-auto object-contain"
-                                  />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-sm font-semibold text-foreground leading-none mb-1">
-                                    {program.title}
-                                  </div>
-                                  <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                                    {program.description}
-                                  </p>
-                                </div>
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
+                      <div className="grid w-[520px] grid-cols-2 gap-x-6 gap-y-5 p-5 lg:w-[640px]">
+                        {PILLARS.map((pillar) => (
+                          <div key={pillar.id}>
+                            <p className="text-[11px] font-bold uppercase tracking-widest text-primary mb-2">
+                              {pillar.label}
+                            </p>
+                            <ul className="space-y-1">
+                              {pillar.programs.map((programId) => {
+                                const program = PROGRAMS_BY_ID[programId]
+                                return (
+                                  <li key={program.id}>
+                                    <NavigationMenuLink asChild>
+                                      <Link
+                                        href={`/programs/${program.slug}`}
+                                        className={cn(
+                                          "group flex select-none items-center gap-2.5 rounded-lg border border-transparent p-2 no-underline outline-none transition-all hover:bg-muted hover:border-border focus:bg-muted",
+                                          PROGRAM_HOVER_BG_CLASS[program.id],
+                                        )}
+                                      >
+                                        <Image
+                                          src={program.logo || "/placeholder.svg"}
+                                          alt={`${program.displayName} Logo`}
+                                          width={90}
+                                          height={24}
+                                          className="h-6 w-auto object-contain flex-shrink-0"
+                                        />
+                                        <span className="text-sm font-medium text-foreground">{program.displayName}</span>
+                                      </Link>
+                                    </NavigationMenuLink>
+                                  </li>
+                                )
+                              })}
+                            </ul>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                 )
@@ -168,7 +157,7 @@ export function MainNav() {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="dropdown-layer w-56 rounded-2xl shadow-[var(--shadow-lg)]" align="end" forceMount>
+              <DropdownMenuContent className="dropdown-layer w-56 rounded-xl" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal px-3 py-2.5">
                   <div className="flex flex-col space-y-0.5">
                     <p className="text-sm font-semibold leading-none">{session.user?.name}</p>
@@ -196,22 +185,17 @@ export function MainNav() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link href="/membership">
-                <Button
-                  size="sm"
-                  className="bg-[var(--lime)] text-[var(--ink)] hover:bg-[#d7fb85] px-5 rounded-full font-extrabold shadow-sm shadow-lime-200"
-                >
-                  Join the movement <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
-                </Button>
-              </Link>
-            </motion.div>
+            <Link href="/membership">
+              <Button size="sm" className="px-5">
+                Join the movement <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
+              </Button>
+            </Link>
           )}
         </div>
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl">
@@ -240,27 +224,28 @@ export function MainNav() {
 
               {/* Nav links */}
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
-                <AnimatePresence>
-                  {navItems.map((item, index) => {
-                    if (item.hasChildren) {
-                      return (
-                        <div key={index} className="space-y-1">
-                          <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                            Programs
-                          </div>
-                          <div className="space-y-0.5 pl-2 border-l-2 border-muted ml-2">
-                            {programs.map((program, pi) => (
-                              <motion.div
-                                key={program.id}
-                                initial={{ opacity: 0, x: -8 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: pi * 0.04 }}
-                              >
+                {navItems.map((item, index) => {
+                  if (item.hasChildren) {
+                    return (
+                      <div key={index} className="space-y-3">
+                        <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          Programs
+                        </div>
+                        {PILLARS.map((pillar) => (
+                          <div key={pillar.id} className="pl-2 border-l-2 border-muted ml-2 space-y-0.5">
+                            <p className="px-3 text-[11px] font-bold uppercase tracking-widest text-primary">
+                              {pillar.label}
+                            </p>
+                            {pillar.programs.map((programId) => {
+                              const program = PROGRAMS_BY_ID[programId]
+                              const href = `/programs/${program.slug}`
+                              return (
                                 <Link
-                                  href={program.href}
+                                  key={program.id}
+                                  href={href}
                                   className={cn(
                                     "flex items-center gap-2.5 rounded-lg px-3 py-2.5 transition-colors",
-                                    pathname === program.href
+                                    pathname === href
                                       ? cn(PROGRAM_TEXT_CLASS[program.id], "bg-muted font-medium")
                                       : "text-foreground/75 hover:text-foreground hover:bg-muted",
                                   )}
@@ -268,44 +253,38 @@ export function MainNav() {
                                 >
                                   <Image
                                     src={program.logo || "/placeholder.svg"}
-                                    alt={`${program.title} Logo`}
+                                    alt={`${program.displayName} Logo`}
                                     width={80}
                                     height={24}
                                     className="h-5 w-auto object-contain"
                                   />
-                                  <span className="text-sm font-medium">{program.title}</span>
+                                  <span className="text-sm font-medium">{program.displayName}</span>
                                 </Link>
-                              </motion.div>
-                            ))}
+                              )
+                            })}
                           </div>
-                        </div>
-                      )
-                    }
-
-                    return (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.04 }}
-                      >
-                        <Link
-                          href={item.href}
-                          className={cn(
-                            "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                            pathname === item.href
-                              ? "text-primary bg-primary/8"
-                              : "text-foreground/75 hover:text-foreground hover:bg-muted",
-                          )}
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.title}
-                          {pathname === item.href && <ChevronRight className="h-3.5 w-3.5" />}
-                        </Link>
-                      </motion.div>
+                        ))}
+                      </div>
                     )
-                  })}
-                </AnimatePresence>
+                  }
+
+                  return (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      className={cn(
+                        "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                        pathname === item.href
+                          ? "text-primary bg-primary/8"
+                          : "text-foreground/75 hover:text-foreground hover:bg-muted",
+                      )}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.title}
+                      {pathname === item.href && <ChevronRight className="h-3.5 w-3.5" />}
+                    </Link>
+                  )
+                })}
               </div>
 
               {/* Mobile footer */}
@@ -339,7 +318,7 @@ export function MainNav() {
                   </>
                 ) : (
                   <Link href="/membership" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full rounded-full bg-[var(--lime)] text-[var(--ink)] hover:bg-[#d7fb85] font-extrabold">
+                    <Button className="w-full">
                       Join the movement <ArrowUpRight className="ml-1 h-4 w-4" />
                     </Button>
                   </Link>

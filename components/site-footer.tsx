@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { PROGRAMS } from "@/lib/programs"
+import { PROGRAMS_BY_ID, PILLARS } from "@/lib/programs"
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react"
 
 const footerLinks = {
@@ -65,24 +65,24 @@ const socialLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-[var(--ink)] text-white border-t border-white/10">
+    <footer className="bg-[#071426] text-white border-t border-white/10">
       <div className="app-container pt-8">
-        <div className="relative overflow-hidden rounded-[2rem] bg-primary px-6 py-8 shadow-2xl shadow-black/20 sm:px-10 sm:py-10">
-          <div className="absolute inset-0 maximalist-grid opacity-20" aria-hidden="true" />
-          <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="max-w-xl">
-              <p className="eyebrow text-[var(--lime)] before:bg-[var(--lime)]">Your next contribution</p>
-              <h2 className="mt-3 max-w-lg font-display text-3xl font-black leading-tight text-white sm:text-4xl">
-                Put open technology to work.
-              </h2>
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
-                Join the people building a more capable, inclusive, and self-reliant Andhra Pradesh.
-              </p>
-            </div>
-            <Link href="/membership" className="cta-primary shrink-0">
-              Become a member <ArrowUpRight className="h-4 w-4" />
-            </Link>
+        <div className="flex flex-col gap-6 rounded-lg border border-white/10 bg-white/[0.03] px-6 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-10">
+          <div className="max-w-xl">
+            <p className="eyebrow text-white before:bg-white">Your next contribution</p>
+            <h2 className="mt-3 max-w-lg font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
+              Put open technology to work.
+            </h2>
+            <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
+              Join the people building a more capable, inclusive, and self-reliant Andhra Pradesh.
+            </p>
           </div>
+          <Link
+            href="/membership"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#071426] transition-colors hover:bg-white/90"
+          >
+            Become a member <ArrowUpRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
       {/* Main footer grid */}
@@ -138,24 +138,27 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {/* Programs */}
+          {/* Programs — grouped by ecosystem pillar */}
           <div className="space-y-4">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-white/40">Programs</h3>
-            <ul className="space-y-2.5">
-              {PROGRAMS.map((program) => (
-                <li key={program.id}>
-                  <Link
-                    href={`/programs/${program.slug}`}
-                    className="group flex items-center gap-2 text-sm text-white/50 hover:text-white/90 transition-colors"
-                  >
-                    <Image
-                      src={program.logo}
-                      alt={`${program.displayName} Logo`}
-                      width={80}
-                      height={20}
-                      className="h-4 w-auto brightness-200 opacity-60 group-hover:opacity-90 transition-opacity"
-                    />
-                  </Link>
+            <ul className="space-y-3">
+              {PILLARS.map((pillar) => (
+                <li key={pillar.id}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">{pillar.label}</p>
+                  <div className="flex flex-col gap-1">
+                    {pillar.programs.map((programId) => {
+                      const program = PROGRAMS_BY_ID[programId]
+                      return (
+                        <Link
+                          key={program.id}
+                          href={`/programs/${program.slug}`}
+                          className="text-sm text-white/50 hover:text-white/90 transition-colors"
+                        >
+                          {program.displayName}
+                        </Link>
+                      )
+                    })}
+                  </div>
                 </li>
               ))}
             </ul>

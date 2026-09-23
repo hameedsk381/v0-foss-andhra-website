@@ -110,6 +110,58 @@ export const PROGRAM_HOVER_BG_CLASS: Record<ProgramId, string> = {
   fosspeaks: "hover:bg-fosspeaks/10",
 }
 
+export type PillarId = "community" | "learn" | "build" | "adopt" | "sustain" | "commons"
+
+export interface PillarDefinition {
+  id: PillarId
+  label: string
+  tagline: string
+  programs: ProgramId[]
+}
+
+// The 7 programmes above are FOSS Andhra's implementation surface; these
+// pillars are the ecosystem-level grouping used in nav/programs/footer.
+// FOSStar (membership/community) doesn't fit LEARN/BUILD/ADOPT/SUSTAIN/COMMONS —
+// it's the cross-cutting membership base, so it gets its own "Community" group.
+export const PILLARS: PillarDefinition[] = [
+  {
+    id: "community",
+    label: "Community",
+    tagline: "The membership base connecting everyone in the ecosystem.",
+    programs: ["fosstar"],
+  },
+  {
+    id: "learn",
+    label: "Learn",
+    tagline: "Students, educators, and communities building FOSS skills.",
+    programs: ["fossync", "fosspeaks"],
+  },
+  {
+    id: "build",
+    label: "Build",
+    tagline: "Open-source projects, Telugu technology, and civic tech.",
+    programs: ["fosstorm"],
+  },
+  {
+    id: "adopt",
+    label: "Adopt",
+    tagline: "Helping schools, colleges, and government replace proprietary software.",
+    programs: ["fosserve"],
+  },
+  {
+    id: "sustain",
+    label: "Sustain",
+    tagline: "Funding and mentorship for open-source founders.",
+    programs: ["fosstart"],
+  },
+  {
+    id: "commons",
+    label: "Commons",
+    tagline: "Open datasets, archives, and Telugu-language resources.",
+    programs: ["fossterage"],
+  },
+]
+
 export const PROGRAM_PHOTOS: Record<ProgramId, string> = {
   fosstar: "/stock/panel.jpg",
   fosserve: "/gallery/fosserve-launch.jpg",

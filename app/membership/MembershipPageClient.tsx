@@ -113,30 +113,41 @@ export default function MembershipPage() {
   }
 
   return (
-    <div className="relative overflow-hidden bg-background px-4 py-10 sm:py-14">
-      <div className="pointer-events-none absolute -right-24 top-10 hidden h-72 w-72 rounded-full border border-primary/15 lg:block" aria-hidden="true" />
-      <div className="pointer-events-none absolute -right-10 top-24 hidden h-44 w-44 rounded-full border border-[var(--coral)]/25 lg:block" aria-hidden="true" />
+    <div className="bg-background">
+      <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+        <div className="app-container max-w-3xl">
+          <p className="eyebrow mb-4">Belong to the open future</p>
+          <h1 className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
+            FOSStar Membership Program
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Join our community of open source enthusiasts and help us promote free and open source solutions.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/register?type=professional" className="cta-primary">
+              Choose your membership <ArrowUpRight className="h-4 w-4" />
+            </Link>
+            <Link href="/events" className="cta-secondary">
+              Meet the community
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <div className="px-4 py-10 sm:py-14">
       <div className="max-w-4xl mx-auto">
         <>
-            <p className="eyebrow mb-5">Belong to the open future</p>
-            <h1 className="max-w-3xl font-display text-5xl font-black leading-[0.94] tracking-[-0.055em] text-foreground sm:text-6xl">FOSStar Membership Program</h1>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              Join our community of open source enthusiasts and help us promote free and open source solutions.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/register?type=professional" className="cta-primary">
-                Choose your membership <ArrowUpRight className="h-4 w-4" />
-              </Link>
-              <Link href="/events" className="cta-secondary text-primary">
-                Meet the community
-              </Link>
-            </div>
-
-            <Tabs id="membership-options" defaultValue="benefits" className="mb-12 mt-14">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="benefits">Membership Benefits</TabsTrigger>
-                <TabsTrigger value="types">Membership Types</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
+            <Tabs id="membership-options" defaultValue="benefits" className="mb-12">
+              <TabsList className="grid h-auto w-full grid-cols-3">
+                <TabsTrigger value="benefits" className="whitespace-normal text-center text-xs leading-tight py-2.5 sm:text-sm">
+                  Membership Benefits
+                </TabsTrigger>
+                <TabsTrigger value="types" className="whitespace-normal text-center text-xs leading-tight py-2.5 sm:text-sm">
+                  Membership Types
+                </TabsTrigger>
+                <TabsTrigger value="register" className="whitespace-normal text-center text-xs leading-tight py-2.5 sm:text-sm">
+                  Register
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="benefits" className="mt-6">
@@ -370,6 +381,7 @@ export default function MembershipPage() {
               </TabsContent>
             </Tabs>
           </>
+      </div>
       </div>
     </div>
   )

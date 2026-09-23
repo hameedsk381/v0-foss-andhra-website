@@ -55,8 +55,8 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Program-specific colors
-        fosstar: "#0284c7",
+        // Program-specific colors — single source of truth, mirrored in globals.css CSS vars
+        fosstar: "#015ba7",
         fosserve: "#7c3aed",
         fossync: "#16a34a",
         fosstorm: "#ea580c",
@@ -68,6 +68,10 @@ module.exports = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        flat: "var(--shadow-flat)",
+        "flat-hover": "var(--shadow-flat-hover)",
       },
       keyframes: {
         "accordion-down": {

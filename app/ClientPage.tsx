@@ -1,30 +1,21 @@
 "use client"
 
-import { useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-} from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import {
   ArrowRight,
   BookOpen,
   ShieldCheck,
   Globe,
   Heart,
-  ChevronDown,
-  ChevronRight,
   Calendar,
   MapPin,
   Users,
 } from "lucide-react"
-import { PROGRAMS, PROGRAM_TEXT_CLASS, PROGRAM_PHOTOS } from "@/lib/programs"
+import { PROGRAMS } from "@/lib/programs"
 import { SkipLink } from "@/components/skip-link"
 import { OrganizationJsonLd } from "@/components/structured-data"
-import { buttonHover, buttonTap } from "@/lib/animations"
 
 /* ── Data ─────────────────────────────────────────────── */
 
@@ -41,30 +32,44 @@ const stats = [
   { value: "4",    label: "Open Projects" },
 ]
 
+const goals = [
+  {
+    number: "01",
+    title: "Open Knowledge",
+    description: "AI systems in 2026 are trained on public knowledge. We ensure that knowledge stays open — accessible to AP students without paywalls.",
+  },
+  {
+    number: "02",
+    title: "Data Privacy",
+    description: "From health records to e-governance, your data belongs to you. We champion community-owned, auditable systems.",
+  },
+  {
+    number: "03",
+    title: "Public Welfare",
+    description: "India's DPI — UPI, ONDC, DIGIT — runs on open source. We extend that ethos to every school and panchayat in AP.",
+  },
+]
+
 const values = [
   {
     icon: BookOpen,
     title: "Open Knowledge",
     description: "AI systems in 2026 are trained on public knowledge. We ensure that knowledge stays open — accessible to AP students without paywalls.",
-    dir: "left" as const,
   },
   {
     icon: ShieldCheck,
     title: "Data Privacy",
     description: "From health records to e-governance, your data belongs to you. We champion community-owned, auditable systems.",
-    dir: "right" as const,
   },
   {
     icon: Heart,
     title: "Public Welfare",
     description: "India's DPI — UPI, ONDC, DIGIT — runs on open source. We extend that ethos to every school and panchayat in AP.",
-    dir: "left" as const,
   },
   {
     icon: Globe,
     title: "Offline First",
     description: "Rural AP cannot wait for 5G. We build tools that run on low-end Android and 2G — digital inclusion for everyone.",
-    dir: "right" as const,
   },
 ]
 
@@ -75,34 +80,29 @@ const communityPhotos = [
   { src: "/stock/collaboration.jpg",     title: "Campus Meetups",      sub: "9+ clubs statewide" },
 ]
 
-/* ── Animation helpers ────────────────────────────────── */
+const eventTypes = [
+  { icon: Users,    label: "Community Meetups",  desc: "Monthly open-to-all gatherings" },
+  { icon: Calendar, label: "Hackathons",         desc: "Weekend sprints on open projects" },
+  { icon: MapPin,   label: "Campus Workshops",   desc: "Hands-on FOSS skills, on-site" },
+]
+
+/* ── Animation helper ─────────────────────────────────── */
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16,1,0.3,1] as const } },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const } },
 }
 
-const slideLeft = {
-  hidden: { opacity: 0, x: -32 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.16,1,0.3,1] as const } },
-}
-
-const stagger = (d = 0.08) => ({
+const stagger = (d = 0.06) => ({
   hidden: {},
-  visible: { transition: { staggerChildren: d, delayChildren: 0.04 } },
+  visible: { transition: { staggerChildren: d, delayChildren: 0.02 } },
 })
 
 /* ── Component ────────────────────────────────────────── */
 
 export default function Home() {
   const reduced = useReducedMotion()
-  const heroRef = useRef<HTMLElement>(null)
-
-  const { scrollYProgress: heroScroll } = useScroll({ target: heroRef, offset: ["start start","end start"] })
-  const heroY   = useTransform(heroScroll, [0,1], reduced ? [0,0] : [0,-80])
-  const heroOp  = useTransform(heroScroll, [0,0.75], [1,0])
-
-  const from = (p: object) => reduced ? {} : p
+  const from = (p: object) => (reduced ? {} : p)
 
   return (
     <>
@@ -117,214 +117,119 @@ export default function Home() {
 
       <div className="flex flex-col min-h-screen">
 
-        {/* ══ HERO — full-bleed photo ════════════════════════ */}
-        <section
-          id="main-content"
-          ref={heroRef}
-          className="relative w-full min-h-screen flex items-center overflow-hidden"
-        >
-          {/* Background photo */}
-          <div className="absolute inset-0">
-            <Image
-              src="/stock/hero-community.jpg"
-              alt="FOSS Andhra community summit"
-              fill
-              priority
-              quality={90}
-              className="object-cover object-center"
-            />
-          </div>
+        {/* ══ HERO — flat, two-column ═══════════════════════ */}
+        <section id="main-content" className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+          <div className="app-container grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
+            <motion.div
+              initial={from({ opacity: 0, y: 16 })}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <p className="eyebrow mb-4">Andhra Pradesh&apos;s FOSS Community</p>
 
-          {/* Gradient overlay: strong blue left → fades right so photo shows */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: [
-                "linear-gradient(105deg,",
-                "  rgba(0,40,100,0.97) 0%,",
-                "  rgba(0,70,150,0.92) 35%,",
-                "  rgba(0,92,168,0.75) 55%,",
-                "  rgba(0,92,168,0.35) 75%,",
-                "  transparent 100%",
-                ")",
-              ].join(""),
-            }}
-          />
-          {/* Bottom fade so ticker connects cleanly */}
-          <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-primary to-transparent" />
-          <div className="absolute -right-28 top-20 hidden h-72 w-72 rounded-full border border-[var(--lime)]/35 lg:block" aria-hidden="true" />
-          <div className="absolute -right-16 top-32 hidden h-48 w-48 rounded-full border border-white/20 lg:block" aria-hidden="true" />
-
-          {/* Content */}
-          <motion.div
-            className="app-container relative z-10 py-32 md:py-40"
-            style={{ y: heroY, opacity: heroOp }}
-          >
-            <div className="max-w-[680px]">
-
-              {/* Tag */}
-              <motion.div
-                className="flex items-center gap-3 mb-8"
-                initial={from({ opacity: 0, x: -18 })}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2, ease: [0.16,1,0.3,1] }}
-              >
-                <span className="inline-block w-8 h-[2px] bg-white/60 rounded-full" />
-                <span className="text-sm font-semibold text-white/70 tracking-widest uppercase">
-                  Andhra Pradesh&apos;s FOSS Community
-                </span>
-              </motion.div>
-
-              {/* Headline */}
-              <h1 className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-extrabold leading-[0.95] tracking-tight text-white text-balance">
-                <motion.span
-                  className="block"
-                  initial={from({ opacity: 0, y: 32, filter: "blur(12px)" })}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.8, delay: 0.35, ease: [0.16,1,0.3,1] }}
-                >
-                  Building Andhra
-                </motion.span>
-                <motion.span
-                  className="block"
-                  initial={from({ opacity: 0, y: 32, filter: "blur(12px)" })}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.8, delay: 0.52, ease: [0.16,1,0.3,1] }}
-                >
-                  Pradesh&apos;s
-                </motion.span>
-                <motion.span
-                  className="block relative w-fit"
-                  initial={from({ opacity: 0, y: 32, filter: "blur(12px)" })}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.8, delay: 0.68, ease: [0.16,1,0.3,1] }}
-                >
-                  open future.
-                  <motion.span
-                    className="absolute -bottom-2 left-0 h-1 bg-white rounded-full"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ duration: 0.65, delay: 1.2, ease: [0.16,1,0.3,1] }}
-                    style={{ originX: 0 }}
-                  />
-                </motion.span>
+              <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
+                Building Andhra Pradesh&apos;s <span className="text-primary">open future.</span>
               </h1>
 
-              {/* Subtitle */}
-              <motion.p
-                className="mt-8 text-lg md:text-xl text-white/70 leading-relaxed max-w-lg"
-                initial={from({ opacity: 0, y: 18 })}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.82 }}
-              >
-                700+ students, developers and educators across 9 campuses —
-                building open-source AI, Telugu computing, and civic tech for AP.
-              </motion.p>
+              <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+                700+ students, developers and educators across 9 campuses — building
+                open-source AI, Telugu computing, and civic tech for AP.
+              </p>
 
-              {/* CTAs */}
-              <motion.div
-                className="flex flex-wrap gap-4 mt-9"
-                initial={from({ opacity: 0, y: 14 })}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.98 }}
-              >
-                <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
-                  <Link
-                    href="/programs/fosstar#membership"
-                    className="cta-primary bg-[var(--lime)] text-[var(--ink)]"
-                  >
-                    Join the Community <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </motion.div>
-                <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
-                  <Link
-                    href="/events"
-                    className="cta-secondary border-white/35 text-white hover:bg-white hover:text-[var(--ink)]"
-                  >
-                    Upcoming Events
-                  </Link>
-                </motion.div>
-              </motion.div>
+              <div className="flex flex-wrap gap-4 mt-6">
+                <Link href="/programs/fosstar#membership" className="cta-primary">
+                  Join the Community <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/events" className="cta-secondary">
+                  Upcoming Events
+                </Link>
+              </div>
 
-              {/* Stat pills */}
-              <motion.div
-                className="flex flex-wrap gap-3 mt-10"
-                initial={from({ opacity: 0 })}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.25 }}
-              >
+              <div className="flex flex-wrap gap-3 mt-6">
                 {stats.map(({ value, label }) => (
                   <span
                     key={label}
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-medium backdrop-blur-sm"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-1.5 text-sm"
                   >
-                    <span className="font-extrabold">{value}</span>
-                    <span className="text-white/60">{label}</span>
+                    <span className="font-bold text-foreground">{value}</span>
+                    <span className="text-muted-foreground">{label}</span>
                   </span>
                 ))}
-              </motion.div>
-
-            </div>
-          </motion.div>
-
-          {/* Scroll cue */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.7 }}
-          >
-            <motion.div
-              animate={reduced ? {} : { y: [0, 8, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-              className="text-white/40"
-            >
-              <ChevronDown className="h-5 w-5" />
+              </div>
             </motion.div>
-          </motion.div>
+
+            <motion.div
+              className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border"
+              initial={from({ opacity: 0, y: 16 })}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Image
+                src="/stock/hero-community.jpg"
+                alt="FOSS Andhra community summit"
+                fill
+                priority
+                quality={90}
+                className="object-cover object-center"
+              />
+            </motion.div>
+          </div>
         </section>
 
         {/* ══ CAMPUS TICKER ══════════════════════════════════ */}
-        <div className="w-full bg-primary py-3.5 overflow-hidden" aria-label="Active FOSS campuses">
+        <div className="w-full border-b border-border bg-background py-3.5 overflow-hidden" aria-label="Active FOSS campuses">
           <div className="ticker-track">
             {[...CAMPUS_NAMES, ...CAMPUS_NAMES].map((name, i) => (
-              <span key={i} className="text-xs font-semibold text-white/65 uppercase tracking-[0.14em] shrink-0 px-5 inline-flex items-center gap-5">
+              <span key={i} className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.14em] shrink-0 px-5 inline-flex items-center gap-5">
                 {name}
-                <span className="inline-block w-1 h-1 rounded-full bg-white/35" aria-hidden="true" />
+                <span className="inline-block w-1 h-1 rounded-full bg-border" aria-hidden="true" />
               </span>
             ))}
           </div>
         </div>
 
-        {/* ══ WHAT WE DO — programs as photo cards ══════════ */}
+        {/* ══ GOALS ══════════════════════════════════════════ */}
         <section className="w-full section-shell bg-background">
           <div className="app-container">
-            <motion.div
-              className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10"
-              initial={from({ opacity: 0, y: 22 })}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}
-            >
+            <p className="eyebrow mb-6">About</p>
+            <p className="max-w-2xl text-lg leading-relaxed text-foreground sm:text-xl">
+              FOSS Andhra is a non-profit community that aims at promoting and strengthening the
+              Free and Open Source Software ecosystem across Andhra Pradesh.
+            </p>
+
+            <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+              {goals.map((goal) => (
+                <div key={goal.number}>
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">Goals {goal.number}</p>
+                  <h3 className="font-display text-lg font-bold text-foreground mb-2">{goal.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{goal.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ PROGRAMS — flat cards ══════════════════════════ */}
+        <section className="w-full section-shell bg-muted/30 border-y border-border">
+          <div className="app-container">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">What we do</p>
-                <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground leading-tight">
-                  Seven programmes,<br />one mission.
+                <p className="eyebrow mb-2">What we do</p>
+                <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight">
+                  Seven programmes, one mission.
                 </h2>
               </div>
-              <Link href="/programs" className="shrink-0 self-start sm:self-end">
-                <motion.button
-                  whileHover={buttonHover} whileTap={buttonTap}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-foreground border border-border hover:bg-muted transition-colors"
-                >
-                  All programmes <ArrowRight className="h-3.5 w-3.5" />
-                </motion.button>
+              <Link
+                href="/programs"
+                className="shrink-0 self-start sm:self-end inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+              >
+                All programmes <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-            </motion.div>
+            </div>
 
             <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-              variants={stagger(0.07)}
+              variants={stagger()}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-60px" }}
@@ -332,38 +237,22 @@ export default function Home() {
               {PROGRAMS.map((p) => (
                 <motion.div key={p.id} variants={fadeUp}>
                   <Link href={`/programs/${p.slug}`} className="group block h-full">
-                    <div className="h-full rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/40 hover:shadow-xl transition-all duration-300">
-                      {/* Photo */}
-                      <div className="relative h-48 overflow-hidden">
-                        <Image
-                          src={PROGRAM_PHOTOS[p.id] || "/placeholder.jpg"}
-                          alt={p.displayName}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
-                        {/* Program logo on photo */}
-                        <div className="absolute bottom-3 left-3">
-                          <Image
-                            src={p.logo}
-                            alt={p.displayName}
-                            width={88}
-                            height={30}
-                            className="h-7 w-auto object-contain drop-shadow-md"
-                          />
-                        </div>
-                      </div>
-                      {/* Text */}
-                      <div className="p-5">
-                        <h3 className="font-display font-bold text-foreground text-[1.05rem] mb-1.5">
-                          {p.displayName}
-                        </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                          {p.description}
-                        </p>
-                        <div className="flex items-center gap-1 mt-4 text-primary text-sm font-semibold group-hover:gap-2 transition-all">
-                          Learn more <ArrowRight className="h-3.5 w-3.5" />
-                        </div>
+                    <div className="h-full rounded-lg border border-border bg-card p-5 transition-colors hover:border-primary/40">
+                      <Image
+                        src={p.logo}
+                        alt={p.displayName}
+                        width={100}
+                        height={28}
+                        className="h-7 w-auto object-contain mb-4"
+                      />
+                      <h3 className="font-display font-bold text-foreground text-[1.05rem] mb-1.5">
+                        {p.displayName}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                        {p.description}
+                      </p>
+                      <div className="flex items-center gap-1 mt-4 text-primary text-sm font-semibold group-hover:gap-2 transition-all">
+                        Learn more <ArrowRight className="h-3.5 w-3.5" />
                       </div>
                     </div>
                   </Link>
@@ -373,261 +262,133 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══ EVENTS TEASER — bg-primary ════════════════════ */}
-        <section className="w-full bg-primary overflow-hidden">
-          <div className="app-container py-14 md:py-20">
+        {/* ══ EVENTS TEASER — flat ═══════════════════════════ */}
+        <section className="w-full section-shell bg-background">
+          <div className="app-container">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
-
-              {/* Left: copy */}
-              <motion.div
-                className="max-w-xl"
-                initial={from({ opacity: 0, y: 22 })}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}
-              >
-                <div className="flex items-center gap-2 mb-5">
-                  <Calendar className="h-5 w-5 text-white/60" />
-                  <span className="text-sm font-bold uppercase tracking-widest text-white/60">Events</span>
-                </div>
-                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight text-balance">
+              <div className="max-w-xl">
+                <p className="eyebrow mb-5">Events</p>
+                <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight text-balance">
                   Come build with us in person.
                 </h2>
-                <p className="mt-4 text-white/65 text-lg leading-relaxed">
+                <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
                   Workshops, hackathons, and campus meetups across Andhra Pradesh —
                   free and open to everyone.
                 </p>
                 <div className="flex gap-4 mt-8 flex-wrap">
-                  <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
-                    <Link
-                      href="/events"
-                      className="cta-primary bg-[var(--lime)] text-[var(--ink)]"
-                    >
-                      See all events <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </motion.div>
-                  <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
-                    <Link
-                      href="/contact"
-                      className="cta-secondary border-white/25 text-white hover:bg-white hover:text-[var(--ink)]"
-                    >
-                      Invite us to your campus
-                    </Link>
-                  </motion.div>
+                  <Link href="/events" className="cta-primary">
+                    See all events <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link href="/contact" className="cta-secondary">
+                    Invite us to your campus
+                  </Link>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Right: event type pills */}
-              <motion.div
-                className="grid grid-cols-1 gap-3 w-full max-w-sm"
-                variants={stagger(0.1)}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-              >
-                {[
-                  { icon: Users,    label: "Community Meetups",  desc: "Monthly open-to-all gatherings" },
-                  { icon: Calendar, label: "Hackathons",         desc: "Weekend sprints on open projects" },
-                  { icon: MapPin,   label: "Campus Workshops",   desc: "Hands-on FOSS skills, on-site" },
-                ].map(({ icon: Icon, label, desc }) => (
-                  <motion.div
-                    key={label}
-                    variants={slideLeft}
-                    className="flex items-center gap-4 rounded-xl bg-white/10 border border-white/15 px-5 py-4"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
-                      <Icon className="h-5 w-5 text-white" />
+              <div className="grid grid-cols-1 gap-3 w-full max-w-sm">
+                {eventTypes.map(({ icon: Icon, label, desc }) => (
+                  <div key={label} className="flex items-center gap-4 rounded-lg border border-border bg-card px-5 py-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="font-semibold text-white text-sm">{label}</p>
-                      <p className="text-white/55 text-xs mt-0.5">{desc}</p>
+                      <p className="font-semibold text-foreground text-sm">{label}</p>
+                      <p className="text-muted-foreground text-xs mt-0.5">{desc}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
-              </motion.div>
-
+              </div>
             </div>
           </div>
         </section>
 
         {/* ══ COMMUNITY PHOTOS ══════════════════════════════ */}
-        <section className="w-full section-shell bg-[hsl(var(--surface-1))]">
+        <section className="w-full section-shell bg-muted/30 border-y border-border">
           <div className="app-container">
-            <motion.div
-              className="mb-8"
-              initial={from({ opacity: 0, y: 22 })}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6 }}
-            >
-              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">Community in action</p>
-              <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground">
-                Real events,<br />real impact.
+            <div className="mb-8">
+              <p className="eyebrow mb-2">Community in action</p>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
+                Real events, real impact.
               </h2>
-            </motion.div>
+            </div>
 
-            {/* Main photo grid */}
-            <motion.div
-              className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4"
-              variants={stagger(0.08)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-            >
-              {/* Large featured photo */}
-              <motion.div
-                variants={fadeUp}
-                className="col-span-2 row-span-2 relative rounded-2xl overflow-hidden group"
-                style={{ aspectRatio: "4/3" }}
-                whileHover={reduced ? {} : { scale: 1.01 }}
-                transition={{ duration: 0.4 }}
-              >
-                <Image
-                  src="/gallery/fosstar-summit.jpg"
-                  alt="Annual community summit"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/75 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 p-5">
-                  <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold mb-2 backdrop-blur-sm">
-                    Featured
-                  </span>
-                  <p className="text-white font-display font-bold text-xl leading-snug">Annual Summit</p>
-                  <p className="text-white/65 text-sm mt-0.5">Our largest gathering of the year</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              <div className="col-span-2 row-span-2 relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
+                <Image src="/gallery/fosstar-summit.jpg" alt="Annual community summit" fill className="object-cover" />
+                <div className="absolute bottom-0 left-0 right-0 bg-background/90 p-4">
+                  <p className="text-foreground font-display font-bold">Annual Summit</p>
+                  <p className="text-muted-foreground text-sm mt-0.5">Our largest gathering of the year</p>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Smaller photos */}
               {communityPhotos.map((photo) => (
-                <motion.div
-                  key={photo.title}
-                  variants={fadeUp}
-                  className="relative rounded-2xl overflow-hidden group"
-                  style={{ aspectRatio: "4/3" }}
-                  whileHover={reduced ? {} : { scale: 1.02 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <Image
-                    src={photo.src}
-                    alt={photo.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-108"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent" />
-                  <div className="absolute bottom-0 left-0 p-3.5">
-                    <p className="text-white font-semibold text-sm leading-snug">{photo.title}</p>
-                    <p className="text-white/60 text-xs mt-0.5">{photo.sub}</p>
+                <div key={photo.title} className="relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
+                  <Image src={photo.src} alt={photo.title} fill className="object-cover" />
+                  <div className="absolute bottom-0 left-0 right-0 bg-background/90 p-3">
+                    <p className="text-foreground font-semibold text-sm">{photo.title}</p>
+                    <p className="text-muted-foreground text-xs mt-0.5">{photo.sub}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* ══ VALUES ════════════════════════════════════════ */}
         <section className="w-full section-shell bg-background">
           <div className="app-container">
-            <motion.div
-              className="mb-10 max-w-xl"
-              initial={from({ opacity: 0, y: 22 })}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6 }}
-            >
-              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">What we stand for</p>
-              <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-foreground text-balance leading-tight">
-                Technology for people,<br />not shareholders.
+            <div className="mb-10 max-w-xl">
+              <p className="eyebrow mb-2">What we stand for</p>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground text-balance leading-tight">
+                Technology for people, not shareholders.
               </h2>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 gap-5"
-              variants={stagger(0.09)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {values.map(({ icon: Icon, title, description }, i) => (
-                <motion.div
-                  key={i}
-                  variants={fadeUp}
-                  className="flex gap-4 p-6 rounded-2xl bg-[hsl(var(--surface-2))] border border-border"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                <div key={i} className="flex gap-4 p-6 rounded-lg border border-border bg-card">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-display font-bold text-foreground mb-1.5">{title}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* ══ JOIN CTA ═══════════════════════════════════════ */}
-        <section className="w-full section-shell bg-[hsl(var(--surface-1))]">
+        {/* ══ JOIN CTA — flat band ══════════════════════════ */}
+        <section className="w-full section-shell bg-background">
           <div className="app-container">
-            <motion.div
-              initial={from({ opacity: 0, scale: 0.97, y: 22 })}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7, ease: [0.16,1,0.3,1] }}
-              className="rounded-3xl overflow-hidden relative bg-primary px-10 py-14 md:px-16 md:py-20"
-            >
-              {/* Dot grid */}
-              <div
-                className="absolute inset-0 opacity-[0.07] pointer-events-none"
-                aria-hidden="true"
-                style={{
-                  backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)",
-                  backgroundSize: "22px 22px",
-                }}
-              />
-              {/* Glow */}
-              <motion.div
-                className="absolute -right-20 -bottom-20 w-96 h-96 rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 65%)" }}
-                animate={reduced ? {} : { scale: [1,1.3,1], opacity: [0.3,0.5,0.3] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                aria-hidden="true"
-              />
-              {/* Image collage top-right */}
-              <div className="absolute top-0 right-0 bottom-0 w-2/5 hidden lg:block overflow-hidden opacity-25">
-                <Image src="/gallery/fosstorm-workshop.jpg" alt="FOSStorm community workshop session" fill className="object-cover object-left" />
-              </div>
-
-              <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-10 lg:max-w-[60%]">
-                <div className="space-y-4">
-                  <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight text-balance">
+            <div className="rounded-lg border border-border bg-primary px-10 py-14 md:px-16 md:py-20">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+                <div className="space-y-4 max-w-xl">
+                  <h2 className="font-display text-3xl sm:text-4xl font-bold text-white leading-tight text-balance">
                     Open source is AP&apos;s advantage.
                   </h2>
-                  <p className="text-white/60 text-lg leading-relaxed max-w-lg">
+                  <p className="text-white/75 text-lg leading-relaxed">
                     Join 700+ members building the open technology layer for Andhra Pradesh&apos;s digital future.
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
-                    <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
-                      <Link
-                        href="/programs/fosstar#membership"
-                        className="cta-primary bg-[var(--lime)] text-[var(--ink)]"
-                      >
-                        Become a Member
-                      </Link>
-                    </motion.div>
-                    <motion.div className="inline-block" whileHover={buttonHover} whileTap={buttonTap}>
-                      <Link
-                        href="/contribute"
-                        className="cta-secondary border-white/25 text-white hover:bg-white hover:text-[var(--ink)]"
-                      >
-                        Contribute <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </motion.div>
+                    <Link
+                      href="/programs/fosstar#membership"
+                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-white/90"
+                    >
+                      Become a Member
+                    </Link>
+                    <Link
+                      href="/contribute"
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                    >
+                      Contribute <ArrowRight className="h-4 w-4" />
+                    </Link>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
