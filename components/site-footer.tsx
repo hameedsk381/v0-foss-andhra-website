@@ -81,7 +81,7 @@ export function SiteFooter() {
             href="/membership"
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#071426] transition-colors hover:bg-white/90"
           >
-            Become a member <ArrowUpRight className="h-4 w-4" />
+            Join FOSStar <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

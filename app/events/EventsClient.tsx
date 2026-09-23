@@ -213,7 +213,7 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/membership" className="cta-primary">
-                  Join the community <ArrowRight className="h-4 w-4" />
+                  Join FOSStar <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="/contact" className="cta-secondary">
                   Host an event

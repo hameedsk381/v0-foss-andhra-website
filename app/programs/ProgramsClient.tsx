@@ -47,7 +47,7 @@ export default function ProgramsClient() {
                         </p>
                         <div className="mt-6 flex flex-wrap gap-3">
                             <Link href="/membership" className="cta-primary">
-                                Find your programme <ArrowRight className="h-4 w-4" />
+                                Join FOSStar <ArrowRight className="h-4 w-4" />
                             </Link>
                             <Link href="/events" className="cta-secondary">
                                 Meet the community

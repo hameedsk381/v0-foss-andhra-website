@@ -187,7 +187,7 @@ export function MainNav() {
           ) : (
             <Link href="/membership">
               <Button size="sm" className="px-5">
-                Join the movement <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
+                Join FOSStar <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             </Link>
           )}
@@ -319,7 +319,7 @@ export function MainNav() {
                 ) : (
                   <Link href="/membership" onClick={() => setIsOpen(false)}>
                     <Button className="w-full">
-                      Join the movement <ArrowUpRight className="ml-1 h-4 w-4" />
+                      Join FOSStar <ArrowUpRight className="ml-1 h-4 w-4" />
                     </Button>
                   </Link>
                 )}

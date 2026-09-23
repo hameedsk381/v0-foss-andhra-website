@@ -306,9 +306,9 @@ export default function AboutPageClient() {
                 Become a part of FOSS Andhra and help us promote free and open source software across the region
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-4">
-                <Link href="/programs/fosstar#membership">
+                <Link href="/membership">
                   <AnimatedButton className="bg-secondary text-black hover:bg-secondary/90">
-                    Become a Member
+                    Join FOSStar
                   </AnimatedButton>
                 </Link>
                 <Link href="/contribute">

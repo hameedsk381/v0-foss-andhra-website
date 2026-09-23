@@ -137,8 +137,8 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap gap-4 mt-6">
-                <Link href="/programs/fosstar#membership" className="cta-primary">
-                  Join the Community <ArrowRight className="h-4 w-4" />
+                <Link href="/membership" className="cta-primary">
+                  Join FOSStar <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="/events" className="cta-secondary">
                   Upcoming Events
@@ -374,10 +374,10 @@ export default function Home() {
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
                     <Link
-                      href="/programs/fosstar#membership"
+                      href="/membership"
                       className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-white/90"
                     >
-                      Become a Member
+                      Join FOSStar
                     </Link>
                     <Link
                       href="/contribute"
