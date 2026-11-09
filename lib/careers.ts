@@ -38,3 +38,6 @@ export function isOpeningAcceptingApplications(opening: { status: string; applyD
   endOfDeadline.setHours(23, 59, 59, 999)
   return endOfDeadline.getTime() >= Date.now()
 }
+
+/** Slugs that would be shadowed by real routes under /careers. */
+export const RESERVED_SLUGS = ["poster", "apply"]

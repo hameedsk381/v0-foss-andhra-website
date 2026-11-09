@@ -41,6 +41,9 @@ export default async function CareersPage({ searchParams }: { searchParams: { ty
         <p className="mt-2 text-gray-600">
           Work with FOSS Andhra to grow free and open source software across the region.
         </p>
+        <Link href="/careers/poster" className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">
+          Download the openings poster to share →
+        </Link>
       </div>
 
       <div className="mb-6 flex flex-wrap gap-2">

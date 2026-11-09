@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdminSessionOrKey } from "@/lib/auth/admin"
-import { slugify } from "@/lib/careers"
+import { RESERVED_SLUGS, slugify } from "@/lib/careers"
 import { openingSchema } from "@/lib/careers-schema"
 
 export const dynamic = "force-dynamic"
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const data = parsed.data
 
     const slug = slugify(data.slug || data.title)
-    if (!slug) {
+    if (!slug || RESERVED_SLUGS.includes(slug)) {
       return NextResponse.json({ success: false, error: "A valid slug is required" }, { status: 400 })
     }
     if (await prisma.careerOpening.findUnique({ where: { slug }, select: { id: true } })) {

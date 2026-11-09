@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { requireAdminSessionOrKey } from "@/lib/auth/admin"
-import { slugify } from "@/lib/careers"
+import { RESERVED_SLUGS, slugify } from "@/lib/careers"
 import { openingSchema } from "@/lib/careers-schema"
 
 export const dynamic = "force-dynamic"
@@ -23,7 +23,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     let slug: string | undefined
     if (data.slug !== undefined) {
       slug = slugify(data.slug)
-      if (!slug) return NextResponse.json({ success: false, error: "A valid slug is required" }, { status: 400 })
+      if (!slug || RESERVED_SLUGS.includes(slug)) return NextResponse.json({ success: false, error: "That slug is reserved. Choose another" }, { status: 400 })
       const clash = await prisma.careerOpening.findUnique({ where: { slug }, select: { id: true } })
       if (clash && clash.id !== params.id) {
         return NextResponse.json({ success: false, error: "An opening with this slug already exists" }, { status: 409 })
