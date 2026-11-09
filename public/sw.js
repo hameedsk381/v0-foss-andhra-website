@@ -1,5 +1,8 @@
 // Service Worker for FOSS Andhra PWA
-const CACHE_NAME = 'foss-andhra-v1'
+// Bumped to v2: v1 precached and served '/', '/events' and '/blog' cache-first, so returning
+// visitors kept seeing stale pages (e.g. new blog posts never appeared). Old caches are
+// deleted on activate.
+const CACHE_NAME = 'foss-andhra-v2'
 const OFFLINE_URL = '/offline'
 
 // Install event - cache essential resources
@@ -7,11 +10,9 @@ self.addEventListener('install', (event) => {
   console.log('[SW] Installing service worker...')
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      // Only static shell files; dynamic pages are fetched from the network.
       return cache.addAll([
-        '/',
         '/offline',
-        '/events',
-        '/blog',
         '/manifest.json',
       ])
     })
@@ -52,6 +53,20 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
+  // Never intercept API calls; they must always hit the network.
+  if (url.pathname.startsWith('/api/')) {
+    return
+  }
+
+  // Pages: network first so content is always fresh; fall back to the offline page.
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => caches.match(OFFLINE_URL))
+    )
+    return
+  }
+
+  // Static assets (images, scripts, styles): cache first.
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       // Return cached version if available

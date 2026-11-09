@@ -16,6 +16,9 @@ import {
 import { PROGRAMS } from "@/lib/programs"
 import { SkipLink } from "@/components/skip-link"
 import { OrganizationJsonLd } from "@/components/structured-data"
+import { useOpenings } from "@/components/home/use-openings"
+import { OpeningsSection } from "@/components/home/openings-section"
+import { OpeningsPopup } from "@/components/home/openings-popup"
 
 /* ── Data ─────────────────────────────────────────────── */
 
@@ -103,10 +106,12 @@ const stagger = (d = 0.06) => ({
 export default function Home() {
   const reduced = useReducedMotion()
   const from = (p: object) => (reduced ? {} : p)
+  const { openings, loading: openingsLoading } = useOpenings()
 
   return (
     <>
       <SkipLink />
+      <OpeningsPopup openings={openings} />
       <OrganizationJsonLd
         name="FOSS Andhra"
         url="https://fossap.in"
@@ -187,6 +192,9 @@ export default function Home() {
             ))}
           </div>
         </div>
+
+        {/* ══ OPENINGS — careers & internships ═══════════════ */}
+        <OpeningsSection openings={openings} loading={openingsLoading} />
 
         {/* ══ GOALS ══════════════════════════════════════════ */}
         <section className="w-full section-shell bg-background">
