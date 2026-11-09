@@ -3,12 +3,14 @@
 import Link from "next/link"
 import { ArrowRight, Briefcase, Clock, MapPin } from "lucide-react"
 import { requiresMembership, typeLabel, workModeLabel } from "@/lib/careers"
+import { InternshipPoster } from "@/components/internship-poster"
 import type { PublicOpening } from "./use-openings"
 
 const MAX_CARDS = 6
 
 export function OpeningsSection({ openings, loading }: { openings: PublicOpening[]; loading: boolean }) {
   const shown = openings.slice(0, MAX_CARDS)
+  const hasInternships = openings.some((o) => o.type === "internship")
 
   return (
     <section id="openings" className="w-full section-shell bg-background border-b border-border" aria-labelledby="openings-heading">
@@ -32,6 +34,12 @@ export function OpeningsSection({ openings, loading }: { openings: PublicOpening
             </Link>
           </div>
         </div>
+
+        {!loading && hasInternships && (
+          <div className="mb-10">
+            <InternshipPoster href="/careers?type=internship" sizes="(min-width: 1280px) 1200px, 100vw" />
+          </div>
+        )}
 
         {loading ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">

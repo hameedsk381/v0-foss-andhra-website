@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { prisma } from "@/lib/prisma"
 import { ApplyForm } from "./apply-form"
+import { InternshipPoster, internshipPosterMetadata } from "@/components/internship-poster"
 import {
   OPENING_TYPES,
   isOpeningAcceptingApplications,
@@ -18,6 +19,12 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
   title: "Careers & Internships | FOSS Andhra",
   description: "Open jobs, internships, fellowships, collaborations and volunteer roles at FOSS Andhra.",
+  openGraph: {
+    title: "Careers & Internships | FOSS Andhra",
+    description: "Open jobs, internships, fellowships, collaborations and volunteer roles at FOSS Andhra.",
+    ...internshipPosterMetadata.openGraph,
+  },
+  twitter: internshipPosterMetadata.twitter,
 }
 
 export default async function CareersPage({ searchParams }: { searchParams: { type?: string } }) {
@@ -42,9 +49,15 @@ export default async function CareersPage({ searchParams }: { searchParams: { ty
           Work with FOSS Andhra to grow free and open source software across the region.
         </p>
         <Link href="/careers/poster" className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">
-          Download the openings poster to share →
+          Download the internship poster to share →
         </Link>
       </div>
+
+      {openings.some((o) => o.type === "internship") && (
+        <div className="mb-8">
+          <InternshipPoster priority sizes="(min-width: 1024px) 1024px, 100vw" />
+        </div>
+      )}
 
       <div className="mb-6 flex flex-wrap gap-2">
         <Link

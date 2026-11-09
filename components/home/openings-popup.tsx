@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { ArrowRight } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { typeLabel } from "@/lib/careers"
+import { InternshipPoster } from "@/components/internship-poster"
 import type { PublicOpening } from "./use-openings"
 
 const STORAGE_KEY = "openings-popup-dismissed-at"
@@ -54,10 +55,11 @@ export function OpeningsPopup({ openings }: { openings: PublicOpening[] }) {
   if (!hasOpenings) return null
 
   const listed = openings.slice(0, LISTED)
+  const hasInternships = openings.some((o) => o.type === "internship")
 
   return (
     <Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : close())}>
-      <DialogContent className="max-w-md">
+      <DialogContent className={hasInternships ? "max-h-[90vh] max-w-xl overflow-y-auto" : "max-w-md"}>
         <DialogHeader>
           <p className="eyebrow">We&apos;re hiring</p>
           <DialogTitle className="font-display text-2xl">
@@ -67,6 +69,8 @@ export function OpeningsPopup({ openings }: { openings: PublicOpening[] }) {
             Internships, jobs and collaborations are open to FOSStar members.
           </DialogDescription>
         </DialogHeader>
+
+        {hasInternships && <InternshipPoster sizes="(min-width: 640px) 576px, 100vw" />}
 
         <ul className="space-y-2">
           {listed.map((o) => (

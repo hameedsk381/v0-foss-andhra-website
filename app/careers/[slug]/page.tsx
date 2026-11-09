@@ -10,6 +10,7 @@ import { prisma } from "@/lib/prisma"
 import { ApplyForm } from "../apply-form"
 import { isOpeningAcceptingApplications, requiresMembership, typeLabel, workModeLabel } from "@/lib/careers"
 import { getCurrentMember } from "@/lib/member/session"
+import { InternshipPoster, internshipPosterMetadata } from "@/components/internship-poster"
 
 export const dynamic = "force-dynamic"
 
@@ -23,7 +24,16 @@ async function getOpening(slug: string) {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const opening = await getOpening(params.slug).catch(() => null)
   if (!opening) return { title: "Careers | FOSS Andhra" }
-  return { title: `${opening.title} | Careers | FOSS Andhra`, description: opening.summary ?? undefined }
+  const title = `${opening.title} | Careers | FOSS Andhra`
+  const description = opening.summary ?? undefined
+  if (opening.type !== "internship") return { title, description }
+  // Internship links share the program poster as the preview image.
+  return {
+    title,
+    description,
+    openGraph: { title, description, ...internshipPosterMetadata.openGraph },
+    twitter: internshipPosterMetadata.twitter,
+  }
 }
 
 function Section({ title, body }: { title: string; body?: string | null }) {
@@ -78,6 +88,12 @@ export default async function OpeningPage({ params }: { params: { slug: string }
           </span>
         )}
       </div>
+
+      {opening.type === "internship" && (
+        <div className="mt-6">
+          <InternshipPoster href="/careers?type=internship" sizes="(min-width: 768px) 768px, 100vw" />
+        </div>
+      )}
 
       <Section title="About the role" body={opening.description} />
       <Section title="Requirements" body={opening.requirements} />
