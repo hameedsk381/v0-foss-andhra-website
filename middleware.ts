@@ -6,6 +6,15 @@ const ADMIN_ROLES = new Set(["admin", "editor", "viewer"])
 const MUTATION_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"])
 const ADMIN_ONLY_API_PREFIXES = ["/api/admin/settings", "/api/admin/newsletter/send"]
 
+// Routes that accept CONTENT_API_KEY (content pages, blog posts, career openings). Applications hold
+// applicant personal data and stay session-only.
+const API_KEY_PATH_PREFIXES = ["/api/admin/content", "/api/admin/blog/posts", "/api/admin/careers"]
+const API_KEY_BLOCKED_PREFIXES = ["/api/admin/careers/applications"]
+
+function hasApiKeyHeader(req: NextRequest): boolean {
+  return /^bearer\s+\S/i.test(req.headers.get("authorization") ?? "") || !!req.headers.get("x-api-key")
+}
+
 function getRole(token: unknown): string {
   const role = (token as any)?.role
   return typeof role === "string" ? role.toLowerCase() : ""
@@ -39,6 +48,17 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (pathname.startsWith("/api/admin")) {
+    // API-key access: only content routes may be reached without a session. The route handlers
+    // validate the key themselves (middleware can't), so this just lets key-bearing requests through.
+    if (
+      !isAuthenticated &&
+      hasApiKeyHeader(req) &&
+      API_KEY_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
+      !API_KEY_BLOCKED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+    ) {
+      return NextResponse.next()
+    }
+
     if (!isAuthenticated || !isAdminToken(token)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }

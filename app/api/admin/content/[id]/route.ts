@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { requireAdminAccess } from "@/lib/auth/admin"
+import { requireAdminAccessOrKey } from "@/lib/auth/admin"
 
 // GET single content
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    const authError = await requireAdminAccessOrKey(["viewer", "editor", "admin"])
     if (authError) return authError
 const content = await prisma.content.findUnique({
       where: { id: params.id },
@@ -25,7 +25,7 @@ const content = await prisma.content.findUnique({
 // PUT update content
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const authError = await requireAdminAccess(["editor", "admin"])
+    const authError = await requireAdminAccessOrKey(["editor", "admin"])
     if (authError) return authError
 const body = await request.json()
 
@@ -57,7 +57,7 @@ const body = await request.json()
 // DELETE content
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const authError = await requireAdminAccess(["admin"])
+    const authError = await requireAdminAccessOrKey(["admin"])
     if (authError) return authError
 await prisma.content.delete({
       where: { id: params.id },

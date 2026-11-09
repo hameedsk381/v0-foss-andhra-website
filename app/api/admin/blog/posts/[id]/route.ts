@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { requireAdminAccess } from "@/lib/auth/admin"
+import { requireAdminAccessOrKey } from "@/lib/auth/admin"
 import { prisma } from "@/lib/prisma"
 
 // GET - Fetch single blog post
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    const authError = await requireAdminAccessOrKey(["viewer", "editor", "admin"])
     if (authError) return authError
 
     const post = await prisma.blogPost.findUnique({
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 // PUT - Update blog post
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const authError = await requireAdminAccess(["editor", "admin"])
+    const authError = await requireAdminAccessOrKey(["editor", "admin"])
     if (authError) return authError
 
     const body = await request.json()
@@ -112,7 +112,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // DELETE - Delete blog post
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const authError = await requireAdminAccess(["admin"])
+    const authError = await requireAdminAccessOrKey(["admin"])
     if (authError) return authError
 
     await prisma.blogPost.delete({

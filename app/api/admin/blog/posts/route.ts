@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { requireAdminSession } from "@/lib/auth/admin"
+import { requireAdminSessionOrKey } from "@/lib/auth/admin"
 import { prisma } from "@/lib/prisma"
 
 export const dynamic = "force-dynamic"
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic"
 // GET - Fetch all blog posts
 export async function GET(request: NextRequest) {
   try {
-    const { authError } = await requireAdminSession(["viewer", "editor", "admin"])
+    const { authError } = await requireAdminSessionOrKey(["viewer", "editor", "admin"])
     if (authError) return authError
 
     const { searchParams } = new URL(request.url)
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
 // POST - Create new blog post
 export async function POST(request: NextRequest) {
   try {
-    const { session, authError } = await requireAdminSession(["editor", "admin"])
+    const { session, authError } = await requireAdminSessionOrKey(["editor", "admin"])
     if (authError) return authError
 
     const body = await request.json()

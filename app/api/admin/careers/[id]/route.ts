@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { requireAdminSession } from "@/lib/auth/admin"
+import { requireAdminSessionOrKey } from "@/lib/auth/admin"
 import { slugify } from "@/lib/careers"
 import { openingSchema } from "@/lib/careers-schema"
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic"
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { authError } = await requireAdminSession(["editor", "admin"])
+    const { authError } = await requireAdminSessionOrKey(["editor", "admin"])
     if (authError) return authError
 
     const existing = await prisma.careerOpening.findUnique({ where: { id: params.id } })
@@ -47,7 +47,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
 export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { authError } = await requireAdminSession(["admin"])
+    const { authError } = await requireAdminSessionOrKey(["admin"])
     if (authError) return authError
 
     // Applications are kept (openingId is set to null) so applicant records aren't lost.

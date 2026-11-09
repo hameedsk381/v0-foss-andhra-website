@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { requireAdminSession } from "@/lib/auth/admin"
+import { requireAdminSessionOrKey } from "@/lib/auth/admin"
 import { slugify } from "@/lib/careers"
 import { openingSchema } from "@/lib/careers-schema"
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic"
 
 export async function GET() {
   try {
-    const { authError } = await requireAdminSession(["viewer", "editor", "admin"])
+    const { authError } = await requireAdminSessionOrKey(["viewer", "editor", "admin"])
     if (authError) return authError
 
     const openings = await prisma.careerOpening.findMany({
@@ -24,7 +24,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { authError } = await requireAdminSession(["editor", "admin"])
+    const { authError } = await requireAdminSessionOrKey(["editor", "admin"])
     if (authError) return authError
 
     const parsed = openingSchema.safeParse(await request.json())
