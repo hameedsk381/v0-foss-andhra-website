@@ -110,7 +110,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       coverImage: true,
       readingTime: true,
       publishedAt: true,
-      category: { select: { name: true, slug: true } },
+      BlogCategory: { select: { name: true, slug: true } },
     },
   })
 
@@ -247,7 +247,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   className="group flex h-full flex-col rounded-lg border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-                    {related.category?.name}
+                    {related.BlogCategory?.name}
                   </span>
                   <span className="mt-2 font-display text-sm font-semibold leading-snug text-foreground group-hover:text-primary transition-colors">
                     {related.title}
