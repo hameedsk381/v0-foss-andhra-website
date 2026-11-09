@@ -5,7 +5,8 @@ import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, CreditCard, Bell, TrendingUp, Award, Users } from "lucide-react"
+import { Calendar, CreditCard, Bell, TrendingUp, Award, Users, CheckCircle } from "lucide-react"
+import { getTierBenefits } from "@/lib/member/tiers"
 import { Skeleton } from "@/components/skeleton-loader"
 import { ActivityTimeline } from "@/components/member/activity-timeline"
 import Link from "next/link"
@@ -92,6 +93,7 @@ export default function MemberDashboard() {
   }
 
   const { member, stats, activities } = dashboardData
+  const tierInfo = getTierBenefits(member?.membershipType)
 
   const daysUntilExpiry = member?.expiryDate
     ? Math.ceil((new Date(member.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
@@ -174,8 +176,8 @@ export default function MemberDashboard() {
           <CardContent className="px-3 pb-2 sm:px-4 sm:pb-3">
             <div className="text-lg font-bold sm:text-xl">{stats.certificatesEarned}</div>
             <p className="text-[10px] text-gray-500 sm:text-xs">Earned certificates</p>
-            <Link href="/programs" className="inline-block text-[10px] text-primary hover:underline sm:text-xs">
-              View Programs
+            <Link href="/member/certificates" className="inline-block text-[10px] text-primary hover:underline sm:text-xs">
+              View Certificates
             </Link>
           </CardContent>
         </Card>
@@ -207,6 +209,28 @@ export default function MemberDashboard() {
             </Link>
             <ChangePasswordModal />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-primary/20">
+        <CardHeader className="px-3 pb-2 sm:px-6">
+          <CardTitle className="text-sm sm:text-base">Your {tierInfo.label} Benefits</CardTitle>
+          <p className="text-xs text-gray-600 sm:text-sm">{tierInfo.tagline}</p>
+        </CardHeader>
+        <CardContent className="px-3 pt-2 sm:px-6">
+          <ul className="space-y-1.5 text-xs sm:text-sm">
+            {tierInfo.benefits.map((benefit) => (
+              <li key={benefit} className="flex items-start gap-2">
+                <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-600" />
+                <span>{benefit}</span>
+              </li>
+            ))}
+          </ul>
+          <Link href="/member/resources">
+            <Button className="mt-3" size="sm" variant="outline">
+              Open Member Resources
+            </Button>
+          </Link>
         </CardContent>
       </Card>
 

@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Image as ImageIcon,
   ShieldCheck,
+  Briefcase,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -35,6 +36,7 @@ const navItems = [
   { href: "/admin/blog", label: "Blog", icon: BookOpen },
   { href: "/admin/content", label: "Content", icon: FileText },
   { href: "/admin/programs", label: "Programs", icon: FolderTree },
+  { href: "/admin/careers", label: "Careers", icon: Briefcase },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { href: "/admin/notifications/push", label: "Push Notifications", icon: Bell },

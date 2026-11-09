@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Settings,
+  Award,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -23,6 +24,8 @@ import { signOut } from "next-auth/react"
 const navItems = [
   { href: "/member", label: "Dashboard", icon: LayoutDashboard },
   { href: "/member/profile", label: "Profile", icon: User },
+  { href: "/member/resources", label: "Resources", icon: FileText },
+  { href: "/member/certificates", label: "Certificates", icon: Award },
   { href: "/member/membership", label: "Membership", icon: CreditCard },
   { href: "/member/settings", label: "Settings", icon: Settings },
 ]

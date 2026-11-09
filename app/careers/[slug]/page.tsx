@@ -1,0 +1,98 @@
+import Link from "next/link"
+import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { ArrowLeft, Briefcase, Clock, MapPin, Wallet } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { prisma } from "@/lib/prisma"
+import { ApplyForm } from "../apply-form"
+import { isOpeningAcceptingApplications, typeLabel, workModeLabel } from "@/lib/careers"
+
+export const dynamic = "force-dynamic"
+
+async function getOpening(slug: string) {
+  const opening = await prisma.careerOpening.findUnique({ where: { slug } })
+  // Drafts are never public; closed openings stay viewable but not applicable.
+  if (!opening || opening.status === "draft") return null
+  return opening
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const opening = await getOpening(params.slug).catch(() => null)
+  if (!opening) return { title: "Careers | FOSS Andhra" }
+  return { title: `${opening.title} | Careers | FOSS Andhra`, description: opening.summary ?? undefined }
+}
+
+function Section({ title, body }: { title: string; body?: string | null }) {
+  if (!body) return null
+  return (
+    <section className="mt-6">
+      <h2 className="mb-2 text-lg font-semibold">{title}</h2>
+      <div className="prose max-w-none">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{body}</ReactMarkdown>
+      </div>
+    </section>
+  )
+}
+
+export default async function OpeningPage({ params }: { params: { slug: string } }) {
+  const opening = await getOpening(params.slug)
+  if (!opening) notFound()
+
+  const accepting = isOpeningAcceptingApplications(opening)
+
+  return (
+    <div className="container mx-auto max-w-3xl px-4 py-12">
+      <Link href="/careers" className="mb-4 inline-flex items-center gap-1 text-sm text-primary hover:underline">
+        <ArrowLeft className="h-4 w-4" /> All openings
+      </Link>
+
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <Badge variant="secondary">{typeLabel(opening.type)}</Badge>
+        {!accepting && <Badge variant="destructive">Closed</Badge>}
+      </div>
+      <h1 className="text-3xl font-bold">{opening.title}</h1>
+      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-gray-600">
+        <span className="inline-flex items-center gap-1">
+          <MapPin className="h-4 w-4" /> {opening.location} · {workModeLabel(opening.workMode)}
+        </span>
+        {opening.department && (
+          <span className="inline-flex items-center gap-1">
+            <Briefcase className="h-4 w-4" /> {opening.department}
+          </span>
+        )}
+        {opening.compensation && (
+          <span className="inline-flex items-center gap-1">
+            <Wallet className="h-4 w-4" /> {opening.compensation}
+          </span>
+        )}
+        {opening.applyDeadline && (
+          <span className="inline-flex items-center gap-1">
+            <Clock className="h-4 w-4" /> Apply by {opening.applyDeadline.toLocaleDateString("en-IN")}
+          </span>
+        )}
+      </div>
+
+      <Section title="About the role" body={opening.description} />
+      <Section title="Requirements" body={opening.requirements} />
+      <Section title="What you get" body={opening.benefits} />
+
+      <section className="mt-10 rounded-lg border bg-white p-6">
+        {!accepting ? (
+          <p className="text-sm text-gray-600">This opening is no longer accepting applications.</p>
+        ) : opening.externalApplyUrl ? (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-600">Applications for this role are handled on an external page.</p>
+            <a href={opening.externalApplyUrl} target="_blank" rel="noopener noreferrer">
+              <Button>Apply on external site</Button>
+            </a>
+          </div>
+        ) : (
+          <ApplyForm openingId={opening.id} heading="Apply for this role" />
+        )}
+      </section>
+    </div>
+  )
+}

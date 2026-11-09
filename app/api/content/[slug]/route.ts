@@ -16,7 +16,8 @@ export async function GET(
       },
     })
 
-    if (!content) {
+    // Members-only resources must never be served through the public API.
+    if (!content || content.type === "member-resource") {
       return NextResponse.json(
         { success: false, error: "Content not found" },
         { status: 404 }

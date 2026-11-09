@@ -568,3 +568,54 @@ model PromoCodeTicket {
 
   @@unique([promoCodeId, ticketTypeId])
 }
+
+model CareerOpening {
+  id                String              @id @default(cuid())
+  slug              String              @unique
+  title             String
+  // job | internship | fellowship | contract | volunteer
+  type              String              @default("job")
+  department        String?
+  location          String              @default("Andhra Pradesh")
+  // onsite | remote | hybrid
+  workMode          String              @default("onsite")
+  summary           String?
+  description       String
+  requirements      String?
+  benefits          String?
+  compensation      String?
+  applyDeadline     DateTime?
+  externalApplyUrl  String?
+  featured          Boolean             @default(false)
+  // draft | open | closed
+  status            String              @default("draft")
+  publishedAt       DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  CareerApplication CareerApplication[]
+
+  @@index([status])
+  @@index([type])
+}
+
+model CareerApplication {
+  id           String         @id @default(cuid())
+  // null = general application not tied to an opening
+  openingId    String?
+  name         String
+  email        String
+  phone        String
+  resumeUrl    String?
+  profileUrl   String?
+  coverLetter  String?
+  // new | reviewing | shortlisted | rejected | hired
+  status       String         @default("new")
+  adminNotes   String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  CareerOpening CareerOpening? @relation(fields: [openingId], references: [id], onDelete: SetNull)
+
+  @@index([openingId])
+  @@index([status])
+  @@index([email])
+}

@@ -109,6 +109,7 @@ export async function GET(request: NextRequest) {
     const content = await prisma.content.findMany({
       where: {
         status: "published",
+        type: { not: "member-resource" },
         OR: [
           { title: { contains: query, mode: "insensitive" } },
           { content: { contains: query, mode: "insensitive" } },

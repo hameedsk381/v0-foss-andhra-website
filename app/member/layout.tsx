@@ -43,9 +43,11 @@ export default async function MemberLayout({
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <MemberResponsiveSidebar />
+      <div className="print:hidden">
+        <MemberResponsiveSidebar />
+      </div>
       {/* Main Content */}
-      <main className="flex-1 lg:ml-64 overflow-auto">
+      <main className="flex-1 lg:ml-64 overflow-auto print:ml-0">
         <div className="p-3 lg:p-6">{children}</div>
       </main>
     </div>

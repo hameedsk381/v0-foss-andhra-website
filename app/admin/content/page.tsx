@@ -109,7 +109,7 @@ export default function ContentManagement() {
   const openNewContentDialog = () => {
     setEditingContent(null)
     setContentForm({
-      type: activeTab === "pages" ? "page" : "program",
+      type: activeTab === "pages" ? "page" : activeTab === "resources" ? "member-resource" : "program",
       slug: "",
       title: "",
       content: "",
@@ -221,6 +221,7 @@ export default function ContentManagement() {
   const filteredContents = contents.filter((content) => {
     if (activeTab === "pages") return content.type === "page"
     if (activeTab === "programs") return content.type === "program"
+    if (activeTab === "resources") return content.type === "member-resource"
     return false
   })
 
@@ -241,6 +242,7 @@ export default function ContentManagement() {
         <TabsList>
           <TabsTrigger value="pages">Pages</TabsTrigger>
           <TabsTrigger value="programs">Programs</TabsTrigger>
+          <TabsTrigger value="resources">Member Resources</TabsTrigger>
           <TabsTrigger value="gallery">Gallery</TabsTrigger>
           <TabsTrigger value="media">Media</TabsTrigger>
         </TabsList>
@@ -273,6 +275,60 @@ export default function ContentManagement() {
                           </Badge>
                         </div>
                         <p className="text-sm text-gray-500">/{content.slug}</p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Last updated: {new Date(content.updatedAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => openEditContentDialog(content)}>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => deleteContent(content.id)} className="text-red-600">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="resources" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Member Resources ({filteredContents.length})</CardTitle>
+              <p className="text-sm text-gray-500">
+                Visible only to logged-in members with an active membership. Write the body in Markdown. To limit a
+                resource to certain tiers, put comma-separated tags in Keywords (student, teacher, institution,
+                professional, company, ngo). Leave Keywords empty or use &quot;all&quot; for every member. Set status
+                to Published to make it visible.
+              </p>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <p className="text-center py-8 text-gray-500">Loading...</p>
+              ) : filteredContents.length === 0 ? (
+                <p className="text-center py-8 text-gray-500">No member resources yet. Add your first one!</p>
+              ) : (
+                <div className="space-y-3">
+                  {filteredContents.map((content) => (
+                    <div key={content.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-medium">{content.title}</h3>
+                          <Badge
+                            className={
+                              content.status === "published"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-gray-100 text-gray-800"
+                            }
+                          >
+                            {content.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-500">Audience: {content.keywords || "all members"}</p>
                         <p className="text-xs text-gray-400 mt-1">
                           Last updated: {new Date(content.updatedAt).toLocaleString()}
                         </p>
@@ -438,6 +494,7 @@ export default function ContentManagement() {
                 <SelectContent>
                   <SelectItem value="page">Page</SelectItem>
                   <SelectItem value="program">Program</SelectItem>
+                  <SelectItem value="member-resource">Member Resource</SelectItem>
                 </SelectContent>
               </Select>
             </div>

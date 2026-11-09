@@ -322,8 +322,29 @@ export function AudienceSpecificForms() {
   }
 
   const isFormValid = () => {
-    const data = getCurrentFormData()
-    return data.name && data.email && data.phone && data.agreeTerms
+    const data = getCurrentFormData() as unknown as Record<string, string | boolean>
+    const requiredByType: Record<AudienceType, string[]> = {
+      student: ["address", "institution", "course"],
+      teacher: ["institution"],
+      institution: ["institutionName"],
+      professional: [],
+      company: ["companyName"],
+      ngo: ["organizationName"],
+    }
+    const extra = selectedAudience ? requiredByType[selectedAudience] : []
+    const filled = (v: string | boolean | undefined) => typeof v === "string" && v.trim() !== ""
+    return (
+      filled(data.name) &&
+      filled(data.email) &&
+      filled(data.phone) &&
+      extra.every((k) => filled(data[k])) &&
+      data.agreeTerms === true
+    )
+  }
+
+  const getOrganization = () => {
+    const d = getCurrentFormData() as unknown as Record<string, string>
+    return d.institutionName || d.companyName || d.organizationName || d.institution || d.company || ""
   }
 
   if (currentStep === "audience") {
@@ -483,11 +504,17 @@ export function AudienceSpecificForms() {
                       <p className="mb-2">
                         <strong>Phone:</strong> {getCurrentFormData().phone}
                       </p>
-                      {selectedAudience === 'student' && (
+                      {getOrganization() && (
                         <p className="mb-2">
-                          <strong>Address:</strong> {(getCurrentFormData() as StudentFormData).address}
+                          <strong>Organization:</strong> {getOrganization()}
                         </p>
                       )}
+                      {(selectedAudience === "student" || selectedAudience === "institution") &&
+                        (getCurrentFormData() as StudentFormData).address && (
+                          <p className="mb-2">
+                            <strong>Address:</strong> {(getCurrentFormData() as StudentFormData).address}
+                          </p>
+                        )}
                     </div>
                     <div>
                       <p className="mb-2">
@@ -539,6 +566,25 @@ export function AudienceSpecificForms() {
                     <p className="text-sm text-gray-600 mb-2">Your Membership ID:</p>
                     <p className="text-lg font-mono font-bold text-fosstar">{membershipId}</p>
                   </div>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-left">
+                  <h4 className="font-semibold text-blue-900 mb-2">Next: check your email</h4>
+                  <ol className="list-decimal list-inside text-sm text-blue-800 space-y-1">
+                    <li>
+                      We sent a welcome email to <strong>{getCurrentFormData().email}</strong> with a link to set your
+                      password.
+                    </li>
+                    <li>Click the verification link in the second email to confirm your address.</li>
+                    <li>
+                      Then <a href="/login" className="underline font-medium">log in</a> to access your member
+                      dashboard.
+                    </li>
+                  </ol>
+                  <p className="text-xs text-blue-700 mt-3">
+                    Both links expire in 24 hours. Can&apos;t find them? Check your spam folder or contact us with your
+                    Membership ID.
+                  </p>
                 </div>
 
                 <div className="flex gap-4">
@@ -650,7 +696,7 @@ function StudentForm({ data, setData }: { data: StudentFormData; setData: (data:
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="year">Current Year</Label>
-            <Select onValueChange={(value) => handleChange("year", value)}>
+            <Select value={data.year} onValueChange={(value) => handleChange("year", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select your current year" />
               </SelectTrigger>
@@ -798,7 +844,7 @@ function TeacherForm({ data, setData }: { data: TeacherFormData; setData: (data:
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="designation">Designation</Label>
-            <Select onValueChange={(value) => handleChange("designation", value)}>
+            <Select value={data.designation} onValueChange={(value) => handleChange("designation", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select your designation" />
               </SelectTrigger>
@@ -814,7 +860,7 @@ function TeacherForm({ data, setData }: { data: TeacherFormData; setData: (data:
           </div>
           <div className="space-y-2">
             <Label htmlFor="experience">Teaching Experience</Label>
-            <Select onValueChange={(value) => handleChange("experience", value)}>
+            <Select value={data.experience} onValueChange={(value) => handleChange("experience", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Years of experience" />
               </SelectTrigger>
@@ -944,7 +990,7 @@ function InstitutionForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="institutionType">Institution Type</Label>
-            <Select onValueChange={(value) => handleChange("institutionType", value)}>
+            <Select value={data.institutionType} onValueChange={(value) => handleChange("institutionType", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select institution type" />
               </SelectTrigger>
@@ -959,7 +1005,7 @@ function InstitutionForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="studentCount">Student Count</Label>
-            <Select onValueChange={(value) => handleChange("studentCount", value)}>
+            <Select value={data.studentCount} onValueChange={(value) => handleChange("studentCount", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Number of students" />
               </SelectTrigger>
@@ -1009,7 +1055,7 @@ function InstitutionForm({
         </div>
         <div className="space-y-2">
           <Label htmlFor="timeline">Implementation Timeline</Label>
-          <Select onValueChange={(value) => handleChange("timeline", value)}>
+          <Select value={data.timeline} onValueChange={(value) => handleChange("timeline", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Expected timeline" />
             </SelectTrigger>
@@ -1112,7 +1158,7 @@ function ProfessionalForm({
         </div>
         <div className="space-y-2">
           <Label htmlFor="experience">Professional Experience</Label>
-          <Select onValueChange={(value) => handleChange("experience", value)}>
+          <Select value={data.experience} onValueChange={(value) => handleChange("experience", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Years of experience" />
             </SelectTrigger>
@@ -1161,7 +1207,7 @@ function ProfessionalForm({
         </div>
         <div className="space-y-2">
           <Label htmlFor="availability">Availability for Community Activities</Label>
-          <Select onValueChange={(value) => handleChange("availability", value)}>
+          <Select value={data.availability} onValueChange={(value) => handleChange("availability", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Your availability" />
             </SelectTrigger>
@@ -1252,7 +1298,7 @@ function CompanyForm({ data, setData }: { data: CompanyFormData; setData: (data:
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="industry">Industry</Label>
-            <Select onValueChange={(value) => handleChange("industry", value)}>
+            <Select value={data.industry} onValueChange={(value) => handleChange("industry", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select industry" />
               </SelectTrigger>
@@ -1269,7 +1315,7 @@ function CompanyForm({ data, setData }: { data: CompanyFormData; setData: (data:
           </div>
           <div className="space-y-2">
             <Label htmlFor="size">Company Size</Label>
-            <Select onValueChange={(value) => handleChange("size", value)}>
+            <Select value={data.size} onValueChange={(value) => handleChange("size", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Number of employees" />
               </SelectTrigger>
@@ -1406,7 +1452,7 @@ function NGOForm({ data, setData }: { data: NGOFormData; setData: (data: NGOForm
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="focusArea">Focus Area</Label>
-            <Select onValueChange={(value) => handleChange("focusArea", value)}>
+            <Select value={data.focusArea} onValueChange={(value) => handleChange("focusArea", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Primary focus area" />
               </SelectTrigger>

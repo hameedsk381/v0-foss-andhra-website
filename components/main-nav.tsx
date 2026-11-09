@@ -36,6 +36,7 @@ const navItems = [
   { title: "Events", href: "/events" },
   { title: "Blog", href: "/blog", icon: BookOpen },
   { title: "Gallery", href: "/gallery" },
+  { title: "Careers", href: "/careers" },
   { title: "Contribute", href: "/contribute" },
 ]
 

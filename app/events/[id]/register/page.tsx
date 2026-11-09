@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
@@ -27,6 +28,8 @@ export default function EventRegisterPage() {
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
+    const [isMember, setIsMember] = useState(false)
+    const { data: session } = useSession()
 
     const [formData, setFormData] = useState({
         name: "",
@@ -41,6 +44,17 @@ export default function EventRegisterPage() {
             fetchEvent()
         }
     }, [id])
+
+    // Prefill name/email for logged-in members (without overwriting anything already typed).
+    useEffect(() => {
+        const user = session?.user as { name?: string | null; email?: string | null; userType?: string } | undefined
+        if (!user || user.userType !== "member") return
+        setFormData((prev) => ({
+            ...prev,
+            name: prev.name || user.name || "",
+            email: prev.email || user.email || "",
+        }))
+    }, [session])
 
     const fetchEvent = async () => {
         try {
@@ -74,6 +88,8 @@ export default function EventRegisterPage() {
             })
 
             if (response.ok) {
+                const result = await response.json().catch(() => null)
+                setIsMember(Boolean(result?.isMember))
                 setSubmitted(true)
             } else {
                 alert("Failed to register. Please try again.")
@@ -106,6 +122,12 @@ export default function EventRegisterPage() {
                         You have successfully registered for <strong>{event?.title}</strong>.
                         Confirmation details have been sent to your email.
                     </p>
+                    {isMember && (
+                        <p className="mb-8 rounded-md bg-green-50 p-3 text-sm text-green-800">
+                            Your registration is flagged as a FOSStar member registration. If you attend, your
+                            certificate will appear in your member dashboard.
+                        </p>
+                    )}
                     <div className="flex flex-col gap-4">
                         <Link href={`/events/${id}/details`}>
                             <Button className="w-full">View Event Details</Button>
