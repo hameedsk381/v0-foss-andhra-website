@@ -2,6 +2,7 @@ import NextAuth, { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { getEnvAdminConfig, isEnvAdminEmail, syncEnvAdmin, verifyEnvAdminPassword } from "@/lib/auth/env-admin"
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -17,21 +18,32 @@ export const authOptions: AuthOptions = {
           throw new Error("Invalid credentials")
         }
 
-        const admin = await prisma.admin.findUnique({
-          where: { email: credentials.email }
-        })
+        const envAdmin = getEnvAdminConfig()
+        let admin
 
-        if (!admin) {
-          throw new Error("Invalid credentials")
-        }
+        if (envAdmin && isEnvAdminEmail(credentials.email, envAdmin)) {
+          // The .env credentials are authoritative for the primary admin.
+          if (!verifyEnvAdminPassword(credentials.password, envAdmin)) {
+            throw new Error("Invalid credentials")
+          }
+          admin = await syncEnvAdmin(envAdmin)
+        } else {
+          admin = await prisma.admin.findUnique({
+            where: { email: credentials.email }
+          })
 
-        const isValidPassword = await bcrypt.compare(
-          credentials.password,
-          admin.password
-        )
+          if (!admin) {
+            throw new Error("Invalid credentials")
+          }
 
-        if (!isValidPassword) {
-          throw new Error("Invalid credentials")
+          const isValidPassword = await bcrypt.compare(
+            credentials.password,
+            admin.password
+          )
+
+          if (!isValidPassword) {
+            throw new Error("Invalid credentials")
+          }
         }
 
         // Update last login
