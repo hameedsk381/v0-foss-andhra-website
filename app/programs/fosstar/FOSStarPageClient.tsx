@@ -432,7 +432,7 @@ export default function FOSStarPage() {
                         </div>
                       </div>
                       <div className="text-center">
-                        <Link href="/register">
+                        <Link href="/membership">
                           <AnimatedButton className="bg-fosstar hover:bg-fosstar/90 text-white px-8 py-3">
                             Join Now - ₹300/year
                           </AnimatedButton>

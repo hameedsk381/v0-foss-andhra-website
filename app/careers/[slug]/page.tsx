@@ -95,7 +95,7 @@ export default async function OpeningPage({ params }: { params: { slug: string }
               <Link href="/login">
                 <Button>Log in</Button>
               </Link>
-              <Link href="/register">
+              <Link href="/membership">
                 <Button variant="outline">Become a FOSStar member</Button>
               </Link>
             </div>

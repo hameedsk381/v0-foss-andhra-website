@@ -84,7 +84,7 @@ test.describe('Page routing', () => {
     { name: 'faq',       path: '/faq' },
     { name: 'membership',path: '/membership' },
     { name: 'login',     path: '/login' },
-    { name: 'register',  path: '/register' },
+    { name: 'careers',   path: '/careers' },
   ]
 
   for (const { name, path } of routes) {

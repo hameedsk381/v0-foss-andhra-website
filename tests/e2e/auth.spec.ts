@@ -55,7 +55,7 @@ test.describe('Login page', () => {
 test.describe('Register page', () => {
   test.beforeEach(async ({ page }) => {
     await mockApiRoutes(page)
-    await page.goto('/register')
+    await page.goto('/membership')
   })
 
   test('register page loads', async ({ page }) => {

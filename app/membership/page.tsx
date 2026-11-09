@@ -1,18 +1,31 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
-import MembershipPageClient from "./MembershipPageClient"
+import { AudienceSpecificForms } from "./audience-forms"
 
 export const metadata: Metadata = {
-  title: "FOSStar Membership Program | FOSS Andhra",
+  title: "Join FOSStar — Register | FOSS Andhra",
   description:
-    "Explore FOSStar membership tiers for students, professionals, and institutions. Join the FOSS Andhra community in Andhra Pradesh and access exclusive resources and events.",
+    "Register as a FOSStar member of FOSS Andhra: student, professional, or institutional membership. Join the community of open source enthusiasts across Andhra Pradesh.",
   alternates: { canonical: "/membership" },
-  openGraph: {
-    title: "FOSStar Membership | FOSS Andhra",
-    description: "Join FOSS Andhra's membership program for students, professionals, and institutions in AP.",
-    url: "https://fossap.in/membership",
-  },
 }
 
-export default function MembershipPage() {
-  return <MembershipPageClient />
+function RegisterContent() {
+  return <AudienceSpecificForms />
+}
+
+export default function RegisterPage() {
+  return (
+    <div className="container mx-auto px-4 py-12">
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading registration form...</p>
+          </div>
+        </div>
+      }>
+        <RegisterContent />
+      </Suspense>
+    </div>
+  )
 }

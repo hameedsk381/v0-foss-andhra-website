@@ -114,6 +114,16 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/register",
+        destination: "/careers",
+        permanent: true,
+      },
+      {
+        source: "/register/:path*",
+        destination: "/careers",
+        permanent: true,
+      },
     ]
   },
 }
