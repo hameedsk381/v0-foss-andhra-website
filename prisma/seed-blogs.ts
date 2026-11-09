@@ -17,7 +17,7 @@ async function main() {
       data: {
         id: generateId(),
         name: "FOSS Andhra Admin",
-        email: "admin@fossandhra.org",
+        email: "admin@fossap.in",
         password: "$2a$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdqgqw9XDpnDGfPdYjNlJBMF9S6", // "password123"
         role: "admin",
         updatedAt: new Date(),

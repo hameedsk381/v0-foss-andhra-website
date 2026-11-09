@@ -148,7 +148,7 @@ export default function PushNotificationsPage() {
                 type="url"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://fossandhra.org/events/..."
+                placeholder="https://fossap.in/events/..."
               />
               <p className="text-sm text-gray-500 mt-1">
                 URL to open when notification is clicked

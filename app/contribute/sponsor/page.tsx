@@ -234,9 +234,9 @@ export default function SponsorPage() {
                     Contact Sponsorship Team
                   </Button>
                 </Link>
-                <a href="mailto:sponsors@fossandhra.org">
+                <a href="mailto:sponsors@fossap.in">
                   <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                    Email: sponsors@fossandhra.org
+                    Email: sponsors@fossap.in
                   </Button>
                 </a>
               </div>

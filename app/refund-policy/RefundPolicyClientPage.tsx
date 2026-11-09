@@ -59,7 +59,7 @@ export default function RefundPolicyClientPage() {
                 non-refundable.
               </p>
               <p className="text-muted-foreground md:text-lg/relaxed">
-                To request a refund for your annual membership fee, please contact us at membership@fossandhra.org with
+                To request a refund for your annual membership fee, please contact us at membership@fossap.in with
                 your name and the email address used for registration.
               </p>
             </div>
@@ -145,7 +145,7 @@ export default function RefundPolicyClientPage() {
               </li>
             </ul>
             <p className="text-muted-foreground md:text-lg/relaxed">
-              If you believe a digital product is defective, please contact us at support@fossandhra.org with details of
+              If you believe a digital product is defective, please contact us at support@fossap.in with details of
               the issue.
             </p>
           </motion.section>

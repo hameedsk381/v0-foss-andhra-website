@@ -31,7 +31,7 @@ const contentPages = [
 <h2>Security of Your Information</h2>
 <p>We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable.</p>
 <h2>Contact Us</h2>
-<p>If you have questions or concerns about this Privacy Policy, please contact us at privacy@fossandhra.org</p>`,
+<p>If you have questions or concerns about this Privacy Policy, please contact us at privacy@fossap.in</p>`,
     metaDescription: 'Privacy policy for FOSS Andhra\'s website, programs, and services.',
     keywords: 'privacy policy, data protection, FOSS Andhra',
     status: 'published',
@@ -49,7 +49,7 @@ const contentPages = [
 <h2>Disclaimer</h2>
 <p>Our services are provided "as is" without warranties of any kind, either express or implied. We do not warrant that our services will be uninterrupted, error-free, or secure.</p>
 <h2>Contact Us</h2>
-<p>If you have any questions about these Terms, please contact us at legal@fossandhra.org</p>`,
+<p>If you have any questions about these Terms, please contact us at legal@fossap.in</p>`,
     metaDescription: 'Terms and conditions for using FOSS Andhra\'s website, programs, and services.',
     keywords: 'terms of service, terms and conditions, FOSS Andhra',
     status: 'published',
@@ -70,11 +70,11 @@ const contentPages = [
 <li>Less than 15 days before the event: No refund</li>
 </ul>
 <h2>Donations</h2>
-<p>Donations to FOSS Andhra are generally non-refundable. However, if you made a donation in error or were charged an incorrect amount, please contact us immediately at donations@fossandhra.org.</p>
+<p>Donations to FOSS Andhra are generally non-refundable. However, if you made a donation in error or were charged an incorrect amount, please contact us immediately at donations@fossap.in.</p>
 <h2>Refund Process</h2>
-<p>To request a refund, please contact us at refunds@fossandhra.org with your name, email address, date of purchase, item purchased, and reason for the refund request.</p>
+<p>To request a refund, please contact us at refunds@fossap.in with your name, email address, date of purchase, item purchased, and reason for the refund request.</p>
 <h2>Contact Us</h2>
-<p>If you have any questions about this Refund Policy, please contact us at refunds@fossandhra.org</p>`,
+<p>If you have any questions about this Refund Policy, please contact us at refunds@fossap.in</p>`,
     metaDescription: 'Refund policy for FOSS Andhra\'s programs, events, and services.',
     keywords: 'refund policy, cancellation, FOSS Andhra',
     status: 'published',

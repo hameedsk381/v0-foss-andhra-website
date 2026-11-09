@@ -95,7 +95,7 @@ export default function AdminLogin() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@fossandhra.org"
+                placeholder="admin@fossap.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

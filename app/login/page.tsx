@@ -211,7 +211,7 @@ function LoginPageContent() {
                   <Input
                     id="admin-email"
                     type="email"
-                    placeholder="admin@fossandhra.org"
+                    placeholder="admin@fossap.in"
                     value={adminEmail}
                     onChange={(e) => setAdminEmail(e.target.value)}
                     required

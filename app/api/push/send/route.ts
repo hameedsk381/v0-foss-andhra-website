@@ -8,7 +8,7 @@ import webpush from "web-push"
 // Configure web-push with VAPID keys
 const vapidPublicKey = process.env.VAPID_PUBLIC_KEY
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY
-const vapidEmail = process.env.VAPID_EMAIL || "mailto:info@fossandhra.org"
+const vapidEmail = process.env.VAPID_EMAIL || "mailto:info@fossap.in"
 
 if (vapidPublicKey && vapidPrivateKey) {
   webpush.setVapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey)

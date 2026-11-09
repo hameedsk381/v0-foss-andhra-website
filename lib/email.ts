@@ -771,7 +771,7 @@ export async function sendRenewalReminderEmail(to: string, memberData: {
             </ul>
 
             <center>
-              <a href="https://fossandhra.org/programs/fosstar#membership" class="button">Renew Membership</a>
+              <a href="https://fossap.in/programs/fosstar#membership" class="button">Renew Membership</a>
             </center>
 
             <p>Questions? Contact us at <a href="mailto:office@fossap.in">office@fossap.in</a></p>
@@ -852,16 +852,16 @@ export async function sendVolunteerConfirmationEmail(to: string, volunteerData: 
             <h3>In the Meantime</h3>
             <p>While we review your application, feel free to:</p>
             <ul>
-              <li>Explore our <a href="https://fossandhra.org/programs">programs and initiatives</a></li>
-              <li>Join our upcoming <a href="https://fossandhra.org/events">events and workshops</a></li>
-              <li>Read our <a href="https://fossandhra.org/blog">latest blog posts</a></li>
+              <li>Explore our <a href="https://fossap.in/programs">programs and initiatives</a></li>
+              <li>Join our upcoming <a href="https://fossap.in/events">events and workshops</a></li>
+              <li>Read our <a href="https://fossap.in/blog">latest blog posts</a></li>
             </ul>
 
             <center>
-              <a href="https://fossandhra.org" class="button">Visit Our Website</a>
+              <a href="https://fossap.in" class="button">Visit Our Website</a>
             </center>
 
-            <p>If you have any questions, feel free to reach out to us at <a href="mailto:volunteers@fossandhra.org">volunteers@fossandhra.org</a></p>
+            <p>If you have any questions, feel free to reach out to us at <a href="mailto:volunteers@fossap.in">volunteers@fossap.in</a></p>
 
             <p>Thank you for your commitment to the FOSS movement!</p>
 
@@ -899,7 +899,7 @@ export async function sendVolunteerAdminNotification(volunteerData: {
   id: string
 }) {
   const { firstName, lastName, email, phone, skills, interests, availability, id } = volunteerData
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@fossandhra.org'
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@fossap.in'
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3002'
 
   const mailOptions = {
@@ -1066,7 +1066,7 @@ export async function sendTicketConfirmationEmail(to: string, orderData: {
             <h3 style="color: #015ba7;">Need Help?</h3>
             <p>If you have any questions or need assistance, please contact us:</p>
             <p>
-              📧 Email: <a href="mailto:events@fossandhra.org" style="color: #015ba7;">events@fossandhra.org</a><br>
+              📧 Email: <a href="mailto:events@fossap.in" style="color: #015ba7;">events@fossap.in</a><br>
               📞 Phone: +91-XXX-XXX-XXXX
             </p>
 

@@ -16,6 +16,6 @@ console.log("✅ VAPID keys generated successfully!\n")
 console.log("Add these to your .env file:\n")
 console.log("VAPID_PUBLIC_KEY=" + vapidKeys.publicKey)
 console.log("VAPID_PRIVATE_KEY=" + vapidKeys.privateKey)
-console.log("VAPID_EMAIL=mailto:info@fossandhra.org\n")
+console.log("VAPID_EMAIL=mailto:info@fossap.in\n")
 console.log("⚠️  Keep the private key SECRET! Never commit it to version control.\n")
 

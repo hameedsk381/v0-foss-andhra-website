@@ -10,7 +10,7 @@ interface SEOMetaProps {
 }
 
 export function SEOMeta({ title, description, keywords, image, url, type = "website" }: SEOMetaProps) {
-  const siteUrl = "https://fossandhra.org"
+  const siteUrl = "https://fossap.in"
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl
   const imageUrl = image ? `${siteUrl}${image}` : `${siteUrl}/og-image.png`
 

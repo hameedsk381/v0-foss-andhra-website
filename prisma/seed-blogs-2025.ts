@@ -13,7 +13,7 @@ async function main() {
       data: {
         id: randomUUID(),
         name: 'FOSS Andhra Admin',
-        email: 'admin@fossandhra.org',
+        email: 'admin@fossap.in',
         password: 'hashed_password_here',
         role: 'admin',
         updatedAt: new Date(),

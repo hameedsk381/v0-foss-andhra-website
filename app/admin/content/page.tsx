@@ -583,7 +583,7 @@ export default function ContentManagement() {
                     id="canonicalUrl"
                     value={contentForm.canonicalUrl}
                     onChange={(e) => setContentForm({ ...contentForm, canonicalUrl: e.target.value })}
-                    placeholder="https://fossandhra.org/page-url"
+                    placeholder="https://fossap.in/page-url"
                   />
                 </div>
 

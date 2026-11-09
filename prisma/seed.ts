@@ -366,7 +366,7 @@ async function seedGallery() {
 async function seedAdmin() {
   console.log('🌱 Seeding admin account...')
 
-  const email = 'admin@fossandhra.org'
+  const email = 'admin@fossap.in'
   const password = await bcrypt.hash('FossAndhra@2024', 10)
 
   // Check if admin exists
