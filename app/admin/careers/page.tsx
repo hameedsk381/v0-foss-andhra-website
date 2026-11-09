@@ -556,7 +556,7 @@ export default function CareersAdminPage() {
 
                 {hrForm === "interview" && (
                   <div className="space-y-2 border-t pt-3">
-                    <Label htmlFor="iv-at">Interview date and time (at Centre for Excellence, Vijayawada)</Label>
+                    <Label htmlFor="iv-at">Interview date and time (at Yesj Centre for Excellence, Vijayawada)</Label>
                     <Input id="iv-at" type="datetime-local" value={interviewAt} onChange={(e) => setInterviewAt(e.target.value)} />
                     <Textarea
                       rows={2}

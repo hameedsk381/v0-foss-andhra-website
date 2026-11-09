@@ -5,15 +5,13 @@
 
 export const INTERNSHIP_MONTHS = 3
 
-/** Where interns meet. The street address is not set in the codebase; add it via OFFICE_ADDRESS if needed. */
+/** Where interns meet (same address as the site footer). */
 export const OFFICE = {
-  name: "Centre for Excellence",
-  city: "Vijayawada",
-  address: process.env.OFFICE_ADDRESS?.trim() || "",
+  name: "Yesj Centre for Excellence",
+  city: "Vijayawada, AP 520008",
 }
 
-export const officeLine = () =>
-  [OFFICE.name, OFFICE.address, OFFICE.city].filter(Boolean).join(", ")
+export const officeLine = () => `${OFFICE.name}, ${OFFICE.city}`
 
 export const HR_EMAIL = () =>
   process.env.CAREERS_EMAIL?.trim() || process.env.ADMIN_EMAIL?.trim() || "office@fossap.in"
@@ -131,7 +129,7 @@ export function getRoleProfile(department: string | null | undefined, title?: st
 
 /** Responsibilities every intern shares, regardless of domain. */
 export const COMMON_RESPONSIBILITIES = [
-  "Attend the on-site sessions at the Centre for Excellence, Vijayawada, and the scheduled online check-ins",
+  "Attend the on-site sessions at the Yesj Centre for Excellence, Vijayawada, and the scheduled online check-ins",
   "Be punctual, communicate absences in advance, and respond to your mentor within a reasonable time",
   "Follow the FOSS Andhra Code of Conduct and treat every community member with respect",
   "Submit a short weekly progress update and a final report or demo at the end of the internship",
