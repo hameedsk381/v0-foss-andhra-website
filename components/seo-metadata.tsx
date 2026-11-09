@@ -38,8 +38,8 @@ export function generateSEOMetadata({
   modifiedTime,
   noIndex = false,
 }: SEOMetadataProps): Metadata {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"
-  const defaultImage = `${siteUrl}/og-default.png`
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
+  const defaultImage = `${siteUrl}/og-image.png`
   
   const metadata: Metadata = {
     title,
@@ -101,7 +101,7 @@ export function generateBlogPostMetadata(post: {
   publishedAt?: Date | null
   updatedAt?: Date
 }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
   
   return generateSEOMetadata({
     title: `${post.title} | FOSS Andhra Blog`,
@@ -140,7 +140,7 @@ export function generateContentMetadata(content: {
   publishedAt?: Date | null
   updatedAt?: Date
 }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
   
   // Extract plain text from HTML content for description fallback
   const plainText = content.content.replace(/<[^>]*>/g, "").substring(0, 160)

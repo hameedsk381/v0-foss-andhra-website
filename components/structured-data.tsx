@@ -1,4 +1,7 @@
-import Script from "next/script"
+// Structured data (JSON-LD) helpers.
+// All payloads render as plain <script> tags in SSR HTML so crawlers see them
+// without executing JavaScript (next/script's default strategy injects after
+// hydration, so they never appear in the raw markup).
 
 interface BlogPostJsonLdProps {
   post: {
@@ -10,18 +13,19 @@ interface BlogPostJsonLdProps {
     publishedAt?: Date | null
     updatedAt: Date
     category: { name: string }
+    readingTime?: number | null
   }
 }
 
 export function BlogPostJsonLd({ post }: BlogPostJsonLdProps) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"
-  
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
-    image: post.coverImage || `${siteUrl}/og-default.png`,
+    image: post.coverImage || `${siteUrl}/og-image.png`,
     author: {
       "@type": "Person",
       name: post.author.name,
@@ -31,7 +35,7 @@ export function BlogPostJsonLd({ post }: BlogPostJsonLdProps) {
       name: "FOSS Andhra",
       logo: {
         "@type": "ImageObject",
-        url: `${siteUrl}/logo.png`,
+        url: `${siteUrl}/logos/foss-andhra-logo.png`,
       },
     },
     datePublished: post.publishedAt?.toISOString() || post.updatedAt.toISOString(),
@@ -41,10 +45,11 @@ export function BlogPostJsonLd({ post }: BlogPostJsonLdProps) {
       "@id": `${siteUrl}/blog/${post.slug}`,
     },
     articleSection: post.category.name,
+    ...(post.readingTime ? { timeRequired: `PT${post.readingTime}M` } : {}),
   }
 
   return (
-    <Script
+    <script
       id="blog-post-jsonld"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -62,8 +67,8 @@ interface OrganizationJsonLdProps {
 
 export function OrganizationJsonLd({
   name = "FOSS Andhra",
-  url = "https://fossandhra.org",
-  logo = "https://fossandhra.org/logo.png",
+  url = "https://fossap.in",
+  logo = `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"}/logos/foss-andhra-logo.png`,
   description = "Free and Open Source Software Community in Andhra Pradesh",
   socialProfiles = [
     "https://twitter.com/fossandhra",
@@ -82,7 +87,7 @@ export function OrganizationJsonLd({
   }
 
   return (
-    <Script
+    <script
       id="organization-jsonld"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -110,7 +115,7 @@ export function BreadcrumbJsonLd({ items }: BreadcrumbJsonLdProps) {
   }
 
   return (
-    <Script
+    <script
       id="breadcrumb-jsonld"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -131,8 +136,8 @@ interface EventJsonLdProps {
 }
 
 export function EventJsonLd({ event }: EventJsonLdProps) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossandhra.org"
-  
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
+
   const startDateTime = new Date(event.date)
   const [hours, minutes] = event.time.split(":")
   startDateTime.setHours(parseInt(hours), parseInt(minutes))
@@ -149,7 +154,7 @@ export function EventJsonLd({ event }: EventJsonLdProps) {
       name: event.location,
       address: event.location,
     },
-    image: event.imageUrl || `${siteUrl}/og-default.png`,
+    image: event.imageUrl || `${siteUrl}/og-image.png`,
     organizer: {
       "@type": "Organization",
       name: "FOSS Andhra",
@@ -158,7 +163,7 @@ export function EventJsonLd({ event }: EventJsonLdProps) {
   }
 
   return (
-    <Script
+    <script
       id="event-jsonld"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

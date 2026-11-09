@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+import Link from "next/link"
+import { ArrowLeft, Calendar, Clock, Eye } from "lucide-react"
 
 export const dynamic = "force-dynamic"
 import { generateBlogPostMetadata } from "@/components/seo-metadata"
@@ -14,6 +16,8 @@ interface BlogPostPageProps {
     slug: string
   }
 }
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   try {
@@ -93,75 +97,116 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     // Ignore view count update errors during build/preview
   }
 
+  // Related posts from the same category (deep internal links for readers + crawlers)
+  const relatedPosts = await prisma.blogPost.findMany({
+    where: { status: "published", id: { not: post.id }, categoryId: post.categoryId },
+    orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
+    take: 3,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      excerpt: true,
+      coverImage: true,
+      readingTime: true,
+      publishedAt: true,
+      category: { select: { name: true, slug: true } },
+    },
+  })
+
+  const publishedAt = post.publishedAt || post.createdAt
+
   return (
-    <div className="min-h-screen bg-[hsl(var(--surface-1))]">
+    <div className="min-h-screen bg-background">
       {/* SEO: Structured Data */}
       <BlogPostJsonLd post={post} />
       <BreadcrumbJsonLd
         items={[
-          { name: "Home", url: process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in" },
-          { name: "Blog", url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"}/blog` },
-          { name: post.category.name, url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"}/blog/category/${post.category.slug}` },
-          { name: post.title, url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"}/blog/${post.slug}` },
+          { name: "Home", url: SITE_URL },
+          { name: "Blog", url: `${SITE_URL}/blog` },
+          { name: post.title, url: `${SITE_URL}/blog/${post.slug}` },
         ]}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Article Header */}
-        <article className="bg-card rounded-lg shadow-md overflow-hidden border border-border">
-          {post.coverImage && (
-            <div className="aspect-video w-full">
-              <img
-                src={post.coverImage}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+      <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 py-10 sm:py-14">
+        {/* Back to blog */}
+        <Link
+          href="/blog"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          All posts
+        </Link>
 
-          <div className="p-8">
-            {/* Category & Reading Time */}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full">
+        <article className="bg-card rounded-xl shadow-sm overflow-hidden border border-border">
+          {/* Article header */}
+          <header className="px-6 sm:px-10 pt-8 pb-6">
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <Link
+                href={`/blog?category=${post.category.slug}`}
+                className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium hover:bg-primary/20 transition-colors"
+              >
                 {post.category.name}
-              </span>
-              {post.readingTime && (
-                <span>{post.readingTime} min read</span>
+              </Link>
+              {post.readingTime != null && post.readingTime > 0 && (
+                <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" aria-hidden="true" />
+                  {post.readingTime} min read
+                </span>
               )}
-              <span>{post.views} views</span>
+              <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Eye className="h-4 w-4" aria-hidden="true" />
+                {post.views} views
+              </span>
             </div>
 
-            {/* Title */}
-            <h1 className="font-display text-4xl font-extrabold text-foreground mb-4">
+            <h1 className="font-display text-3xl sm:text-4xl font-bold leading-tight tracking-tight text-foreground">
               {post.title}
             </h1>
 
-            {/* Excerpt */}
-            <p className="text-xl text-muted-foreground mb-6">{post.excerpt}</p>
+            {post.excerpt && (
+              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+                {post.excerpt}
+              </p>
+            )}
 
-            {/* Meta Info */}
-            <div className="flex items-center gap-4 pb-6 border-b">
-              {post.author.avatar && (
-                <img
-                  src={post.author.avatar}
-                  alt={post.author.name}
-                  className="w-12 h-12 rounded-full"
-                />
-              )}
-              <div>
-                <p className="font-semibold text-foreground">{post.author.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {new Date(post.publishedAt || post.createdAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
+            <div className="mt-6 flex items-center justify-between gap-4 border-b pb-6">
+              <div className="flex items-center gap-3">
+                {post.author.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={post.author.avatar}
+                    alt={post.author.name}
+                    className="w-11 h-11 rounded-full border border-border object-cover"
+                  />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="w-11 h-11 rounded-full bg-primary/10 text-primary flex items-center justify-center font-display font-bold"
+                  >
+                    {post.author.name?.charAt(0).toUpperCase() || "F"}
+                  </span>
+                )}
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{post.author.name || "FOSS Andhra"}</p>
+                  <time
+                    dateTime={publishedAt.toISOString()}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {publishedAt.toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </time>
+                </div>
               </div>
             </div>
+          </header>
 
-            {/* Content - Markdown Rendering */}
-            <div className="prose prose-zinc dark:prose-invert max-w-none mt-8 prose-headings:font-semibold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:leading-7 prose-li:my-0.5 prose-img:rounded-lg prose-img:shadow-md ProseMirror">
+          {/* Content - Markdown rendering */}
+          <div className="px-6 sm:px-10">
+            <div className="prose prose-zinc dark:prose-invert max-w-none prose-headings:font-display prose-headings:tracking-tight prose-h2:text-2xl prose-h3:text-xl prose-p:leading-7 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-primary prose-blockquote:bg-primary/[0.04] prose-blockquote:py-1 prose-blockquote:pr-4 prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none prose-pre:bg-foreground prose-img:rounded-lg prose-img:shadow-md">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}
@@ -170,19 +215,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </ReactMarkdown>
             </div>
 
-            {/* Tags */}
+            {/* Tags (non-link: tag archive pages don't exist) */}
             {post.tags.length > 0 && (
-              <div className="mt-8 pt-8 border-t">
-                <h3 className="font-semibold mb-3">Tags</h3>
+              <div className="mt-10 pb-8 border-t pt-6" aria-label="Post tags">
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map(({ tag }: any) => (
-                    <a
+                    <span
                       key={tag.id}
-                      href={`/blog/tag/${tag.slug}`}
-                      className="bg-muted hover:bg-muted/70 px-3 py-1 rounded-full text-sm text-foreground transition"
+                      className="bg-muted px-3 py-1 rounded-full text-sm text-foreground"
                     >
                       #{tag.name}
-                    </a>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -190,32 +233,92 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </article>
 
-        {/* Comments Section */}
+        {/* Related posts from the same category */}
+        {relatedPosts.length > 0 && (
+          <section aria-labelledby="related-heading" className="mt-10">
+            <h2 id="related-heading" className="font-display text-xl font-bold text-foreground mb-5">
+              More from {post.category.name}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {relatedPosts.map((related: any) => (
+                <Link
+                  key={related.id}
+                  href={`/blog/${related.slug}`}
+                  className="group flex h-full flex-col rounded-lg border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                    {related.category?.name}
+                  </span>
+                  <span className="mt-2 font-display text-sm font-semibold leading-snug text-foreground group-hover:text-primary transition-colors">
+                    {related.title}
+                  </span>
+                  <span className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+                    {related.readingTime > 0 ? `${related.readingTime} min read` : "Guide"}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Comments */}
         {post.comments.length > 0 && (
-          <div className="mt-8 bg-card rounded-lg shadow-md p-8 border border-border">
-            <h2 className="text-2xl font-bold mb-6">
+          <section aria-labelledby="comments-heading" className="mt-10 bg-card rounded-xl p-6 sm:p-8 border border-border">
+            <h2 id="comments-heading" className="font-display text-xl font-bold mb-6">
               Comments ({post.comments.length})
             </h2>
             <div className="space-y-6">
               {post.comments.map((comment: any) => (
-                <div key={comment.id} className="border-b pb-6 last:border-b-0">
+                <div key={comment.id} className="border-b pb-6 last:border-b-0 last:pb-0">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-semibold">
+                    <span
+                      aria-hidden="true"
+                      className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-semibold shrink-0"
+                    >
                       {comment.name.charAt(0).toUpperCase()}
-                    </div>
+                    </span>
                     <div className="flex-1">
                       <p className="font-semibold">{comment.name}</p>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {new Date(comment.createdAt).toLocaleDateString()}
-                      </p>
-                      <p className="text-foreground">{comment.content}</p>
+                      <time
+                        dateTime={new Date(comment.createdAt).toISOString()}
+                        className="text-sm text-muted-foreground"
+                      >
+                        {new Date(comment.createdAt).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </time>
+                      <p className="mt-2 text-foreground leading-relaxed">{comment.content}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         )}
+
+        {/* CTA band — internal links for the reader journey */}
+        <div className="mt-10 rounded-xl border border-border bg-primary/[0.04] p-6 sm:p-8">
+          <h2 className="font-display text-lg font-bold text-foreground sm:text-xl">
+            Take the next step
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Explore our{" "}
+            <Link href="/careers?type=internship" className="font-medium text-primary hover:underline">
+              internship openings
+            </Link>
+            , become a{" "}
+            <Link href="/membership" className="font-medium text-primary hover:underline">
+              FOSStar member
+            </Link>
+            , or meet the community at an{" "}
+            <Link href="/events" className="font-medium text-primary hover:underline">
+              upcoming event
+            </Link>
+            .
+          </p>
+        </div>
       </div>
     </div>
   )

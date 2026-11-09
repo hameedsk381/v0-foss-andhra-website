@@ -121,12 +121,16 @@ function BlogListJsonLd({ posts }: { posts: Awaited<ReturnType<typeof getPosts>>
   )
 }
 
-export default async function BlogPage() {
-  const [initialPosts, categories] = await Promise.all([getPosts(), getCategories()])
+export default async function BlogPage({ searchParams }: { searchParams?: { category?: string } }) {
+  const [posts, categories] = await Promise.all([getPosts(), getCategories()])
   return (
     <>
-      <BlogListJsonLd posts={initialPosts} />
-      <BlogPageClient initialPosts={initialPosts} categories={categories} />
+      <BlogListJsonLd posts={posts} />
+      <BlogPageClient
+        initialPosts={posts}
+        categories={categories}
+        initialCategory={searchParams?.category || null}
+      />
     </>
   )
 }

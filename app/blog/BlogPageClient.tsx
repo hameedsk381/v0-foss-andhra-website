@@ -33,6 +33,7 @@ interface CategoryOption {
 interface Props {
   initialPosts?: BlogPost[]
   categories?: CategoryOption[]
+  initialCategory?: string | null
 }
 
 const PAGE_SIZE = 9
@@ -107,9 +108,9 @@ function CoverOrGradient({ post, tall }: { post: BlogPost; tall?: boolean }) {
   )
 }
 
-export default function BlogPageClient({ initialPosts = [], categories = [] }: Props) {
+export default function BlogPageClient({ initialPosts = [], categories = [], initialCategory = null }: Props) {
   const [searchTerm, setSearchTerm] = useState("")
-  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [activeCategory, setActiveCategory] = useState<string | null>(initialCategory)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   const featured = initialPosts.find((p) => p.featured)
