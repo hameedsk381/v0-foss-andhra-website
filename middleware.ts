@@ -6,13 +6,27 @@ const ADMIN_ROLES = new Set(["admin", "editor", "viewer"])
 const MUTATION_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"])
 const ADMIN_ONLY_API_PREFIXES = ["/api/admin/settings", "/api/admin/newsletter/send"]
 
-// Routes that accept CONTENT_API_KEY (content pages, blog posts, career openings). Applications hold
-// applicant personal data and stay session-only.
-const API_KEY_PATH_PREFIXES = ["/api/admin/content", "/api/admin/blog/posts", "/api/admin/careers"]
-const API_KEY_BLOCKED_PREFIXES = ["/api/admin/careers/applications"]
+// Edge-runtime check of CONTENT_API_KEY (Web Crypto; compares SHA-256 digests without early exit).
+async function hasValidApiKey(req: NextRequest): Promise<boolean> {
+  const key = process.env.CONTENT_API_KEY?.trim()
+  if (!key || key.length < 32 || /^(replace-with|change-me)/i.test(key)) return false
 
-function hasApiKeyHeader(req: NextRequest): boolean {
-  return /^bearer\s+\S/i.test(req.headers.get("authorization") ?? "") || !!req.headers.get("x-api-key")
+  const auth = req.headers.get("authorization") ?? ""
+  const presented = /^bearer\s+\S/i.test(auth)
+    ? auth.replace(/^bearer\s+/i, "").trim()
+    : (req.headers.get("x-api-key")?.trim() ?? "")
+  if (!presented) return false
+
+  const enc = new TextEncoder()
+  const [a, b] = await Promise.all([
+    crypto.subtle.digest("SHA-256", enc.encode(presented)),
+    crypto.subtle.digest("SHA-256", enc.encode(key)),
+  ])
+  const x = new Uint8Array(a)
+  const y = new Uint8Array(b)
+  let diff = 0
+  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i]
+  return diff === 0
 }
 
 function getRole(token: unknown): string {
@@ -48,14 +62,9 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (pathname.startsWith("/api/admin")) {
-    // API-key access: only content routes may be reached without a session. The route handlers
-    // validate the key themselves (middleware can't), so this just lets key-bearing requests through.
-    if (
-      !isAuthenticated &&
-      hasApiKeyHeader(req) &&
-      API_KEY_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
-      !API_KEY_BLOCKED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
-    ) {
+    // A valid CONTENT_API_KEY grants full admin API access. The key is verified here, so only
+    // correct keys skip the session check (route handlers verify it again).
+    if (!isAuthenticated && (await hasValidApiKey(req))) {
       return NextResponse.next()
     }
 

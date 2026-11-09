@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { requireAdminAccess } from "@/lib/auth/admin"
+import { requireAdminAccessOrKey } from "@/lib/auth/admin"
 import { prisma } from "@/lib/prisma"
 
 // GET - Fetch all categories
 export async function GET() {
   try {
-    const authError = await requireAdminAccess(["viewer", "editor", "admin"])
+    const authError = await requireAdminAccessOrKey(["viewer", "editor", "admin"])
     if (authError) return authError
 
     const categories = await prisma.blogCategory.findMany({
@@ -33,7 +33,7 @@ export async function GET() {
 // POST - Create new category
 export async function POST(request: NextRequest) {
   try {
-    const authError = await requireAdminAccess(["editor", "admin"])
+    const authError = await requireAdminAccessOrKey(["editor", "admin"])
     if (authError) return authError
 
     const body = await request.json()

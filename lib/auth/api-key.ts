@@ -3,7 +3,7 @@ import crypto from "crypto"
 /**
  * Content API key, set in .env as CONTENT_API_KEY (at least 32 characters).
  * Send it as `Authorization: Bearer <key>` (or `x-api-key: <key>`).
- * It grants editor-level access to the content routes only (see requireAdmin*OrKey).
+ * It grants FULL admin access to every admin API route (treat it like the admin password).
  */
 export function getContentApiKey(): string | null {
   const key = process.env.CONTENT_API_KEY?.trim()

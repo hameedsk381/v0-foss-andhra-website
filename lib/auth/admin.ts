@@ -36,30 +36,21 @@ export function ensureAdminAccess(session: Session | null, allowedRoles: AdminRo
   return null
 }
 
-export async function requireAdminAccess(allowedRoles: AdminRole[]) {
-  const session = await getServerSession(authOptions)
-  return ensureAdminAccess(session, allowedRoles)
-}
-
-export async function requireAdminSession(allowedRoles: AdminRole[]) {
-  const session = await getServerSession(authOptions)
-  const authError = ensureAdminAccess(session, allowedRoles)
-  return { session, authError }
+/** True when the request carries a valid CONTENT_API_KEY (full admin access). */
+export function hasValidApiKey(): boolean {
+  return isValidContentApiKey(readPresentedKey(headers()))
 }
 
 /**
- * Like requireAdminSession, but a valid content API key is also accepted. The key acts
- * as an "editor": it cannot reach routes that require the "admin" role (e.g. deletes).
- * Use only on content routes (content, blog posts, career openings).
+ * Admin check used by every admin route. A valid CONTENT_API_KEY grants full admin access
+ * (role "admin"); an invalid key is rejected outright; otherwise the login session is used.
  */
-export async function requireAdminSessionOrKey(allowedRoles: AdminRole[]) {
+export async function requireAdminSession(allowedRoles: AdminRole[]) {
   const presented = readPresentedKey(headers())
+
   if (presented) {
     if (!isValidContentApiKey(presented)) {
       return { session: null as unknown as Session, authError: NextResponse.json({ error: "Invalid API key" }, { status: 401 }) }
-    }
-    if (!allowedRoles.includes("editor")) {
-      return { session: null as unknown as Session, authError: NextResponse.json({ error: "Forbidden" }, { status: 403 }) }
     }
 
     // Attribute API-key changes to the env admin (or the oldest admin) so author relations stay valid.
@@ -75,16 +66,22 @@ export async function requireAdminSessionOrKey(allowedRoles: AdminRole[]) {
     }
 
     const session = {
-      user: { id: admin.id, email: admin.email, name: `${admin.name} (API key)`, role: "editor", userType: "admin" },
+      user: { id: admin.id, email: admin.email, name: `${admin.name} (API key)`, role: "admin", userType: "admin" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } as unknown as Session
     return { session, authError: null }
   }
 
-  return requireAdminSession(allowedRoles)
+  const session = await getServerSession(authOptions)
+  const authError = ensureAdminAccess(session, allowedRoles)
+  return { session, authError }
 }
 
-export async function requireAdminAccessOrKey(allowedRoles: AdminRole[]) {
-  const { authError } = await requireAdminSessionOrKey(allowedRoles)
+export async function requireAdminAccess(allowedRoles: AdminRole[]) {
+  const { authError } = await requireAdminSession(allowedRoles)
   return authError
 }
+
+// Kept for routes imported earlier; identical to the functions above.
+export const requireAdminSessionOrKey = requireAdminSession
+export const requireAdminAccessOrKey = requireAdminAccess
