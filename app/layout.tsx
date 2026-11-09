@@ -9,7 +9,6 @@ import { RegisterSW } from "./register-sw"
 import { InstallPrompt } from "@/components/install-prompt"
 import { OfflineIndicator } from "@/components/offline-indicator"
 import { WebVitals } from "./web-vitals"
-import Script from "next/script"
 import { AppChrome } from "@/components/app-chrome"
 
 const inter = Inter({
@@ -72,7 +71,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FOSS Andhra - Free & Open Source Software Community",
     description: "Join the leading open source community in Andhra Pradesh",
-    images: ["/twitter-image.png"],
+    images: ["/og-image.png"],
     creator: "@fossandhra",
   },
   robots: {
@@ -116,8 +115,8 @@ export default function RootLayout({
           </AuthProvider>
         </ThemeProvider>
 
-        {/* Structured Data for Organization */}
-        <Script
+        {/* Structured Data for Organization (plain <script> renders in SSR HTML so crawlers see it) */}
+        <script
           id="organization-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
