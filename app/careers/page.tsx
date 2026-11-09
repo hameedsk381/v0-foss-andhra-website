@@ -5,7 +5,13 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { prisma } from "@/lib/prisma"
 import { ApplyForm } from "./apply-form"
-import { OPENING_TYPES, isOpeningAcceptingApplications, typeLabel, workModeLabel } from "@/lib/careers"
+import {
+  OPENING_TYPES,
+  isOpeningAcceptingApplications,
+  requiresMembership,
+  typeLabel,
+  workModeLabel,
+} from "@/lib/careers"
 
 export const dynamic = "force-dynamic"
 
@@ -71,6 +77,7 @@ export default async function CareersPage({ searchParams }: { searchParams: { ty
                   <div className="mb-1 flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">{typeLabel(o.type)}</Badge>
                     {o.featured && <Badge>Featured</Badge>}
+                    {requiresMembership(o.type) && <Badge variant="outline">FOSStar members only</Badge>}
                   </div>
                   <CardTitle className="text-lg">{o.title}</CardTitle>
                 </CardHeader>

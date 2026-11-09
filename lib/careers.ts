@@ -26,6 +26,9 @@ export function slugify(input: string) {
     .slice(0, 80)
 }
 
+/** Internships can only be applied to by active FOSStar members. */
+export const requiresMembership = (type: string) => type === "internship"
+
 /** An opening is visible/applicable only while open and before its deadline (end of that day). */
 export function isOpeningAcceptingApplications(opening: { status: string; applyDeadline: Date | null }) {
   if (opening.status !== "open") return false

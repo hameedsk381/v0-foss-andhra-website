@@ -3,7 +3,8 @@ import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { strictRateLimit, getRateLimitIdentifier } from "@/lib/rate-limit"
 import { logError, logInfo } from "@/lib/logger"
-import { isOpeningAcceptingApplications } from "@/lib/careers"
+import { isOpeningAcceptingApplications, requiresMembership } from "@/lib/careers"
+import { getCurrentMember } from "@/lib/member/session"
 
 export const dynamic = "force-dynamic"
 
@@ -39,15 +40,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, { status: 400 })
     }
     const data = parsed.data
-    const email = data.email.toLowerCase()
+    let email = data.email.toLowerCase()
 
     if (data.openingId) {
       const opening = await prisma.careerOpening.findUnique({
         where: { id: data.openingId },
-        select: { status: true, applyDeadline: true },
+        select: { status: true, applyDeadline: true, type: true },
       })
       if (!opening || !isOpeningAcceptingApplications(opening)) {
         return NextResponse.json({ error: "This opening is no longer accepting applications" }, { status: 400 })
+      }
+
+      // Internships are for active FOSStar members only; applications use the member's own email.
+      if (requiresMembership(opening.type)) {
+        const member = await getCurrentMember()
+        if (!member) {
+          return NextResponse.json({ error: "Please log in as a FOSStar member to apply for internships" }, { status: 401 })
+        }
+        if (!member.active) {
+          return NextResponse.json({ error: "Your FOSStar membership has expired. Renew it to apply" }, { status: 403 })
+        }
+        email = member.email.trim().toLowerCase()
       }
     }
 

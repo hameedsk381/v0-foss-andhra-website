@@ -7,8 +7,24 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
-export function ApplyForm({ openingId, heading }: { openingId?: string; heading?: string }) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", resumeUrl: "", profileUrl: "", coverLetter: "" })
+export function ApplyForm({
+  openingId,
+  heading,
+  prefill,
+}: {
+  openingId?: string
+  heading?: string
+  /** Logged-in member details; the email is then locked to the member's own. */
+  prefill?: { name: string; email: string }
+}) {
+  const [form, setForm] = useState({
+    name: prefill?.name ?? "",
+    email: prefill?.email ?? "",
+    phone: "",
+    resumeUrl: "",
+    profileUrl: "",
+    coverLetter: "",
+  })
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState("")
@@ -62,7 +78,14 @@ export function ApplyForm({ openingId, heading }: { openingId?: string; heading?
         </div>
         <div className="space-y-2">
           <Label htmlFor="career-email">Email *</Label>
-          <Input id="career-email" type="email" value={form.email} onChange={set("email")} required />
+          <Input
+            id="career-email"
+            type="email"
+            value={form.email}
+            onChange={set("email")}
+            readOnly={!!prefill}
+            required
+          />
         </div>
       </div>
       <div className="space-y-2">

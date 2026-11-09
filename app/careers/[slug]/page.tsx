@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
 import { ApplyForm } from "../apply-form"
-import { isOpeningAcceptingApplications, typeLabel, workModeLabel } from "@/lib/careers"
+import { isOpeningAcceptingApplications, requiresMembership, typeLabel, workModeLabel } from "@/lib/careers"
+import { getCurrentMember } from "@/lib/member/session"
 
 export const dynamic = "force-dynamic"
 
@@ -42,6 +43,8 @@ export default async function OpeningPage({ params }: { params: { slug: string }
   if (!opening) notFound()
 
   const accepting = isOpeningAcceptingApplications(opening)
+  const membersOnly = requiresMembership(opening.type)
+  const member = membersOnly ? await getCurrentMember() : null
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-12">
@@ -51,6 +54,7 @@ export default async function OpeningPage({ params }: { params: { slug: string }
 
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <Badge variant="secondary">{typeLabel(opening.type)}</Badge>
+        {membersOnly && <Badge>FOSStar members only</Badge>}
         {!accepting && <Badge variant="destructive">Closed</Badge>}
       </div>
       <h1 className="text-3xl font-bold">{opening.title}</h1>
@@ -82,6 +86,29 @@ export default async function OpeningPage({ params }: { params: { slug: string }
       <section className="mt-10 rounded-lg border bg-white p-6">
         {!accepting ? (
           <p className="text-sm text-gray-600">This opening is no longer accepting applications.</p>
+        ) : membersOnly && !member ? (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-700">
+              Internships are open to FOSStar members only. Log in to apply, or become a member first.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/login">
+                <Button>Log in</Button>
+              </Link>
+              <Link href="/register">
+                <Button variant="outline">Become a FOSStar member</Button>
+              </Link>
+            </div>
+          </div>
+        ) : membersOnly && member && !member.active ? (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-700">
+              Your FOSStar membership has expired. Renew it to apply for internships.
+            </p>
+            <Link href="/member/membership/renew">
+              <Button>Renew membership</Button>
+            </Link>
+          </div>
         ) : opening.externalApplyUrl ? (
           <div className="space-y-3">
             <p className="text-sm text-gray-600">Applications for this role are handled on an external page.</p>
@@ -90,7 +117,11 @@ export default async function OpeningPage({ params }: { params: { slug: string }
             </a>
           </div>
         ) : (
-          <ApplyForm openingId={opening.id} heading="Apply for this role" />
+          <ApplyForm
+            openingId={opening.id}
+            heading="Apply for this role"
+            prefill={member ? { name: member.name, email: member.email } : undefined}
+          />
         )}
       </section>
     </div>
