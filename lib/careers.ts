@@ -14,7 +14,8 @@ export const WORK_MODES = [
 ] as const
 
 export const OPENING_STATUSES = ["draft", "open", "closed"] as const
-export const APPLICATION_STATUSES = ["new", "reviewing", "shortlisted", "rejected", "hired"] as const
+// new -> reviewing -> shortlisted (interview invited) -> offered (letter sent) -> accepted -> hired (joined); rejected at any stage
+export const APPLICATION_STATUSES = ["new", "reviewing", "shortlisted", "offered", "accepted", "hired", "rejected"] as const
 
 export const typeLabel = (value: string) => OPENING_TYPES.find((t) => t.value === value)?.label ?? value
 export const workModeLabel = (value: string) => WORK_MODES.find((m) => m.value === value)?.label ?? value
@@ -40,4 +41,4 @@ export function isOpeningAcceptingApplications(opening: { status: string; applyD
 }
 
 /** Slugs that would be shadowed by real routes under /careers. */
-export const RESERVED_SLUGS = ["poster", "apply"]
+export const RESERVED_SLUGS = ["poster", "apply", "offer"]

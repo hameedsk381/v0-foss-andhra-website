@@ -5,6 +5,7 @@ import { strictRateLimit, getRateLimitIdentifier } from "@/lib/rate-limit"
 import { logError, logInfo } from "@/lib/logger"
 import { isOpeningAcceptingApplications, requiresMembership } from "@/lib/careers"
 import { getCurrentMember } from "@/lib/member/session"
+import { notifyHrNewApplication, sendApplicationReceived } from "@/lib/careers-emails"
 
 export const dynamic = "force-dynamic"
 
@@ -41,15 +42,19 @@ export async function POST(request: NextRequest) {
     }
     const data = parsed.data
     let email = data.email.toLowerCase()
+    let roleTitle = "General application"
+    let isInternship = false
 
     if (data.openingId) {
       const opening = await prisma.careerOpening.findUnique({
         where: { id: data.openingId },
-        select: { status: true, applyDeadline: true, type: true },
+        select: { status: true, applyDeadline: true, type: true, title: true },
       })
       if (!opening || !isOpeningAcceptingApplications(opening)) {
         return NextResponse.json({ error: "This opening is no longer accepting applications" }, { status: 400 })
       }
+      roleTitle = opening.title
+      isInternship = opening.type === "internship"
 
       // Everything except volunteer roles is for active FOSStar members only; applications use the member's own email.
       if (requiresMembership(opening.type)) {
@@ -86,6 +91,13 @@ export async function POST(request: NextRequest) {
     })
 
     logInfo("Career application submitted", { applicationId: application.id, openingId: data.openingId })
+
+    // Acknowledge the applicant and tell HR; email problems must not fail the application.
+    await Promise.all([
+      sendApplicationReceived({ name: data.name, email }, roleTitle, isInternship),
+      notifyHrNewApplication({ name: data.name, email, phone: data.phone }, roleTitle),
+    ])
+
     return NextResponse.json({ success: true, message: "Application submitted successfully" }, { status: 201 })
   } catch (error) {
     if (error instanceof Response) return error

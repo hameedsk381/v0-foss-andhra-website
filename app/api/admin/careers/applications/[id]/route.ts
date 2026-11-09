@@ -21,6 +21,13 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ success: false, error: "Invalid status or notes" }, { status: 400 })
     }
 
+    if (parsed.data.status === "offered") {
+      return NextResponse.json(
+        { success: false, error: "Use Issue offer letter to move an application to offered" },
+        { status: 400 },
+      )
+    }
+
     const application = await prisma.careerApplication.update({
       where: { id: params.id },
       data: parsed.data,

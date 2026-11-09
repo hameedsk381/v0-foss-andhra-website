@@ -608,9 +608,20 @@ model CareerApplication {
   resumeUrl    String?
   profileUrl   String?
   coverLetter  String?
-  // new | reviewing | shortlisted | rejected | hired
+  // new | reviewing | shortlisted | offered | accepted | hired | rejected
   status       String         @default("new")
   adminNotes   String?
+  // Interview (set when the candidate is invited)
+  interviewAt   DateTime?
+  interviewNote String?
+  // Offer letter (internships)
+  offerRef        String?   @unique
+  offerToken      String?   @unique
+  offerIssuedAt   DateTime?
+  offerNotes      String?
+  startDate       DateTime?
+  endDate         DateTime?
+  offerAcceptedAt DateTime?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   CareerOpening CareerOpening? @relation(fields: [openingId], references: [id], onDelete: SetNull)

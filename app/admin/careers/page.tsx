@@ -50,6 +50,12 @@ interface Application {
   coverLetter: string | null
   status: string
   adminNotes: string | null
+  interviewAt: string | null
+  offerRef: string | null
+  offerToken: string | null
+  startDate: string | null
+  endDate: string | null
+  offerAcceptedAt: string | null
   createdAt: string
   CareerOpening: { title: string; type: string } | null
 }
@@ -84,6 +90,12 @@ export default function CareersAdminPage() {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
   const [viewing, setViewing] = useState<Application | null>(null)
+  const [hrForm, setHrForm] = useState<"interview" | "offer" | null>(null)
+  const [hrWorking, setHrWorking] = useState(false)
+  const [interviewAt, setInterviewAt] = useState("")
+  const [interviewNote, setInterviewNote] = useState("")
+  const [startDate, setStartDate] = useState("")
+  const [offerNotes, setOfferNotes] = useState("")
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -172,6 +184,42 @@ export default function CareersAdminPage() {
     } else {
       toast({ title: "Error", description: "Failed to update status", variant: "destructive" })
     }
+  }
+
+  const runAction = async (a: Application, body: Record<string, unknown>, done: string) => {
+    setHrWorking(true)
+    try {
+      const res = await fetch(`/api/admin/careers/applications/${a.id}/action`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) throw new Error(data.error || "Action failed")
+      toast({
+        title: done,
+        description: data.emailed
+          ? "Email sent to the candidate."
+          : "Saved, but the email could not be sent. Check the SMTP settings and resend.",
+        variant: data.emailed ? "default" : "destructive",
+      })
+      setApplications((prev) => prev.map((x) => (x.id === a.id ? { ...x, ...data.data } : x)))
+      setViewing((v) => (v && v.id === a.id ? { ...v, ...data.data } : v))
+      setHrForm(null)
+    } catch (e) {
+      toast({ title: "Error", description: e instanceof Error ? e.message : "Action failed", variant: "destructive" })
+    } finally {
+      setHrWorking(false)
+    }
+  }
+
+  const openViewer = (a: Application) => {
+    setHrForm(null)
+    setInterviewAt("")
+    setInterviewNote("")
+    setStartDate("")
+    setOfferNotes("")
+    setViewing(a)
   }
 
   const removeApplication = async (a: Application) => {
@@ -269,7 +317,7 @@ export default function CareersAdminPage() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button variant="outline" size="sm" onClick={() => setViewing(a)}>
+                    <Button variant="outline" size="sm" onClick={() => openViewer(a)}>
                       View
                     </Button>
                   </div>
@@ -451,6 +499,106 @@ export default function CareersAdminPage() {
                   <div>
                     <strong>Why interested:</strong>
                     <p className="mt-1 whitespace-pre-wrap text-gray-700">{viewing.coverLetter}</p>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-3 rounded-lg border bg-muted/30 p-3 text-sm">
+                <p className="font-semibold">HR workflow</p>
+                {viewing.interviewAt && <p>Interview: {new Date(viewing.interviewAt).toLocaleString()}</p>}
+                {viewing.offerRef && (
+                  <p>
+                    Offer {viewing.offerRef} · starts {viewing.startDate && new Date(viewing.startDate).toLocaleDateString()} ·{" "}
+                    {viewing.offerAcceptedAt
+                      ? "accepted " + new Date(viewing.offerAcceptedAt).toLocaleDateString()
+                      : "awaiting acceptance"}
+                  </p>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" variant="outline" onClick={() => setHrForm(hrForm === "interview" ? null : "interview")}>
+                    Invite to interview
+                  </Button>
+                  {viewing.CareerOpening?.type === "internship" && (
+                    <Button size="sm" onClick={() => setHrForm(hrForm === "offer" ? null : "offer")}>
+                      {viewing.offerRef ? "Re-issue offer letter" : "Issue offer letter"}
+                    </Button>
+                  )}
+                  {viewing.offerToken && (
+                    <>
+                      <a href={`/careers/offer/${viewing.offerToken}`} target="_blank" rel="noopener noreferrer">
+                        <Button size="sm" variant="outline">
+                          View letter
+                        </Button>
+                      </a>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={hrWorking}
+                        onClick={() => runAction(viewing, { action: "resend-offer" }, "Offer re-sent")}
+                      >
+                        Resend email
+                      </Button>
+                    </>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-red-600"
+                    disabled={hrWorking}
+                    onClick={() => {
+                      if (confirm(`Reject ${viewing.name} and email them a polite decline?`)) {
+                        runAction(viewing, { action: "reject" }, "Application rejected")
+                      }
+                    }}
+                  >
+                    Reject &amp; email
+                  </Button>
+                </div>
+
+                {hrForm === "interview" && (
+                  <div className="space-y-2 border-t pt-3">
+                    <Label htmlFor="iv-at">Interview date and time (at Centre for Excellence, Vijayawada)</Label>
+                    <Input id="iv-at" type="datetime-local" value={interviewAt} onChange={(e) => setInterviewAt(e.target.value)} />
+                    <Textarea
+                      rows={2}
+                      placeholder="Optional note for the candidate"
+                      value={interviewNote}
+                      onChange={(e) => setInterviewNote(e.target.value)}
+                    />
+                    <Button
+                      size="sm"
+                      disabled={!interviewAt || hrWorking}
+                      onClick={() =>
+                        runAction(
+                          viewing,
+                          { action: "interview", interviewAt: new Date(interviewAt).toISOString(), note: interviewNote || undefined },
+                          "Interview invite sent",
+                        )
+                      }
+                    >
+                      {hrWorking ? "Sending..." : "Send invite"}
+                    </Button>
+                  </div>
+                )}
+
+                {hrForm === "offer" && (
+                  <div className="space-y-2 border-t pt-3">
+                    <Label htmlFor="of-start">Start date (3-month internship; the end date is calculated)</Label>
+                    <Input id="of-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                    <Textarea
+                      rows={3}
+                      placeholder="Optional extra details for the letter, e.g. weekly timings, on-site days, mentor name"
+                      value={offerNotes}
+                      onChange={(e) => setOfferNotes(e.target.value)}
+                    />
+                    <Button
+                      size="sm"
+                      disabled={!startDate || hrWorking}
+                      onClick={() =>
+                        runAction(viewing, { action: "offer", startDate, notes: offerNotes || undefined }, "Offer letter issued")
+                      }
+                    >
+                      {hrWorking ? "Sending..." : "Issue and email letter"}
+                    </Button>
                   </div>
                 )}
               </div>
