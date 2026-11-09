@@ -1,6 +1,7 @@
 export const OPENING_TYPES = [
   { value: "job", label: "Job" },
   { value: "internship", label: "Internship" },
+  { value: "collaboration", label: "Collaboration" },
   { value: "fellowship", label: "Fellowship" },
   { value: "contract", label: "Contract" },
   { value: "volunteer", label: "Volunteer Role" },
@@ -26,8 +27,8 @@ export function slugify(input: string) {
     .slice(0, 80)
 }
 
-/** Internships can only be applied to by active FOSStar members. */
-export const requiresMembership = (type: string) => type === "internship"
+/** All opportunities except volunteer roles can only be applied to by active FOSStar members. */
+export const requiresMembership = (type: string) => type !== "volunteer"
 
 /** An opening is visible/applicable only while open and before its deadline (end of that day). */
 export function isOpeningAcceptingApplications(opening: { status: string; applyDeadline: Date | null }) {

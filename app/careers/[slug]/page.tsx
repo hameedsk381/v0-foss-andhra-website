@@ -89,7 +89,7 @@ export default async function OpeningPage({ params }: { params: { slug: string }
         ) : membersOnly && !member ? (
           <div className="space-y-3">
             <p className="text-sm text-gray-700">
-              Internships are open to FOSStar members only. Log in to apply, or become a member first.
+              This opportunity is open to FOSStar members only. Log in to apply, or become a member first.
             </p>
             <div className="flex flex-wrap gap-2">
               <Link href="/login">
@@ -103,7 +103,7 @@ export default async function OpeningPage({ params }: { params: { slug: string }
         ) : membersOnly && member && !member.active ? (
           <div className="space-y-3">
             <p className="text-sm text-gray-700">
-              Your FOSStar membership has expired. Renew it to apply for internships.
+              Your FOSStar membership has expired. Renew it to apply.
             </p>
             <Link href="/member/membership/renew">
               <Button>Renew membership</Button>

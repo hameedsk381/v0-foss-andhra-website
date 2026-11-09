@@ -51,11 +51,11 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "This opening is no longer accepting applications" }, { status: 400 })
       }
 
-      // Internships are for active FOSStar members only; applications use the member's own email.
+      // Everything except volunteer roles is for active FOSStar members only; applications use the member's own email.
       if (requiresMembership(opening.type)) {
         const member = await getCurrentMember()
         if (!member) {
-          return NextResponse.json({ error: "Please log in as a FOSStar member to apply for internships" }, { status: 401 })
+          return NextResponse.json({ error: "Please log in as a FOSStar member to apply" }, { status: 401 })
         }
         if (!member.active) {
           return NextResponse.json({ error: "Your FOSStar membership has expired. Renew it to apply" }, { status: 403 })

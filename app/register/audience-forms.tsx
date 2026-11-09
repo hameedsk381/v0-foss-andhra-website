@@ -13,7 +13,21 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { RazorpayCheckout } from "@/components/razorpay-checkout"
 import { AnimatedSection } from "@/components/ui/animated-section"
-import { ArrowLeft, CheckCircle, PartyPopper, GraduationCap, Users, Building, Briefcase, Heart } from "lucide-react"
+import { ArrowLeft, CheckCircle, PartyPopper, GraduationCap, Users, Building, Briefcase, Heart, Info } from "lucide-react"
+import { getOpportunityLink } from "@/lib/member/tiers"
+
+function MembershipNotice() {
+  return (
+    <div className="mb-6 flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+      <Info className="mt-0.5 h-5 w-5 shrink-0" />
+      <p>
+        <strong>FOSStar membership required.</strong> To apply for internships, jobs, fellowships, collaborations and
+        other opportunities, you need to be a FOSStar member. After you join, you&apos;ll be taken to the opportunities
+        that match your membership type.
+      </p>
+    </div>
+  )
+}
 
 interface BaseFormData {
   name: string
@@ -351,6 +365,7 @@ export function AudienceSpecificForms() {
     return (
       <div className="max-w-6xl mx-auto">
         <AnimatedSection variant="fadeUp">
+          <MembershipNotice />
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">Choose Your Registration Type</h1>
             <p className="text-xl text-gray-600">
@@ -395,6 +410,7 @@ export function AudienceSpecificForms() {
   return (
     <div className="max-w-4xl mx-auto">
       <AnimatedSection variant="fadeUp">
+        {currentStep !== "success" && <MembershipNotice />}
         {/* Progress Indicator */}
         <div className="mb-8">
           <div className="flex items-center justify-center space-x-4">
@@ -586,6 +602,13 @@ export function AudienceSpecificForms() {
                     Membership ID.
                   </p>
                 </div>
+
+                <Button
+                  onClick={() => (window.location.href = getOpportunityLink(`FOSStar ${selectedAudience}`).href)}
+                  className="w-full bg-fosstar hover:bg-fosstar/90"
+                >
+                  Explore {getOpportunityLink(`FOSStar ${selectedAudience}`).label} for you →
+                </Button>
 
                 <div className="flex gap-4">
                   <Button

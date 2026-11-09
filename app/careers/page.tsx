@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Careers & Internships | FOSS Andhra",
-  description: "Open jobs, internships, fellowships and volunteer roles at FOSS Andhra.",
+  description: "Open jobs, internships, fellowships, collaborations and volunteer roles at FOSS Andhra.",
 }
 
 export default async function CareersPage({ searchParams }: { searchParams: { type?: string } }) {

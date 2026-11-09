@@ -97,6 +97,23 @@ const TIERS: Record<MemberTier, TierBenefits> = {
   },
 }
 
+/** Which kind of opportunity each tier is pointed to first on /careers. */
+const OPPORTUNITY_BY_TIER: Record<MemberTier, { type: string | null; label: string }> = {
+  student: { type: "internship", label: "Internships" },
+  teacher: { type: "fellowship", label: "Fellowships" },
+  professional: { type: "job", label: "Jobs" },
+  institution: { type: "collaboration", label: "Collaborations" },
+  company: { type: "collaboration", label: "Collaborations" },
+  ngo: { type: "collaboration", label: "Collaborations" },
+  general: { type: null, label: "Opportunities" },
+}
+
+/** Careers section (filtered to the tier's opportunity type) for a membership type. */
+export function getOpportunityLink(membershipType?: string | null): { href: string; label: string } {
+  const { type, label } = OPPORTUNITY_BY_TIER[getTierFromMembershipType(membershipType)]
+  return { href: type ? `/careers?type=${type}` : "/careers", label }
+}
+
 /** Map a stored membershipType (e.g. "FOSStar student", "FOSStar Annual") to a tier. */
 export function getTierFromMembershipType(membershipType?: string | null): MemberTier {
   const key = (membershipType || "").trim().toLowerCase().replace(/^fosstar\s+/, "")

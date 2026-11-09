@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, CreditCard, Bell, TrendingUp, Award, Users, CheckCircle } from "lucide-react"
-import { getTierBenefits } from "@/lib/member/tiers"
+import { getOpportunityLink, getTierBenefits } from "@/lib/member/tiers"
 import { Skeleton } from "@/components/skeleton-loader"
 import { ActivityTimeline } from "@/components/member/activity-timeline"
 import Link from "next/link"
@@ -94,6 +94,7 @@ export default function MemberDashboard() {
 
   const { member, stats, activities } = dashboardData
   const tierInfo = getTierBenefits(member?.membershipType)
+  const opportunity = getOpportunityLink(member?.membershipType)
 
   const daysUntilExpiry = member?.expiryDate
     ? Math.ceil((new Date(member.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
@@ -226,11 +227,16 @@ export default function MemberDashboard() {
               </li>
             ))}
           </ul>
-          <Link href="/member/resources">
-            <Button className="mt-3" size="sm" variant="outline">
-              Open Member Resources
-            </Button>
-          </Link>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link href={opportunity.href}>
+              <Button size="sm">Browse {opportunity.label}</Button>
+            </Link>
+            <Link href="/member/resources">
+              <Button size="sm" variant="outline">
+                Open Member Resources
+              </Button>
+            </Link>
+          </div>
         </CardContent>
       </Card>
 
