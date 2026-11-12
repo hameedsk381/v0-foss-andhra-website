@@ -83,12 +83,13 @@ export default function DonatePage() {
             </p>
           </div>
 
+          <h2 className="mb-8 text-center font-display text-2xl font-bold sm:text-3xl">Make a Donation</h2>
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Main Donation Form */}
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Make a Donation</CardTitle>
+                  <CardTitle>Contribution Details</CardTitle>
                   <CardDescription>
                     Choose your contribution amount and frequency
                   </CardDescription>

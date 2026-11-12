@@ -80,7 +80,7 @@ export default function AboutPageClient() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-xl font-bold">Our Team</h3>
+                  <p className="text-xl font-bold">Our Team</p>
                   <p className="text-sm">Dedicated to promoting FOSS across Andhra Pradesh</p>
                 </div>
               </div>

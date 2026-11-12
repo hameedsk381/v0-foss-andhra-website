@@ -105,10 +105,11 @@ export default function SponsorPage() {
             </p>
           </div>
 
+          <h2 className="mb-8 text-center font-display text-2xl font-bold sm:text-3xl">Why Sponsor FOSS Andhra?</h2>
           {/* Why Sponsor */}
           <Card className="mb-12 bg-primary text-white">
             <CardHeader>
-              <CardTitle className="text-2xl text-white">Why Sponsor FOSS Andhra?</CardTitle>
+              <CardTitle className="text-2xl text-white">Why Sponsor Us</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-3 gap-6">

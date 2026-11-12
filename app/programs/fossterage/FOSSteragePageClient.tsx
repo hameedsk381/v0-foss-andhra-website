@@ -57,7 +57,7 @@ export default function FOSSteragePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-fossterage/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-xl font-bold">Knowledge Repository</h3>
+                  <p className="text-xl font-bold">Knowledge Repository</p>
                   <p className="text-sm">Centralized databases for researchers and data scientists</p>
                 </div>
               </div>

@@ -240,6 +240,7 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
       <div className="container mx-auto px-4 py-12">
       <div className="max-w-5xl mx-auto">
 
+        <h2 className="mb-6 text-2xl font-bold tracking-tight">All Events</h2>
         <Tabs defaultValue="upcoming" className="mb-12">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="upcoming">Upcoming Events</TabsTrigger>

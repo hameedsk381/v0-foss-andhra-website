@@ -57,7 +57,7 @@ export default function FOSSpeaksPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-fosspeaks/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-xl font-bold">Advocacy & Outreach</h3>
+                  <p className="text-xl font-bold">Advocacy & Outreach</p>
                   <p className="text-sm">Promoting FOSS adoption through awareness campaigns</p>
                 </div>
               </div>

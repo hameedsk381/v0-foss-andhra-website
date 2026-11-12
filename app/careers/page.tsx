@@ -79,6 +79,8 @@ export default async function CareersPage({ searchParams }: { searchParams: { ty
         ))}
       </div>
 
+      <h2 className="mb-6 text-2xl font-bold tracking-tight">Current Openings</h2>
+
       {openings.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-gray-600">

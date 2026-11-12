@@ -304,6 +304,7 @@ export default function ContactPage() {
 
       <div className="app-container py-12 md:py-16">
         <div className="max-w-5xl mx-auto">
+          <h2 className="mb-8 text-center font-display text-2xl font-bold sm:text-3xl">Get in Touch</h2>
           <StaggerGroup className="grid gap-6 md:grid-cols-3 mb-12">
             <StaggerItem from="left">
               <Card className="h-full">

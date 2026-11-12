@@ -75,7 +75,7 @@ export default function FOSStarPage() {
                 <Image src="/gallery/fosstar-event-1.jpg" alt="FOSStar Community Event" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-fosstar/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-xl font-bold">Community Building</h3>
+                  <p className="text-xl font-bold">Community Building</p>
                   <p className="text-sm">Connecting FOSS enthusiasts across Andhra Pradesh</p>
                 </div>
               </div>

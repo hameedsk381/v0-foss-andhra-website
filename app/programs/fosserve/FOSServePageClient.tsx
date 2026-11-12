@@ -81,7 +81,7 @@ export default function FOSServePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-fosserve/80 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <h3 className="text-xl font-bold">Education & Governance</h3>
+                    <p className="text-xl font-bold">Education & Governance</p>
                     <p className="text-sm">Implementing open source solutions for public benefit</p>
                   </div>
                 </div>
@@ -113,7 +113,7 @@ export default function FOSServePage() {
                         <GraduationCap className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
-                        <h4 className="font-medium">Education</h4>
+                        <h3 className="font-medium">Education</h3>
                         <p className="text-sm text-muted-foreground">FOSS solutions for educational institutions</p>
                       </div>
                     </div>
@@ -122,7 +122,7 @@ export default function FOSServePage() {
                         <Building className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
-                        <h4 className="font-medium">Governance</h4>
+                        <h3 className="font-medium">Governance</h3>
                         <p className="text-sm text-muted-foreground">Open source for government departments</p>
                       </div>
                     </div>
@@ -131,7 +131,7 @@ export default function FOSServePage() {
                         <BookOpen className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
-                        <h4 className="font-medium">Society</h4>
+                        <h3 className="font-medium">Society</h3>
                         <p className="text-sm text-muted-foreground">Broader access to technology</p>
                       </div>
                     </div>
@@ -140,7 +140,7 @@ export default function FOSServePage() {
                         <CheckCircle className="h-5 w-5 text-fosserve" />
                       </div>
                       <div>
-                        <h4 className="font-medium">Implementation</h4>
+                        <h3 className="font-medium">Implementation</h3>
                         <p className="text-sm text-muted-foreground">Custom deployment and support</p>
                       </div>
                     </div>
@@ -607,7 +607,7 @@ export default function FOSServePage() {
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                        <h4 className="font-medium">{item.title}</h4>
+                        <h3 className="font-medium">{item.title}</h3>
                         <p className="text-sm opacity-90">FOSServe open source initiative</p>
                       </div>
                     </div>
