@@ -40,12 +40,12 @@
 
 **On-site hygiene (agent, in passing):**
 
-| # | Action | Owner |
-|---|--------|-------|
-| 2.5 | Trim the 16 meta descriptions >160 chars to 70–160 | Agent |
-| 2.6 | Fix the 17 heading-level skips (H1→H3 without H2) as pages are edited | Agent |
-| 2.7 | E-E-A-T: add a short author bio line under each blog post (name, role, GitHub/LinkedIn link) | Agent |
-| 2.8 | Optional: trim homepage title to ≤60 chars | Agent |
+| # | Action | Owner | Status |
+|---|--------|-------|--------|
+| 2.5 | Trim the meta descriptions >160 chars to 70–160 | Agent | ✅ Done — 7 blog posts (live DB, no deploy) + 7 static pages (commit 68335c7); privacy/refund descriptions also lengthened from 65/63 |
+| 2.6 | Fix the heading-level skips (H1→H3 without H2) as pages are edited | Agent | ✅ Done (commit 7051ae0) — decorative eyebrows → `<p>`, section H2s added on careers/events/contact/donate/sponsor, step titles promoted |
+| 2.7 | E-E-A-T: add a short author bio line under each blog post (name, role, GitHub/LinkedIn link) | Agent | ✅ Done (commit 68335c7) — author bio line on post pages with fallback; set a real bio + avatar for the admin author in the DB/admin panel to personalize |
+| 2.8 | Optional: trim homepage title to ≤60 chars | Agent | ✅ Done (commit 68335c7) — plus contact/contribute/fosserve titles and smart ≤60 truncation of blog post `<title>` tags |
 
 **Exit criteria:** 5+ new referring domains; GSC shows first non-brand impressions; hygiene issues ≤ 5.
 
