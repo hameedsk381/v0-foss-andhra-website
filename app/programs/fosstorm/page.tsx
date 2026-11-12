@@ -4,7 +4,7 @@ import FOSStormPageClient from "./FOSStormPageClient"
 export const metadata: Metadata = {
   title: "FOSStorm — Community Open Source Projects",
   description:
-    "FOSStorm develops open source projects addressing local challenges in Andhra Pradesh. Collaborate on impactful solutions for education, governance, and digital inclusion.",
+    "FOSStorm develops open source projects addressing local challenges in Andhra Pradesh. Collaborate on solutions for education, governance, and digital inclusion.",
   alternates: { canonical: "/programs/fosstorm" },
   openGraph: {
     title: "FOSStorm — Community Open Source Projects",

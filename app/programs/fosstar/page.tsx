@@ -4,7 +4,7 @@ import FOSStarPageClient from "./FOSStarPageClient"
 export const metadata: Metadata = {
   title: "FOSStar — FOSS Andhra Membership Program",
   description:
-    "Join FOSStar, FOSS Andhra's membership program for students, professionals, and institutions. Connect, learn, and contribute to the open source community in Andhra Pradesh.",
+    "Join FOSStar, FOSS Andhra's membership program for students, professionals, and institutions. Connect and contribute to open source in Andhra Pradesh.",
   alternates: { canonical: "/programs/fosstar" },
   openGraph: {
     title: "FOSStar — FOSS Andhra Membership Program",

@@ -3,7 +3,7 @@ import RefundPolicyClientPage from "./RefundPolicyClientPage"
 
 export const metadata: Metadata = {
   title: "Refund Policy",
-  description: "Refund policy for FOSS Andhra's programs, events, and services.",
+  description: "Refund and cancellation terms for FOSS Andhra's memberships, internship fees, events, and other services.",
   alternates: { canonical: "/refund-policy" },
 }
 

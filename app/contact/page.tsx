@@ -2,7 +2,8 @@ import type { Metadata } from "next"
 import ContactPageClient from "./ContactPageClient"
 
 export const metadata: Metadata = {
-  title: "Contact FOSS Andhra | Vijayawada, Andhra Pradesh",
+  // Absolute: with the "%s | FOSS Andhra" template this would exceed 60 chars.
+  title: { absolute: "Contact FOSS Andhra | Vijayawada, Andhra Pradesh" },
   description:
     "Get in touch with FOSS Andhra. Email office@fossap.in or call +91 94944 63840. Office at Yesj Centre for Excellence, Vijayawada, AP 520008.",
   alternates: { canonical: "/contact" },

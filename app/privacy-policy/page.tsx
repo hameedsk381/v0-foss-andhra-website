@@ -3,7 +3,7 @@ import PrivacyPolicyClientPage from "./PrivacyPolicyClientPage"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy policy for FOSS Andhra's website, programs, and services.",
+  description: "How FOSS Andhra collects, uses, and protects your personal data across our website, programs, events, and services.",
   alternates: { canonical: "/privacy-policy" },
 }
 

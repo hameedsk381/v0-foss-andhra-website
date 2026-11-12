@@ -2,9 +2,10 @@ import type { Metadata } from "next"
 import ContributePageClient from "./ContributePageClient"
 
 export const metadata: Metadata = {
-  title: "Contribute to FOSS Andhra | Donate, Volunteer, Sponsor",
+  // Absolute: with the "%s | FOSS Andhra" template this would exceed 60 chars.
+  title: { absolute: "Contribute to FOSS Andhra | Donate, Volunteer, Sponsor" },
   description:
-    "Support FOSS Andhra through donations, volunteering your skills, or corporate sponsorship. Help advance free and open source software adoption in Andhra Pradesh.",
+    "Support FOSS Andhra through donations, volunteering your skills, or corporate sponsorship. Advance free and open source software adoption in Andhra Pradesh.",
   alternates: { canonical: "/contribute" },
   openGraph: {
     title: "Contribute to FOSS Andhra",

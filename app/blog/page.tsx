@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
   title: "Blog — Open Source Guides & Community News",
   description:
-    "Guides, tutorials and news on free and open source software from the FOSS Andhra community: getting started with Git, Linux, open source programs for students, FOSS clubs and more.",
+    "Guides, tutorials and news on free and open source software from the FOSS Andhra community: Git, Linux, open source programs for students, FOSS clubs and more.",
   keywords: [
     "open source blog",
     "FOSS Andhra blog",

@@ -2,9 +2,10 @@ import type { Metadata } from "next"
 import FOSServePageClient from "./FOSServePageClient"
 
 export const metadata: Metadata = {
-  title: "FOSServe — Open Source in Education & Governance",
+  // Absolute: with the "%s | FOSS Andhra" template this would exceed 60 chars.
+  title: { absolute: "FOSServe — Open Source in Education & Governance" },
   description:
-    "FOSServe promotes open source solutions in Andhra Pradesh's educational institutions and government bodies. Partner with FOSS Andhra to transform your organization.",
+    "FOSServe promotes open source solutions in Andhra Pradesh's educational institutions and government bodies. Partner with us to transform your organization.",
   alternates: { canonical: "/programs/fosserve" },
   openGraph: {
     title: "FOSServe — Open Source in Education & Governance",

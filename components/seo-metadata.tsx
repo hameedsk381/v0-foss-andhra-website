@@ -83,6 +83,20 @@ export function generateSEOMetadata({
   return metadata
 }
 
+// <title> tag for a blog post, kept within Google's ~60-char display limit.
+// 1. "<headline> | FOSS Andhra Blog" when it fits
+// 2. "<headline> | FOSS Andhra" when that fits
+// 3. the headline alone if it fits
+// 4. the headline truncated at a word boundary
+function blogTitleTag(postTitle: string): string {
+  if (`${postTitle} | FOSS Andhra Blog`.length <= 60) return `${postTitle} | FOSS Andhra Blog`
+  if (`${postTitle} | FOSS Andhra`.length <= 60) return `${postTitle} | FOSS Andhra`
+  if (postTitle.length <= 60) return postTitle
+  const cut = postTitle.slice(0, 60)
+  const lastSpace = cut.lastIndexOf(" ")
+  return (lastSpace > 30 ? cut.slice(0, lastSpace) : cut).replace(/[,;:\s]+$/, "").trim()
+}
+
 // Helper function for blog posts
 export function generateBlogPostMetadata(post: {
   title: string
@@ -104,9 +118,13 @@ export function generateBlogPostMetadata(post: {
   updatedAt?: Date
 }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
-  
+
   return generateSEOMetadata({
-    title: `${post.title} | FOSS Andhra Blog`,
+    // Compose the <title> smartly so it stays within ~60 chars: keep the
+    // "| FOSS Andhra Blog" suffix when it fits, else drop the suffix, else
+    // truncate the headline at a word boundary. The stored headline itself
+    // (used for H1/OG) is never changed.
+    title: blogTitleTag(post.title),
     description: post.metaDescription || post.excerpt,
     keywords: post.metaKeywords || undefined,
     ogTitle: post.ogTitle || post.title,

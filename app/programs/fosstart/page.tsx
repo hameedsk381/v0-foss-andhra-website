@@ -4,7 +4,7 @@ import FOSStartPageClient from "./FOSStartPageClient"
 export const metadata: Metadata = {
   title: "FOSStart — Open Source Startup Incubation",
   description:
-    "FOSStart incubates open source startups in Andhra Pradesh with seed funding, mentorship, and a network of FOSS entrepreneurs. Build a sustainable business on open source.",
+    "FOSStart incubates open source startups in Andhra Pradesh with seed funding, mentorship, and a network of FOSS entrepreneurs.",
   alternates: { canonical: "/programs/fosstart" },
   openGraph: {
     title: "FOSStart — Open Source Startup Incubation",

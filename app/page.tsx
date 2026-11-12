@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import ClientPage from "./ClientPage"
 
 export const metadata: Metadata = {
-  title: "FOSS Andhra - Free & Open Source Software Community in Andhra Pradesh",
+  title: "FOSS Andhra | Open Source Community in Andhra Pradesh",
   description:
     "FOSS Andhra is a community promoting Free and Open Source Software through events, education, hackathons, and developer collaboration across India.",
   keywords:

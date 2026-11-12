@@ -6,7 +6,7 @@ import { AudienceSpecificForms } from "./audience-forms"
 export const metadata: Metadata = {
   title: "Join FOSStar - Register",
   description:
-    "Register as a FOSStar member of FOSS Andhra: student, professional, or institutional membership. Join the community of open source enthusiasts across Andhra Pradesh.",
+    "Register as a FOSStar member of FOSS Andhra: student, professional, or institutional membership. Join open source enthusiasts across Andhra Pradesh.",
   alternates: { canonical: "/membership" },
 }
 
