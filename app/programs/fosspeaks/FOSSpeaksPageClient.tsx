@@ -486,6 +486,18 @@ export default function FOSSpeaksPage() {
         iconBgClass="bg-fosspeaks/10"
         iconClass="text-fosspeaks"
         submitButtonClass="bg-fosspeaks text-white hover:bg-fosspeaks/90"
+        relatedPosts={[
+          {
+            title: "What Is Open Source Software? A Beginner's Guide",
+            slug: "what-is-open-source-software-beginners-guide",
+            blurb: "A plain-language introduction to open source, free software and licenses.",
+          },
+          {
+            title: "Why Students Should Contribute to Open Source",
+            slug: "why-students-should-contribute-to-open-source",
+            blurb: "Career, learning and community reasons to start contributing early.",
+          },
+        ]}
       />
     </div>
   )

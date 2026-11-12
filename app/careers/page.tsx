@@ -53,6 +53,13 @@ export default async function CareersPage({ searchParams }: { searchParams: { ty
         <Link href="/careers/poster" className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">
           Download the internship poster to share →
         </Link>
+        <p className="mt-1 text-sm text-gray-600">
+          New here? Read{" "}
+          <Link href="/internships" className="font-semibold text-primary hover:underline">
+            how our internship program works
+          </Link>{" "}
+          — duration, tracks, eligibility and FAQ.
+        </p>
       </div>
 
       {openings.some((o) => o.type === "internship") && (

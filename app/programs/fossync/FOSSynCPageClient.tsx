@@ -201,6 +201,12 @@ export default function FOSSynCPage() {
                   </Button>
                 </Link>
               </div>
+              <div className="mt-6 border-t border-fossync/20 pt-5">
+                <h3 className="mb-3 text-lg font-semibold">Related guide</h3>
+                <Link href="/blog/how-to-start-a-foss-club-at-your-college" className="text-sm text-primary hover:underline">
+                  How to start a FOSS club at your college — members, faculty coordinator, install fests and first projects →
+                </Link>
+              </div>
             </div>
           </TabsContent>
 

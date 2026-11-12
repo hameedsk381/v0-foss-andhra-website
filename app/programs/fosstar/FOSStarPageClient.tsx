@@ -520,6 +520,18 @@ export default function FOSStarPage() {
         iconBgClass="bg-fosstar/10"
         iconClass="text-fosstar"
         submitButtonClass="bg-fosstar text-white hover:bg-fosstar/90"
+        relatedPosts={[
+          {
+            title: "Why Students Should Contribute to Open Source",
+            slug: "why-students-should-contribute-to-open-source",
+            blurb: "How contributing early builds skills, portfolios and community standing.",
+          },
+          {
+            title: "10 Beginner-Friendly Open Source Projects to Contribute To (2026)",
+            slug: "beginner-friendly-open-source-projects-2026",
+            blurb: "Active projects with welcoming first issues for new contributors.",
+          },
+        ]}
       />
     </div>
   )

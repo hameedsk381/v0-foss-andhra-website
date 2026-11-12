@@ -487,6 +487,18 @@ export default function FOSSteragePage() {
         iconBgClass="bg-fossterage/10"
         iconClass="text-fossterage"
         submitButtonClass="bg-fossterage text-white hover:bg-fossterage/90"
+        relatedPosts={[
+          {
+            title: "How to Write Documentation People Actually Read",
+            slug: "how-to-write-documentation-people-actually-read",
+            blurb: "Practical documentation habits for project maintainers and contributors.",
+          },
+          {
+            title: "Open Source Licenses Explained: MIT, Apache, GPL",
+            slug: "open-source-licenses-explained-mit-apache-gpl",
+            blurb: "Understand the licenses behind the repositories you share and reuse.",
+          },
+        ]}
       />
     </div>
   )

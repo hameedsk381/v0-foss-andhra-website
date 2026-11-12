@@ -123,6 +123,31 @@ export function BreadcrumbJsonLd({ items }: BreadcrumbJsonLdProps) {
   )
 }
 
+interface FAQJsonLdProps {
+  items: Array<{ q: string; a: string }>
+}
+
+/** FAQPage structured data for rich results — items must also be visible on the page. */
+export function FAQJsonLd({ items }: FAQJsonLdProps) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  }
+
+  return (
+    <script
+      id="faq-jsonld"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  )
+}
+
 interface EventJsonLdProps {
   event: {
     title: string

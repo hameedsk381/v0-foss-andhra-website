@@ -1,6 +1,7 @@
 "use client"
 
 import { FormEvent, useState } from "react"
+import Link from "next/link"
 import { Mail, MapPin, Phone } from "lucide-react"
 import { AnimatedButton } from "@/components/ui/animated-button"
 import { AnimatedSection } from "@/components/ui/animated-section"
@@ -8,11 +9,19 @@ import { Card, CardContent } from "@/components/ui/card"
 import { contactFormSchema } from "@/lib/validation-schemas"
 import { useToast } from "@/hooks/use-toast"
 
+interface RelatedPost {
+  title: string
+  slug: string
+  blurb: string
+}
+
 interface ProgramContactSectionProps {
   description: string
   iconBgClass: string
   iconClass: string
   submitButtonClass: string
+  /** 2-3 related blog guides, shown as internal links above the contact form. */
+  relatedPosts?: RelatedPost[]
 }
 
 export function ProgramContactSection({
@@ -20,6 +29,7 @@ export function ProgramContactSection({
   iconBgClass,
   iconClass,
   submitButtonClass,
+  relatedPosts = [],
 }: ProgramContactSectionProps) {
   const { toast } = useToast()
   const [formData, setFormData] = useState({
@@ -109,6 +119,26 @@ export function ProgramContactSection({
   return (
     <section className="w-full py-12 md:py-24 bg-gray-50" id="contact">
       <div className="container px-4 md:px-6">
+        {relatedPosts.length > 0 && (
+          <div className="mb-10">
+            <h2 className="mb-5 text-2xl font-bold tracking-tight text-gray-900">
+              Related guides from our blog
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {relatedPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="block rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+                >
+                  <p className="font-semibold text-gray-900">{post.title}</p>
+                  <p className="mt-1 text-sm text-gray-600">{post.blurb}</p>
+                  <p className="mt-2 text-sm font-medium text-primary">Read the guide →</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <AnimatedSection variant="fadeRight">
             <div className="space-y-6">

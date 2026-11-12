@@ -517,7 +517,7 @@ export default function FOSStormPage() {
 
 
               <div className="bg-fosstorm/5 p-8 rounded-lg">
-                <h4 className="text-xl font-bold mb-4">Join the FOSStorm Developer Community</h4>
+                <h2 className="text-xl font-bold mb-4">Join the FOSStorm Developer Community</h2>
                 <p className="mb-6">
                   Connect with other contributors, get help with issues, and stay updated on project developments by
                   joining our developer community.
@@ -531,6 +531,21 @@ export default function FOSStormPage() {
                       Join Matrix Channel
                     </Button>
                   </Link>
+                </div>
+                <div className="mt-6 border-t border-fosstorm/20 pt-5">
+                  <h3 className="mb-3 text-lg font-semibold">Related guides</h3>
+                  <ul className="space-y-2 text-sm">
+                    <li>
+                      <Link href="/blog/how-to-make-your-first-open-source-contribution" className="text-primary hover:underline">
+                        How to make your first open source contribution →
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog/beginner-friendly-open-source-projects-2026" className="text-primary hover:underline">
+                        10 beginner-friendly open source projects to contribute to (2026) →
+                      </Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -558,7 +573,7 @@ export default function FOSStormPage() {
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h4 className="font-medium">{item.title}</h4>
+                    <h3 className="font-medium">{item.title}</h3>
                     <p className="text-sm opacity-90">FOSStorm application interface</p>
                   </div>
                 </div>

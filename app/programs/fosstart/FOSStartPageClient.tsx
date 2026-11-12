@@ -465,7 +465,7 @@ export default function FOSStartPage() {
                       <li className="flex items-start">
                         <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                         <div>
-                          <h4 className="font-medium">Eligibility</h4>
+                          <h3 className="font-medium">Eligibility</h3>
                           <p className="text-sm text-muted-foreground">
                             Individuals or teams with innovative open source ideas
                           </p>
@@ -474,14 +474,14 @@ export default function FOSStartPage() {
                       <li className="flex items-start">
                         <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                         <div>
-                          <h4 className="font-medium">Requirements</h4>
+                          <h3 className="font-medium">Requirements</h3>
                           <p className="text-sm text-muted-foreground">Commitment to open source principles and licensing</p>
                         </div>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                         <div>
-                          <h4 className="font-medium">Support Includes</h4>
+                          <h3 className="font-medium">Support Includes</h3>
                           <p className="text-sm text-muted-foreground">Funding, mentorship, and workspace access</p>
                         </div>
                       </li>
@@ -513,7 +513,7 @@ export default function FOSStartPage() {
                       <li className="flex items-start">
                         <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                         <div>
-                          <h4 className="font-medium">Eligibility</h4>
+                          <h3 className="font-medium">Eligibility</h3>
                           <p className="text-sm text-muted-foreground">
                             Registered startups with a working open source product
                           </p>
@@ -522,14 +522,14 @@ export default function FOSStartPage() {
                       <li className="flex items-start">
                         <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                         <div>
-                          <h4 className="font-medium">Requirements</h4>
+                          <h3 className="font-medium">Requirements</h3>
                           <p className="text-sm text-muted-foreground">Sustainable business model around open source</p>
                         </div>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                         <div>
-                          <h4 className="font-medium">Support Includes</h4>
+                          <h3 className="font-medium">Support Includes</h3>
                           <p className="text-sm text-muted-foreground">Funding, strategic guidance, and networking</p>
                         </div>
                       </li>
@@ -553,7 +553,7 @@ export default function FOSStartPage() {
                         <div className="w-12 h-12 bg-fosstart/10 rounded-full flex items-center justify-center mx-auto mb-3">
                           <span className="text-fosstart font-bold">1</span>
                         </div>
-                        <h4 className="font-medium mb-1">Initial Application</h4>
+                        <h3 className="font-medium mb-1">Initial Application</h3>
                         <p className="text-sm text-muted-foreground">
                           Submit your online application with basic information about your idea or startup
                         </p>
@@ -563,7 +563,7 @@ export default function FOSStartPage() {
                         <div className="w-12 h-12 bg-fosstart/10 rounded-full flex items-center justify-center mx-auto mb-3">
                           <span className="text-fosstart font-bold">2</span>
                         </div>
-                        <h4 className="font-medium mb-1">Screening</h4>
+                        <h3 className="font-medium mb-1">Screening</h3>
                         <p className="text-sm text-muted-foreground">
                           Our team reviews applications and selects promising candidates for the next stage
                         </p>
@@ -573,7 +573,7 @@ export default function FOSStartPage() {
                         <div className="w-12 h-12 bg-fosstart/10 rounded-full flex items-center justify-center mx-auto mb-3">
                           <span className="text-fosstart font-bold">3</span>
                         </div>
-                        <h4 className="font-medium mb-1">Pitch & Interview</h4>
+                        <h3 className="font-medium mb-1">Pitch & Interview</h3>
                         <p className="text-sm text-muted-foreground">
                           Selected candidates present their ideas and answer questions from our panel
                         </p>
@@ -583,7 +583,7 @@ export default function FOSStartPage() {
                         <div className="w-12 h-12 bg-fosstart/10 rounded-full flex items-center justify-center mx-auto mb-3">
                           <span className="text-fosstart font-bold">4</span>
                         </div>
-                        <h4 className="font-medium mb-1">Decision & Onboarding</h4>
+                        <h3 className="font-medium mb-1">Decision & Onboarding</h3>
                         <p className="text-sm text-muted-foreground">
                           Final selection and onboarding of successful applicants into the FOSStart program
                         </p>
@@ -594,7 +594,7 @@ export default function FOSStartPage() {
               </div>
 
               <div className="bg-fosstart/5 p-8 rounded-lg">
-                <h4 className="text-xl font-bold mb-4">Ready to Apply?</h4>
+                <h2 className="text-xl font-bold mb-4">Ready to Apply?</h2>
                 <p className="mb-6">
                   If you have an open source idea or startup that you'd like to grow with FOSStart support, we encourage
                   you to apply for our funding programs.
@@ -628,7 +628,7 @@ export default function FOSStartPage() {
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h4 className="font-medium">{item.title}</h4>
+                    <h3 className="font-medium">{item.title}</h3>
                     <p className="text-sm opacity-90">FOSStart initiative in action</p>
                   </div>
                 </div>

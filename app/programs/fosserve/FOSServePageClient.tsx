@@ -708,6 +708,18 @@ export default function FOSServePage() {
           iconBgClass="bg-fosserve/10"
           iconClass="text-fosserve"
           submitButtonClass="bg-fosserve text-white hover:bg-fosserve/90"
+          relatedPosts={[
+            {
+              title: "Open Source in Education: Why Colleges Should Adopt FOSS",
+              slug: "open-source-in-education-why-colleges-should-adopt-foss",
+              blurb: "Cost, no lock-in, deeper learning and practical first steps for institutions.",
+            },
+            {
+              title: "Open Source Licenses Explained: MIT, Apache, GPL",
+              slug: "open-source-licenses-explained-mit-apache-gpl",
+              blurb: "What institutions should know before adopting and redistributing open source software.",
+            },
+          ]}
         />
       </div>
     </main>
