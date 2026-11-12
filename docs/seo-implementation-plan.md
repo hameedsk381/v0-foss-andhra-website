@@ -57,11 +57,11 @@
 
 | # | Action | Owner |
 |---|--------|-------|
-| 3.1 | Build the generic-demand internship landing: one page answering "internships for students in Andhra Pradesh / open source internship" honestly (3-month hybrid, unpaid, membership route) — the runner-up opportunity from the report | Agent + User review |
-| 3.2 | Deepen the 3 strongest existing posts (FOSS club guide, GitHub pack guide, beginner projects) toward 1,200–1,500 words with concrete steps and screenshots; update `updatedAt` and re-ping | Agent |
-| 3.3 | Content cadence: 2 posts/month from the student question clusters (first PR, GSoC prep, Linux install fest, hackathon prep, git basics) | User (topics) + Agent (drafts) |
-| 3.4 | Internal links: each program page links to its 2–3 relevant posts; posts link back to programs | Agent |
-| 3.5 | GSC review after 4–6 weeks: sort queries by impressions, pick the ones already seeing impressions with position 10–30 as next content targets | Agent |
+| 3.1 | Build the generic-demand internship landing: one page answering "internships for students in Andhra Pradesh / open source internship" honestly (3-month hybrid, unpaid, membership route) — the runner-up opportunity from the report | ✅ Done — `/internships` live (commit f6deb3c): facts grid, 7 track cards, FAQ + FAQPage JSON-LD, linked from /careers and in sitemap |
+| 3.2 | Deepen the 3 strongest existing posts (FOSS club guide, GitHub pack guide, beginner projects) toward 1,200–1,500 words with concrete steps and screenshots; update `updatedAt` and re-ping | ✅ Done — club guide 427→1,487 words, pack guide 534→1,199, projects list 563→1,233 (live DB, no deploy); IndexNow re-pinged |
+| 3.3 | Content cadence: 2 posts/month from the student question clusters (first PR, GSoC prep, Linux install fest, hackathon prep, git basics) | User (topics) + Agent (drafts) — first drafts available on request |
+| 3.4 | Internal links: each program page links to its 2–3 relevant posts; posts link back to programs | ✅ Done — related-guides sections on fosserve/fosspeaks/fosstar/fossterage + inline guides on fossync/fosstorm; all deepened posts link to programs, careers and membership |
+| 3.5 | GSC review after 4–6 weeks: sort queries by impressions, pick the ones already seeing impressions with position 10–30 as next content targets | Blocked on Search Console verification (user) |
 
 **Exit criteria:** ≥1 page in the first 10 results for one non-brand cluster; organic visits ≥ 30/month (tool estimate basis).
 
