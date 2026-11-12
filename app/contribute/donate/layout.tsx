@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, ReactNode } from "next"
 
 // Server layout: client pages cannot export metadata, so the donation page
 // otherwise inherits the homepage title/canonical defaults.
@@ -7,4 +7,8 @@ export const metadata: Metadata = {
   description:
     "Support FOSS Andhra's mission to promote free and open source software in education, governance and society across Andhra Pradesh.",
   alternates: { canonical: "/contribute/donate" },
+}
+
+export default function DonateLayout({ children }: { children: ReactNode }) {
+  return children
 }
