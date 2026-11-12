@@ -22,6 +22,7 @@ export default function ContributePage() {
         <div className="max-w-6xl mx-auto">
 
           {/* Contribution Options */}
+          <h2 className="mb-8 text-center font-display text-2xl font-bold sm:text-3xl">Ways to Contribute</h2>
           <StaggerGroup className="grid gap-6 md:grid-cols-3 mb-16">
             <StaggerItem from="left">
               <Link href="/contribute/donate" className="block h-full">
