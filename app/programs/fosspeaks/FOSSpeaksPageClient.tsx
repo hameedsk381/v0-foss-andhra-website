@@ -87,7 +87,7 @@ export default function FOSSpeaksPage() {
                       <Megaphone className="h-5 w-5 text-fosspeaks" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Public Advocacy</h4>
+                      <h3 className="font-medium">Public Advocacy</h3>
                       <p className="text-sm text-muted-foreground">Promoting FOSS awareness</p>
                     </div>
                   </div>
@@ -96,7 +96,7 @@ export default function FOSSpeaksPage() {
                       <Globe className="h-5 w-5 text-fosspeaks" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Policy Influence</h4>
+                      <h3 className="font-medium">Policy Influence</h3>
                       <p className="text-sm text-muted-foreground">Shaping digital policy</p>
                     </div>
                   </div>
@@ -105,7 +105,7 @@ export default function FOSSpeaksPage() {
                       <Presentation className="h-5 w-5 text-fosspeaks" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Educational Outreach</h4>
+                      <h3 className="font-medium">Educational Outreach</h3>
                       <p className="text-sm text-muted-foreground">FOSS workshops and seminars</p>
                     </div>
                   </div>
@@ -114,7 +114,7 @@ export default function FOSSpeaksPage() {
                       <Newspaper className="h-5 w-5 text-fosspeaks" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Media Engagement</h4>
+                      <h3 className="font-medium">Media Engagement</h3>
                       <p className="text-sm text-muted-foreground">Press and public relations</p>
                     </div>
                   </div>

@@ -88,7 +88,7 @@ export default function FOSSteragePage() {
                       <Database className="h-5 w-5 text-fossterage" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Open Databases</h4>
+                      <h3 className="font-medium">Open Databases</h3>
                       <p className="text-sm text-muted-foreground">Creating accessible data repositories</p>
                     </div>
                   </div>
@@ -97,7 +97,7 @@ export default function FOSSteragePage() {
                       <Server className="h-5 w-5 text-fossterage" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Data Infrastructure</h4>
+                      <h3 className="font-medium">Data Infrastructure</h3>
                       <p className="text-sm text-muted-foreground">Building robust data systems</p>
                     </div>
                   </div>
@@ -106,7 +106,7 @@ export default function FOSSteragePage() {
                       <Brain className="h-5 w-5 text-fossterage" />
                     </div>
                     <div>
-                      <h4 className="font-medium">AI & ML Resources</h4>
+                      <h3 className="font-medium">AI & ML Resources</h3>
                       <p className="text-sm text-muted-foreground">Promoting ML model sharing</p>
                     </div>
                   </div>
@@ -115,7 +115,7 @@ export default function FOSSteragePage() {
                       <Share2 className="h-5 w-5 text-fossterage" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Knowledge Transfer</h4>
+                      <h3 className="font-medium">Knowledge Transfer</h3>
                       <p className="text-sm text-muted-foreground">Facilitating information exchange</p>
                     </div>
                   </div>

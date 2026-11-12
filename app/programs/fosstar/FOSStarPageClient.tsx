@@ -106,7 +106,7 @@ export default function FOSStarPage() {
                       <Users className="h-5 w-5 text-fosstar" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Community</h4>
+                      <h3 className="font-medium">Community</h3>
                       <p className="text-sm text-muted-foreground">Building a strong FOSS network</p>
                     </div>
                   </div>
@@ -115,7 +115,7 @@ export default function FOSStarPage() {
                       <Calendar className="h-5 w-5 text-fosstar" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Events</h4>
+                      <h3 className="font-medium">Events</h3>
                       <p className="text-sm text-muted-foreground">Regular meetups and workshops</p>
                     </div>
                   </div>
@@ -124,7 +124,7 @@ export default function FOSStarPage() {
                       <Star className="h-5 w-5 text-fosstar" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Recognition</h4>
+                      <h3 className="font-medium">Recognition</h3>
                       <p className="text-sm text-muted-foreground">Acknowledging contributions</p>
                     </div>
                   </div>
@@ -133,7 +133,7 @@ export default function FOSStarPage() {
                       <Heart className="h-5 w-5 text-fosstar" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Support</h4>
+                      <h3 className="font-medium">Support</h3>
                       <p className="text-sm text-muted-foreground">Resources for FOSS adoption</p>
                     </div>
                   </div>
@@ -389,7 +389,7 @@ export default function FOSStarPage() {
                     <CardContent className="pt-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                          <h4 className="font-semibold mb-3">Community Benefits</h4>
+                          <h3 className="font-semibold mb-3">Community Benefits</h3>
                           <ul className="space-y-2">
                             <li className="flex items-start">
                               <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
@@ -410,7 +410,7 @@ export default function FOSStarPage() {
                           </ul>
                         </div>
                         <div>
-                          <h4 className="font-semibold mb-3">Learning & Growth</h4>
+                          <h3 className="font-semibold mb-3">Learning & Growth</h3>
                           <ul className="space-y-2">
                             <li className="flex items-start">
                               <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
