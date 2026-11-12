@@ -57,7 +57,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       include: {
         BlogCategory: true,
         Admin: {
-          select: { id: true, name: true, email: true, avatar: true, bio: true },
+          select: { id: true, name: true, email: true, avatar: true },
         },
         BlogPostTag: {
           include: { BlogTag: true },
@@ -203,12 +203,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             </div>
 
-            {post.author.bio && (
-              <p className="mt-4 border-l-2 border-primary/20 pl-3 text-sm leading-relaxed text-muted-foreground">
-                {post.author.bio ||
-                  "FOSS Andhra community volunteer writing about free and open source software, education and developer tools from Andhra Pradesh."}
-              </p>
-            )}
+            {/* E-E-A-T author line: the Admin model has no bio field, so this
+                is a static community-authorship statement. */}
+            <p className="mt-4 border-l-2 border-primary/20 pl-3 text-sm leading-relaxed text-muted-foreground">
+              FOSS Andhra community volunteer writing about free and open source software,
+              education and developer tools from Andhra Pradesh.
+            </p>
           </header>
 
           {/* Content - Markdown rendering */}
