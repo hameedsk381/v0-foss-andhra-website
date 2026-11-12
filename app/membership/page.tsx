@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
+import Link from "next/link"
 import { AudienceSpecificForms } from "./audience-forms"
 
 export const metadata: Metadata = {
@@ -22,6 +23,21 @@ export default function RegisterPage() {
           FOSStar is FOSS Andhra&apos;s membership program for students, professionals, and institutions.
           Members get access to internships and opportunities, community events, workshops, and a network
           of open source contributors across Andhra Pradesh.
+        </p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          New here? Read about the{" "}
+          <Link href="/programs/fosstar" className="font-medium text-primary hover:underline">
+            FOSStar program and member benefits
+          </Link>
+          , browse{" "}
+          <Link href="/careers" className="font-medium text-primary hover:underline">
+            current internship openings
+          </Link>
+          , or check the{" "}
+          <Link href="/faq" className="font-medium text-primary hover:underline">
+            membership FAQ
+          </Link>
+          .
         </p>
       </header>
       <Suspense fallback={
