@@ -41,8 +41,10 @@ export function generateSEOMetadata({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fossap.in"
   const defaultImage = `${siteUrl}/og-image.png`
   
+  // Titles are absolute: callers compose the full string, so the root layout
+  // template ("%s | FOSS Andhra") must not append the brand a second time.
   const metadata: Metadata = {
-    title,
+    title: { absolute: title },
     description,
     keywords: keywords?.split(",").map(k => k.trim()),
     authors: author ? [{ name: author }] : undefined,

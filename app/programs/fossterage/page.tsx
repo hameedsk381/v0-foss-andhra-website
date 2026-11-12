@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import FOSSteragePageClient from "./FOSSteragePageClient"
 
 export const metadata: Metadata = {
-  title: "FOSSterage — FOSS Knowledge Repository | FOSS Andhra",
+  title: "FOSSterage — FOSS Knowledge Repository",
   description:
     "FOSSterage is FOSS Andhra's open knowledge repository for free and open source software resources, documentation, and learning materials in Andhra Pradesh.",
   alternates: { canonical: "/programs/fossterage" },

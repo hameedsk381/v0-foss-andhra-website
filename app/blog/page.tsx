@@ -4,7 +4,7 @@ import BlogPageClient from "./BlogPageClient"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "Blog — Open Source Guides & Community News | FOSS Andhra",
+  title: "Blog — Open Source Guides & Community News",
   description:
     "Guides, tutorials and news on free and open source software from the FOSS Andhra community: getting started with Git, Linux, open source programs for students, FOSS clubs and more.",
   keywords: [
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/blog" },
   openGraph: {
-    title: "Blog — Open Source Guides & Community News | FOSS Andhra",
+    title: "Blog — Open Source Guides & Community News",
     description:
       "Guides, tutorials and news on free and open source software from the Andhra Pradesh open source community.",
     url: "https://fossap.in/blog",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog — Open Source Guides & Community News | FOSS Andhra",
+    title: "Blog — Open Source Guides & Community News",
     description: "Guides, tutorials and news on free and open source software from FOSS Andhra.",
   },
 }

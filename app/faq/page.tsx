@@ -82,7 +82,7 @@ const faqSchema = {
 }
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | FOSS Andhra",
+  title: "Frequently Asked Questions",
   description:
     "Answers to common questions about FOSS Andhra, FOSStar membership, FOSSynC student clubs, and how to contribute to open source in Andhra Pradesh.",
   alternates: { canonical: "/faq" },

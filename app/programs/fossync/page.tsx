@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import FOSSynCPageClient from "./FOSSynCPageClient"
 
 export const metadata: Metadata = {
-  title: "FOSSynC — Student FOSS Clubs in Andhra Pradesh | FOSS Andhra",
+  title: "FOSSynC — Student FOSS Clubs in Andhra Pradesh",
   description:
     "FOSSynC helps colleges across Andhra Pradesh start student-led open source clubs with mentorship, resources, hackathons, and community support.",
   alternates: { canonical: "/programs/fossync" },

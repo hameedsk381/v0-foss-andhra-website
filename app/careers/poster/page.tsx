@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button"
 import { INTERNSHIP_POSTER, InternshipPoster, internshipPosterMetadata } from "@/components/internship-poster"
 
 export const metadata: Metadata = {
-  title: "Internship Program Poster | FOSS Andhra",
-  description: "Download and share the FOSS Andhra Internship Program poster.",
+  title: "Internship Program Poster",
+  description:
+    "Download and share the FOSS Andhra Internship Program poster: paid-style internships in AI, DevOps, design and system design for students across Andhra Pradesh.",
+  alternates: { canonical: "/careers/poster" },
   openGraph: {
-    title: "Internship Program Poster | FOSS Andhra",
-    description: "Download and share the FOSS Andhra Internship Program poster.",
+    title: "Internship Program Poster",
+    description:
+      "Download and share the FOSS Andhra Internship Program poster: paid-style internships in AI, DevOps, design and system design for students across Andhra Pradesh.",
+    url: "https://fossap.in/careers/poster",
     ...internshipPosterMetadata.openGraph,
   },
   twitter: internshipPosterMetadata.twitter,

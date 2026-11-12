@@ -17,11 +17,11 @@ import {
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "Careers & Internships | FOSS Andhra",
+  title: "Careers & Internships",
   description: "Open jobs, internships, fellowships, collaborations and volunteer roles at FOSS Andhra.",
   alternates: { canonical: "/careers" },
   openGraph: {
-    title: "Careers & Internships | FOSS Andhra",
+    title: "Careers & Internships",
     description: "Open jobs, internships, fellowships, collaborations and volunteer roles at FOSS Andhra.",
     url: "https://fossap.in/careers",
     ...internshipPosterMetadata.openGraph,

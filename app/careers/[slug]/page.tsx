@@ -23,15 +23,18 @@ async function getOpening(slug: string) {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const opening = await getOpening(params.slug).catch(() => null)
-  if (!opening) return { title: "Careers | FOSS Andhra" }
-  const title = `${opening.title} | Careers | FOSS Andhra`
+  if (!opening) return { title: "Careers | FOSS Andhra", alternates: { canonical: "/careers" } }
+  // Absolute title: the root layout template would otherwise append "| FOSS Andhra" a second time.
+  const title = { absolute: `${opening.title} | Careers | FOSS Andhra` }
   const description = opening.summary ?? undefined
-  if (opening.type !== "internship") return { title, description }
+  const alternates = { canonical: `/careers/${params.slug}` }
+  if (opening.type !== "internship") return { title, description, alternates }
   // Internship links share the program poster as the preview image.
   return {
     title,
     description,
-    openGraph: { title, description, ...internshipPosterMetadata.openGraph },
+    alternates,
+    openGraph: { title: opening.title, description, url: `https://fossap.in/careers/${params.slug}`, ...internshipPosterMetadata.openGraph },
     twitter: internshipPosterMetadata.twitter,
   }
 }

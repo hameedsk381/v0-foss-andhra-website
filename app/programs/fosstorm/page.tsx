@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import FOSStormPageClient from "./FOSStormPageClient"
 
 export const metadata: Metadata = {
-  title: "FOSStorm — Community Open Source Projects | FOSS Andhra",
+  title: "FOSStorm — Community Open Source Projects",
   description:
     "FOSStorm develops open source projects addressing local challenges in Andhra Pradesh. Collaborate on impactful solutions for education, governance, and digital inclusion.",
   alternates: { canonical: "/programs/fosstorm" },
