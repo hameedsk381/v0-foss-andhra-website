@@ -120,7 +120,7 @@ export function ProgramContactSection({
                     <Mail className={`h-5 w-5 ${iconClass}`} />
                   </div>
                   <div>
-                    <h4 className="font-medium">Email Us</h4>
+                    <h3 className="font-medium">Email Us</h3>
                     <p className="text-sm text-gray-500">office@fossap.in</p>
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export function ProgramContactSection({
                     <Phone className={`h-5 w-5 ${iconClass}`} />
                   </div>
                   <div>
-                    <h4 className="font-medium">Phone</h4>
+                    <h3 className="font-medium">Phone</h3>
                     <p className="text-sm text-gray-500">+91 94944 63840</p>
                   </div>
                 </div>
@@ -138,7 +138,7 @@ export function ProgramContactSection({
                     <MapPin className={`h-5 w-5 ${iconClass}`} />
                   </div>
                   <div>
-                    <h4 className="font-medium">Office</h4>
+                    <h3 className="font-medium">Office</h3>
                     <p className="text-sm text-gray-500">Foss andhra, Yesj centre for excellence, Vijayawada 520008</p>
                   </div>
                 </div>

@@ -121,6 +121,7 @@ export default function VolunteerPage() {
             </p>
           </div>
 
+          <h2 className="mb-8 text-center font-display text-2xl font-bold sm:text-3xl">Get Involved</h2>
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Form */}
             <div className="lg:col-span-2">
