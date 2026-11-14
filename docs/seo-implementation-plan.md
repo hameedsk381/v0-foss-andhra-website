@@ -85,13 +85,13 @@ New site modules that create indexable public pages and strengthen the membershi
 
 | # | Module | Status |
 |---|--------|--------|
-| 5.1 | Certificates & verification — issue certs with public codes (`FOSSAP-CERT-XXXXXXXX`), public verify pages, indexable `/certificates` landing, admin UI. Pushed `dc61f99`; migration applies on next deploy | ✅ Built, pending deploy |
-| 5.2 | FOSSynC Clubs portal — public club directory + state-wide leaderboard at `/clubs`, club registration (`/clubs/register`) with admin review queue, per-club public pages `/clubs/[slug]` (indexable). Pushed `b0a591c`; migration applies on next deploy | ✅ Built, pending deploy |
-| 5.3 | Learning Hub — structured learning tracks (Git, Linux, first contribution) with member progress; ties into blog content | ⬜ Next |
+| 5.1 | Certificates & verification — issue certs with public codes (`FOSSAP-CERT-XXXXXXXX`), public verify pages, indexable `/certificates` landing, admin UI. Pushed `dc61f99`. **Verified live 14 Nov: issue → public page → revoke → delete all confirmed in production** | ✅ Live |
+| 5.2 | FOSSynC Clubs portal — public club directory + state-wide leaderboard at `/clubs`, club registration (`/clubs/register`) with admin review queue, per-club public pages `/clubs/[slug]` (indexable). Pushed `b0a591c` | ✅ Built, pending deploy |
+| 5.3 | Learning Hub — tracks + lessons (draft/published, Markdown), public `/learn` landing, track and lesson pages, FOSStar member progress tracking, admin editor. Pushed `2159d1b`; seed `scripts/seed-learning.mjs` publishes the first "Git & GitHub Basics" track after deploy | ✅ Built, pending deploy + seed |
 | 5.4 | Quick wins — ICS feed for `/events`, public newsletter archive, Code of Conduct page | ⬜ |
 | 5.5 | Project showcase / good-first-issues feed, hackathon module, mentorship, member profiles, chapter pages | ⬜ Backlog |
 
-After each deploy: verify the new pages render, ping IndexNow for the new indexable landings (`/certificates`, `/clubs`, `/clubs/register`).
+After each deploy: verify the new pages render, ping IndexNow for the new indexable landings (`/certificates`, `/clubs`, `/clubs/register`, `/learn`).
 
 ---
 
