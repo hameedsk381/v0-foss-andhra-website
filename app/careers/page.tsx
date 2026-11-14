@@ -2,8 +2,10 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { Briefcase, Clock, MapPin } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { prisma } from "@/lib/prisma"
+import { getCurrentMember } from "@/lib/member/session"
 import { ApplyForm } from "./apply-form"
 import { InternshipPoster, internshipPosterMetadata } from "@/components/internship-poster"
 import {
@@ -42,6 +44,9 @@ export default async function CareersPage({ searchParams }: { searchParams: { ty
     console.error("Failed to load career openings:", error)
   }
   openings = openings.filter(isOpeningAcceptingApplications)
+
+  const member = await getCurrentMember()
+  const canApplyGeneral = Boolean(member?.active)
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
@@ -133,7 +138,30 @@ export default async function CareersPage({ searchParams }: { searchParams: { ty
       )}
 
       <section className="mt-12 rounded-lg border bg-white p-6">
-        <ApplyForm heading="Don't see a fit? Send a general application" />
+        {canApplyGeneral ? (
+          <ApplyForm heading="Don't see a fit? Send a general application" prefill={{ name: member!.name, email: member!.email }} />
+        ) : member && !member!.active ? (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-700">Your FOSStar membership has expired. Renew it to send a general application.</p>
+            <Link href="/member/membership/renew">
+              <Button>Renew membership</Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-700">
+              General applications are open to FOSStar members. Log in to apply, or become a member first.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/login">
+                <Button>Log in</Button>
+              </Link>
+              <Link href="/membership">
+                <Button variant="outline">Become a FOSStar member</Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   )

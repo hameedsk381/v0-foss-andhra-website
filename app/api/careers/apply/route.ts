@@ -44,6 +44,9 @@ export async function POST(request: NextRequest) {
     let email = data.email.toLowerCase()
     let roleTitle = "General application"
     let isInternship = false
+    // General applications (no opening) feed the same member-only pipeline;
+    // everything except volunteer roles requires an active FOSStar membership.
+    let membersOnly = true
 
     if (data.openingId) {
       const opening = await prisma.careerOpening.findUnique({
@@ -55,18 +58,18 @@ export async function POST(request: NextRequest) {
       }
       roleTitle = opening.title
       isInternship = opening.type === "internship"
+      membersOnly = requiresMembership(opening.type)
+    }
 
-      // Everything except volunteer roles is for active FOSStar members only; applications use the member's own email.
-      if (requiresMembership(opening.type)) {
-        const member = await getCurrentMember()
-        if (!member) {
-          return NextResponse.json({ error: "Please log in as a FOSStar member to apply" }, { status: 401 })
-        }
-        if (!member.active) {
-          return NextResponse.json({ error: "Your FOSStar membership has expired. Renew it to apply" }, { status: 403 })
-        }
-        email = member.email.trim().toLowerCase()
+    if (membersOnly) {
+      const member = await getCurrentMember()
+      if (!member) {
+        return NextResponse.json({ error: "Please log in as a FOSStar member to apply" }, { status: 401 })
       }
+      if (!member.active) {
+        return NextResponse.json({ error: "Your FOSStar membership has expired. Renew it to apply" }, { status: 403 })
+      }
+      email = member.email.trim().toLowerCase()
     }
 
     const duplicate = await prisma.careerApplication.findFirst({
