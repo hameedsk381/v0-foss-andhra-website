@@ -95,6 +95,7 @@ export default function CareersAdminPage() {
   const [interviewAt, setInterviewAt] = useState("")
   const [interviewNote, setInterviewNote] = useState("")
   const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
   const [offerNotes, setOfferNotes] = useState("")
 
   const load = useCallback(async () => {
@@ -517,11 +518,9 @@ export default function CareersAdminPage() {
                   <Button size="sm" variant="outline" onClick={() => setHrForm(hrForm === "interview" ? null : "interview")}>
                     Invite to interview
                   </Button>
-                  {viewing.CareerOpening?.type === "internship" && (
-                    <Button size="sm" onClick={() => setHrForm(hrForm === "offer" ? null : "offer")}>
-                      {viewing.offerRef ? "Re-issue offer letter" : "Issue offer letter"}
-                    </Button>
-                  )}
+                  <Button size="sm" onClick={() => setHrForm(hrForm === "offer" ? null : "offer")}>
+                    {viewing.offerRef ? "Re-issue offer letter" : "Issue offer letter"}
+                  </Button>
                   {viewing.offerToken && (
                     <>
                       <a href={`/careers/offer/${viewing.offerToken}`} target="_blank" rel="noopener noreferrer">
@@ -582,8 +581,14 @@ export default function CareersAdminPage() {
 
                 {hrForm === "offer" && (
                   <div className="space-y-2 border-t pt-3">
-                    <Label htmlFor="of-start">Start date (3-month internship; the end date is calculated)</Label>
+                    <Label htmlFor="of-start">
+                      Start date{!viewing.CareerOpening || viewing.CareerOpening.type === "internship"
+                        ? " (end date defaults to the 3-month internship term)"
+                        : ""}
+                    </Label>
                     <Input id="of-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                    <Label htmlFor="of-end">End date (optional — leave blank for the standard 3-month term)</Label>
+                    <Input id="of-end" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
                     <Textarea
                       rows={3}
                       placeholder="Optional extra details for the letter, e.g. weekly timings, on-site days, mentor name"
@@ -594,7 +599,11 @@ export default function CareersAdminPage() {
                       size="sm"
                       disabled={!startDate || hrWorking}
                       onClick={() =>
-                        runAction(viewing, { action: "offer", startDate, notes: offerNotes || undefined }, "Offer letter issued")
+                        runAction(
+                          viewing,
+                          { action: "offer", startDate, endDate: endDate || undefined, notes: offerNotes || undefined },
+                          "Offer letter issued",
+                        )
                       }
                     >
                       {hrWorking ? "Sending..." : "Issue and email letter"}

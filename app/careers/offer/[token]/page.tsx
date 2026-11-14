@@ -6,6 +6,7 @@ import {
   COMMON_RESPONSIBILITIES,
   HR_EMAIL,
   INTERNSHIP_MONTHS,
+  POSITION_TERMS,
   SIGNATORY,
   TERMS,
   formatLongDate,
@@ -19,7 +20,7 @@ export const dynamic = "force-dynamic"
 
 // Private link: keep it out of search results.
 export const metadata: Metadata = {
-  title: "Internship Offer Letter | FOSS Andhra",
+  title: "Offer Letter | FOSS Andhra",
   robots: { index: false, follow: false },
 }
 
@@ -28,17 +29,27 @@ export default async function OfferLetterPage({ params }: { params: { token: str
 
   const offer = await prisma.careerApplication.findUnique({
     where: { offerToken: params.token },
-    include: { CareerOpening: { select: { title: true, department: true, workMode: true } } },
+    include: { CareerOpening: { select: { title: true, department: true, workMode: true, type: true } } },
   })
   if (!offer || !offer.offerRef || !offer.startDate || !offer.endDate || offer.status === "rejected") notFound()
 
   const title = offer.CareerOpening?.title ?? "Intern"
+  const isInternship = !offer.CareerOpening || offer.CareerOpening.type === "internship"
   const profile = getRoleProfile(offer.CareerOpening?.department, title)
   const mode = workModeLabel(offer.CareerOpening?.workMode ?? "hybrid")
 
+  // Whole months between start and end (calendar-aware, minimum 1)
+  const monthCount = Math.max(
+    1,
+    Math.round(
+      (new Date(offer.endDate).getTime() - new Date(offer.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30.44),
+    ),
+  )
+  const durationLabel = isInternship ? `${INTERNSHIP_MONTHS} months` : `${monthCount} month${monthCount === 1 ? "" : "s"}`
+
   const rows: [string, string][] = [
     ["Position", title],
-    ["Duration", `${INTERNSHIP_MONTHS} months`],
+    ["Duration", durationLabel],
     ["Start date", formatLongDate(offer.startDate)],
     ["End date", formatLongDate(offer.endDate)],
     ["Work mode", `${mode} (in-person meetings at ${officeLine()})`],
@@ -71,13 +82,25 @@ export default async function OfferLetterPage({ params }: { params: { token: str
           <p className="text-gray-600">{offer.email}</p>
         </div>
 
-        <h2 className="mt-6 text-lg font-bold">Subject: Internship Offer — {title}</h2>
+        <h2 className="mt-6 text-lg font-bold">
+          {isInternship ? "Internship Offer" : "Position Offer"} — {title}
+        </h2>
 
         <p className="mt-4 text-sm leading-relaxed">Dear {offer.name},</p>
         <p className="mt-3 text-sm leading-relaxed">
-          Congratulations! Following your application and interview, FOSS Andhra is pleased to offer you an internship
-          as <strong>{title}</strong> for a period of {INTERNSHIP_MONTHS} months. We were impressed by your interest and
-          look forward to you joining the community.
+          {isInternship ? (
+            <>
+              Congratulations! Following your application and interview, FOSS Andhra is pleased to offer you an
+              internship as <strong>{title}</strong> for a period of {durationLabel}. We were impressed by your
+              interest and look forward to you joining the community.
+            </>
+          ) : (
+            <>
+              Congratulations! Following your application, FOSS Andhra is pleased to offer you the position of{" "}
+              <strong>{title}</strong> from {formatLongDate(offer.startDate)} to {formatLongDate(offer.endDate)}. We
+              were impressed by your interest and look forward to you joining the community.
+            </>
+          )}
         </p>
 
         <table className="mt-5 w-full border-collapse text-sm">
@@ -108,7 +131,9 @@ export default async function OfferLetterPage({ params }: { params: { token: str
               <li key={r}>{r}</li>
             ))}
           </ul>
-          <h4 className="mt-3 text-sm font-semibold">Expectations from every intern</h4>
+          <h4 className="mt-3 text-sm font-semibold">
+            Expectations from every {isInternship ? "intern" : "team member"}
+          </h4>
           <ul className="mt-1 list-disc space-y-1 pl-5 text-sm leading-relaxed">
             {COMMON_RESPONSIBILITIES.map((r) => (
               <li key={r}>{r}</li>
@@ -126,7 +151,7 @@ export default async function OfferLetterPage({ params }: { params: { token: str
         <section className="mt-6">
           <h3 className="text-base font-bold">Terms</h3>
           <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-relaxed">
-            {TERMS.map((t) => (
+            {(isInternship ? TERMS : POSITION_TERMS).map((t) => (
               <li key={t}>{t}</li>
             ))}
           </ol>

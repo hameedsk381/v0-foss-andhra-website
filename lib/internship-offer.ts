@@ -144,6 +144,15 @@ export const TERMS = [
   "You must remain an active FOSStar member for the duration of the internship.",
 ]
 
+/** Terms for non-internship engagements (jobs, fellowships, contracts). */
+export const POSITION_TERMS = [
+  "This is a learning-focused contribution engagement with FOSS Andhra. It does not create an employment relationship unless explicitly agreed in writing.",
+  "Work you create for FOSS Andhra is released under an open-source licence chosen by the project. You keep credit for your contributions.",
+  "On satisfactory completion you will receive a certificate of contribution from FOSS Andhra.",
+  "Either party may end this engagement by giving reasonable notice. FOSS Andhra may end it earlier for a breach of the Code of Conduct.",
+  "You must remain an active FOSStar member for the duration of the engagement.",
+]
+
 /** Same day-of-month `months` later, minus one day (clamped to the month length). */
 export function addMonthsMinusDay(start: Date, months: number) {
   const d = new Date(start)

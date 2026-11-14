@@ -19,6 +19,7 @@ const actionSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("offer"),
     startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Start date must be YYYY-MM-DD"),
+    endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "End date must be YYYY-MM-DD").optional(),
     notes: z.string().trim().max(2000).optional(),
   }),
   z.object({ action: z.literal("resend-offer") }),
@@ -27,11 +28,11 @@ const actionSchema = z.discriminatedUnion("action", [
 
 const OFFER_BLOCKED = ["rejected", "hired"]
 
-async function nextOfferRef() {
+async function nextOfferRef(prefix: string) {
   const year = new Date().getFullYear()
-  const prefix = `FOSSAP/INT/${year}/`
-  const count = await prisma.careerApplication.count({ where: { offerRef: { startsWith: prefix } } })
-  return `${prefix}${String(count + 1).padStart(4, "0")}`
+  const p = `${prefix}/${year}/`
+  const count = await prisma.careerApplication.count({ where: { offerRef: { startsWith: p } } })
+  return `${p}${String(count + 1).padStart(4, "0")}`
 }
 
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
@@ -55,7 +56,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     if (!application) return NextResponse.json({ success: false, error: "Application not found" }, { status: 404 })
 
     const roleTitle = application.CareerOpening?.title ?? "FOSS Andhra opportunity"
-    const isInternship = application.CareerOpening?.type === "internship"
+    // No opening = general application; these are offers for the internship program.
+    const isInternship = !application.CareerOpening || application.CareerOpening.type === "internship"
     const who = { name: application.name, email: application.email }
 
     if (input.action === "reject") {
@@ -77,10 +79,9 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ success: true, emailed, data: updated })
     }
 
-    // Offer actions: internships only
-    if (!isInternship) {
-      return NextResponse.json({ success: false, error: "Offer letters are only available for internships" }, { status: 400 })
-    }
+    // Offer actions: any role type. Internships (and general applications, which
+    // feed the internship program) get the standard 3-month letter; other roles
+    // can set a custom end date.
     if (OFFER_BLOCKED.includes(application.status)) {
       return NextResponse.json(
         { success: false, error: `Cannot issue an offer for an application marked ${application.status}` },
@@ -97,6 +98,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
         ref: application.offerRef,
         startDate: application.startDate,
         endDate: application.endDate,
+        isInternship,
       })
       return NextResponse.json({ success: true, emailed, data: application })
     }
@@ -106,7 +108,15 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     if (Number.isNaN(start.getTime()) || start.getTime() < Date.now() - 24 * 60 * 60 * 1000) {
       return NextResponse.json({ success: false, error: "Start date must be today or later" }, { status: 400 })
     }
-    const end = addMonthsMinusDay(start, INTERNSHIP_MONTHS)
+    let end: Date
+    if (input.endDate) {
+      end = new Date(`${input.endDate}T00:00:00.000Z`)
+      if (Number.isNaN(end.getTime()) || end.getTime() <= start.getTime()) {
+        return NextResponse.json({ success: false, error: "End date must be after the start date" }, { status: 400 })
+      }
+    } else {
+      end = addMonthsMinusDay(start, INTERNSHIP_MONTHS)
+    }
 
     let updated = null
     for (let attempt = 0; attempt < 3 && !updated; attempt++) {
@@ -115,7 +125,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
           where: { id: application.id },
           data: {
             status: "offered",
-            offerRef: application.offerRef ?? (await nextOfferRef()),
+            offerRef: application.offerRef ?? (await nextOfferRef(isInternship ? "FOSSAP/INT" : "FOSSAP/OFF")),
             offerToken: application.offerToken ?? randomBytes(24).toString("hex"),
             offerIssuedAt: new Date(),
             offerNotes: input.notes || null,
@@ -137,6 +147,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       ref: updated.offerRef,
       startDate: start,
       endDate: end,
+      isInternship,
     })
     return NextResponse.json({ success: true, emailed, data: updated })
   } catch (error) {

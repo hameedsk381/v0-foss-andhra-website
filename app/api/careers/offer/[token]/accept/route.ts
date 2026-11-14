@@ -16,7 +16,7 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
     }
     const offer = await prisma.careerApplication.findUnique({
       where: { offerToken: params.token },
-      include: { CareerOpening: { select: { title: true } } },
+      include: { CareerOpening: { select: { title: true, type: true } } },
     })
     if (!offer || !offer.startDate) return NextResponse.json({ error: "Offer not found" }, { status: 404 })
 
@@ -38,6 +38,7 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
       { name: offer.name, email: offer.email },
       offer.CareerOpening?.title ?? "Internship",
       offer.startDate,
+      !offer.CareerOpening || offer.CareerOpening.type === "internship",
     )
     return NextResponse.json({ success: true })
   } catch (error) {

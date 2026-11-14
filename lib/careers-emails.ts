@@ -90,16 +90,21 @@ export async function sendInterviewInvite(a: Applicant, roleTitle: string, at: D
 export async function sendOfferEmail(
   a: Applicant,
   roleTitle: string,
-  d: { token: string; ref: string; startDate: Date; endDate: Date },
+  d: { token: string; ref: string; startDate: Date; endDate: Date; isInternship?: boolean },
 ) {
   const link = offerUrl(d.token)
+  const kind = d.isInternship === false ? "offer" : "internship offer"
+  const duration =
+    d.isInternship === false
+      ? `${esc(formatLongDate(d.startDate))} to ${esc(formatLongDate(d.endDate))}`
+      : `${INTERNSHIP_MONTHS} months`
   const html = layout(
-    "Internship offer letter",
+    `${kind.charAt(0).toUpperCase()}${kind.slice(1)} letter`,
     `<h2 style="margin:0 0 12px;color:#015ba7">Congratulations ${esc(a.name)}!</h2>
      <p>We are delighted to offer you the position of <strong>${esc(roleTitle)}</strong> at FOSS Andhra.</p>
      <table cellpadding="0" cellspacing="0" style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;width:100%">
        <tr><td style="padding:10px 16px"><strong>Reference:</strong> ${esc(d.ref)}<br>
-       <strong>Duration:</strong> ${INTERNSHIP_MONTHS} months<br>
+       <strong>Duration:</strong> ${duration}<br>
        <strong>Starts:</strong> ${esc(formatLongDate(d.startDate))}<br>
        <strong>Ends:</strong> ${esc(formatLongDate(d.endDate))}<br>
        <strong>We meet at:</strong> ${esc(officeLine())}</td></tr>
@@ -109,18 +114,20 @@ export async function sendOfferEmail(
      <p style="font-size:12px;color:#6b7280;word-break:break-all">${link}</p>
      <p>We look forward to working with you.<br><strong>FOSS Andhra Team</strong></p>`,
   )
-  return safeSend(a.email, `Your internship offer letter — ${roleTitle} (${d.ref})`, html, "career_offer_email")
+  return safeSend(a.email, `Your ${kind} letter — ${roleTitle} (${d.ref})`, html, "career_offer_email")
 }
 
 export async function sendAcceptanceConfirmation(
   a: Applicant,
   roleTitle: string,
   startDate: Date,
+  isInternship = true,
 ) {
+  const kind = isInternship ? "internship" : "role"
   const html = layout(
     "Offer accepted",
     `<h2 style="margin:0 0 12px;color:#015ba7">Welcome aboard, ${esc(a.name)}!</h2>
-     <p>You have accepted the <strong>${esc(roleTitle)}</strong> internship. We will see you on <strong>${esc(formatLongDate(startDate))}</strong> at ${esc(officeLine())}.</p>
+     <p>You have accepted the <strong>${esc(roleTitle)}</strong> ${kind}. We will see you on <strong>${esc(formatLongDate(startDate))}</strong> at ${esc(officeLine())}.</p>
      <p>Your mentor will contact you before the start date with the schedule and what to prepare.</p>
      <p>Best regards,<br><strong>FOSS Andhra Team</strong></p>`,
   )
