@@ -25,6 +25,7 @@ import {
   Award,
   School,
   GraduationCap,
+  MapPin,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -43,6 +44,7 @@ const navItems = [
   { href: "/admin/certificates", label: "Certificates", icon: Award },
   { href: "/admin/clubs", label: "FOSSynC Clubs", icon: School },
   { href: "/admin/learning", label: "Learning Hub", icon: GraduationCap },
+  { href: "/admin/chapters", label: "Chapters", icon: MapPin },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { href: "/admin/notifications/push", label: "Push Notifications", icon: Bell },
