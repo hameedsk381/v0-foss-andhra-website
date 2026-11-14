@@ -27,6 +27,7 @@ import {
   GraduationCap,
   MapPin,
   Package,
+  Handshake,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -47,6 +48,7 @@ const navItems = [
   { href: "/admin/learning", label: "Learning Hub", icon: GraduationCap },
   { href: "/admin/chapters", label: "Chapters", icon: MapPin },
   { href: "/admin/resources", label: "Resource Library", icon: Package },
+  { href: "/admin/sponsors", label: "Sponsorship", icon: Handshake },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { href: "/admin/notifications/push", label: "Push Notifications", icon: Bell },

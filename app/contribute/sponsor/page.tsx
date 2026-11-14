@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Building, Star, Users, Trophy, CheckCircle, Mail } from "lucide-react"
+import { SponsorInquiryForm } from "./sponsor-inquiry-form"
 
 export default function SponsorPage() {
   const sponsorshipTiers = [
@@ -221,6 +222,17 @@ export default function SponsorPage() {
             </CardContent>
           </Card>
 
+          {/* Inquiry Form */}
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-center">Start a sponsorship conversation</h2>
+            <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Tell us what you would like to support and we will prepare a tailored proposal.
+            </p>
+            <div className="max-w-2xl mx-auto">
+              <SponsorInquiryForm />
+            </div>
+          </div>
+
           {/* Contact CTA */}
           <Card className="bg-primary text-white text-center">
             <CardContent className="py-12">
@@ -230,7 +242,7 @@ export default function SponsorPage() {
                 Get in touch to discuss sponsorship opportunities and how we can work together to promote FOSS in Andhra Pradesh
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/contact">
+                <Link href="#inquiry">
                   <Button size="lg" className="bg-white text-primary hover:bg-white/90">
                     Contact Sponsorship Team
                   </Button>

@@ -770,3 +770,22 @@ model ResourceItem {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model SponsorshipInquiry {
+  id           String   @id @default(cuid())
+  organization String
+  contactName  String
+  email        String
+  phone        String?
+  // platinum | gold | silver | bronze | custom
+  tier         String   @default("custom")
+  budget       String?
+  message      String
+  // new | contacted | proposal | won | lost
+  status       String   @default("new")
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([status])
+}
