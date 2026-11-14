@@ -49,6 +49,7 @@ const navItems = [
   { href: "/admin/chapters", label: "Chapters", icon: MapPin },
   { href: "/admin/resources", label: "Resource Library", icon: Package },
   { href: "/admin/sponsors", label: "Sponsorship", icon: Handshake },
+  { href: "/admin/mentors", label: "Mentorship", icon: Users },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { href: "/admin/notifications/push", label: "Push Notifications", icon: Bell },

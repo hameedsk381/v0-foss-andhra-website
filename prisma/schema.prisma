@@ -789,3 +789,41 @@ model SponsorshipInquiry {
 
   @@index([status])
 }
+
+model MentorProfile {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  headline     String
+  expertise    String
+  bio          String?
+  githubUrl    String?
+  linkedinUrl  String?
+  availability String?
+  maxMentees   Int      @default(2)
+  // pending | approved | rejected
+  status       String   @default("pending")
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  MentorshipRequest MentorshipRequest[]
+}
+
+model MentorshipRequest {
+  id         String   @id @default(cuid())
+  memberId   String?
+  name       String
+  email      String
+  mentorId   String?
+  goals      String
+  background String?
+  // pending | accepted | declined | completed | cancelled
+  status     String   @default("pending")
+  adminNotes String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  MentorProfile MentorProfile? @relation(fields: [mentorId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([mentorId])
+}
