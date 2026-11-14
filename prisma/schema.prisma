@@ -827,3 +827,64 @@ model MentorshipRequest {
   @@index([status])
   @@index([mentorId])
 }
+
+model Hackathon {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  title         String
+  description   String
+  theme         String?
+  // draft | registration_open | judging | completed
+  status        String    @default("draft")
+  startDate     DateTime
+  endDate       DateTime
+  regDeadline   DateTime?
+  venue         String?
+  externalUrl   String?
+  rules         String?
+  prizes        String?
+  createdBy     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  ProblemStatement ProblemStatement[]
+  Team          Team[]
+}
+
+model ProblemStatement {
+  id            String    @id @default(cuid())
+  hackathonId   String
+  title         String
+  description   String
+  // easy | medium | hard
+  difficulty    String    @default("medium")
+  sponsor       String?
+  order         Int       @default(0)
+  Hackathon     Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  Team          Team[]
+}
+
+model Team {
+  id                 String    @id @default(cuid())
+  hackathonId        String
+  name               String
+  leaderName         String
+  leaderEmail        String
+  college            String?
+  size               Int       @default(4)
+  problemStatementId String?
+  memberNames        String?
+  // pending | approved | rejected
+  status             String    @default("pending")
+  submissionUrl      String?
+  submissionNote     String?
+  submittedAt        DateTime?
+  score              Int?
+  judgeNotes         String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  Hackathon          Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  ProblemStatement   ProblemStatement? @relation(fields: [problemStatementId], references: [id], onDelete: SetNull)
+
+  @@index([hackathonId])
+  @@index([status])
+}
