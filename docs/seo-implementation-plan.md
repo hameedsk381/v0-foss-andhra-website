@@ -89,9 +89,15 @@ New site modules that create indexable public pages and strengthen the membershi
 | 5.2 | FOSSynC Clubs portal — public club directory + state-wide leaderboard at `/clubs`, club registration (`/clubs/register`) with admin review queue, per-club public pages `/clubs/[slug]` (indexable). Pushed `b0a591c`. **Verified live 14 Nov: register → approve → public page → delete all confirmed in production** | ✅ Live |
 | 5.3 | Learning Hub — tracks + lessons (draft/published, Markdown), public `/learn` landing, track and lesson pages, FOSStar member progress tracking, admin editor. Pushed `2159d1b`. **Live 14 Nov: "Git & GitHub Basics" track seeded and published (6 lessons); pages verified** | ✅ Live |
 | 5.4 | Quick wins — ICS feed for `/events`, public newsletter archive, Code of Conduct page | ⬜ |
-| 5.5 | Project showcase / good-first-issues feed, hackathon module, mentorship, member profiles, chapter pages | ⬜ Backlog |
+| 5.5 | Member public profiles — opt-in `/members` directory + `/members/[slug]`, `/member/profile` opt-in switch. Pushed `9abe7b5`. Pending deploy | ✅ Built |
+| 5.6 | City chapters — `Chapter` model, admin `/admin/chapters`, public `/chapters` + `/chapters/[slug]` with live city events + FOSSynC clubs. Pushed `d566749`. Pending deploy | ✅ Built |
+| 5.7 | Resource library — public `/resources` (categories/featured/members-only gating), click tracking, admin `/admin/resources`. Pushed `7630353`. Pending deploy | ✅ Built |
+| 5.8 | Sponsor portal — `SponsorshipInquiry` pipeline, inquiry form in `/contribute/sponsor`, admin pipeline `/admin/sponsors`. Pushed `a9f35f2`. Pending deploy | ✅ Built |
+| 5.9 | Mentorship — public `/mentors` directory + apply form + member-gated requests, admin `/admin/mentors` with Mentors/Requests tabs. Pushed `a6ac0f5`. Pending deploy | ✅ Built |
+| 5.10 | Hackathon module — `Hackathon`/`ProblemStatement`/`Team` models, public `/hackathons` + `/hackathons/[slug]` (PS, rules, prizes, register form, leaderboard), team registration API, admin `/admin/hackathons`. Pushed `99a3f56`. Pending deploy | ✅ Built |
+| 5.11 | Telugu i18n (pragmatic) — Telugu dictionary `lib/i18n/te.ts`, indexable `/te` Telugu landing page (links to programs/membership/learn/clubs/hackathons/mentors/events/resources), footer "తెలుగు" link. Full-site Telugu routing deliberately deferred | ✅ Built |
 
-After each deploy: verify the new pages render, ping IndexNow for the new indexable landings (`/certificates`, `/clubs`, `/clubs/register`, `/learn`).
+After each deploy: verify the new pages render, ping IndexNow for the new indexable landings (`/certificates`, `/clubs`, `/clubs/register`, `/learn`, `/members`, `/chapters`, `/resources`, `/mentors`, `/hackathons`, `/te`).
 
 ---
 

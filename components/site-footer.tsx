@@ -212,7 +212,16 @@ export function SiteFooter() {
       {/* Bottom bar */}
       <div className="border-t border-white/6">
         <div className="app-container py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
-          <p>&copy; {new Date().getFullYear()} FOSS Andhra. All rights reserved.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <p>&copy; {new Date().getFullYear()} FOSS Andhra. All rights reserved.</p>
+            <Link
+              href="/te"
+              lang="te"
+              className="text-white/50 hover:text-white/80 transition-colors"
+            >
+              తెలుగు
+            </Link>
+          </div>
           <p>
             Built with{" "}
             <span className="text-secondary/70">♥</span>
