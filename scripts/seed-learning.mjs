@@ -28,6 +28,7 @@ const lessons = [
     title: "What is Git and why open source runs on it",
     summary: "Version control in plain language, and how thousands of volunteers build software together.",
     durationMin: 10,
+    status: "published",
     content: `## The problem Git solves
 
 Imagine you and three friends are writing a project report together, each on your own laptop. You email files back and forth: \`report-final.docx\`, \`report-final-2.docx\`, \`report-FINAL-really.docx\`. Someone overwrites someone else's work. Nobody remembers which version was correct.
@@ -59,6 +60,7 @@ In the next lesson you will install Git and set up your identity, so every commi
     title: "Installing Git and configuring your identity",
     summary: "Get Git running on Windows, Linux or Mac and set your name and email for the first time.",
     durationMin: 15,
+    status: "published",
     content: `## Install Git
 
 **Windows:** download from [git-scm.com](https://git-scm.com/download/win) and run the installer. The default options are fine.
@@ -116,6 +118,7 @@ If you see your name and email in the output, you are ready. Next lesson: your f
     title: "Your first repository: init, add, commit",
     summary: "The three commands behind every commit, practised on a tiny local project.",
     durationMin: 20,
+    status: "published",
     content: `## Make a practice project
 
 \`\`\`bash
@@ -176,6 +179,7 @@ Next lesson: branches, where you can experiment without breaking anything.`,
     title: "Branches: experiment without breaking anything",
     summary: "Create parallel versions of your project and merge them back when they work.",
     durationMin: 20,
+    status: "published",
     content: `## What a branch is
 
 A branch is a parallel line of work. Your main branch stays stable while you try a risky idea on a side branch. If the idea fails, throw the branch away — main is untouched. If it works, merge it back.
@@ -234,6 +238,7 @@ Next lesson: taking your repo to GitHub, where collaboration happens.`,
     title: "Pushing to GitHub and opening your first pull request",
     summary: "Put your repo online and learn the pull request flow used by every open source project.",
     durationMin: 25,
+    status: "published",
     content: `## Create the repo on GitHub
 
 1. Sign up / log in at [github.com](https://github.com) (free).
@@ -284,6 +289,7 @@ Next lesson: finding real projects that want your help.`,
     title: "Finding real projects and making your first real contribution",
     summary: "How to read CONTRIBUTING.md, find 'good first issue' labels, and survive code review.",
     durationMin: 20,
+    status: "published",
     content: `## Find a project that wants beginners
 
 Good first targets:
