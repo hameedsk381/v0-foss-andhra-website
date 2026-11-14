@@ -20,6 +20,20 @@ export default async function CertificatePage({ params }: { params: { code: stri
   const certificate = await prisma.certificate.findUnique({ where: { code } })
   if (!certificate) notFound()
 
+  // If the holder is an active member with a public profile, link to it (not shown on the printable copy).
+  const memberProfile = certificate.email
+    ? await prisma.member.findFirst({
+        where: {
+          email: { equals: certificate.email, mode: "insensitive" },
+          profileVisible: true,
+          status: "active",
+          expiryDate: { gt: new Date() },
+          publicSlug: { not: null },
+        },
+        select: { publicSlug: true },
+      })
+    : null
+
   const revoked = certificate.status === "revoked"
   const dateLine =
     certificate.startDate && certificate.endDate
@@ -109,6 +123,14 @@ export default async function CertificatePage({ params }: { params: { code: stri
       </article>
 
       <div className="mx-auto mt-6 max-w-3xl text-center print:hidden">
+        {memberProfile && (
+          <p className="mb-2 text-sm text-gray-600">
+            Issued to a FOSStar member —{" "}
+            <Link href={`/members/${memberProfile.publicSlug}`} className="font-semibold text-primary hover:underline">
+              view member profile
+            </Link>
+          </p>
+        )}
         <Link href="/certificates" className="text-sm font-semibold text-primary hover:underline">
           Verify another certificate
         </Link>

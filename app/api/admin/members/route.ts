@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { uniqueMemberSlug } from "@/lib/member/public-profile"
 import { requireAdminAccess } from "@/lib/auth/admin"
 import { sendMemberWelcomeEmail } from "@/lib/email"
 import crypto from "crypto"
@@ -106,6 +107,8 @@ export async function POST(request: Request) {
         password: placeholderPassword,
         resetToken,
         resetTokenExpiry,
+        // Public profile is on by default; slug assigned once and kept stable
+        publicSlug: await uniqueMemberSlug(body.name),
       },
       select: MEMBER_LIST_SELECT,
     })

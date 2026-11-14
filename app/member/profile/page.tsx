@@ -262,8 +262,9 @@ export default function ProfilePage() {
         <CardHeader>
           <CardTitle>Public Profile</CardTitle>
           <p className="text-sm text-gray-600 mt-1">
-            Opt in to appear in the FOSS Andhra member directory at fossap.in/members — a public portfolio page
-            recruiters and open source communities can browse. Your phone and email are never shown.
+            Your public profile appears in the FOSS Andhra member directory at fossap.in/members — a portfolio page
+            recruiters and open source communities can browse. Use the switch below to hide it at any time. Your phone
+            and email are never shown.
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -275,7 +276,7 @@ export default function ProfilePage() {
                   ? publicSlug
                     ? `Your public page: fossap.in/members/${publicSlug}`
                     : "Your public page will be created when you save."
-                  : "Your profile is currently private."}
+                  : "Your profile is currently hidden. Turning this on restores your public page."}
               </p>
             </div>
             <Switch

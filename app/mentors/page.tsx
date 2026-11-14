@@ -27,6 +27,22 @@ export default async function MentorsPage() {
     getCurrentMember(),
   ])
 
+  // Mentors who are also FOSStar members get a link to their public profile
+  const mentorEmails = [...new Set(mentors.map((m) => m.email.toLowerCase()))]
+  const memberProfiles = mentorEmails.length
+    ? await prisma.member.findMany({
+        where: {
+          email: { in: mentorEmails, mode: "insensitive" },
+          profileVisible: true,
+          status: "active",
+          expiryDate: { gt: new Date() },
+          publicSlug: { not: null },
+        },
+        select: { email: true, publicSlug: true },
+      })
+    : []
+  const profileByEmail = new Map(memberProfiles.map((p) => [p.email.toLowerCase(), p.publicSlug]))
+
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
       <div className="text-center">
@@ -46,7 +62,18 @@ export default async function MentorsPage() {
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h3 className="font-semibold">{m.name}</h3>
+                    <h3 className="font-semibold">
+                      {profileByEmail.get(m.email.toLowerCase()) ? (
+                        <Link
+                          href={`/members/${profileByEmail.get(m.email.toLowerCase())}`}
+                          className="hover:text-primary hover:underline"
+                        >
+                          {m.name}
+                        </Link>
+                      ) : (
+                        m.name
+                      )}
+                    </h3>
                     <p className="text-sm text-gray-600">{m.headline}</p>
                   </div>
                   <Badge variant="secondary">{m.maxMentees} slots</Badge>

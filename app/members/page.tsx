@@ -42,8 +42,8 @@ export default async function MembersPage() {
         <p className="text-sm font-semibold uppercase tracking-wide text-primary">FOSStar Member Directory</p>
         <h1 className="mt-2 text-3xl font-bold sm:text-4xl">People building open source in Andhra Pradesh</h1>
         <p className="mx-auto mt-3 max-w-2xl text-gray-600">
-          Public profiles of FOSS Andhra members who chose to appear here. Hiring for an open source role or looking
-          for collaborators? Start with these portfolios.
+          Public profiles of FOSS Andhra members — every FOSStar member gets one automatically. Hiring for an open
+          source role or looking for collaborators? Start with these portfolios.
         </p>
       </div>
 
@@ -88,11 +88,7 @@ export default async function MembersPage() {
         {visible.length === 0 && (
           <Card className="sm:col-span-2">
             <CardContent className="py-12 text-center text-gray-500">
-              No public profiles yet. FOSStar members can opt in from their{" "}
-              <Link href="/member/profile" className="text-primary hover:underline">
-                profile settings
-              </Link>
-              .
+              No public profiles yet. New FOSStar members get one automatically on signup.
             </CardContent>
           </Card>
         )}
@@ -103,7 +99,7 @@ export default async function MembersPage() {
         <Link href="/membership" className="font-semibold text-primary hover:underline">
           Join FOSStar
         </Link>{" "}
-        and enable your public profile in settings.
+        — every member gets a public profile automatically.
       </div>
     </div>
   )

@@ -236,9 +236,10 @@ model Member {
   renewal30ReminderSentAt DateTime?
   renewal7ReminderSentAt  DateTime?
 
-  // Public opt-in profile (member directory). Slug assigned on first opt-in and kept stable.
+  // Public profile (member directory) — public by default, members can opt out.
+  // Slug assigned once (on signup or first visibility) and kept stable — never regenerated.
   publicSlug      String?   @unique
-  profileVisible  Boolean   @default(false)
+  profileVisible  Boolean   @default(true)
   publicBio       String?
   publicSkills    String?
   githubUrl       String?

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { uniqueMemberSlug } from "@/lib/member/public-profile"
 
 export const dynamic = "force-dynamic"
 const MEMBER_PROFILE_SELECT = {
@@ -38,17 +39,6 @@ const updateMemberProfileSchema = z.object({
   linkedinUrl: z.string().trim().url("Enter a valid LinkedIn URL").max(300).optional().or(z.literal("")),
   websiteUrl: z.string().trim().url("Enter a valid URL").max(300).optional().or(z.literal("")),
 })
-
-async function uniqueMemberSlug(base: string, excludeId?: string) {
-  const candidate = base.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60) || "member"
-  let slug = candidate
-  let n = 2
-  for (;;) {
-    const existing = await prisma.member.findUnique({ where: { publicSlug: slug }, select: { id: true } })
-    if (!existing || existing.id === excludeId) return slug
-    slug = `${candidate}-${n++}`
-  }
-}
 
 export async function GET() {
   try {
@@ -111,7 +101,7 @@ export async function PUT(request: Request) {
       websiteUrl,
     } = parsed.data
 
-    // Assign the public slug once, on first opt-in; never change it afterwards
+    // Assign the public slug once, on first visibility; never change it afterwards
     const data: Record<string, unknown> = {
       name,
       phone,
