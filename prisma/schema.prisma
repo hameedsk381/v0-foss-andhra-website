@@ -630,3 +630,29 @@ model CareerApplication {
   @@index([status])
   @@index([email])
 }
+
+model Certificate {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  name          String
+  email         String?
+  // internship | event | workshop | club | contribution | custom
+  type          String    @default("custom")
+  title         String
+  program       String?
+  description   String?
+  startDate     DateTime?
+  endDate       DateTime?
+  // active | revoked
+  status        String    @default("active")
+  issuedById    String?
+  issuedAt      DateTime  @default(now())
+  revokedAt     DateTime?
+  revokedReason String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+  @@index([type])
+  @@index([status])
+}
