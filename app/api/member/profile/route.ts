@@ -30,7 +30,25 @@ const updateMemberProfileSchema = z.object({
   organization: z.string().trim().max(160, "Organization is too long").optional(),
   designation: z.string().trim().max(160, "Designation is too long").optional(),
   interests: z.string().trim().max(2000, "Interests must be under 2000 characters").optional(),
+  // Public profile (opt-in)
+  profileVisible: z.boolean().optional(),
+  publicBio: z.string().trim().max(600, "Bio must be under 600 characters").optional().or(z.literal("")),
+  publicSkills: z.string().trim().max(300, "Skills must be under 300 characters").optional().or(z.literal("")),
+  githubUrl: z.string().trim().url("Enter a valid GitHub URL").max(300).optional().or(z.literal("")),
+  linkedinUrl: z.string().trim().url("Enter a valid LinkedIn URL").max(300).optional().or(z.literal("")),
+  websiteUrl: z.string().trim().url("Enter a valid URL").max(300).optional().or(z.literal("")),
 })
+
+async function uniqueMemberSlug(base: string, excludeId?: string) {
+  const candidate = base.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60) || "member"
+  let slug = candidate
+  let n = 2
+  for (;;) {
+    const existing = await prisma.member.findUnique({ where: { publicSlug: slug }, select: { id: true } })
+    if (!existing || existing.id === excludeId) return slug
+    slug = `${candidate}-${n++}`
+  }
+}
 
 export async function GET() {
   try {
@@ -84,17 +102,45 @@ export async function PUT(request: Request) {
     }
 
     const { name, phone, organization, designation, interests } = parsed.data
+    const {
+      profileVisible,
+      publicBio,
+      publicSkills,
+      githubUrl,
+      linkedinUrl,
+      websiteUrl,
+    } = parsed.data
+
+    // Assign the public slug once, on first opt-in; never change it afterwards
+    const data: Record<string, unknown> = {
+      name,
+      phone,
+      organization: organization || null,
+      designation: designation || null,
+      interests: interests || null,
+    }
+    if (profileVisible !== undefined) {
+      data.profileVisible = profileVisible
+      if (profileVisible) {
+        const current = await prisma.member.findUnique({
+          where: { id: (session.user as any).id },
+          select: { publicSlug: true, name: true },
+        })
+        if (current && !current.publicSlug) {
+          data.publicSlug = await uniqueMemberSlug(current.name)
+        }
+      }
+    }
+    if (publicBio !== undefined) data.publicBio = publicBio || null
+    if (publicSkills !== undefined) data.publicSkills = publicSkills || null
+    if (githubUrl !== undefined) data.githubUrl = githubUrl || null
+    if (linkedinUrl !== undefined) data.linkedinUrl = linkedinUrl || null
+    if (websiteUrl !== undefined) data.websiteUrl = websiteUrl || null
 
     const updatedMember = await prisma.member.update({
       where: { id: (session.user as any).id },
-      data: {
-        name,
-        phone,
-        organization: organization || null,
-        designation: designation || null,
-        interests: interests || null,
-      },
-      select: MEMBER_PROFILE_SELECT,
+      data,
+      select: { ...MEMBER_PROFILE_SELECT, publicSlug: true },
     })
 
     return NextResponse.json({ success: true, data: updatedMember })

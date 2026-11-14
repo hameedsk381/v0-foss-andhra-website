@@ -8,7 +8,9 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { Skeleton } from "@/components/skeleton-loader"
-import { User, Mail, Phone, Building, Briefcase, Save } from "lucide-react"
+import { User, Mail, Phone, Building, Briefcase, Save, Github, Globe, Linkedin, ExternalLink } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import Link from "next/link"
 
 export default function ProfilePage() {
   const [memberData, setMemberData] = useState<any>(null)
@@ -18,9 +20,16 @@ export default function ProfilePage() {
     organization: "",
     designation: "",
     interests: "",
+    publicBio: "",
+    publicSkills: "",
+    githubUrl: "",
+    linkedinUrl: "",
+    websiteUrl: "",
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [profileVisible, setProfileVisible] = useState(false)
+  const [publicSlug, setPublicSlug] = useState<string | null>(null)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -39,7 +48,14 @@ export default function ProfilePage() {
           organization: data.data.organization || "",
           designation: data.data.designation || "",
           interests: data.data.interests || "",
+          publicBio: data.data.publicBio || "",
+          publicSkills: data.data.publicSkills || "",
+          githubUrl: data.data.githubUrl || "",
+          linkedinUrl: data.data.linkedinUrl || "",
+          websiteUrl: data.data.websiteUrl || "",
         })
+        setProfileVisible(Boolean(data.data.profileVisible))
+        setPublicSlug(data.data.publicSlug || null)
       }
     } catch (error) {
       console.error("Error fetching member data:", error)
@@ -56,7 +72,7 @@ export default function ProfilePage() {
       const res = await fetch("/api/member/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, profileVisible }),
       })
 
       const data = await res.json()
@@ -67,13 +83,17 @@ export default function ProfilePage() {
           description: "Profile updated successfully",
         })
         setMemberData(data.data)
+        setProfileVisible(Boolean(data.data.profileVisible))
+        setPublicSlug(data.data.publicSlug || null)
       } else {
-        throw new Error("Failed to update profile")
+        throw new Error(data.error || "Failed to update profile")
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update profile. Please try again.",
+        description: error instanceof Error && error.message !== "Failed to update profile"
+          ? error.message
+          : "Failed to update profile. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -236,6 +256,100 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Public Profile */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Public Profile</CardTitle>
+          <p className="text-sm text-gray-600 mt-1">
+            Opt in to appear in the FOSS Andhra member directory at fossap.in/members — a public portfolio page
+            recruiters and open source communities can browse. Your phone and email are never shown.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
+            <div>
+              <p className="font-medium">Show my profile in the member directory</p>
+              <p className="text-sm text-gray-500">
+                {profileVisible
+                  ? publicSlug
+                    ? `Your public page: fossap.in/members/${publicSlug}`
+                    : "Your public page will be created when you save."
+                  : "Your profile is currently private."}
+              </p>
+            </div>
+            <Switch
+              checked={profileVisible}
+              onCheckedChange={setProfileVisible}
+              aria-label="Show profile in member directory"
+            />
+          </div>
+          {profileVisible && publicSlug && (
+            <div className="flex gap-3">
+              <Link href={`/members/${publicSlug}`} target="_blank">
+                <Button variant="outline" size="sm">
+                  <ExternalLink className="h-4 w-4 mr-2" /> View my public page
+                </Button>
+              </Link>
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="md:col-span-2 space-y-2">
+              <Label htmlFor="publicBio">Short bio (shown publicly)</Label>
+              <Textarea
+                id="publicBio"
+                rows={3}
+                maxLength={600}
+                placeholder="One or two sentences about who you are and what you're building."
+                value={formData.publicBio}
+                onChange={(e) => setFormData({ ...formData, publicBio: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="publicSkills">Public skills (comma separated)</Label>
+              <Input
+                id="publicSkills"
+                placeholder="e.g. Python, React, Linux, design"
+                value={formData.publicSkills}
+                onChange={(e) => setFormData({ ...formData, publicSkills: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="githubUrl">GitHub URL</Label>
+              <Input
+                id="githubUrl"
+                type="url"
+                placeholder="https://github.com/username"
+                value={formData.githubUrl}
+                onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="linkedinUrl">LinkedIn URL</Label>
+              <Input
+                id="linkedinUrl"
+                type="url"
+                placeholder="https://linkedin.com/in/username"
+                value={formData.linkedinUrl}
+                onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="websiteUrl">Website / portfolio</Label>
+              <Input
+                id="websiteUrl"
+                type="url"
+                placeholder="https://your-site.dev"
+                value={formData.websiteUrl}
+                onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
+              />
+            </div>
+          </div>
+          <p className="text-xs text-gray-500">
+            Press “Save Changes” above to apply these public profile settings too.
+          </p>
+        </CardContent>
+      </Card>
 
       {/* Account Information */}
       <Card>

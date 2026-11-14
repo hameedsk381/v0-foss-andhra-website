@@ -236,6 +236,15 @@ model Member {
   renewal30ReminderSentAt DateTime?
   renewal7ReminderSentAt  DateTime?
 
+  // Public opt-in profile (member directory). Slug assigned on first opt-in and kept stable.
+  publicSlug      String?   @unique
+  profileVisible  Boolean   @default(false)
+  publicBio       String?
+  publicSkills    String?
+  githubUrl       String?
+  linkedinUrl     String?
+  websiteUrl      String?
+
   LearningProgress LearningProgress[]
 
   @@index([status])
