@@ -308,7 +308,8 @@ model ProgramCaseStudy {
 
 model ProgramClub {
   id          String   @id @default(cuid())
-  programId   String
+  // Null for club-portal registrations before an admin assigns a program
+  programId   String?
   name        String
   location    String
   institution String
@@ -317,11 +318,23 @@ model ProgramClub {
   description String?
   contact     String?
   logo        String?
+  // Public page slug, e.g. "srkr-engineering-college" -> /clubs/slug; null until approved
+  slug        String?  @unique
+  // pending | approved | rejected (pending/rejected rows are inactive and never public)
+  status      String   @default("approved")
+  email       String?
+  coordinatorName String?
+  coordinatorPhone String?
+  githubUrl   String?
+  websiteUrl  String?
   order       Int      @default(0)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  Program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  Program     Program? @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([active])
 }
 
 model ProgramInitiative {
