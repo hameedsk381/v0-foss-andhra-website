@@ -14,80 +14,28 @@ import {
   Users,
 } from "lucide-react"
 import { PROGRAMS } from "@/lib/programs"
+import type { HomeContent } from "@/lib/site-content"
 import { SkipLink } from "@/components/skip-link"
 import { OrganizationJsonLd } from "@/components/structured-data"
 import { useOpenings } from "@/components/home/use-openings"
 import { OpeningsSection } from "@/components/home/openings-section"
 import { OpeningsPopup } from "@/components/home/openings-popup"
 
-/* ── Data ─────────────────────────────────────────────── */
+/* ── Icon resolver (content stores icon names as strings) ─ */
 
-const CAMPUS_NAMES = [
-  "JNTU Kakinada", "Andhra University", "NIT Tadepalligudem",
-  "IIT Tirupati", "SVU Tirupati", "KL University",
-  "VIT-AP", "RVR College", "GITAM",
-]
+const ICONS: Record<string, typeof BookOpen> = {
+  "book-open": BookOpen,
+  "shield-check": ShieldCheck,
+  heart: Heart,
+  globe: Globe,
+  users: Users,
+  calendar: Calendar,
+  "map-pin": MapPin,
+}
 
-const stats = [
-  { value: "700+", label: "Community Members" },
-  { value: "9+",   label: "Campus Clubs" },
-  { value: "7",    label: "Programmes" },
-  { value: "4",    label: "Open Projects" },
-]
-
-const goals = [
-  {
-    number: "01",
-    title: "Open Knowledge",
-    description: "AI systems in 2026 are trained on public knowledge. We ensure that knowledge stays open — accessible to AP students without paywalls.",
-  },
-  {
-    number: "02",
-    title: "Data Privacy",
-    description: "From health records to e-governance, your data belongs to you. We champion community-owned, auditable systems.",
-  },
-  {
-    number: "03",
-    title: "Public Welfare",
-    description: "India's DPI — UPI, ONDC, DIGIT — runs on open source. We extend that ethos to every school and panchayat in AP.",
-  },
-]
-
-const values = [
-  {
-    icon: BookOpen,
-    title: "Open Knowledge",
-    description: "AI systems in 2026 are trained on public knowledge. We ensure that knowledge stays open — accessible to AP students without paywalls.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Data Privacy",
-    description: "From health records to e-governance, your data belongs to you. We champion community-owned, auditable systems.",
-  },
-  {
-    icon: Heart,
-    title: "Public Welfare",
-    description: "India's DPI — UPI, ONDC, DIGIT — runs on open source. We extend that ethos to every school and panchayat in AP.",
-  },
-  {
-    icon: Globe,
-    title: "Offline First",
-    description: "Rural AP cannot wait for 5G. We build tools that run on low-end Android and 2G — digital inclusion for everyone.",
-  },
-]
-
-const communityPhotos = [
-  { src: "/gallery/fosstar-event-1.jpg", title: "Planning Sprints",    sub: "Roadmaps & working groups" },
-  { src: "/stock/code-screen.jpg",       title: "Hack Nights",         sub: "Shipping open code" },
-  { src: "/stock/workshop.jpg",          title: "Hands-on Workshops",  sub: "Skills, live and in person" },
-  { src: "/stock/collaboration.jpg",     title: "Campus Meetups",      sub: "9+ clubs statewide" },
-]
-
-const eventTypes = [
-  { icon: Users,    label: "Community Meetups",  desc: "Monthly open-to-all gatherings" },
-  { icon: Calendar, label: "Hackathons",         desc: "Weekend sprints on open projects" },
-  { icon: MapPin,   label: "Campus Workshops",   desc: "Hands-on FOSS skills, on-site" },
-]
+function iconFor(name: string) {
+  return ICONS[name] ?? BookOpen
+}
 
 /* ── Animation helper ─────────────────────────────────── */
 
@@ -103,7 +51,7 @@ const stagger = (d = 0.06) => ({
 
 /* ── Component ────────────────────────────────────────── */
 
-export default function Home() {
+export default function Home({ content }: { content: HomeContent }) {
   const reduced = useReducedMotion()
   const from = (p: object) => (reduced ? {} : p)
   const { openings, loading: openingsLoading } = useOpenings()
@@ -130,28 +78,28 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="eyebrow mb-4">Andhra Pradesh&apos;s FOSS Community</p>
+              <p className="eyebrow mb-4">{content.heroEyebrow}</p>
 
               <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
-                Building Andhra Pradesh&apos;s <span className="text-primary">open future.</span>
+                {content.heroTitle}{" "}
+                <span className="text-primary">{content.heroTitleHighlight}</span>
               </h1>
 
               <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-                700+ students, developers and educators across 9 campuses — building
-                open-source AI, Telugu computing, and civic tech for AP.
+                {content.heroSubtitle}
               </p>
 
               <div className="flex flex-wrap gap-4 mt-6">
-                <Link href="/membership" className="cta-primary">
-                  Join FOSStar <ArrowRight className="h-4 w-4" />
+                <Link href={content.heroCtaPrimaryHref} className="cta-primary">
+                  {content.heroCtaPrimaryLabel} <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/events" className="cta-secondary">
-                  Upcoming Events
+                <Link href={content.heroCtaSecondaryHref} className="cta-secondary">
+                  {content.heroCtaSecondaryLabel}
                 </Link>
               </div>
 
               <div className="flex flex-wrap gap-3 mt-6">
-                {stats.map(({ value, label }) => (
+                {content.stats.map(({ value, label }) => (
                   <span
                     key={label}
                     className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-1.5 text-sm"
@@ -170,7 +118,7 @@ export default function Home() {
               transition={{ duration: 0.45, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
               <Image
-                src="/stock/hero-community.jpg"
+                src={content.heroImage}
                 alt="FOSS Andhra community summit"
                 fill
                 priority
@@ -184,7 +132,7 @@ export default function Home() {
         {/* ══ CAMPUS TICKER ══════════════════════════════════ */}
         <div className="w-full border-b border-border bg-background py-3.5 overflow-hidden" aria-label="Active FOSS campuses">
           <div className="ticker-track">
-            {[...CAMPUS_NAMES, ...CAMPUS_NAMES].map((name, i) => (
+            {[...content.campusNames, ...content.campusNames].map((name, i) => (
               <span key={i} className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.14em] shrink-0 px-5 inline-flex items-center gap-5">
                 {name}
                 <span className="inline-block w-1 h-1 rounded-full bg-border" aria-hidden="true" />
@@ -199,14 +147,13 @@ export default function Home() {
         {/* ══ GOALS ══════════════════════════════════════════ */}
         <section className="w-full section-shell bg-background">
           <div className="app-container">
-            <p className="eyebrow mb-6">About</p>
+            <p className="eyebrow mb-6">{content.aboutEyebrow}</p>
             <p className="max-w-2xl text-lg leading-relaxed text-foreground sm:text-xl">
-              FOSS Andhra is a non-profit community that aims at promoting and strengthening the
-              Free and Open Source Software ecosystem across Andhra Pradesh.
+              {content.aboutLead}
             </p>
 
             <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-              {goals.map((goal) => (
+              {content.goals.map((goal) => (
                 <div key={goal.number}>
                   <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">Goals {goal.number}</p>
                   <h3 className="font-display text-lg font-bold text-foreground mb-2">{goal.title}</h3>
@@ -224,7 +171,7 @@ export default function Home() {
               <div>
                 <p className="eyebrow mb-2">What we do</p>
                 <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight">
-                  Seven programmes, one mission.
+                  {content.programsHeading}
                 </h2>
               </div>
               <Link
@@ -277,34 +224,36 @@ export default function Home() {
               <div className="max-w-xl">
                 <p className="eyebrow mb-5">Events</p>
                 <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight text-balance">
-                  Come build with us in person.
+                  {content.eventsHeading}
                 </h2>
                 <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-                  Workshops, hackathons, and campus meetups across Andhra Pradesh —
-                  free and open to everyone.
+                  {content.eventsSubtitle}
                 </p>
                 <div className="flex gap-4 mt-8 flex-wrap">
-                  <Link href="/events" className="cta-primary">
-                    See all events <ArrowRight className="h-4 w-4" />
+                  <Link href={content.eventsPrimaryHref} className="cta-primary">
+                    {content.eventsPrimaryLabel} <ArrowRight className="h-4 w-4" />
                   </Link>
-                  <Link href="/contact" className="cta-secondary">
-                    Invite us to your campus
+                  <Link href={content.eventsSecondaryHref} className="cta-secondary">
+                    {content.eventsSecondaryLabel}
                   </Link>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-3 w-full max-w-sm">
-                {eventTypes.map(({ icon: Icon, label, desc }) => (
-                  <div key={label} className="flex items-center gap-4 rounded-lg border border-border bg-card px-5 py-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <Icon className="h-5 w-5 text-primary" />
+                {content.eventTypes.map(({ icon, title, description }) => {
+                  const Icon = iconFor(icon)
+                  return (
+                    <div key={title} className="flex items-center gap-4 rounded-lg border border-border bg-card px-5 py-4">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <Icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground text-sm">{title}</p>
+                        <p className="text-muted-foreground text-xs mt-0.5">{description}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-foreground text-sm">{label}</p>
-                      <p className="text-muted-foreground text-xs mt-0.5">{desc}</p>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -316,20 +265,20 @@ export default function Home() {
             <div className="mb-8">
               <p className="eyebrow mb-2">Community in action</p>
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
-                Real events, real impact.
+                {content.photosHeading}
               </h2>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               <div className="col-span-2 row-span-2 relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
-                <Image src="/gallery/fosstar-summit.jpg" alt="Annual community summit" fill className="object-cover" />
+                <Image src={content.featuredPhoto.src} alt={content.featuredPhoto.title} fill className="object-cover" />
                 <div className="absolute bottom-0 left-0 right-0 bg-background/90 p-4">
-                  <p className="text-foreground font-display font-bold">Annual Summit</p>
-                  <p className="text-muted-foreground text-sm mt-0.5">Our largest gathering of the year</p>
+                  <p className="text-foreground font-display font-bold">{content.featuredPhoto.title}</p>
+                  <p className="text-muted-foreground text-sm mt-0.5">{content.featuredPhoto.sub}</p>
                 </div>
               </div>
 
-              {communityPhotos.map((photo) => (
+              {content.photos.map((photo) => (
                 <div key={photo.title} className="relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
                   <Image src={photo.src} alt={photo.title} fill className="object-cover" />
                   <div className="absolute bottom-0 left-0 right-0 bg-background/90 p-3">
@@ -348,22 +297,25 @@ export default function Home() {
             <div className="mb-10 max-w-xl">
               <p className="eyebrow mb-2">What we stand for</p>
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground text-balance leading-tight">
-                Technology for people, not shareholders.
+                {content.valuesHeading}
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {values.map(({ icon: Icon, title, description }, i) => (
-                <div key={i} className="flex gap-4 p-6 rounded-lg border border-border bg-card">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon className="h-5 w-5 text-primary" />
+              {content.values.map(({ icon, title, description }, i) => {
+                const Icon = iconFor(icon)
+                return (
+                  <div key={i} className="flex gap-4 p-6 rounded-lg border border-border bg-card">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-display font-bold text-foreground mb-1.5">{title}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-display font-bold text-foreground mb-1.5">{title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
@@ -375,23 +327,23 @@ export default function Home() {
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
                 <div className="space-y-4 max-w-xl">
                   <h2 className="font-display text-3xl sm:text-4xl font-bold text-white leading-tight text-balance">
-                    Open source is AP&apos;s advantage.
+                    {content.joinHeading}
                   </h2>
                   <p className="text-white/75 text-lg leading-relaxed">
-                    Join 700+ members building the open technology layer for Andhra Pradesh&apos;s digital future.
+                    {content.joinSubtitle}
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
                     <Link
-                      href="/membership"
+                      href={content.joinPrimaryHref}
                       className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-white/90"
                     >
-                      Join FOSStar
+                      {content.joinPrimaryLabel}
                     </Link>
                     <Link
-                      href="/contribute"
+                      href={content.joinSecondaryHref}
                       className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                     >
-                      Contribute <ArrowRight className="h-4 w-4" />
+                      {content.joinSecondaryLabel} <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
                 </div>

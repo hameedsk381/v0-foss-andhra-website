@@ -10,6 +10,7 @@ import { InstallPrompt } from "@/components/install-prompt"
 import { OfflineIndicator } from "@/components/offline-indicator"
 import { WebVitals } from "./web-vitals"
 import { AppChrome } from "@/components/app-chrome"
+import { SiteFooter } from "@/components/site-footer"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -103,7 +104,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
-            <AppChrome>{children}</AppChrome>
+            <AppChrome footer={<SiteFooter />}>{children}</AppChrome>
             <Toaster />
             <RegisterSW />
             <InstallPrompt />

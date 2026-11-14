@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { PROGRAMS_BY_ID, PILLARS } from "@/lib/programs"
+import { getFooterContent } from "@/lib/site-content"
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react"
 
 const footerLinks = {
@@ -64,7 +65,8 @@ const socialLinks = [
   },
 ]
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const c = await getFooterContent()
   return (
     <footer className="bg-[#071426] text-white border-t border-white/10">
       <div className="app-container pt-8">
@@ -72,17 +74,17 @@ export function SiteFooter() {
           <div className="max-w-xl">
             <p className="eyebrow text-white before:bg-white">Your next contribution</p>
             <h2 className="mt-3 max-w-lg font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
-              Put open technology to work.
+              {c.joinBannerTitle}
             </h2>
             <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
-              Join the people building a more capable, inclusive, and self-reliant Andhra Pradesh.
+              {c.joinBannerBody}
             </p>
           </div>
           <Link
-            href="/membership"
+            href={c.joinBannerCtaHref}
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#071426] transition-colors hover:bg-white/90"
           >
-            Join FOSStar <ArrowUpRight className="h-4 w-4" />
+            {c.joinBannerCtaLabel} <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
       </div>
@@ -102,23 +104,22 @@ export function SiteFooter() {
               />
             </Link>
             <p className="text-sm leading-relaxed text-white/50 max-w-xs">
-              Fostering free and open-source software adoption across education, governance, and
-              society in Andhra Pradesh.
+              {c.brandTagline}
             </p>
 
             {/* Contact info */}
             <div className="space-y-2.5 text-sm">
-              <a href="mailto:office@fossap.in" className="flex items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
+              <a href={`mailto:${c.contactEmail}`} className="flex items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
                 <Mail className="h-3.5 w-3.5 flex-shrink-0 text-secondary/80" />
-                office@fossap.in
+                {c.contactEmail}
               </a>
-              <a href="tel:+919494463840" className="flex items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
+              <a href={`tel:${c.contactPhone.replace(/\s+/g, "")}`} className="flex items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
                 <Phone className="h-3.5 w-3.5 flex-shrink-0 text-secondary/80" />
-                +91&nbsp;94944&nbsp;63840
+                {c.contactPhone}
               </a>
               <div className="flex items-start gap-2.5 text-white/50">
                 <MapPin className="h-3.5 w-3.5 flex-shrink-0 text-secondary/80 mt-0.5" />
-                <span>Yesj Centre for Excellence,<br />Vijayawada, AP 520008</span>
+                <span>{c.addressLine1}<br />{c.addressLine2}</span>
               </div>
             </div>
 
@@ -223,9 +224,9 @@ export function SiteFooter() {
             </Link>
           </div>
           <p>
-            Built with{" "}
+            {c.copyrightNote.split("♥")[0]}
             <span className="text-secondary/70">♥</span>
-            {" "}for the open source community
+            {c.copyrightNote.split("♥")[1] ?? ""}
           </p>
         </div>
       </div>

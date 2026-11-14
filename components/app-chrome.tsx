@@ -4,16 +4,16 @@ import type React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { MainNav } from "@/components/main-nav"
-import { SiteFooter } from "@/components/site-footer"
 import { BottomNav } from "@/components/bottom-nav"
 
 interface AppChromeProps {
   children: React.ReactNode
+  footer?: React.ReactNode
 }
 
 const APP_SHELL_PREFIXES = ["/admin", "/member"]
 
-export function AppChrome({ children }: AppChromeProps) {
+export function AppChrome({ children, footer }: AppChromeProps) {
   const pathname = usePathname()
   const isAppShellRoute = APP_SHELL_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 
@@ -51,7 +51,7 @@ export function AppChrome({ children }: AppChromeProps) {
       <main id="main-content" className="flex-1">
         {children}
       </main>
-      <SiteFooter />
+      {footer}
       <BottomNav />
     </div>
   )
