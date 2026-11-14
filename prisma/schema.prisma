@@ -748,3 +748,25 @@ model Chapter {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model ResourceItem {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  description   String
+  // install-fest-kit | poster-template | slide-deck | guide | recording | dataset | other
+  category      String   @default("other")
+  format        String?
+  // Link to the hosted file (GitHub release, Drive, own CDN) — no binary uploads in-app
+  externalUrl   String
+  sizeLabel     String?
+  // public | members
+  access        String   @default("public")
+  featured      Boolean  @default(false)
+  downloadCount Int      @default(0)
+  // draft | published
+  status        String   @default("draft")
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
