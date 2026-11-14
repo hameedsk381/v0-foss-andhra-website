@@ -236,6 +236,8 @@ model Member {
   renewal30ReminderSentAt DateTime?
   renewal7ReminderSentAt  DateTime?
 
+  LearningProgress LearningProgress[]
+
   @@index([status])
   @@index([expiryDate])
   @@index([paymentId])
@@ -668,4 +670,54 @@ model Certificate {
   @@index([email])
   @@index([type])
   @@index([status])
+}
+
+model LearningTrack {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  description    String
+  // beginner | intermediate | advanced
+  level          String   @default("beginner")
+  estimatedHours Int?
+  // draft | published
+  status         String   @default("draft")
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  LearningLesson LearningLesson[]
+}
+
+model LearningLesson {
+  id          String   @id @default(cuid())
+  trackId     String
+  slug        String
+  title       String
+  summary     String?
+  content     String
+  durationMin Int      @default(10)
+  // draft | published
+  status      String   @default("draft")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  LearningTrack LearningTrack   @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  LearningProgress LearningProgress[]
+
+  @@unique([trackId, slug])
+  @@index([trackId])
+  @@index([status])
+}
+
+model LearningProgress {
+  id          String   @id @default(cuid())
+  memberId    String
+  lessonId    String
+  completedAt DateTime @default(now())
+  Member        Member         @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  LearningLesson LearningLesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, lessonId])
+  @@index([memberId])
+  @@index([lessonId])
 }
