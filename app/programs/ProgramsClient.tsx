@@ -21,7 +21,7 @@ export default function ProgramsClient() {
         <div className="flex flex-col min-h-screen">
 
             {/* ══ HERO — flat, two-column ═══════════════════════ */}
-            <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+            <section className="w-full border-b border-border bg-primary/[0.06] py-10 sm:py-14">
                 <div className="app-container grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
                     <motion.div
                         initial={reduced ? {} : { opacity: 0, y: 16 }}
@@ -121,7 +121,7 @@ export default function ProgramsClient() {
             </section>
 
             {/* ══ STRATEGY ═════════════════════════════════════ */}
-            <section className="w-full section-shell bg-muted/30 border-y border-border">
+            <section className="w-full section-shell bg-muted/60 border-y border-border">
                 <div className="app-container">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div>

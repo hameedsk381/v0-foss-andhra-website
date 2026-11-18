@@ -202,7 +202,7 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
     <div className="flex flex-col min-h-screen">
 
       {/* ══ HERO — flat, two-column ═══════════════════════ */}
-      <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+      <section className="w-full border-b border-border bg-primary/[0.06] py-10 sm:py-14">
         <div className="app-container">
           <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
             <motion.div

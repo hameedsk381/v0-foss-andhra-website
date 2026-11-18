@@ -4,30 +4,32 @@
 
 @layer base {
   :root {
-    /* Core palette — #005ca8 blue + cream white */
-    --background: 36 34% 96%;
-    --foreground: 210 30% 12%;
+    /* Core palette — #005ca8 blue + cream white.
+       Light surfaces are warmed and brightened so the neutrals read as paper,
+       not grey; secondary text is deepened to pass 4.5:1. */
+    --background: 40 45% 97%;
+    --foreground: 211 45% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 210 30% 12%;
+    --card-foreground: 211 45% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 30% 12%;
+    --popover-foreground: 211 45% 11%;
 
     /* Primary: #005ca8 */
     --primary: 207 100% 33%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: light blue tint */
-    --secondary: 76 66% 88%;
-    --secondary-foreground: 207 100% 28%;
+    /* Secondary: light lime tint with real chroma */
+    --secondary: 78 75% 85%;
+    --secondary-foreground: 207 100% 25%;
 
-    --muted: 36 20% 91%;
-    --muted-foreground: 215 16% 48%;
-    --accent: 76 66% 88%;
-    --accent-foreground: 210 30% 12%;
+    --muted: 38 32% 94%;
+    --muted-foreground: 213 24% 42%;
+    --accent: 78 75% 85%;
+    --accent-foreground: 211 45% 11%;
     --destructive: 0 84% 58%;
     --destructive-foreground: 0 0% 100%;
-    --border: 34 18% 84%;
-    --input: 34 18% 84%;
+    --border: 35 26% 82%;
+    --input: 35 26% 82%;
     --ring: 207 100% 43%;
 
     /* Radius — single flat value used everywhere */
@@ -37,8 +39,8 @@
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
     /* Surface layers */
-    --surface-1: 36 20% 97%;
-    --surface-2: 207 25% 95%;
+    --surface-1: 40 40% 98%;
+    --surface-2: 207 45% 95%;
     --surface-raised: 0 0% 100%;
 
     /* Shadows — flat: a border does most of the work, shadow only appears on hover */

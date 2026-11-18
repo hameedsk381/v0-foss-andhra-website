@@ -20,7 +20,7 @@ export function PageHero({ eyebrow, title, titleLine2, subtitle, image, children
   const from = (p: object) => (reduced ? {} : p)
 
   return (
-    <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+    <section className="w-full border-b border-border bg-primary/[0.06] py-10 sm:py-14">
       <div className="app-container grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
         <motion.div
           initial={from({ opacity: 0, y: 16 })}

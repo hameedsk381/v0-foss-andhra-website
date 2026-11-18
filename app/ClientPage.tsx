@@ -81,7 +81,7 @@ export default function Home({ content }: { content: HomeContent }) {
       <div className="flex flex-col min-h-screen">
 
         {/* ══ HERO — flat, two-column ═══════════════════════ */}
-        <section id="main-content" className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+        <section id="main-content" className="w-full border-b border-border bg-primary/[0.06] py-10 sm:py-14">
           <div className="app-container grid gap-8 md:grid-cols-2 md:items-center md:gap-12">
             <motion.div
               initial={from({ opacity: 0, y: 16 })}
@@ -185,7 +185,7 @@ export default function Home({ content }: { content: HomeContent }) {
         </section>
 
         {/* ══ PROGRAMS — flat cards ══════════════════════════ */}
-        <section className="w-full section-shell bg-muted/30 border-y border-border">
+        <section className="w-full section-shell bg-muted/60 border-y border-border">
           <div className="app-container">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
               <div>
@@ -308,7 +308,7 @@ export default function Home({ content }: { content: HomeContent }) {
         </section>
 
         {/* ══ COMMUNITY PHOTOS ══════════════════════════════ */}
-        <section className="w-full section-shell bg-muted/30 border-y border-border">
+        <section className="w-full section-shell bg-muted/60 border-y border-border">
           <div className="app-container">
             <div className="mb-8">
               <p className="eyebrow mb-2">Community in action</p>

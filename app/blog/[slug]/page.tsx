@@ -213,7 +213,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Content - Markdown rendering */}
           <div className="px-6 sm:px-10">
-            <div className="prose prose-zinc dark:prose-invert max-w-none prose-headings:font-display prose-headings:tracking-tight prose-h2:text-2xl prose-h3:text-xl prose-p:leading-7 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-primary prose-blockquote:bg-primary/[0.04] prose-blockquote:py-1 prose-blockquote:pr-4 prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none prose-pre:bg-foreground prose-img:rounded-lg prose-img:shadow-md">
+            <div className="prose prose-zinc dark:prose-invert max-w-none prose-headings:font-display prose-headings:tracking-tight prose-h2:text-2xl prose-h3:text-xl prose-p:leading-7 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-primary prose-blockquote:bg-primary/[0.06] prose-blockquote:py-1 prose-blockquote:pr-4 prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none prose-pre:bg-foreground prose-img:rounded-lg prose-img:shadow-md">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}
@@ -306,7 +306,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         )}
 
         {/* CTA band — internal links for the reader journey */}
-        <div className="mt-10 rounded-xl border border-border bg-primary/[0.04] p-6 sm:p-8">
+        <div className="mt-10 rounded-xl border border-border bg-primary/[0.06] p-6 sm:p-8">
           <h2 className="font-display text-lg font-bold text-foreground sm:text-xl">
             Take the next step
           </h2>

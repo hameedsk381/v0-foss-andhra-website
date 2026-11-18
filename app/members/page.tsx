@@ -41,7 +41,7 @@ export default async function MembersPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
+      <section className="w-full border-b border-border bg-primary/[0.06] py-10 sm:py-14">
         <div className="app-container">
           <p className="eyebrow mb-4">FOSStar member directory</p>
           <h1 className="max-w-3xl font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">

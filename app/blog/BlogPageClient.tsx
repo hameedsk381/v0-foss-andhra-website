@@ -314,7 +314,7 @@ export default function BlogPageClient({ initialPosts = [], categories = [], ini
         )}
 
         {/* Internal-link CTA band */}
-        <div className="mt-16 rounded-xl border border-border bg-primary/[0.04] p-8 sm:p-10">
+        <div className="mt-16 rounded-xl border border-border bg-primary/[0.06] p-8 sm:p-10">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div>
               <h2 className="font-display text-xl font-bold text-foreground sm:text-2xl">
