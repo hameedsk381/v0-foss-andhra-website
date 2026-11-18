@@ -33,6 +33,7 @@ interface HomeContent {
   heroImage: string
   stats: StatItem[]
   campusNames: string[]
+  tagline: string
   aboutEyebrow: string
   aboutLead: string
   goals: { number: string; title: string; description: string }[]
@@ -184,6 +185,15 @@ export default function SiteContentPage() {
               <div>
                 <Label>Secondary button link</Label>
                 <Input value={str(home.heroCtaSecondaryHref)} onChange={(e) => setHome({ ...home, heroCtaSecondaryHref: e.target.value })} />
+              </div>
+              <div className="sm:col-span-2">
+                <Label>Tagline (large type moment)</Label>
+                <Textarea
+                  rows={2}
+                  value={str(home.tagline)}
+                  onChange={(e) => setHome({ ...home, tagline: e.target.value })}
+                  placeholder="One benefit statement, two lines or more. Words reveal in order on scroll."
+                />
               </div>
             </CardContent>
           </Card>

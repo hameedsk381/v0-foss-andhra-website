@@ -25,11 +25,11 @@ export function PageHero({ eyebrow, title, titleLine2, subtitle, image, children
         <motion.div
           initial={from({ opacity: 0, y: 16 })}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="eyebrow mb-4">{eyebrow}</p>
 
-          <h1 className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
+          <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             {title}
             {titleLine2 && <span className="block text-primary">{titleLine2}</span>}
           </h1>
@@ -47,7 +47,7 @@ export function PageHero({ eyebrow, title, titleLine2, subtitle, image, children
           className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border"
           initial={from({ opacity: 0, y: 16 })}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
           <Image src={image} alt={`${title} — ${eyebrow}`} fill priority className="object-cover object-center" />
         </motion.div>

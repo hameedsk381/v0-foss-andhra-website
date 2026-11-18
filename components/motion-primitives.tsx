@@ -13,7 +13,8 @@ import {
 } from "framer-motion"
 import { useEffect } from "react"
 
-const EASE = [0.16, 1, 0.3, 1] as const
+// Single motion curve for the whole site: weighted, decelerates into place.
+const EASE = [0.22, 1, 0.36, 1] as const
 
 /* ── Scroll progress bar (site-wide, rendered by template) ── */
 
@@ -111,7 +112,7 @@ export function StaggerItem({
           ? { hidden: { opacity: 1 }, visible: { opacity: 1 } }
           : {
               hidden: { opacity: 0, ...offset },
-              visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.55, ease: EASE } },
+              visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6, ease: EASE } },
             }
       }
     >
@@ -147,7 +148,7 @@ export function AnimatedCounter({
     }
     const controls = animate(count, value, {
       duration,
-      ease: [0.16, 1, 0.3, 1],
+      ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => {
         if (ref.current) ref.current.textContent = `${Math.round(v)}${suffix}`
       },

@@ -36,6 +36,8 @@ export interface HomeContent {
   heroImage: string
   stats: StatItem[]
   campusNames: string[]
+  // Tagline reveal (large type moment mid page)
+  tagline: string
   // About/goals section
   aboutEyebrow: string
   aboutLead: string
@@ -109,6 +111,8 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     "RVR College",
     "GITAM",
   ],
+  tagline:
+    "Open source is not a product you buy. It is a public good you build, in your own language, on your own terms.",
   aboutEyebrow: "About",
   aboutLead:
     "FOSS Andhra is a non-profit community that aims at promoting and strengthening the Free and Open Source Software ecosystem across Andhra Pradesh.",

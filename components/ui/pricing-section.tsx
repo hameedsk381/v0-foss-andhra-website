@@ -77,7 +77,7 @@ export function PricingSection({
             )}
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, delay: 0.15 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
             {tier.badge && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">

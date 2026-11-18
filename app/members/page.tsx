@@ -44,7 +44,7 @@ export default async function MembersPage() {
       <section className="w-full border-b border-border bg-primary/[0.04] py-10 sm:py-14">
         <div className="app-container">
           <p className="eyebrow mb-4">FOSStar member directory</p>
-          <h1 className="max-w-3xl font-display text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
+          <h1 className="max-w-3xl font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             People building <span className="text-primary">open source in Andhra Pradesh.</span>
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">

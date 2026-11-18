@@ -29,7 +29,7 @@ export function ProgramHero({ title, description, color, logoSrc, eyebrow = "FOS
           className="max-w-2xl"
           initial={from({ opacity: 0, y: 16 })}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="mb-6 inline-block rounded-lg bg-white px-4 py-2.5">
             <Image
@@ -44,7 +44,7 @@ export function ProgramHero({ title, description, color, logoSrc, eyebrow = "FOS
 
           <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-3">{eyebrow}</p>
 
-          <h1 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.05] tracking-tight text-white text-balance">
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
             {title}
           </h1>
 

@@ -209,11 +209,11 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
               className="flex-1 min-w-0"
               initial={reduced ? {} : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             >
               <p className="eyebrow mb-4">Workshops · Hackathons · Meetups</p>
 
-              <h1 className="font-display text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-foreground text-balance">
+              <h1 className="max-w-2xl font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
                 Come build <span className="text-primary">with us, in person.</span>
               </h1>
 
