@@ -35,30 +35,62 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useSession } from "next-auth/react"
 
-const navItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/analytics", label: "Analytics", icon: BarChart },
-  { href: "/admin/events", label: "Events", icon: Calendar },
-  { href: "/admin/members", label: "Members", icon: Users },
-  { href: "/admin/donations", label: "Donations", icon: Heart },
-  { href: "/admin/blog", label: "Blog", icon: BookOpen },
-  { href: "/admin/content", label: "Content", icon: FileText },
-  { href: "/admin/site-content", label: "Site Content", icon: PenSquare },
-  { href: "/admin/programs", label: "Programs", icon: FolderTree },
-  { href: "/admin/careers", label: "Careers", icon: Briefcase },
-  { href: "/admin/certificates", label: "Certificates", icon: Award },
-  { href: "/admin/clubs", label: "FOSSynC Clubs", icon: School },
-  { href: "/admin/learning", label: "Learning Hub", icon: GraduationCap },
-  { href: "/admin/chapters", label: "Chapters", icon: MapPin },
-  { href: "/admin/resources", label: "Resource Library", icon: Package },
-  { href: "/admin/sponsors", label: "Sponsorship", icon: Handshake },
-  { href: "/admin/mentors", label: "Mentorship", icon: Users },
-  { href: "/admin/hackathons", label: "Hackathons", icon: Trophy },
-  { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
-  { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
-  { href: "/admin/notifications/push", label: "Push Notifications", icon: Bell },
-  { href: "/admin/handbook", label: "Team Handbook", icon: ShieldCheck },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+// Hick's law: 24 flat links become six labeled groups; scanning starts at the group, not the item.
+// Miller's law: no group holds more than eight entries.
+const navSections: { label: string; items: { href: string; label: string; icon: typeof LayoutDashboard }[] }[] = [
+  {
+    label: "Overview",
+    items: [
+      { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/admin/analytics", label: "Analytics", icon: BarChart },
+    ],
+  },
+  {
+    label: "Publishing",
+    items: [
+      { href: "/admin/blog", label: "Blog", icon: BookOpen },
+      { href: "/admin/content", label: "Content", icon: FileText },
+      { href: "/admin/site-content", label: "Site Content", icon: PenSquare },
+      { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
+      { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
+      { href: "/admin/notifications/push", label: "Push Notifications", icon: Bell },
+    ],
+  },
+  {
+    label: "People",
+    items: [
+      { href: "/admin/members", label: "Members", icon: Users },
+      { href: "/admin/careers", label: "Careers", icon: Briefcase },
+      { href: "/admin/mentors", label: "Mentorship", icon: Users },
+      { href: "/admin/certificates", label: "Certificates", icon: Award },
+    ],
+  },
+  {
+    label: "Programmes",
+    items: [
+      { href: "/admin/events", label: "Events", icon: Calendar },
+      { href: "/admin/programs", label: "Programs", icon: FolderTree },
+      { href: "/admin/clubs", label: "FOSSynC Clubs", icon: School },
+      { href: "/admin/learning", label: "Learning Hub", icon: GraduationCap },
+      { href: "/admin/chapters", label: "Chapters", icon: MapPin },
+      { href: "/admin/resources", label: "Resource Library", icon: Package },
+      { href: "/admin/hackathons", label: "Hackathons", icon: Trophy },
+    ],
+  },
+  {
+    label: "Funding",
+    items: [
+      { href: "/admin/donations", label: "Donations", icon: Heart },
+      { href: "/admin/sponsors", label: "Sponsorship", icon: Handshake },
+    ],
+  },
+  {
+    label: "Admin",
+    items: [
+      { href: "/admin/handbook", label: "Team Handbook", icon: ShieldCheck },
+      { href: "/admin/settings", label: "Settings", icon: Settings },
+    ],
+  },
 ]
 
 export function ResponsiveSidebar() {
@@ -91,7 +123,7 @@ export function ResponsiveSidebar() {
           variant="outline"
           size="icon"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="h-10 w-10 rounded-lg border-slate-200 bg-white/95 shadow-md backdrop-blur"
+          className="h-11 w-11 rounded-lg border-slate-200 bg-white/95 shadow-md backdrop-blur"
           aria-label={isMobileMenuOpen ? "Close admin menu" : "Open admin menu"}
         >
           {isMobileMenuOpen ? (
@@ -146,30 +178,43 @@ export function ResponsiveSidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href || 
-              (item.href !== "/admin" && pathname.startsWith(item.href))
+        <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
+          {navSections.map((section) => (
+            <div key={section.label}>
+              {!isCollapsed ? (
+                <p className="px-3 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-200/60">
+                  {section.label}
+                </p>
+              ) : (
+                <div className="mx-2 mb-1.5 border-t border-white/10" aria-hidden="true" />
+              )}
+              <div className="space-y-0.5">
+                {section.items.map((item) => {
+                  const Icon = item.icon
+                  const isActive = pathname === item.href ||
+                    (item.href !== "/admin" && pathname.startsWith(item.href))
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-white/20 text-white shadow-inner"
-                    : "text-blue-100 hover:bg-white/10 hover:text-white",
-                  isCollapsed && "justify-center px-2"
-                )}
-                title={isCollapsed ? item.label : undefined}
-              >
-                <Icon className="h-5 w-5 flex-shrink-0" />
-                {!isCollapsed && <span>{item.label}</span>}
-              </Link>
-            )
-          })}
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                        isActive
+                          ? "bg-white/20 text-white shadow-inner"
+                          : "text-blue-100 hover:bg-white/10 hover:text-white",
+                        isCollapsed && "justify-center px-2"
+                      )}
+                      title={isCollapsed ? item.label : undefined}
+                    >
+                      <Icon className="h-5 w-5 flex-shrink-0" />
+                      {!isCollapsed && <span>{item.label}</span>}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         {/* User Section */}

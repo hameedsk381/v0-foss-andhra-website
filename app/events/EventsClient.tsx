@@ -84,7 +84,14 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
     const isFeatured = index === 0 && !isPast
 
     return (
-      <Card key={event.id} className={isFeatured ? "border-primary/30 shadow-md" : ""}>
+      <Card
+        key={event.id}
+        className={
+          isFeatured
+            ? "overflow-hidden border-primary/40 ring-1 ring-primary/15 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            : "overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+        }
+      >
         <CardHeader className={isFeatured ? "bg-primary/5" : ""}>
           <div className="flex justify-between items-start">
             <div className="flex-1">
@@ -139,7 +146,7 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
             )}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex gap-2 flex-wrap">
             {!isPast && seatsLeft !== null && seatsLeft > 0 && (
               <Badge variant="outline" className="text-gray-500">
@@ -158,28 +165,30 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
               </Badge>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link href={`/events/${event.id}/details`}>
-              <Button variant="outline">View Details</Button>
+              <Button variant="outline" className="min-h-11">
+                View Details
+              </Button>
             </Link>
             {!isPast && event.enableTicketing ? (
               event.externalTicketUrl ? (
                 <a href={event.externalTicketUrl} target="_blank" rel="noopener noreferrer">
-                  <Button>Buy Tickets</Button>
+                  <Button className="min-h-11">Buy Tickets</Button>
                 </a>
               ) : (
                 <Link href={`/events/${event.id}`}>
-                  <Button>Buy Tickets</Button>
+                  <Button className="min-h-11">Buy Tickets</Button>
                 </Link>
               )
             ) : !isPast && !event.enableTicketing ? (
               event.externalRegisterUrl ? (
                 <a href={event.externalRegisterUrl} target="_blank" rel="noopener noreferrer">
-                  <Button>Register</Button>
+                  <Button className="min-h-11">Register</Button>
                 </a>
               ) : (
                 <Link href={`/events/${event.id}/register`}>
-                  <Button>Register</Button>
+                  <Button className="min-h-11">Register</Button>
                 </Link>
               )
             ) : null}
@@ -212,10 +221,10 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
                 Free and open to everyone — across 9 campuses and counting.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/membership" className="cta-primary">
+                <Link href="/membership" className="cta-primary w-full sm:w-auto">
                   Join FOSStar <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/contact" className="cta-secondary">
+                <Link href="/contact" className="cta-secondary w-full sm:w-auto">
                   Host an event
                 </Link>
               </div>
@@ -237,14 +246,14 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
       </section>
 
       {/* ══ EVENT LIST ════════════════════════════════════ */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="app-container py-12">
       <div className="max-w-5xl mx-auto">
 
         <h2 className="mb-6 text-2xl font-bold tracking-tight">All Events</h2>
         <Tabs defaultValue="upcoming" className="mb-12">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="upcoming">Upcoming Events</TabsTrigger>
-            <TabsTrigger value="past">Past Events</TabsTrigger>
+            <TabsTrigger value="upcoming" className="min-h-11">Upcoming Events</TabsTrigger>
+            <TabsTrigger value="past" className="min-h-11">Past Events</TabsTrigger>
           </TabsList>
 
           <TabsContent value="upcoming" className="mt-6">
@@ -274,14 +283,14 @@ export default function EventsClient({ initialUpcomingEvents = [], initialPastEv
         </Tabs>
 
         <div className="bg-muted/40 border border-border p-8 rounded-lg my-12">
-          <h3 className="font-display text-2xl font-bold text-foreground mb-4">Host Your Own FOSS Event</h3>
+          <h3 className="font-display text-2xl font-bold text-foreground mb-3">Host your own FOSS event</h3>
           <p className="mb-6 text-muted-foreground">
             Are you interested in hosting a FOSS event at your institution or organization? FOSS Andhra provides
             support, resources, and speakers for community-organized events.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Link href="/contact">
-              <Button className="bg-primary hover:bg-primary/90 text-white">Contact Us</Button>
+            <Link href="/contact" className="cta-primary w-full sm:w-auto">
+              Contact us
             </Link>
           </div>
         </div>

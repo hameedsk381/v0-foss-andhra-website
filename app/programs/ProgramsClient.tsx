@@ -7,13 +7,6 @@ import { ArrowRight } from "lucide-react"
 import { PROGRAMS_BY_ID, PILLARS } from "@/lib/programs"
 import { StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 
-const pillars = [
-    { title: "Education-First", desc: "Equipping the next generation with FOSS skills via FOSSynC and FOSServe." },
-    { title: "Social Advocacy", desc: "Promoting digital freedom and open tech for society through FOSSpeaks." },
-    { title: "Innovation Hub", desc: "Funding and incubating open source startups with FOSStart." },
-    { title: "Knowledge Management", desc: "Archiving critical research and data in FOSSterage." },
-]
-
 const team = [
     { name: "Venkata Vishnu Vardhan", affiliation: "Andhra Loyola Institute of Engineering and Technology" },
     { name: "Akhila Reddy", affiliation: "Andhra Loyola Institute of Engineering and Technology" },
@@ -46,10 +39,10 @@ export default function ProgramsClient() {
                             each programme covers one stage of AP&apos;s open source pipeline.
                         </p>
                         <div className="mt-6 flex flex-wrap gap-3">
-                            <Link href="/membership" className="cta-primary">
+                            <Link href="/membership" className="cta-primary w-full sm:w-auto">
                                 Join FOSStar <ArrowRight className="h-4 w-4" />
                             </Link>
-                            <Link href="/events" className="cta-secondary">
+                            <Link href="/events" className="cta-secondary w-full sm:w-auto">
                                 Meet the community
                             </Link>
                         </div>
@@ -71,7 +64,8 @@ export default function ProgramsClient() {
                 <div className="app-container space-y-12">
                     {PILLARS.map((pillar) => (
                         <div key={pillar.id}>
-                            <div className="mb-5">
+                            {/* Law of proximity: the pillar label stays tight to its cards */}
+                            <div className="mb-4">
                                 <p className="eyebrow mb-1.5">{pillar.label}</p>
                                 <p className="text-sm text-muted-foreground max-w-xl">{pillar.tagline}</p>
                             </div>
@@ -81,10 +75,24 @@ export default function ProgramsClient() {
                             >
                                 {pillar.programs.map((programId) => {
                                     const p = PROGRAMS_BY_ID[programId]
+                                    const featured = p.id === "fosstar"
                                     return (
                                         <StaggerItem key={p.id}>
                                             <Link href={`/programs/${p.slug}`} className="group block h-full">
-                                                <div className="h-full rounded-lg border border-border bg-card p-5 transition-colors hover:border-primary/40">
+                                                {/* Law of similarity: the homepage card recipe, reused verbatim.
+                                                    Von Restorff: membership is the one ringed card. */}
+                                                <div
+                                                    className={
+                                                        featured
+                                                            ? "relative h-full rounded-lg border border-primary/40 bg-card p-5 ring-1 ring-primary/15 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-md"
+                                                            : "relative h-full rounded-lg border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                                                    }
+                                                >
+                                                    {featured && (
+                                                        <span className="absolute right-4 top-4 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                                                            Start here
+                                                        </span>
+                                                    )}
                                                     <Image
                                                         src={p.logo}
                                                         alt={p.displayName}
@@ -125,16 +133,19 @@ export default function ProgramsClient() {
                                 Every layer of society — from students and educators to government and
                                 entrepreneurs — gets a programme designed for its stage of the open source journey.
                             </p>
-                            <StaggerGroup className="space-y-3" gap={0.09}>
-                                {pillars.map((item) => (
-                                    <StaggerItem key={item.title} from="left">
-                                        <div className="flex gap-4 p-4 rounded-lg bg-card border border-border">
+                            <StaggerGroup
+                                className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-card"
+                                gap={0.09}
+                            >
+                                {PILLARS.map((item) => (
+                                    <StaggerItem key={item.id} from="left">
+                                        <div className="flex gap-4 p-4">
                                             <div className="h-6 w-6 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center mt-1">
                                                 <div className="h-2 w-2 rounded-full bg-primary" />
                                             </div>
                                             <div>
-                                                <h3 className="font-display font-bold text-foreground">{item.title}</h3>
-                                                <p className="text-sm text-muted-foreground mt-0.5">{item.desc}</p>
+                                                <h3 className="font-display font-bold text-foreground">{item.label}</h3>
+                                                <p className="text-sm text-muted-foreground mt-0.5">{item.tagline}</p>
                                             </div>
                                         </div>
                                     </StaggerItem>
