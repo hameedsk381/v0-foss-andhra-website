@@ -17,7 +17,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, X, BookOpen, User, LogOut, LayoutDashboard, ChevronRight, ArrowUpRight } from "lucide-react"
+import { Menu, X, BookOpen, User, LogOut, LayoutDashboard, ChevronRight, ChevronDown, ArrowUpRight } from "lucide-react"
 import { useSession, signOut } from "next-auth/react"
 import {
   DropdownMenu,
@@ -29,16 +29,26 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
+// Hick's law: five primary destinations + one "More" cluster instead of eight flat links.
+// Serial position effect: the primary action (Join) sits last and is the only filled button.
 const navItems = [
   { title: "Home", href: "/" },
-  { title: "About", href: "/about" },
   { title: "Programs", href: "/programs", hasChildren: true },
   { title: "Events", href: "/events" },
   { title: "Blog", href: "/blog", icon: BookOpen },
+  { title: "About", href: "/about" },
+]
+
+const moreItems = [
   { title: "Gallery", href: "/gallery" },
   { title: "Careers", href: "/careers" },
   { title: "Contribute", href: "/contribute" },
+  { title: "Members", href: "/members" },
+  { title: "FAQ", href: "/faq" },
+  { title: "Contact", href: "/contact" },
 ]
+
+const mobileNavItems = [...navItems, ...moreItems]
 
 export function MainNav() {
   const pathname = usePathname()
@@ -72,7 +82,7 @@ export function MainNav() {
                   <NavigationMenuItem key={index}>
                     <NavigationMenuTrigger
                       className={cn(
-                        "text-[14px] font-medium h-9 px-3.5 rounded-lg nav-trigger-layer transition-colors",
+                        "text-[14px] font-medium h-11 px-3.5 rounded-lg nav-trigger-layer transition-colors",
                         pathname.startsWith("/programs")
                           ? "bg-primary/8 text-primary"
                           : "text-foreground/80 hover:text-foreground hover:bg-muted",
@@ -129,7 +139,7 @@ export function MainNav() {
                       href={item.href}
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "text-[14px] font-medium h-9 px-3.5 rounded-lg transition-colors",
+                        "text-[14px] font-medium h-11 px-3.5 rounded-lg transition-colors",
                         pathname === item.href
                           ? "bg-primary/8 text-primary"
                           : "text-foreground/80 hover:text-foreground hover:bg-muted",
@@ -141,6 +151,34 @@ export function MainNav() {
                 </NavigationMenuItem>
               )
             })}
+
+            {/* Hick's law: secondary destinations folded into one menu */}
+            <NavigationMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className={cn(
+                      "inline-flex h-11 items-center gap-1 rounded-lg px-3.5 text-[14px] font-medium transition-colors",
+                      moreItems.some((i) => pathname === i.href || pathname.startsWith(`${i.href}/`))
+                        ? "bg-primary/8 text-primary"
+                        : "text-foreground/80 hover:text-foreground hover:bg-muted",
+                    )}
+                  >
+                    More <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="dropdown-layer w-48 rounded-xl p-1.5">
+                  {moreItems.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild className="rounded-lg">
+                      <Link href={item.href} className="flex min-h-10 items-center px-3 text-sm">
+                        {item.title}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
@@ -149,7 +187,7 @@ export function MainNav() {
           {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
+                <Button variant="ghost" className="relative h-11 w-11 rounded-full p-0">
                   <Avatar className="h-8 w-8 ring-2 ring-primary/20">
                     <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
                     <AvatarFallback className="text-xs bg-primary/10 text-primary font-semibold">
@@ -199,7 +237,7 @@ export function MainNav() {
       <div className="lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl">
+            <Button variant="ghost" size="icon" className="h-11 w-11 rounded-xl">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle menu</span>
             </Button>
@@ -217,7 +255,7 @@ export function MainNav() {
                     className="h-8 w-auto"
                   />
                 </Link>
-                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" onClick={() => setIsOpen(false)}>
+                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-lg" onClick={() => setIsOpen(false)}>
                   <X className="h-4 w-4" />
                   <span className="sr-only">Close</span>
                 </Button>
@@ -225,7 +263,7 @@ export function MainNav() {
 
               {/* Nav links */}
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
-                {navItems.map((item, index) => {
+                {mobileNavItems.map((item, index) => {
                   if (item.hasChildren) {
                     return (
                       <div key={index} className="space-y-3">
@@ -245,7 +283,7 @@ export function MainNav() {
                                   key={program.id}
                                   href={href}
                                   className={cn(
-                                    "flex items-center gap-2.5 rounded-lg px-3 py-2.5 transition-colors",
+                                    "flex min-h-[44px] items-center gap-2.5 rounded-lg px-3 py-2.5 transition-colors",
                                     pathname === href
                                       ? cn(PROGRAM_TEXT_CLASS[program.id], "bg-muted font-medium")
                                       : "text-foreground/75 hover:text-foreground hover:bg-muted",
@@ -274,7 +312,7 @@ export function MainNav() {
                       key={index}
                       href={item.href}
                       className={cn(
-                        "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                        "flex min-h-[44px] items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                         pathname === item.href
                           ? "text-primary bg-primary/8"
                           : "text-foreground/75 hover:text-foreground hover:bg-muted",

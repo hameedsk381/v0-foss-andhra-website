@@ -13,8 +13,9 @@ import {
   MapPin,
   Users,
 } from "lucide-react"
-import { PROGRAMS } from "@/lib/programs"
+import { PROGRAMS_BY_ID, type ProgramId } from "@/lib/programs"
 import type { HomeContent } from "@/lib/site-content"
+import { cn } from "@/lib/utils"
 import { SkipLink } from "@/components/skip-link"
 import { OrganizationJsonLd } from "@/components/structured-data"
 import { useOpenings } from "@/components/home/use-openings"
@@ -36,6 +37,14 @@ const ICONS: Record<string, typeof BookOpen> = {
 function iconFor(name: string) {
   return ICONS[name] ?? BookOpen
 }
+
+/* ── Miller's law: seven programmes chunked into three groups ── */
+
+const PROGRAM_GROUPS: { label: string; ids: ProgramId[] }[] = [
+  { label: "Join the community", ids: ["fosstar"] },
+  { label: "Learn & build", ids: ["fossync", "fosspeaks", "fosstorm"] },
+  { label: "Adopt, fund & share", ids: ["fosserve", "fosstart", "fossterage"] },
+]
 
 /* ── Animation helper ─────────────────────────────────── */
 
@@ -90,24 +99,25 @@ export default function Home({ content }: { content: HomeContent }) {
               </p>
 
               <div className="flex flex-wrap gap-4 mt-6">
-                <Link href={content.heroCtaPrimaryHref} className="cta-primary">
+                <Link href={content.heroCtaPrimaryHref} className="cta-primary w-full sm:w-auto">
                   {content.heroCtaPrimaryLabel} <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href={content.heroCtaSecondaryHref} className="cta-secondary">
+                <Link href={content.heroCtaSecondaryHref} className="cta-secondary w-full sm:w-auto">
                   {content.heroCtaSecondaryLabel}
                 </Link>
               </div>
 
-              <div className="flex flex-wrap gap-3 mt-6">
-                {content.stats.map(({ value, label }) => (
-                  <span
-                    key={label}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-1.5 text-sm"
-                  >
-                    <span className="font-bold text-foreground">{value}</span>
-                    <span className="text-muted-foreground">{label}</span>
-                  </span>
-                ))}
+              {/* Law of common region: the four stats read as one bar, not four loose chips.
+                  Von Restorff: the first stat is the one filled cell in the row. */}
+              <div className="mt-6 overflow-hidden rounded-lg border border-border bg-border">
+                <dl className="grid grid-cols-2 gap-px sm:grid-cols-4">
+                  {content.stats.map(({ value, label }, i) => (
+                    <div key={label} className={cn("bg-card px-3.5 py-3", i === 0 && "bg-primary/5")}>
+                      <dd className="text-lg font-bold leading-tight text-foreground">{value}</dd>
+                      <dt className="mt-0.5 text-xs text-muted-foreground">{label}</dt>
+                    </div>
+                  ))}
+                </dl>
               </div>
             </motion.div>
 
@@ -176,44 +186,72 @@ export default function Home({ content }: { content: HomeContent }) {
               </div>
               <Link
                 href="/programs"
-                className="shrink-0 self-start sm:self-end inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+                className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted sm:self-end"
               >
                 All programmes <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
 
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-              variants={stagger()}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-            >
-              {PROGRAMS.map((p) => (
-                <motion.div key={p.id} variants={fadeUp}>
-                  <Link href={`/programs/${p.slug}`} className="group block h-full">
-                    <div className="h-full rounded-lg border border-border bg-card p-5 transition-colors hover:border-primary/40">
-                      <Image
-                        src={p.logo}
-                        alt={p.displayName}
-                        width={100}
-                        height={28}
-                        className="h-7 w-auto object-contain mb-4"
-                      />
-                      <h3 className="font-display font-bold text-foreground text-[1.05rem] mb-1.5">
-                        {p.displayName}
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                        {p.description}
-                      </p>
-                      <div className="flex items-center gap-1 mt-4 text-primary text-sm font-semibold group-hover:gap-2 transition-all">
-                        Learn more <ArrowRight className="h-3.5 w-3.5" />
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
+            <div className="space-y-10">
+              {PROGRAM_GROUPS.map((group) => (
+                <div key={group.label}>
+                  {/* Law of proximity: each group label sits tight above its cards */}
+                  <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                    {group.label}
+                  </h3>
+                  <motion.div
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+                    variants={stagger()}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                  >
+                    {group.ids.map((id) => {
+                      const p = PROGRAMS_BY_ID[id]
+                      const featured = p.id === "fosstar"
+                      return (
+                        <motion.div key={p.id} variants={fadeUp}>
+                          {/* Law of similarity: one card recipe everywhere; Von Restorff: the
+                              membership entry is the only ringed card and carries the tag. */}
+                          <Link href={`/programs/${p.slug}`} className="group block h-full">
+                            <div
+                              className={cn(
+                                "relative h-full rounded-lg border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+                                featured
+                                  ? "border-primary/40 ring-1 ring-primary/15 hover:border-primary/60"
+                                  : "border-border hover:border-primary/40",
+                              )}
+                            >
+                              {featured && (
+                                <span className="absolute right-4 top-4 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                                  Start here
+                                </span>
+                              )}
+                              <Image
+                                src={p.logo}
+                                alt={p.displayName}
+                                width={100}
+                                height={28}
+                                className="h-7 w-auto object-contain mb-4"
+                              />
+                              <h4 className="font-display font-bold text-foreground text-[1.05rem] mb-1.5">
+                                {p.displayName}
+                              </h4>
+                              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                {p.description}
+                              </p>
+                              <div className="flex items-center gap-1 mt-4 text-primary text-sm font-semibold group-hover:gap-2 transition-all">
+                                Learn more <ArrowRight className="h-3.5 w-3.5" />
+                              </div>
+                            </div>
+                          </Link>
+                        </motion.div>
+                      )
+                    })}
+                  </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -230,10 +268,10 @@ export default function Home({ content }: { content: HomeContent }) {
                   {content.eventsSubtitle}
                 </p>
                 <div className="flex gap-4 mt-8 flex-wrap">
-                  <Link href={content.eventsPrimaryHref} className="cta-primary">
+                  <Link href={content.eventsPrimaryHref} className="cta-primary w-full sm:w-auto">
                     {content.eventsPrimaryLabel} <ArrowRight className="h-4 w-4" />
                   </Link>
-                  <Link href={content.eventsSecondaryHref} className="cta-secondary">
+                  <Link href={content.eventsSecondaryHref} className="cta-secondary w-full sm:w-auto">
                     {content.eventsSecondaryLabel}
                   </Link>
                 </div>
@@ -270,8 +308,8 @@ export default function Home({ content }: { content: HomeContent }) {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-              <div className="col-span-2 row-span-2 relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
-                <Image src={content.featuredPhoto.src} alt={content.featuredPhoto.title} fill className="object-cover" />
+              <div className="group col-span-2 row-span-2 relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
+                <Image src={content.featuredPhoto.src} alt={content.featuredPhoto.title} fill className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
                 <div className="absolute bottom-0 left-0 right-0 bg-background/90 p-4">
                   <p className="text-foreground font-display font-bold">{content.featuredPhoto.title}</p>
                   <p className="text-muted-foreground text-sm mt-0.5">{content.featuredPhoto.sub}</p>
@@ -279,8 +317,8 @@ export default function Home({ content }: { content: HomeContent }) {
               </div>
 
               {content.photos.map((photo) => (
-                <div key={photo.title} className="relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
-                  <Image src={photo.src} alt={photo.title} fill className="object-cover" />
+                <div key={photo.title} className="group relative rounded-lg border border-border overflow-hidden" style={{ aspectRatio: "4/3" }}>
+                  <Image src={photo.src} alt={photo.title} fill className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
                   <div className="absolute bottom-0 left-0 right-0 bg-background/90 p-3">
                     <p className="text-foreground font-semibold text-sm">{photo.title}</p>
                     <p className="text-muted-foreground text-xs mt-0.5">{photo.sub}</p>
@@ -335,13 +373,13 @@ export default function Home({ content }: { content: HomeContent }) {
                   <div className="flex flex-wrap gap-4 pt-2">
                     <Link
                       href={content.joinPrimaryHref}
-                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-white/90"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-primary transition-all hover:-translate-y-px hover:bg-white/90 active:translate-y-0 sm:w-auto"
                     >
                       {content.joinPrimaryLabel}
                     </Link>
                     <Link
                       href={content.joinSecondaryHref}
-                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:bg-white/10 active:translate-y-0 sm:w-auto"
                     >
                       {content.joinSecondaryLabel} <ArrowRight className="h-4 w-4" />
                     </Link>

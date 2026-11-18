@@ -82,7 +82,7 @@ export async function SiteFooter() {
           </div>
           <Link
             href={c.joinBannerCtaHref}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#071426] transition-colors hover:bg-white/90"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#071426] transition-all hover:-translate-y-px hover:bg-white/90 active:translate-y-0"
           >
             {c.joinBannerCtaLabel} <ArrowUpRight className="h-4 w-4" />
           </Link>
@@ -109,11 +109,11 @@ export async function SiteFooter() {
 
             {/* Contact info */}
             <div className="space-y-2.5 text-sm">
-              <a href={`mailto:${c.contactEmail}`} className="flex items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
+              <a href={`mailto:${c.contactEmail}`} className="flex min-h-9 items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
                 <Mail className="h-3.5 w-3.5 flex-shrink-0 text-secondary/80" />
                 {c.contactEmail}
               </a>
-              <a href={`tel:${c.contactPhone.replace(/\s+/g, "")}`} className="flex items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
+              <a href={`tel:${c.contactPhone.replace(/\s+/g, "")}`} className="flex min-h-9 items-center gap-2.5 text-white/50 hover:text-white/80 transition-colors">
                 <Phone className="h-3.5 w-3.5 flex-shrink-0 text-secondary/80" />
                 {c.contactPhone}
               </a>
@@ -124,7 +124,7 @@ export async function SiteFooter() {
             </div>
 
             {/* Social links */}
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-1.5 pt-1">
               {socialLinks.map(({ label, href, icon }) => (
                 <a
                   key={label}
@@ -132,7 +132,7 @@ export async function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-8 h-8 rounded-lg bg-white/8 hover:bg-white/15 flex items-center justify-center text-white/60 hover:text-white transition-all"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/8 text-white/60 transition-all hover:-translate-y-px hover:bg-white/15 hover:text-white active:translate-y-0"
                 >
                   {icon}
                 </a>
@@ -154,7 +154,7 @@ export async function SiteFooter() {
                         <Link
                           key={program.id}
                           href={`/programs/${program.slug}`}
-                          className="text-sm text-white/50 hover:text-white/90 transition-colors"
+                          className="inline-flex min-h-8 items-center text-sm text-white/50 transition-colors hover:text-white/90"
                         >
                           {program.displayName}
                         </Link>
@@ -172,7 +172,7 @@ export async function SiteFooter() {
             <ul className="space-y-2.5">
               {footerLinks.about.map(({ label, href }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-white/50 hover:text-white/90 transition-colors">
+                  <Link href={href} className="inline-flex min-h-9 items-center text-sm text-white/50 transition-colors hover:text-white/90">
                     {label}
                   </Link>
                 </li>
@@ -186,7 +186,7 @@ export async function SiteFooter() {
             <ul className="space-y-2.5">
               {footerLinks.contribute.map(({ label, href }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-white/50 hover:text-white/90 transition-colors">
+                  <Link href={href} className="inline-flex min-h-9 items-center text-sm text-white/50 transition-colors hover:text-white/90">
                     {label}
                   </Link>
                 </li>
@@ -200,7 +200,7 @@ export async function SiteFooter() {
             <ul className="space-y-2.5">
               {footerLinks.legal.map(({ label, href }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-white/50 hover:text-white/90 transition-colors">
+                  <Link href={href} className="inline-flex min-h-9 items-center text-sm text-white/50 transition-colors hover:text-white/90">
                     {label}
                   </Link>
                 </li>

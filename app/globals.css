@@ -226,6 +226,31 @@
   border-color: hsl(var(--primary) / 0.4);
 }
 
+/* Fitts's law: buttons answer the pointer and confirm the press */
+.cta-primary,
+.cta-secondary {
+  transition: background 150ms ease, border-color 150ms ease, transform 120ms ease;
+}
+
+.cta-primary:hover,
+.cta-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.cta-primary:active,
+.cta-secondary:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-primary:hover,
+  .cta-secondary:hover,
+  .cta-primary:active,
+  .cta-secondary:active {
+    transform: none;
+  }
+}
+
 .section-shell {
   padding-block: clamp(2rem, 4.5vw, 4.5rem);
 }
