@@ -21,7 +21,7 @@ export async function GET(req: Request) {
         const comments = await prisma.blogComment.findMany({
             where,
             include: {
-                post: {
+                BlogPost: {
                     select: {
                         title: true,
                         slug: true,

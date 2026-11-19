@@ -33,7 +33,7 @@ interface BlogPost {
   views: number
   createdAt: string
   featured: boolean
-  _count: { comments: number }
+  _count: { BlogComment: number }
 }
 
 interface Comment {
@@ -43,14 +43,13 @@ interface Comment {
   content: string
   status: "pending" | "approved" | "spam"
   createdAt: string
-  post: {
+  BlogPost: {
     title: string
     slug: string
   }
 }
 
-export default function BlogManagement() {
-  const [posts, setPosts] = useState<BlogPost[]>([])
+export default function BlogManagement() {  const [posts, setPosts] = useState<BlogPost[]>([])
   const [categories, setCategories] = useState<any[]>([])
   const [tags, setTags] = useState<any[]>([])
   const [comments, setComments] = useState<Comment[]>([])
@@ -281,7 +280,7 @@ export default function BlogManagement() {
       accessor: (comment) => (
         <div>
           <div className="text-sm line-clamp-2">{comment.content}</div>
-          <div className="text-xs text-blue-600 mt-1">On: {comment.post.title}</div>
+          <div className="text-xs text-blue-600 mt-1">On: {comment.BlogPost.title}</div>
         </div>
       ),
     },
@@ -366,7 +365,7 @@ export default function BlogManagement() {
     {
       id: "comments",
       header: "Comments",
-      accessor: (post) => post._count?.comments ?? 0,
+      accessor: (post) => post._count?.BlogComment ?? 0,
       sortable: true,
     },
     {
